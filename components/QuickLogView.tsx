@@ -41,27 +41,25 @@ export default function QuickLogView() {
         <TimezoneSelect value={tz} onChange={setTz} />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-3">
+      <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-gray-400">Tap anywhere to log a time.</p>
+          <p className="text-center text-sm text-gray-400">Tap anywhere to log a time.</p>
         ) : (
-          <ul className="space-y-2">
-            {sorted.map((entry, i) => {
-              const { date, time, ms } = formatInZone(entry.at, tz);
-              return (
-                <li
-                  key={entry.id}
-                  className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5"
-                >
-                  <span className="text-xs text-gray-400">#{sorted.length - i}</span>
-                  <span className="font-mono tabular-nums text-gray-900">
-                    {date} · {time}
-                    <span className="text-gray-400">.{ms}</span>
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+          sorted.map((entry, i) => {
+            const { date, time, ms } = formatInZone(entry.at, tz);
+            return (
+              <div
+                key={entry.id}
+                className="flex shrink-0 items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5"
+              >
+                <span className="text-xs text-gray-400">#{sorted.length - i}</span>
+                <span className="font-mono tabular-nums text-gray-900">
+                  {date} · {time}
+                  <span className="text-gray-400">.{ms}</span>
+                </span>
+              </div>
+            );
+          })
         )}
       </div>
 
