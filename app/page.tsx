@@ -230,14 +230,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="text-center">
-              <p className="font-display text-sm font-semibold text-ink">Time to Refuge</p>
-              {people.length > 0 && (
-                <p className="text-xs tabular-nums text-muted/70">
-                  {index + 1} / {people.length}
-                </p>
-              )}
-            </div>
+            <p className="font-display text-sm font-semibold text-ink">Time to Refuge</p>
 
             <div className="flex items-center gap-1">
               <button

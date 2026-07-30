@@ -96,56 +96,57 @@ export function RefugeView({
       className="flex flex-1 flex-col overflow-hidden pt-4"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
-      {/* Only this track moves when swiping between people. */}
-      <div
-        className="flex flex-1 items-center overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div
-          className="flex w-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${index * 100}%)` }}
-        >
-          {people.map((p) => {
-            const isCurrent = p.id === current?.id;
-            return (
-              <div key={p.id} className="w-full shrink-0 px-4">
-                <PersonCard
-                  person={p}
-                  variant="focused"
-                  target={isCurrent ? target : null}
-                  onSelectPhase={isCurrent ? setSelectedPhase : undefined}
-                  onClear={(phase) => onClear(p.id, phase)}
-                  onResetAll={() => onResetAll(p.id)}
-                  onExport={() => onExport(p)}
-                  onRename={(name) => onRename(p.id, name)}
-                />
-              </div>
-            );
-          })}
+      <div className="flex flex-1 flex-col justify-center overflow-hidden">
+        {/* Position + navigation, directly above the card. */}
+        <div className="flex shrink-0 items-center justify-center gap-1 pb-3">
+          <GhostNav
+            direction="prev"
+            available={index > 0}
+            onClick={() => onIndexChange(index - 1)}
+          />
+          <span className="min-w-14 text-center text-sm tabular-nums text-muted">
+            {index + 1} / {people.length}
+          </span>
+          <GhostNav
+            direction="next"
+            available={index < people.length - 1}
+            onClick={() => onIndexChange(index + 1)}
+          />
+        </div>
+
+        {/* Only this track moves when swiping between people. */}
+        <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          <div
+            className="flex w-full transition-transform duration-300 ease-out"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {people.map((p) => {
+              const isCurrent = p.id === current?.id;
+              return (
+                <div key={p.id} className="w-full shrink-0 px-4">
+                  <PersonCard
+                    person={p}
+                    variant="focused"
+                    target={isCurrent ? target : null}
+                    onSelectPhase={isCurrent ? setSelectedPhase : undefined}
+                    onClear={(phase) => onClear(p.id, phase)}
+                    onResetAll={() => onResetAll(p.id)}
+                    onExport={() => onExport(p)}
+                    onRename={(name) => onRename(p.id, name)}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* Stays put while the cards swipe past. */}
-      <div className="flex shrink-0 items-center gap-1 px-2 pt-4">
-        <GhostNav
-          direction="prev"
-          available={index > 0}
-          onClick={() => onIndexChange(index - 1)}
-        />
-
-        <div className="min-w-0 flex-1">
-          <LiveClockButton
-            onCapture={handleCaptureClick}
-            armed={target !== null}
-            label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
-          />
-        </div>
-
-        <GhostNav
-          direction="next"
-          available={index < people.length - 1}
-          onClick={() => onIndexChange(index + 1)}
+      <div className="shrink-0 px-4 pt-4">
+        <LiveClockButton
+          onCapture={handleCaptureClick}
+          armed={target !== null}
+          label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
         />
       </div>
     </div>
