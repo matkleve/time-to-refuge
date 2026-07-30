@@ -85,7 +85,8 @@ gets caught.
 - **Cards are filled, never outlined**: `bg-card`, or `bg-card-current` for the
   person in view.
 - **Field rows are white** so they read against the card fill.
-- Radii: `rounded-control` (12px) · `rounded-row` (16px) · `rounded-card` (24px).
+- Radii: `rounded-control` (12px) · `rounded-row` (16px) · `rounded-card` (24px) ·
+  `rounded-shell` (32px, the desktop frame).
 - Shadows: `shadow-row` (a filled row) · `shadow-raised` (record button) ·
   `shadow-panel` (popovers).
 
@@ -121,6 +122,22 @@ everywhere.
 
 **Focus.** One ring for the whole app — 2px `flagblue-600` at 2px offset, on
 `:focus-visible`, declared once in the base layer. Never remove it locally.
+
+## 4a. Units
+
+**px is the unit of this system.** `--spacing` is set to `4px`, which puts
+Tailwind's whole spacing and sizing scale on px too — `size-9` is 36px, not
+2.25rem — so a number in the code is the number on screen.
+
+Relative units are used only where a value must scale with something else:
+
+| Unit | Where | Why |
+| --- | --- | --- |
+| `em` | Letter-spacing on tracked captions | Tracking must stay proportional to the glyphs it spaces |
+| `dvh` | App shell height | Must track the mobile viewport as browser chrome moves |
+| `vh` | Desktop frame max-height | Must track the window |
+
+Nothing else. If you reach for `rem`, it is almost certainly a px value.
 
 ## 5. Motion
 

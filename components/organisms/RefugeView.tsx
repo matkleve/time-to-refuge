@@ -88,7 +88,7 @@ export function RefugeView({
   return (
     <div
       className="flex flex-1 flex-col overflow-hidden pt-4"
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+      style={{ paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}
     >
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         {/* Position + navigation, directly above the card. */}

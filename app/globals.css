@@ -23,18 +23,23 @@
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 
-  /* Type scale — six steps, and no ad-hoc sizes outside them. */
-  --text-clock: 2.25rem;        /* the hero clock */
+  /*
+   * Type scale — six steps, and no ad-hoc sizes outside them.
+   *
+   * Sizes are px. See the unit rule at the bottom of this block: relative
+   * units are reserved for the few values that must scale with something.
+   */
+  --text-clock: 36px;      /* the hero clock */
   --text-clock--line-height: 1.1;
-  --text-display: 1.5rem;       /* person name, focused card */
+  --text-display: 24px;    /* person name, focused card */
   --text-display--line-height: 1.2;
-  --text-title: 1.0625rem;      /* panel titles, name in the overview */
+  --text-title: 17px;      /* panel titles, name in the overview */
   --text-title--line-height: 1.3;
-  --text-body: 0.9375rem;       /* default UI text */
+  --text-body: 15px;       /* default UI text */
   --text-body--line-height: 1.45;
-  --text-label: 0.8125rem;      /* meta, counters, secondary rows */
+  --text-label: 13px;      /* meta, counters, secondary rows */
   --text-label--line-height: 1.4;
-  --text-caption: 0.6875rem;    /* tracked uppercase captions */
+  --text-caption: 11px;    /* tracked uppercase captions */
   --text-caption--line-height: 1.3;
 
   /* ── Colour ───────────────────────────────────────────────────────────
@@ -73,9 +78,10 @@
   --color-card-current: #fbe8bf;
 
   /* ── Radius ───────────────────────────────────────────────────────── */
-  --radius-control: 0.75rem;
-  --radius-row: 1rem;
-  --radius-card: 1.5rem;
+  --radius-control: 12px;
+  --radius-row: 16px;
+  --radius-card: 24px;
+  --radius-shell: 32px;
 
   /* ── Elevation ────────────────────────────────────────────────────── */
   --shadow-row: 0 1px 2px rgb(31 27 22 / 0.06);
@@ -87,6 +93,20 @@
   --duration-fast: 120ms;   /* press feedback */
   --duration-ui: 180ms;     /* colour/opacity changes */
   --duration-slide: 280ms;  /* card carousel */
+
+  /*
+   * ── Units ────────────────────────────────────────────────────────────
+   * px is the unit of this system. Setting --spacing in px puts Tailwind's
+   * whole spacing/sizing scale on it too, so `size-9` is 36px, not 2.25rem.
+   *
+   * Relative units are used only where the value must scale with something
+   * else, which is the only case they earn their keep:
+   *   em  — letter-spacing on the tracked captions, so tracking stays
+   *         proportional to the glyphs it is spacing.
+   *   dvh — the app shell, which must track the mobile viewport.
+   *   vh  — the desktop frame's max height.
+   */
+  --spacing: 4px;
 }
 
 @layer base {

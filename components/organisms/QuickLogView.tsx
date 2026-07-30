@@ -122,7 +122,7 @@ export function QuickLogView() {
         )}
       </div>
 
-      <div className="px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+      <div className="px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-2">
         <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>

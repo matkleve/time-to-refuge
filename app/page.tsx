@@ -176,7 +176,7 @@ export default function Home() {
     <AppShell>
       <div
         className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
-        style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
+        style={{ paddingTop: "max(8px, env(safe-area-inset-top))" }}
       >
         <button
           type="button"
