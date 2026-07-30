@@ -15,11 +15,6 @@ export function formatTimestamp(ts: number | null): string {
   return `${time}.${ms}`;
 }
 
-export function formatTimeShort(ts: number | null): string {
-  if (ts === null) return "—";
-  return formatClock(new Date(ts)).time;
-}
-
 export function formatDateForFile(ts: number | null): string {
   if (ts === null) return "";
   return new Date(ts).toISOString();

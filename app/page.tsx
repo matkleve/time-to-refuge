@@ -11,7 +11,7 @@ import {
 } from "@/lib/types";
 import { loadPeople, savePeople, loadLog, saveLog } from "@/lib/storage";
 import { downloadCsv } from "@/lib/csv";
-import PersonCard from "@/components/PersonCard";
+import PersonPane from "@/components/PersonPane";
 import PeopleSheet from "@/components/PeopleSheet";
 import HistoryPanel from "@/components/HistoryPanel";
 import QuickLogView from "@/components/QuickLogView";
@@ -245,9 +245,29 @@ export default function Home() {
             <div className="text-center">
               <p className="text-sm font-semibold text-gray-900">Time to Refuge</p>
               {people.length > 0 && (
-                <p className="text-xs text-gray-400">
-                  {index + 1} / {people.length}
-                </p>
+                <div className="flex items-center justify-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => goTo(index - 1)}
+                    disabled={index === 0}
+                    aria-label="Previous person"
+                    className="rounded px-1 leading-none text-gray-400 hover:text-gray-700 disabled:opacity-20 active:scale-90"
+                  >
+                    ‹
+                  </button>
+                  <p className="text-xs tabular-nums text-gray-400">
+                    {index + 1} / {people.length}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => goTo(index + 1)}
+                    disabled={index === people.length - 1}
+                    aria-label="Next person"
+                    className="rounded px-1 leading-none text-gray-400 hover:text-gray-700 disabled:opacity-20 active:scale-90"
+                  >
+                    ›
+                  </button>
+                </div>
               )}
             </div>
 
@@ -300,7 +320,7 @@ export default function Home() {
                 style={{ transform: `translateX(-${index * 100}%)` }}
               >
                 {people.map((p) => (
-                  <PersonCard
+                  <PersonPane
                     key={p.id}
                     person={p}
                     onCapture={(phase) => handleCapture(p.id, phase)}
@@ -309,27 +329,6 @@ export default function Home() {
                   />
                 ))}
               </div>
-
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => goTo(index - 1)}
-                  aria-label="Previous person"
-                  className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md hover:bg-gray-100 active:scale-95"
-                >
-                  ‹
-                </button>
-              )}
-              {index < people.length - 1 && (
-                <button
-                  type="button"
-                  onClick={() => goTo(index + 1)}
-                  aria-label="Next person"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md hover:bg-gray-100 active:scale-95"
-                >
-                  ›
-                </button>
-              )}
             </div>
           )}
 
