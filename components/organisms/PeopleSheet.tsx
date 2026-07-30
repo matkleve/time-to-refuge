@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Person } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
-import PersonCard from "./PersonCard";
+import { PersonCard } from "./PersonCard";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -15,7 +15,7 @@ interface PeopleSheetProps {
   onClose: () => void;
 }
 
-export default function PeopleSheet({
+export function PeopleSheet({
   people,
   currentId,
   onAdd,
@@ -37,12 +37,12 @@ export default function PeopleSheet({
 
   return (
     <div className="absolute inset-0 z-30 flex flex-col bg-white">
-      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-        <h2 className="text-lg font-semibold text-gray-900">People</h2>
+      <div className="flex items-center justify-between border-b border-line px-5 py-4">
+        <h2 className="text-lg font-semibold text-ink">People</h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 active:scale-95"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink hover:bg-card active:scale-95"
         >
           Close
         </button>
@@ -71,6 +71,8 @@ export default function PeopleSheet({
             {adding ? (
               <div className="flex gap-2 rounded-2xl border border-flagblue-500 bg-flagblue-50 p-2">
                 <input
+                  /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
+                     appears on an explicit user action, so focusing it is expected. */
                   autoFocus
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -79,7 +81,7 @@ export default function PeopleSheet({
                     if (e.key === "Escape") setAdding(false);
                   }}
                   placeholder="Person's name"
-                  className="flex-1 rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-flagblue-500 focus:outline-none"
+                  className="flex-1 rounded-xl border border-line bg-white px-3 py-2 text-ink placeholder:text-muted/70 focus:border-flagblue-500 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -93,7 +95,7 @@ export default function PeopleSheet({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 px-4 py-3.5 text-gray-500 hover:border-flagblue-400 hover:text-flagblue-600 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line px-4 py-3.5 text-muted hover:border-flagblue-400 hover:text-flagblue-600 active:scale-95"
               >
                 <span className="text-lg leading-none">+</span> Add person
               </button>

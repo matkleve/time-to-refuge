@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Check } from "lucide-react";
 
 type Status = "idle" | "checking" | "ok" | "denied" | "error";
 
@@ -19,7 +20,7 @@ function currentOffset(): string {
   return `UTC${sign}${h}:${m}`;
 }
 
-export default function LocationCheck() {
+export function LocationCheck() {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [info, setInfo] = useState<LocationInfo | null>(null);
@@ -83,32 +84,30 @@ export default function LocationCheck() {
         aria-label="Confirm current time and location"
         className="flex h-8 w-8 items-center justify-center rounded-full border border-saffron-500 bg-white text-saffron-600 shadow-md hover:bg-saffron-50 active:scale-95 transition-transform"
       >
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <Check className="h-4 w-4" strokeWidth={2.5} />
       </button>
 
       {open && (
-        <div className="absolute bottom-11 right-0 z-20 w-64 rounded-xl border border-gray-200 bg-white p-3 text-left shadow-xl">
+        <div className="absolute bottom-11 right-0 z-20 w-64 rounded-xl border border-line bg-white p-3 text-left shadow-xl">
           <p className="mb-1 text-[11px] uppercase tracking-wide text-saffron-600">
             Time accuracy check
           </p>
           {status === "checking" && (
-            <p className="text-sm text-gray-600">Locating…</p>
+            <p className="text-sm text-muted">Locating…</p>
           )}
           {(status === "ok" || status === "denied") && info && (
             <div className="space-y-1 text-sm">
-              <p className="text-gray-900">{info.place}</p>
-              <p className="text-gray-600">
+              <p className="text-ink">{info.place}</p>
+              <p className="text-muted">
                 {info.timezone} · {info.offset}
               </p>
-              <p className="text-[11px] text-gray-400">
+              <p className="text-[11px] text-muted/60">
                 The clock uses this device&apos;s system time for the detected timezone above.
               </p>
             </div>
           )}
           {status === "error" && (
-            <p className="text-sm text-gray-600">Location isn&apos;t available on this device.</p>
+            <p className="text-sm text-muted">Location isn&apos;t available on this device.</p>
           )}
         </div>
       )}

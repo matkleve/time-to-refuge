@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Person, PHASES, PHASE_LABELS, Phase } from "@/lib/types";
 import { formatTimestamp } from "@/lib/format";
-import SwipeToAction from "./SwipeToAction";
+import { cn } from "@/lib/utils";
+import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
 interface PersonFieldsProps {
   person: Person;
@@ -13,7 +14,7 @@ interface PersonFieldsProps {
   readOnly?: boolean;
 }
 
-export default function PersonFields({
+export function PersonFields({
   person,
   onClear,
   target = null,
@@ -42,18 +43,20 @@ export default function PersonFields({
         const isTarget = target === phase;
         const asking = confirmPhase === phase;
         // Rows stay white so they read clearly against the card's fill.
-        const rowClassName = `no-select bg-white transition-shadow
-          ${filled ? "shadow-sm" : ""}
-          ${isTarget ? "ring-2 ring-flagblue-500/70" : ""}`;
+        const rowClassName = cn(
+          "no-select bg-white transition-shadow",
+          filled && "shadow-sm",
+          isTarget && "ring-2 ring-flagblue-500/70",
+        );
 
         const content = asking ? (
           <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-sm text-gray-700">Reset {PHASE_LABELS[phase]}?</span>
+            <span className="text-sm text-ink">Reset {PHASE_LABELS[phase]}?</span>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setConfirmPhase(null)}
-                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 active:scale-95"
+                className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted active:scale-95"
               >
                 Cancel
               </button>
@@ -74,17 +77,26 @@ export default function PersonFields({
             type="button"
             onClick={() => handleRowClick(phase)}
             disabled={readOnly}
-            className={`flex w-full items-center justify-between px-4 text-left ${
-              readOnly ? "py-2.5" : "py-3.5 hover:bg-black/[0.02]"
-            }`}
+            className={cn(
+              "flex w-full items-center justify-between px-4 text-left",
+              readOnly ? "py-2.5" : "py-3.5 hover:bg-black/[0.02]",
+            )}
           >
-            <span className={`font-medium ${readOnly ? "text-sm" : "text-lg"} ${filled ? "text-gray-900" : "text-gray-400"}`}>
+            <span
+              className={cn(
+                "font-display font-medium",
+                readOnly ? "text-sm" : "text-lg",
+                filled ? "text-ink" : "text-muted/50",
+              )}
+            >
               {PHASE_LABELS[phase]}
             </span>
             <span
-              className={`font-mono tabular-nums ${readOnly ? "text-sm" : "text-lg"} ${
-                filled ? "text-saffron-600" : "text-gray-300"
-              }`}
+              className={cn(
+                "font-mono tabular-nums",
+                readOnly ? "text-sm" : "text-lg",
+                filled ? "text-saffron-600" : "text-line",
+              )}
             >
               {formatTimestamp(person[phase])}
             </span>
@@ -93,7 +105,7 @@ export default function PersonFields({
 
         if (readOnly) {
           return (
-            <div key={phase} className={`overflow-hidden rounded-2xl ${rowClassName}`}>
+            <div key={phase} className={cn("overflow-hidden rounded-2xl", rowClassName)}>
               {content}
             </div>
           );

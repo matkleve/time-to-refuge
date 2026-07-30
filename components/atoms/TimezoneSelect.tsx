@@ -38,15 +38,15 @@ interface TimezoneSelectProps {
   onChange: (tz: string) => void;
 }
 
-export default function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
-  const zones = useMemo(getTimezones, []);
+export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
+  const zones = useMemo(() => getTimezones(), []);
 
   return (
     <select
       value={value}
       onClick={(e) => e.stopPropagation()}
       onChange={(e) => onChange(e.target.value)}
-      className="max-w-[55vw] rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm text-gray-900 focus:border-flagblue-500 focus:outline-none"
+      className="max-w-[55vw] rounded-lg border border-line bg-white px-2.5 py-1.5 text-sm text-ink focus:border-flagblue-500 focus:outline-none"
     >
       {zones.map((z) => (
         <option key={z} value={z}>

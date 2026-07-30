@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Person, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
-import LiveClockButton from "./LiveClockButton";
-import PersonCard from "./PersonCard";
+import { cn } from "@/lib/utils";
+import { LiveClockButton } from "@/components/atoms/LiveClockButton";
+import { PersonCard } from "./PersonCard";
 
 interface RefugeViewProps {
   people: Person[];
@@ -30,6 +32,7 @@ function GhostNav({
   onClick: () => void;
 }) {
   const prev = direction === "prev";
+  const Icon = prev ? ChevronLeft : ChevronRight;
   return (
     <button
       type="button"
@@ -37,18 +40,17 @@ function GhostNav({
       disabled={!available}
       aria-hidden={!available}
       aria-label={prev ? "Previous person" : "Next person"}
-      className={`shrink-0 rounded-full p-2 text-gray-400 transition-opacity hover:bg-gray-100 hover:text-gray-700 active:scale-90 ${
-        available ? "" : "pointer-events-none opacity-0"
-      }`}
+      className={cn(
+        "shrink-0 rounded-full p-2 text-muted/70 transition-opacity hover:bg-black/[0.05] hover:text-ink active:scale-90",
+        !available && "pointer-events-none opacity-0",
+      )}
     >
-      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d={prev ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <Icon className="h-6 w-6" />
     </button>
   );
 }
 
-export default function RefugeView({
+export function RefugeView({
   people,
   index,
   onIndexChange,

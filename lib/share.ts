@@ -1,34 +1,46 @@
-import { Person, PHASES, PHASE_LABELS } from "./types";
-import { formatTimestamp } from "./format";
+import { Person } from "./types";
+import { renderPersonCardPng } from "./card-image";
 
-export function buildShareText(person: Person): string {
-  const lines = PHASES.map((phase) => `${PHASE_LABELS[phase]}: ${formatTimestamp(person[phase])}`);
-  return `${person.name} took refuge in the Three Jewels\n\n${lines.join("\n")}`;
+export type ShareResult = "shared" | "downloaded" | "cancelled" | "unavailable";
+
+function slugify(value: string): string {
+  return (
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "person"
+  );
 }
 
-export type ShareResult = "shared" | "copied" | "cancelled" | "unavailable";
-
+/**
+ * Shares the person's card as a PNG through the OS share sheet, falling back to
+ * downloading the image where the Web Share API can't take files (desktop
+ * browsers, and iOS Safari over plain HTTP).
+ */
 export async function sharePerson(person: Person): Promise<ShareResult> {
-  const text = buildShareText(person);
+  const blob = await renderPersonCardPng(person);
+  if (!blob) return "unavailable";
 
-  if (typeof navigator.share === "function") {
+  const filename = `refuge-${slugify(person.name)}.png`;
+  const file = new File([blob], filename, { type: "image/png" });
+
+  if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ title: "Time to Refuge", text });
+      await navigator.share({ files: [file], title: `${person.name} — Time to Refuge` });
       return "shared";
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return "cancelled";
-      // fall through to clipboard fallback for any other failure
+      // Any other failure falls through to the download path below.
     }
   }
 
-  if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return "copied";
-    } catch {
-      return "unavailable";
-    }
-  }
-
-  return "unavailable";
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  return "downloaded";
 }

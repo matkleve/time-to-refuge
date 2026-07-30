@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
-import TimezoneSelect from "./TimezoneSelect";
-import QuickLogButton from "./QuickLogButton";
-import SwipeToAction from "./SwipeToAction";
+import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
+import { QuickLogButton } from "@/components/atoms/QuickLogButton";
+import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
-export default function QuickLogView() {
+export function QuickLogView() {
   const [ready, setReady] = useState(false);
   const [entries, setEntries] = useState<QuickLogEntry[]>([]);
   const [tz, setTz] = useState("UTC");
@@ -41,23 +42,31 @@ export default function QuickLogView() {
   const sorted = [...entries].sort((a, b) => b.at - a.at);
 
   return (
+    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+       Pointer-only convenience layer so any tap on the page logs a time. The
+       keyboard-accessible equivalent is the real <button> in QuickLogButton
+       below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
-      <div className="border-b border-gray-200 px-4 py-3">
+      <div className="border-b border-line px-4 py-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500">{entries.length} logged</span>
+          <span className="text-sm text-muted">{entries.length} logged</span>
           {confirmingReset ? (
-            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-              <span className="text-sm text-gray-700">Clear all?</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-ink">Clear all?</span>
               <button
                 type="button"
-                onClick={() => setConfirmingReset(false)}
-                className="rounded-lg border border-gray-300 px-2.5 py-1 text-xs text-gray-600 active:scale-95"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirmingReset(false);
+                }}
+                className="rounded-lg border border-line px-2.5 py-1 text-xs text-muted active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setEntries([]);
                   setConfirmingReset(false);
                 }}
@@ -80,14 +89,14 @@ export default function QuickLogView() {
             </button>
           )}
         </div>
-        <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+        <div className="mt-2">
           <TimezoneSelect value={tz} onChange={setTz} />
         </div>
       </div>
 
       <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <p className="text-center text-sm text-gray-400">Tap anywhere to log a time.</p>
+          <p className="text-center text-sm text-muted/70">Tap anywhere to log a time.</p>
         ) : (
           sorted.map((entry, i) => {
             const { date, time, ms } = formatInZone(entry.at, tz);
@@ -96,14 +105,14 @@ export default function QuickLogView() {
                 <SwipeToAction
                   onSwipe={() => deleteEntry(entry.id)}
                   label="Delete"
-                  className="border border-gray-200 bg-gray-50"
+                  className="border border-line bg-card"
                 >
                   <div className="flex items-center justify-between py-2.5 pl-4 pr-2">
-                    <span className="text-xs text-gray-400">#{sorted.length - i}</span>
+                    <span className="text-xs text-muted/70">#{sorted.length - i}</span>
                     <span className="flex items-center gap-2">
-                      <span className="font-mono tabular-nums text-gray-900">
+                      <span className="font-mono tabular-nums text-ink">
                         {date} · {time}
-                        <span className="text-gray-400">.{ms}</span>
+                        <span className="text-muted/70">.{ms}</span>
                       </span>
                       <button
                         type="button"
@@ -112,11 +121,9 @@ export default function QuickLogView() {
                           deleteEntry(entry.id);
                         }}
                         aria-label="Delete entry"
-                        className="rounded-md p-1 text-gray-300 hover:bg-red-50 hover:text-red-500 active:scale-95"
+                        className="rounded-md p-1 text-line hover:bg-red-50 hover:text-red-500 active:scale-95"
                       >
-                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
-                        </svg>
+                        <X className="h-3.5 w-3.5" strokeWidth={2.5} />
                       </button>
                     </span>
                   </div>
@@ -128,7 +135,7 @@ export default function QuickLogView() {
       </div>
 
       <div className="px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
-        <QuickLogButton flash={flash} />
+        <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>
   );

@@ -1,23 +1,75 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-html,
-body {
-  height: 100%;
-  overscroll-behavior-y: none;
+/*
+ * Design tokens — the single source of truth for colour and type.
+ *
+ * Tailwind v4 is CSS-first: every `--color-*` here becomes a utility
+ * (`--color-saffron-100` → `bg-saffron-100`), so there is no JS config file.
+ * Add a shade here before using it — an undefined shade fails silently as a
+ * dropped declaration rather than a build error.
+ */
+@theme {
+  /* --- Type ---
+   * Spectral (serif) carries names and headings: this is a record of a
+   * ceremony, and the serif reads calmer than a UI sans at display size.
+   * Inter handles interface text. JetBrains Mono is for timestamps only —
+   * picked for genuinely tabular figures, so a running clock doesn't jitter.
+   */
+  --font-display: var(--font-spectral), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* --- Saffron: the recorded time, completion, the Quick Log --- */
+  --color-saffron-50: #fef6e7;
+  --color-saffron-100: #fbe8bf;
+  --color-saffron-200: #f7d489;
+  --color-saffron-300: #f8bd5c;
+  --color-saffron-400: #f5a623;
+  --color-saffron-500: #e8930f;
+  --color-saffron-600: #c9740a;
+  --color-saffron-700: #a05c08;
+
+  /* --- Flag blue: the armed/next action, primary controls --- */
+  --color-flagblue-50: #eaf1fd;
+  --color-flagblue-400: #4a77db;
+  --color-flagblue-500: #2456c9;
+  --color-flagblue-600: #1a41a3;
+  --color-flagblue-700: #153582;
+
+  /* --- Ink & surfaces --- */
+  --color-ink: #1f1b16;
+  --color-muted: #6b6259;
+  --color-line: #e8e4de;
+  /* Person-card fills. Cards are filled, never outlined. */
+  --color-card: #f3f1ee;
+  --color-card-current: var(--color-saffron-100);
 }
 
-body {
-  background-color: #ffffff;
-  color: #171512;
+@layer base {
+  html,
+  body {
+    height: 100%;
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    background-color: white;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.no-select {
+@utility no-select {
   user-select: none;
   -webkit-user-select: none;
 }

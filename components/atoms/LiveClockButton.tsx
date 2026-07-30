@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
-import LocationCheck from "./LocationCheck";
+import { cn } from "@/lib/utils";
+import { LocationCheck } from "./LocationCheck";
 
 interface LiveClockButtonProps {
   onCapture: () => void;
@@ -10,10 +11,10 @@ interface LiveClockButtonProps {
   label: string;
 }
 
-export default function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProps) {
+export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProps) {
   const [now, setNow] = useState<Date | null>(null);
   const [flash, setFlash] = useState(false);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const tick = () => {
@@ -42,17 +43,31 @@ export default function LiveClockButton({ onCapture, armed, label }: LiveClockBu
         type="button"
         onClick={handleClick}
         disabled={!armed}
-        className={`no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl border transition-all
-          ${armed ? "border-flagblue-700 bg-gradient-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]" : "border-gray-200 bg-gray-100"}
-          ${flash ? "ring-4 ring-saffron-400" : ""}
-          py-6 shadow-lg`}
-        style={{ minHeight: "9.5rem" }}
+        className={cn(
+          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg transition-all",
+          armed
+            ? "bg-linear-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]"
+            : "bg-card",
+          flash && "ring-4 ring-saffron-400",
+        )}
       >
-        <span className={`text-4xl font-mono font-semibold tabular-nums tracking-wide ${armed ? "text-white" : "text-gray-500"}`}>
+        <span
+          className={cn(
+            "font-mono text-4xl font-semibold tabular-nums tracking-wide",
+            armed ? "text-white" : "text-muted",
+          )}
+        >
           {time}
-          <span className={armed ? "text-xl text-white/60" : "text-xl text-gray-400"}>.{ms}</span>
+          <span className={cn("text-xl", armed ? "text-white/60" : "text-muted/60")}>.{ms}</span>
         </span>
-        <span className={`text-xs uppercase tracking-[0.2em] ${armed ? "text-white/80" : "text-gray-500"}`}>{label}</span>
+        <span
+          className={cn(
+            "text-xs tracking-[0.2em] uppercase",
+            armed ? "text-white/80" : "text-muted",
+          )}
+        >
+          {label}
+        </span>
       </button>
       <div className="absolute -top-3 -right-2">
         <LocationCheck />

@@ -11,10 +11,13 @@ import {
 } from "@/lib/types";
 import { loadPeople, savePeople, loadLog, saveLog } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
-import RefugeView from "@/components/RefugeView";
-import PeopleSheet from "@/components/PeopleSheet";
-import HistoryPanel from "@/components/HistoryPanel";
-import QuickLogView from "@/components/QuickLogView";
+import { Clock, Download, Undo2, User } from "lucide-react";
+import { AppShell } from "@/components/AppShell";
+import { RefugeView } from "@/components/organisms/RefugeView";
+import { PeopleSheet } from "@/components/organisms/PeopleSheet";
+import { HistoryPanel } from "@/components/organisms/HistoryPanel";
+import { QuickLogView } from "@/components/organisms/QuickLogView";
+import { cn } from "@/lib/utils";
 
 type View = "refuge" | "quicklog";
 
@@ -169,27 +172,28 @@ export default function Home() {
   if (!ready) return null;
 
   return (
-    <div className="min-h-[100dvh] bg-white md:flex md:min-h-[100dvh] md:items-center md:justify-center md:bg-gradient-to-br md:from-flagblue-50 md:via-white md:to-saffron-50 md:p-8">
-    <main className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col overflow-hidden bg-white md:h-[850px] md:max-h-[92vh] md:rounded-[2rem] md:border md:border-gray-200 md:shadow-2xl">
+    <AppShell>
       <div
-        className="flex shrink-0 gap-1 border-b border-gray-200 px-3 pb-2"
+        className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <button
           type="button"
           onClick={() => setView("refuge")}
-          className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
-            view === "refuge" ? "bg-flagblue-600 text-white" : "text-gray-500 hover:bg-gray-100"
-          }`}
+          className={cn(
+            "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
+            view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-black/[0.04]",
+          )}
         >
           Refuge
         </button>
         <button
           type="button"
           onClick={() => setView("quicklog")}
-          className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
-            view === "quicklog" ? "bg-saffron-500 text-white" : "text-gray-500 hover:bg-gray-100"
-          }`}
+          className={cn(
+            "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
+            view === "quicklog" ? "bg-saffron-500 text-white" : "text-muted hover:bg-black/[0.04]",
+          )}
         >
           Quick Log
         </button>
@@ -199,18 +203,15 @@ export default function Home() {
         <QuickLogView />
       ) : (
         <>
-          <header className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3">
+          <header className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => setHistoryOpen(true)}
                 aria-label="History"
-                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
+                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink active:scale-95"
               >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <Clock className="h-5 w-5" />
               </button>
               <button
                 type="button"
@@ -218,14 +219,11 @@ export default function Home() {
                 disabled={undoStack.length === 0}
                 aria-label="Undo last action"
                 title={undoStack[undoStack.length - 1]?.message}
-                className="relative rounded-lg p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 active:scale-95"
+                className="relative rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink disabled:opacity-30 active:scale-95"
               >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 14 4 9l5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M4 9h10a6 6 0 1 1 0 12h-1" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <Undo2 className="h-5 w-5" />
                 {undoStack.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-flagblue-600 px-1 text-[10px] font-semibold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-flagblue-600 px-1 text-[10px] font-semibold text-white">
                     {undoStack.length}
                   </span>
                 )}
@@ -233,9 +231,9 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <p className="text-sm font-semibold text-gray-900">Time to Refuge</p>
+              <p className="font-display text-sm font-semibold text-ink">Time to Refuge</p>
               {people.length > 0 && (
-                <p className="text-xs tabular-nums text-gray-400">
+                <p className="text-xs tabular-nums text-muted/70">
                   {index + 1} / {people.length}
                 </p>
               )}
@@ -247,33 +245,28 @@ export default function Home() {
                 onClick={() => downloadCsv(people)}
                 disabled={people.length === 0}
                 aria-label="Export CSV"
-                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 active:scale-95"
+                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink disabled:opacity-30 active:scale-95"
               >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <Download className="h-5 w-5" />
               </button>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
                 aria-label="Add or manage people"
-                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
+                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink active:scale-95"
               >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6 8-6s8 2 8 6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <User className="h-5 w-5" />
               </button>
             </div>
           </header>
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="text-gray-500">Add the people taking refuge to begin.</p>
+              <p className="text-muted">Add the people taking refuge to begin.</p>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
-                className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-5 py-2.5 font-medium text-white hover:bg-flagblue-700 active:scale-95"
+                className="rounded-xl bg-flagblue-600 px-5 py-2.5 font-medium text-white transition-colors hover:bg-flagblue-700 active:scale-95"
               >
                 Add a person
               </button>
@@ -306,7 +299,6 @@ export default function Home() {
           {historyOpen && <HistoryPanel log={log} onClose={() => setHistoryOpen(false)} />}
         </>
       )}
-    </main>
-    </div>
+    </AppShell>
   );
 }
