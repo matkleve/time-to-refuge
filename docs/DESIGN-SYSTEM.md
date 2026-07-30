@@ -104,6 +104,11 @@ gets caught.
   `rounded-3xl` cards · `rounded-4xl` the desktop shell.
 - Shadows use Tailwind's steps: `shadow-sm` (a filled row) · `shadow-lg`
   (record button) · `shadow-2xl` (popovers).
+- **The desktop backdrop** (`public/backdrop.jpg`, behind the phone-shaped
+  card from `md` up — mobile is full-bleed and never shows it) is pre-blurred
+  and lightened at build time, not with a CSS filter, so it stays decorative
+  rather than something that could ever need text laid over it at a passing
+  contrast ratio.
 
 ## 4. Controls
 
