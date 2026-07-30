@@ -183,16 +183,27 @@
  * rows, the record button — anything that IS the recorded data stays
  * unambiguously solid, never this).
  *
- * 85% white, not something lower: blended against even a pure-black pixel
- * behind it, that's still enough to clear the contrast this app already
- * requires everywhere else (see the same reasoning for LocationCheck's
- * popover) — and the backdrop photo itself never gets remotely that dark,
- * so the real-world margin is wider still. Components add their own border
- * and shadow on top of this from the existing scale in §3 — a bar that
- * already has a hairline `border-b` doesn't need a second border framing it.
+ * TO CHANGE THE GLASS EFFECT: everything is right here, three values.
+ *   - opacity (0.70)  — how see-through the white fill is. The floor for
+ *     ink text to hold 4.5:1 against a worst-case pure-black photo pixel is
+ *     ~0.51 (computed, not guessed — see `npm run a11y:contrast`'s method);
+ *     0.70 keeps a real margin (8.1:1 actual) while staying visibly
+ *     translucent. Don't drop below ~0.55 without redoing that math.
+ *   - blur (24px)     — how soft the photo gets. Larger = softer, calmer,
+ *     less legible detail behind it.
+ *   - saturate (1.8)  — how vivid the colour bleeding through is. 1 = no
+ *     change, >1 = punchier than the source photo.
+ * Every glass surface in the app inherits from this one place.
+ *
+ * Only the standard `backdrop-filter` is written here — don't add a manual
+ * `-webkit-backdrop-filter` alongside it. Tailwind's build (Lightning CSS)
+ * generates that prefix itself from the standard property; writing both by
+ * hand made it drop the standard one from the compiled output, so only
+ * Safari's prefixed version survived and the effect silently vanished
+ * everywhere else. Check `.next/static/css/*.css` for `.glass{` after
+ * touching this if you're ever unsure it's still emitting both.
  */
 @utility glass {
-  background-color: rgb(255 255 255 / 0.85);
-  backdrop-filter: blur(20px) saturate(1.7);
-  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+  background-color: rgb(255 255 255 / 0.70);
+  backdrop-filter: blur(24px) saturate(1.8);
 }

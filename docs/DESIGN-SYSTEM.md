@@ -118,11 +118,31 @@ gets caught.
 
 The `glass` utility (`app/globals.css`) is the frosted material for floating
 chrome sitting above the backdrop photo — the iOS-style effect: `bg-white`
-at 85% opacity plus `backdrop-blur` and a saturation boost, so whatever's
+at 70% opacity plus `backdrop-blur` and a saturation boost, so whatever's
 behind it (the photo, a dimmed dialog scrim) shows through softened and a
 little more vivid, not just dimmed. It is **not** a replacement for "cards
 are filled" above — it's a second, distinct material for a different job,
-and the two are not interchangeable:
+and the two are not interchangeable.
+
+**To change how strong the effect looks, there is exactly one place to
+edit**: the `@utility glass` block in `app/globals.css`. It's three values,
+each documented right there — opacity, blur radius, saturation — and every
+glass surface in the app inherits from that single definition, so there's
+nothing to hunt for across components. The opacity floor (~0.51, computed
+against ink text over a worst-case pure-black photo pixel) is written next
+to it; 0.70 is a deliberate choice above that floor, not the floor itself,
+so there's real room to push it lower for a more see-through look without
+redoing the contrast math yourself.
+
+That block is also where a real bug lived: writing both `backdrop-filter`
+and a manual `-webkit-backdrop-filter` made the build tool drop the
+standard property from the compiled CSS, so the effect only worked in
+Safari and was invisible everywhere else — for weeks, it looked like
+"nothing has a glass effect" when the code all looked right. Only the
+standard property is written now; the build generates the vendor-prefixed
+one itself. If the effect ever seems to vanish again, check the compiled
+output first (`grep '.glass{' .next/static/css/*.css` after a build) before
+assuming the component markup is wrong.
 
 | Gets glass | Stays filled (never glass) |
 | --- | --- |
