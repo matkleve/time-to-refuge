@@ -1,25 +1,47 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — the single source of truth for colour and type.
+ * Design tokens — the single source of truth.
  *
- * Tailwind v4 is CSS-first: every `--color-*` here becomes a utility
- * (`--color-saffron-100` → `bg-saffron-100`), so there is no JS config file.
- * Add a shade here before using it — an undefined shade fails silently as a
- * dropped declaration rather than a build error.
+ * Tailwind v4 is CSS-first: every token here becomes a utility
+ * (`--color-saffron-100` → `bg-saffron-100`, `--radius-card` → `rounded-card`),
+ * so there is no JS config file. Add a token here before using it — an
+ * undefined one fails silently as a dropped declaration, not a build error.
+ *
+ * Colour pairings are verified by `npm run a11y:contrast`.
  */
 @theme {
-  /* --- Type ---
-   * Spectral (serif) carries names and headings: this is a record of a
-   * ceremony, and the serif reads calmer than a UI sans at display size.
-   * Inter handles interface text. JetBrains Mono is for timestamps only —
-   * picked for genuinely tabular figures, so a running clock doesn't jitter.
+  /* ── Type ─────────────────────────────────────────────────────────────
+   * Three families, each with a job:
+   *   display — Spectral. Names and phase labels. This is a record of a
+   *             ceremony; a serif reads calmer than a UI sans at that size.
+   *   sans    — Inter. Everything functional.
+   *   mono    — JetBrains Mono. Times only, for genuinely tabular figures so
+   *             a running clock doesn't jitter as digits change.
    */
   --font-display: var(--font-spectral), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 
-  /* --- Saffron: the recorded time, completion, the Quick Log --- */
+  /* Type scale — six steps, and no ad-hoc sizes outside them. */
+  --text-clock: 2.25rem;        /* the hero clock */
+  --text-clock--line-height: 1.1;
+  --text-display: 1.5rem;       /* person name, focused card */
+  --text-display--line-height: 1.2;
+  --text-title: 1.0625rem;      /* panel titles, name in the overview */
+  --text-title--line-height: 1.3;
+  --text-body: 0.9375rem;       /* default UI text */
+  --text-body--line-height: 1.45;
+  --text-label: 0.8125rem;      /* meta, counters, secondary rows */
+  --text-label--line-height: 1.4;
+  --text-caption: 0.6875rem;    /* tracked uppercase captions */
+  --text-caption--line-height: 1.3;
+
+  /* ── Colour ───────────────────────────────────────────────────────────
+   * Saffron marks a *recorded* time and the Quick Log.
+   * Flag blue marks the *next* action and primary controls.
+   * Both are taken from the Buddhist flag.
+   */
   --color-saffron-50: #fef6e7;
   --color-saffron-100: #fbe8bf;
   --color-saffron-200: #f7d489;
@@ -27,22 +49,44 @@
   --color-saffron-400: #f5a623;
   --color-saffron-500: #e8930f;
   --color-saffron-600: #c9740a;
-  --color-saffron-700: #a05c08;
+  --color-saffron-700: #8f5207; /* time text — needs 4.5:1 on white and card */
 
-  /* --- Flag blue: the armed/next action, primary controls --- */
   --color-flagblue-50: #eaf1fd;
   --color-flagblue-400: #4a77db;
   --color-flagblue-500: #2456c9;
   --color-flagblue-600: #1a41a3;
   --color-flagblue-700: #153582;
 
-  /* --- Ink & surfaces --- */
+  --color-danger-50: #fdeceb;
+  --color-danger-500: #d92d20;
+  --color-danger-600: #b42318;
+
+  /* Ink. `line` is for hairlines ONLY — never as a foreground colour.
+   * Using it on icons is what made them invisible (1.12:1). */
   --color-ink: #1f1b16;
-  --color-muted: #6b6259;
-  --color-line: #e8e4de;
-  /* Person-card fills. Cards are filled, never outlined. */
+  --color-muted: #5f574e;   /* secondary text, and icons at rest */
+  --color-subtle: #7d7469;  /* tertiary text: counters, empty values */
+  --color-line: #ddd8d1;    /* hairlines and dividers */
+
+  /* Surfaces. Cards are filled, never outlined. */
   --color-card: #f3f1ee;
-  --color-card-current: var(--color-saffron-100);
+  --color-card-current: #fbe8bf;
+
+  /* ── Radius ───────────────────────────────────────────────────────── */
+  --radius-control: 0.75rem;
+  --radius-row: 1rem;
+  --radius-card: 1.5rem;
+
+  /* ── Elevation ────────────────────────────────────────────────────── */
+  --shadow-row: 0 1px 2px rgb(31 27 22 / 0.06);
+  --shadow-raised: 0 4px 16px rgb(31 27 22 / 0.12);
+  --shadow-panel: 0 12px 40px rgb(31 27 22 / 0.16);
+
+  /* ── Motion ───────────────────────────────────────────────────────── */
+  --ease-out-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;   /* press feedback */
+  --duration-ui: 180ms;     /* colour/opacity changes */
+  --duration-slide: 280ms;  /* card carousel */
 }
 
 @layer base {
@@ -56,12 +100,23 @@
     background-color: white;
     color: var(--color-ink);
     font-family: var(--font-sans);
+    font-size: var(--text-body);
     -webkit-font-smoothing: antialiased;
   }
 
   h1,
   h2 {
     font-family: var(--font-display);
+  }
+
+  /*
+   * One focus ring for the whole app. There was none before, so keyboard
+   * focus fell back to the browser default and vanished against the filled
+   * cards and the coloured record button (WCAG 2.4.7).
+   */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-flagblue-600);
+    outline-offset: 2px;
   }
 
   * {

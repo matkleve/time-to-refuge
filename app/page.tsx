@@ -11,7 +11,8 @@ import {
 } from "@/lib/types";
 import { loadPeople, savePeople, loadLog, saveLog } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
-import { Clock, Download, Undo2, User } from "lucide-react";
+import { Download, History, Undo2, Users } from "lucide-react";
+import { IconButton } from "@/components/atoms/IconButton";
 import { AppShell } from "@/components/AppShell";
 import { RefugeView } from "@/components/organisms/RefugeView";
 import { PeopleSheet } from "@/components/organisms/PeopleSheet";
@@ -181,8 +182,8 @@ export default function Home() {
           type="button"
           onClick={() => setView("refuge")}
           className={cn(
-            "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
-            view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-black/[0.04]",
+            "flex-1 rounded-control py-2 text-label font-medium transition-colors duration-(--duration-ui)",
+            view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-ink/[0.05]",
           )}
         >
           Refuge
@@ -191,8 +192,8 @@ export default function Home() {
           type="button"
           onClick={() => setView("quicklog")}
           className={cn(
-            "flex-1 rounded-lg py-2 text-sm font-medium transition-colors",
-            view === "quicklog" ? "bg-saffron-500 text-white" : "text-muted hover:bg-black/[0.04]",
+            "flex-1 rounded-control py-2 text-label font-medium transition-colors duration-(--duration-ui)",
+            view === "quicklog" ? "bg-saffron-400 text-ink" : "text-muted hover:bg-ink/[0.05]",
           )}
         >
           Quick Log
@@ -205,61 +206,42 @@ export default function Home() {
         <>
           <header className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
             <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setHistoryOpen(true)}
-                aria-label="History"
-                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink active:scale-95"
-              >
-                <Clock className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleUndo}
-                disabled={undoStack.length === 0}
-                aria-label="Undo last action"
-                title={undoStack[undoStack.length - 1]?.message}
-                className="relative rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink disabled:opacity-30 active:scale-95"
-              >
-                <Undo2 className="h-5 w-5" />
+              <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
+              <span className="relative inline-flex">
+                <IconButton
+                  icon={Undo2}
+                  label={undoStack[undoStack.length - 1]?.message ?? "Undo last action"}
+                  onClick={handleUndo}
+                  disabled={undoStack.length === 0}
+                />
                 {undoStack.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-flagblue-600 px-1 text-[10px] font-semibold text-white">
+                  <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[10px] font-semibold text-white tabular-nums">
                     {undoStack.length}
                   </span>
                 )}
-              </button>
+              </span>
             </div>
 
-            <p className="font-display text-sm font-semibold text-ink">Time to Refuge</p>
+            <p className="font-display text-title font-semibold text-ink">Time to Refuge</p>
 
             <div className="flex items-center gap-1">
-              <button
-                type="button"
+              <IconButton
+                icon={Download}
+                label="Export everyone as CSV"
                 onClick={() => downloadCsv(people)}
                 disabled={people.length === 0}
-                aria-label="Export CSV"
-                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink disabled:opacity-30 active:scale-95"
-              >
-                <Download className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setPeopleOpen(true)}
-                aria-label="Add or manage people"
-                className="rounded-lg p-2 text-muted transition-colors hover:bg-black/[0.05] hover:text-ink active:scale-95"
-              >
-                <User className="h-5 w-5" />
-              </button>
+              />
+              <IconButton icon={Users} label="People" onClick={() => setPeopleOpen(true)} />
             </div>
           </header>
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="text-muted">Add the people taking refuge to begin.</p>
+              <p className="text-body text-muted">Add the people taking refuge to begin.</p>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
-                className="rounded-xl bg-flagblue-600 px-5 py-2.5 font-medium text-white transition-colors hover:bg-flagblue-700 active:scale-95"
+                className="rounded-control bg-flagblue-600 px-5 py-2.5 text-body font-medium text-white shadow-raised transition-colors duration-(--duration-ui) hover:bg-flagblue-700 active:scale-95"
               >
                 Add a person
               </button>

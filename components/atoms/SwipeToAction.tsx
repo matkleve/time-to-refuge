@@ -23,10 +23,10 @@ export function SwipeToAction({
   const progress = Math.min(1, Math.abs(dragX) / 64);
 
   return (
-    <div className={cn("relative overflow-hidden rounded-2xl", className)}>
+    <div className={cn("relative overflow-hidden rounded-row", className)}>
       {!disabled && (
         <div
-          className="absolute inset-0 flex items-center justify-end bg-red-500 pr-6 text-sm font-semibold text-white"
+          className="absolute inset-0 flex items-center justify-end bg-danger-600 pr-6 text-label font-semibold text-white"
           style={{ opacity: progress }}
         >
           {label}
@@ -36,7 +36,7 @@ export function SwipeToAction({
         {...(disabled ? {} : handlers)}
         style={{
           transform: `translateX(${dragX}px)`,
-          transition: dragX === 0 ? "transform 150ms ease-out" : "none",
+          transition: dragX === 0 ? "transform var(--duration-ui) var(--ease-out-ui)" : "none",
         }}
       >
         {children}

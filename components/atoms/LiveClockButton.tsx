@@ -44,26 +44,27 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         onClick={handleClick}
         disabled={!armed}
         className={cn(
-          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg transition-all",
+          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-card py-6 shadow-raised",
+          "transition-all duration-(--duration-fast) ease-(--ease-out-ui)",
           armed
             ? "bg-linear-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]"
             : "bg-card",
-          flash && "ring-4 ring-saffron-400",
+          flash && "ring-4 ring-saffron-400",  // flashes the *other* accent
         )}
       >
         <span
           className={cn(
-            "font-mono text-4xl font-semibold tabular-nums tracking-wide",
+            "font-mono text-clock font-semibold tabular-nums tracking-wide",
             armed ? "text-white" : "text-muted",
           )}
         >
           {time}
-          <span className={cn("text-xl", armed ? "text-white/60" : "text-muted/60")}>.{ms}</span>
+          <span className={cn("text-display", armed ? "text-white/70" : "text-subtle")}>.{ms}</span>
         </span>
         <span
           className={cn(
-            "text-xs tracking-[0.2em] uppercase",
-            armed ? "text-white/80" : "text-muted",
+            "text-caption tracking-[0.2em] uppercase",
+            armed ? "text-white/85" : "text-muted",
           )}
         >
           {label}

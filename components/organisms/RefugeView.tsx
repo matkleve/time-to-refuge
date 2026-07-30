@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Person, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { PersonCard } from "./PersonCard";
 
@@ -19,10 +19,10 @@ interface RefugeViewProps {
 }
 
 /**
- * Ghost arrow beside the record button. When there's no person that way it goes
- * invisible rather than unmounting, so the record button never changes width.
+ * Person navigation. When there is nobody that way the button keeps its
+ * footprint and goes invisible, so the counter never shifts.
  */
-function GhostNav({
+function NavButton({
   direction,
   available,
   onClick,
@@ -32,21 +32,15 @@ function GhostNav({
   onClick: () => void;
 }) {
   const prev = direction === "prev";
-  const Icon = prev ? ChevronLeft : ChevronRight;
   return (
-    <button
-      type="button"
+    <IconButton
+      icon={prev ? ChevronLeft : ChevronRight}
+      label={prev ? "Previous person" : "Next person"}
       onClick={onClick}
       disabled={!available}
-      aria-hidden={!available}
-      aria-label={prev ? "Previous person" : "Next person"}
-      className={cn(
-        "shrink-0 rounded-full p-2 text-muted/70 transition-opacity hover:bg-black/[0.05] hover:text-ink active:scale-90",
-        !available && "pointer-events-none opacity-0",
-      )}
-    >
-      <Icon className="h-6 w-6" />
-    </button>
+      hideWhenDisabled
+      tone="neutral"
+    />
   );
 }
 
@@ -99,15 +93,15 @@ export function RefugeView({
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         {/* Position + navigation, directly above the card. */}
         <div className="flex shrink-0 items-center justify-center gap-1 pb-3">
-          <GhostNav
+          <NavButton
             direction="prev"
             available={index > 0}
             onClick={() => onIndexChange(index - 1)}
           />
-          <span className="min-w-14 text-center text-sm tabular-nums text-muted">
+          <span className="min-w-14 text-center text-label tabular-nums text-muted">
             {index + 1} / {people.length}
           </span>
-          <GhostNav
+          <NavButton
             direction="next"
             available={index < people.length - 1}
             onClick={() => onIndexChange(index + 1)}
@@ -117,7 +111,7 @@ export function RefugeView({
         {/* Only this track moves when swiping between people. */}
         <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div
-            className="flex w-full transition-transform duration-300 ease-out"
+            className="flex w-full transition-transform duration-(--duration-slide) ease-(--ease-out-ui)"
             style={{ transform: `translateX(-${index * 100}%)` }}
           >
             {people.map((p) => {

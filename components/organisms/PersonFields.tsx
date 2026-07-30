@@ -5,6 +5,7 @@ import { Person, PHASES, PHASE_LABELS, Phase } from "@/lib/types";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
+import { ConfirmInline } from "@/components/atoms/ConfirmInline";
 
 interface PersonFieldsProps {
   person: Person;
@@ -44,34 +45,21 @@ export function PersonFields({
         const asking = confirmPhase === phase;
         // Rows stay white so they read clearly against the card's fill.
         const rowClassName = cn(
-          "no-select bg-white transition-shadow",
-          filled && "shadow-sm",
-          isTarget && "ring-2 ring-flagblue-500/70",
+          "no-select bg-white transition-shadow duration-(--duration-ui)",
+          filled && "shadow-row",
+          isTarget && "ring-2 ring-flagblue-500",
         );
 
         const content = asking ? (
-          <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-sm text-ink">Reset {PHASE_LABELS[phase]}?</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setConfirmPhase(null)}
-                className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted active:scale-95"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onClear?.(phase);
-                  setConfirmPhase(null);
-                }}
-                className="rounded-lg border border-red-300 bg-red-50 px-3 py-1.5 text-sm text-red-600 active:scale-95"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
+          <ConfirmInline
+            message={`Reset ${PHASE_LABELS[phase]}?`}
+            confirmLabel={`Reset ${PHASE_LABELS[phase]}`}
+            onConfirm={() => {
+              onClear?.(phase);
+              setConfirmPhase(null);
+            }}
+            onCancel={() => setConfirmPhase(null)}
+          />
         ) : (
           <button
             type="button"
@@ -79,14 +67,14 @@ export function PersonFields({
             disabled={readOnly}
             className={cn(
               "flex w-full items-center justify-between px-4 text-left",
-              readOnly ? "py-2.5" : "py-3.5 hover:bg-black/[0.02]",
+              readOnly ? "py-2.5" : "py-3.5 hover:bg-ink/[0.03]",
             )}
           >
             <span
               className={cn(
                 "font-display font-medium",
-                readOnly ? "text-sm" : "text-lg",
-                filled ? "text-ink" : "text-muted/50",
+                readOnly ? "text-label" : "text-title",
+                filled ? "text-ink" : "text-subtle",
               )}
             >
               {PHASE_LABELS[phase]}
@@ -94,8 +82,8 @@ export function PersonFields({
             <span
               className={cn(
                 "font-mono tabular-nums",
-                readOnly ? "text-sm" : "text-lg",
-                filled ? "text-saffron-600" : "text-line",
+                readOnly ? "text-label" : "text-title",
+                filled ? "text-saffron-700" : "text-subtle",
               )}
             >
               {formatTimestamp(person[phase])}
@@ -105,7 +93,7 @@ export function PersonFields({
 
         if (readOnly) {
           return (
-            <div key={phase} className={cn("overflow-hidden rounded-2xl", rowClassName)}>
+            <div key={phase} className={cn("overflow-hidden rounded-row", rowClassName)}>
               {content}
             </div>
           );

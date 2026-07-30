@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { Person } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
 import { PersonCard } from "./PersonCard";
@@ -38,11 +39,11 @@ export function PeopleSheet({
   return (
     <div className="absolute inset-0 z-30 flex flex-col bg-white">
       <div className="flex items-center justify-between border-b border-line px-5 py-4">
-        <h2 className="text-lg font-semibold text-ink">People</h2>
+        <h2 className="text-title font-semibold text-ink">People</h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink hover:bg-card active:scale-95"
+          className="rounded-control border border-line px-3 py-1.5 text-label text-ink transition-colors duration-(--duration-ui) hover:bg-card active:scale-95"
         >
           Close
         </button>
@@ -69,7 +70,7 @@ export function PeopleSheet({
 
           <li>
             {adding ? (
-              <div className="flex gap-2 rounded-2xl border border-flagblue-500 bg-flagblue-50 p-2">
+              <div className="flex gap-2 rounded-card bg-flagblue-50 p-2">
                 <input
                   /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
                      appears on an explicit user action, so focusing it is expected. */
@@ -86,7 +87,7 @@ export function PeopleSheet({
                 <button
                   type="button"
                   onClick={submit}
-                  className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-4 py-2 font-medium text-white hover:bg-flagblue-700 active:scale-95"
+                  className="rounded-control bg-flagblue-600 px-4 py-2 text-body font-medium text-white transition-colors duration-(--duration-ui) hover:bg-flagblue-700 active:scale-95"
                 >
                   Add
                 </button>
@@ -95,9 +96,9 @@ export function PeopleSheet({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line px-4 py-3.5 text-muted hover:border-flagblue-400 hover:text-flagblue-600 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-card border-2 border-dashed border-line px-4 py-3.5 text-body text-muted transition-colors duration-(--duration-ui) hover:border-flagblue-400 hover:bg-flagblue-50 hover:text-flagblue-600 active:scale-95"
               >
-                <span className="text-lg leading-none">+</span> Add person
+                <Plus className="size-4" aria-hidden /> Add person
               </button>
             )}
           </li>

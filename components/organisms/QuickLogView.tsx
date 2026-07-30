@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { RotateCcw, X } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
+import { IconButton } from "@/components/atoms/IconButton";
+import { ConfirmInline } from "@/components/atoms/ConfirmInline";
 
 export function QuickLogView() {
   const [ready, setReady] = useState(false);
@@ -47,56 +49,43 @@ export function QuickLogView() {
        keyboard-accessible equivalent is the real <button> in QuickLogButton
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
-      <div className="border-b border-line px-4 py-3">
+      <div className="border-b border-line px-3 py-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted">{entries.length} logged</span>
+          <span className="pl-1 text-label text-muted">{entries.length} logged</span>
           {confirmingReset ? (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-ink">Clear all?</span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setConfirmingReset(false);
-                }}
-                className="rounded-lg border border-line px-2.5 py-1 text-xs text-muted active:scale-95"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEntries([]);
-                  setConfirmingReset(false);
-                }}
-                className="rounded-lg border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-600 active:scale-95"
-              >
-                Clear
-              </button>
-            </div>
+            <ConfirmInline
+              className="bg-transparent"
+              message="Clear all?"
+              confirmLabel="Clear all logged times"
+              intent="delete"
+              onConfirm={() => {
+                setEntries([]);
+                setConfirmingReset(false);
+              }}
+              onCancel={() => setConfirmingReset(false)}
+            />
           ) : (
-            <button
-              type="button"
+            <IconButton
+              icon={RotateCcw}
+              label="Clear all logged times"
+              tone="danger"
+              size="sm"
+              disabled={entries.length === 0}
               onClick={(e) => {
                 e.stopPropagation();
                 setConfirmingReset(true);
               }}
-              disabled={entries.length === 0}
-              className="text-sm font-medium text-red-500 disabled:opacity-30 active:scale-95"
-            >
-              Reset
-            </button>
+            />
           )}
         </div>
-        <div className="mt-2">
+        <div className="mt-1 px-1 pb-1">
           <TimezoneSelect value={tz} onChange={setTz} />
         </div>
       </div>
 
       <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <p className="text-center text-sm text-muted/70">Tap anywhere to log a time.</p>
+          <p className="text-center text-label text-subtle">Tap anywhere to log a time.</p>
         ) : (
           sorted.map((entry, i) => {
             const { date, time, ms } = formatInZone(entry.at, tz);
@@ -105,26 +94,25 @@ export function QuickLogView() {
                 <SwipeToAction
                   onSwipe={() => deleteEntry(entry.id)}
                   label="Delete"
-                  className="border border-line bg-card"
+                  className="bg-card"
                 >
-                  <div className="flex items-center justify-between py-2.5 pl-4 pr-2">
-                    <span className="text-xs text-muted/70">#{sorted.length - i}</span>
+                  <div className="flex items-center justify-between py-1.5 pr-1 pl-4">
+                    <span className="text-caption tabular-nums text-subtle">#{sorted.length - i}</span>
                     <span className="flex items-center gap-2">
-                      <span className="font-mono tabular-nums text-ink">
+                      <span className="font-mono text-label tabular-nums text-ink">
                         {date} · {time}
-                        <span className="text-muted/70">.{ms}</span>
+                        <span className="text-subtle">.{ms}</span>
                       </span>
-                      <button
-                        type="button"
+                      <IconButton
+                        icon={X}
+                        label="Delete entry"
+                        tone="danger"
+                        size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
                           deleteEntry(entry.id);
                         }}
-                        aria-label="Delete entry"
-                        className="rounded-md p-1 text-line hover:bg-red-50 hover:text-red-500 active:scale-95"
-                      >
-                        <X className="h-3.5 w-3.5" strokeWidth={2.5} />
-                      </button>
+                      />
                     </span>
                   </div>
                 </SwipeToAction>

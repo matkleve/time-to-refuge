@@ -7,6 +7,7 @@ import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
+import { ConfirmInline } from "@/components/atoms/ConfirmInline";
 import { PersonFields } from "./PersonFields";
 
 interface PersonCardProps {
@@ -76,31 +77,6 @@ export function PersonCard({
     }
   }
 
-  const confirmBar = (
-    message: string,
-    confirmLabel: string,
-    onConfirm: () => void,
-    onCancel: () => void,
-  ) => (
-    <div className="no-select mx-3 mt-2 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm">
-      <span className="text-ink">{message}</span>
-      <button
-        type="button"
-        onClick={onCancel}
-        className="rounded-lg border border-line bg-white px-2.5 py-1 text-xs text-muted active:scale-95"
-      >
-        Cancel
-      </button>
-      <button
-        type="button"
-        onClick={onConfirm}
-        className="rounded-lg border border-red-300 bg-white px-2.5 py-1 text-xs text-red-600 active:scale-95"
-      >
-        {confirmLabel}
-      </button>
-    </div>
-  );
-
   const nameRow = (
     <div className="flex items-center gap-1 px-3 pt-3">
       {editing ? (
@@ -117,8 +93,8 @@ export function PersonCard({
           }}
           aria-label="Person's name"
           className={cn(
-            "min-w-0 flex-1 rounded-lg border border-flagblue-500 bg-white px-2 py-1 font-display font-semibold text-ink focus:outline-none",
-            !overview && "text-2xl",
+            "min-w-0 flex-1 rounded-control border border-flagblue-500 bg-white px-2 py-1 font-display font-semibold text-ink",
+            overview ? "text-title" : "text-display",
           )}
         />
       ) : (
@@ -128,19 +104,19 @@ export function PersonCard({
             <button
               type="button"
               onClick={onSelect}
-              className="flex min-w-0 items-center gap-2 rounded-lg px-1 py-1 text-left hover:bg-black/[0.04]"
+              className="flex min-w-0 items-center gap-2 rounded-control px-1 py-1 text-left transition-colors duration-(--duration-ui) hover:bg-ink/[0.05]"
             >
-              {isComplete(person) && <Check className="h-4 w-4 shrink-0 text-saffron-600" />}
-              <span className="truncate font-display font-semibold text-ink">{person.name}</span>
+              {isComplete(person) && <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />}
+              <span className="truncate font-display text-title font-semibold text-ink">{person.name}</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={startEditing}
               disabled={!onRename}
-              className="flex min-w-0 items-center gap-2 rounded-lg px-1 py-1 text-left hover:bg-black/[0.04] disabled:pointer-events-none"
+              className="flex min-w-0 items-center gap-2 rounded-control px-1 py-1 text-left transition-colors duration-(--duration-ui) hover:bg-ink/[0.05] disabled:pointer-events-none"
             >
-              <h2 className="no-select truncate text-2xl font-semibold text-ink">{person.name}</h2>
+              <h2 className="no-select truncate text-display font-semibold text-ink">{person.name}</h2>
             </button>
           )}
 
@@ -205,29 +181,38 @@ export function PersonCard({
     <>
       {nameRow}
 
-      {shareNote && <p className="no-select px-4 pt-1 text-xs text-flagblue-600">{shareNote}</p>}
+      {shareNote && (
+        <p className="no-select px-4 pt-1 text-caption text-flagblue-600" role="status">
+          {shareNote}
+        </p>
+      )}
 
-      {confirmResetAll &&
-        confirmBar(
-          "Reset all three times?",
-          "Reset",
-          () => {
+      {confirmResetAll && (
+        <ConfirmInline
+          className="mx-3 mt-2"
+          message="Reset all three times?"
+          confirmLabel={`Reset all times for ${person.name}`}
+          onConfirm={() => {
             onResetAll?.();
             setConfirmResetAll(false);
-          },
-          () => setConfirmResetAll(false),
-        )}
+          }}
+          onCancel={() => setConfirmResetAll(false)}
+        />
+      )}
 
-      {confirmDelete &&
-        confirmBar(
-          `Delete ${person.name}?`,
-          "Delete",
-          () => {
+      {confirmDelete && (
+        <ConfirmInline
+          className="mx-3 mt-2"
+          intent="delete"
+          message={`Delete ${person.name}?`}
+          confirmLabel={`Delete ${person.name}`}
+          onConfirm={() => {
             onDelete?.();
             setConfirmDelete(false);
-          },
-          () => setConfirmDelete(false),
-        )}
+          }}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
 
       <div className={overview ? "p-2" : "p-3"}>
         <PersonFields
@@ -242,7 +227,7 @@ export function PersonCard({
   );
 
   const fill = isCurrent ? "bg-card-current" : "bg-card";
-  const shell = cn("overflow-hidden rounded-3xl", fill);
+  const shell = cn("overflow-hidden rounded-card", fill);
 
   // Overview cards are read-only inside, so a whole-card swipe can mean "delete"
   // without competing with the per-row swipe-to-reset used in the focused card.

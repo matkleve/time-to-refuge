@@ -1,71 +1,140 @@
 # Time to Refuge — design system
 
-A short reference for what makes the app look and behave the way it does. The
-tokens are defined once in [`app/globals.css`](../app/globals.css); this file
-explains the intent behind them.
+Everything here is defined once in [`app/globals.css`](../app/globals.css) and
+verified by `npm run a11y:contrast`. The audit that produced it is
+[`UX-AUDIT.md`](./UX-AUDIT.md).
 
 ---
 
 ## 0. The one idea: a record, not a stopwatch
 
 The app captures **the exact wall-clock moment** a person takes refuge in the
-Buddha, the Dharma and the Sangha. Nothing counts up, nothing counts down.
-Every design decision follows from that:
+Buddha, the Dharma and the Sangha. Nothing counts up or down. Every decision
+follows from that:
 
-- Times are shown to the millisecond and never re-computed after capture.
+- Times are captured to the millisecond and never recomputed afterwards.
 - The clock on the record button is the live current time, not elapsed time.
 - Recording is one tap; correcting is always possible and always confirmed.
 
+If a change makes the app feel like a timer, it is off-brief.
+
 ---
 
-## 1. Colour
+## 1. Type
 
-Defined as `--color-*` in the `@theme` block, which is what makes them
-available as Tailwind utilities (`--color-saffron-100` → `bg-saffron-100`).
+Three families, each earning its place:
 
-| Family | Role |
-| --- | --- |
-| `saffron-*` | A recorded time, completion, the Quick Log |
-| `flagblue-*` | The armed/next action, primary controls |
-| `ink` / `muted` / `line` | Text and hairlines |
-| `card` / `card-current` | Person-card fills |
-
-Both accent families are taken from the Buddhist flag.
-
-> **Add a shade to `@theme` before using it.** An undefined shade is not a
-> build error — Tailwind simply drops the declaration, so the element renders
-> with no background at all. That has already caused one bug where the current
-> person's card became invisible against the page.
-
-## 2. Type
-
-| Token | Face | Used for |
+| Token | Face | Job |
 | --- | --- | --- |
-| `font-display` | Spectral | Names, headings, phase labels |
-| `font-sans` | Inter | Interface text |
-| `font-mono` | JetBrains Mono | Timestamps only |
+| `font-display` | Spectral | Names, phase labels, panel titles |
+| `font-sans` | Inter | All interface text |
+| `font-mono` | JetBrains Mono | Times, and only times |
 
-The serif carries names because this is a record of a ceremony and reads
-calmer than a UI sans at display size. JetBrains Mono is chosen for genuinely
-tabular figures — a running clock must not jitter as digits change.
+The serif carries the ceremonial vocabulary — a person's name and the Three
+Jewels — because it reads calmer than a UI sans at display size. JetBrains Mono
+is chosen for genuinely tabular figures: a clock ticking at 60fps must not
+jitter as digits change width.
 
-## 3. Surfaces
+**Scale.** Six steps. Do not introduce a size outside it.
 
-- **Cards are filled, never outlined.** `bg-card`, or `bg-card-current` for the
-  person currently in view. No border.
+| Token | Size | Used for |
+| --- | --- | --- |
+| `text-clock` | 36px | The hero clock |
+| `text-display` | 24px | Person name on the focused card |
+| `text-title` | 17px | Panel titles, name in the overview, field rows |
+| `text-body` | 15px | Default UI text |
+| `text-label` | 13px | Meta, counters, secondary rows |
+| `text-caption` | 11px | Tracked uppercase captions |
+
+> **These names must also be registered in [`lib/utils.ts`](../lib/utils.ts).**
+> `tailwind-merge` matches `text-<x>` as a *colour* utility, so an unregistered
+> `text-clock` is silently dropped whenever a colour follows it in the same
+> `cn()` call. That bug shipped once already — the hero clock rendered at 15px.
+
+## 2. Colour
+
+Saffron marks a **recorded** time and the Quick Log. Flag blue marks the
+**next** action and primary controls. Both come from the Buddhist flag.
+
+| Token | Role |
+| --- | --- |
+| `ink` | Primary text |
+| `muted` | Secondary text — **and every icon at rest** |
+| `subtle` | Tertiary text: counters, empty values, hints |
+| `line` | Hairlines and dividers, **never a foreground** |
+| `card` / `card-current` | Person-card fills |
+| `saffron-700` | Recorded time text |
+| `flagblue-600` | Primary control, focus ring |
+| `danger-*` | Destructive actions |
+
+Two rules that came out of the audit:
+
+- **`line` is never used on text or icons.** Colouring icons with it put them at
+  1.12:1 — the reason they looked invisible.
+- **Saffron surfaces carry `ink`, not white.** White on gold cannot reach 4.5:1
+  without darkening the gold into brown. Blue surfaces carry white.
+
+Every pairing the app ships lives in
+[`scripts/contrast-pairs.mjs`](../scripts/contrast-pairs.mjs). Add a pair when
+you add a combination; `npm run a11y:contrast` fails the build's intent
+otherwise. A contrast bug is invisible in code review — this is the only way it
+gets caught.
+
+## 3. Surfaces & elevation
+
+- **Cards are filled, never outlined**: `bg-card`, or `bg-card-current` for the
+  person in view.
 - **Field rows are white** so they read against the card fill.
-- The armed row carries `ring-2 ring-flagblue-500/70` — the only ring in the app.
+- Radii: `rounded-control` (12px) · `rounded-row` (16px) · `rounded-card` (24px).
+- Shadows: `shadow-row` (a filled row) · `shadow-raised` (record button) ·
+  `shadow-panel` (popovers).
 
 ## 4. Controls
 
-- **One record button per view**, fixed at the bottom. It never moves while
-  cards swipe past it, and its height is identical in both views.
-- Ghost navigation arrows flank it. When there is no person that way they go
-  `opacity-0` rather than unmounting, so the button never changes width.
-- Icons are [lucide-react](https://lucide.dev), routed through
-  [`IconButton`](../components/atoms/IconButton.tsx) for consistent tone/size.
+**Sizes.** Two, and nothing smaller than the `sm`:
 
-## 5. Gestures
+| Size | Box | Used for |
+| --- | --- | --- |
+| `sm` | 36px | Dense clusters inside a card header, list-row actions |
+| `md` | 44px | Standalone controls: header actions, person navigation |
+
+**Icons over words.** Anything small is an icon with an `aria-label`, never a
+text button. [`IconButton`](../components/atoms/IconButton.tsx) is the only way
+to render one, so tone and size stay consistent.
+
+The icon vocabulary, all [lucide](https://lucide.dev):
+
+| Icon | Means |
+| --- | --- |
+| `History` / `Undo2` | History panel · undo one step |
+| `Download` / `Share2` | Export CSV · share the card as an image |
+| `Users` / `Plus` | People overview · add a person |
+| `Pencil` / `RotateCcw` / `Trash2` | Rename · reset times · delete |
+| `Check` / `X` | Confirm · cancel or dismiss |
+| `ChevronLeft` / `ChevronRight` | Previous / next person |
+
+**Confirming.** One component,
+[`ConfirmInline`](../components/atoms/ConfirmInline.tsx): a short question and
+the `X` / `Check` pair (`Trash2` when deleting). Row reset, reset-all, delete
+person and clear-log all use it, so destructive confirmation looks identical
+everywhere.
+
+**Focus.** One ring for the whole app — 2px `flagblue-600` at 2px offset, on
+`:focus-visible`, declared once in the base layer. Never remove it locally.
+
+## 5. Motion
+
+| Token | Value | Used for |
+| --- | --- | --- |
+| `--duration-fast` | 120ms | Press feedback |
+| `--duration-ui` | 180ms | Colour and opacity changes |
+| `--duration-slide` | 280ms | The card carousel |
+
+All of it on `--ease-out-ui`. A capture flashes a ring in **the accent the
+surface is not** — the blue Refuge button flashes saffron, the gold Quick Log
+button flashes blue — so the confirmation always reads against its background.
+
+## 6. Gestures
 
 `SwipeToAction` wraps anything swipeable and always stops propagation, so a row
 swipe never also drives the person carousel.
@@ -76,12 +145,14 @@ swipe never also drives the person carousel.
 | Person card (overview) | Delete that person |
 | Quick Log entry | Delete that entry |
 
-Every gesture has a pointer equivalent (a visible icon), because swipe alone
-is unreachable with a mouse.
+**Every gesture has a visible pointer equivalent.** Swipe alone is unreachable
+with a mouse, and undiscoverable without a hint.
 
-## 6. Accessibility
+## 7. Accessibility floor
 
-- `npm run lint` runs `jsx-a11y`; it is expected to pass with zero errors.
-- Any interactive element must be reachable by keyboard. The Quick Log
-  "tap anywhere" layer is pointer-only *convenience* — the real, focusable
-  control is the record button inside it.
+- `npm run lint` (jsx-a11y) passes with zero errors.
+- `npm run a11y:contrast` passes for every shipped pair.
+- Everything interactive is reachable and operable by keyboard. The Quick Log
+  "tap anywhere" layer is a pointer *convenience*; the real focusable control is
+  the record button inside it.
+- Targets are never below 36px.
