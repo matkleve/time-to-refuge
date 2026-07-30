@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { Person } from "@/lib/types";
+import { Person, Phase } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
 import { PersonCard } from "./PersonCard";
 
@@ -11,6 +11,9 @@ interface PeopleSheetProps {
   currentId: string | null;
   onAdd: (name: string) => void;
   onSelect: (id: string) => void;
+  onOpenAt: (id: string, phase: Phase | null) => void;
+  onEditTime: (id: string, phase: Phase, at: number) => void;
+  onClearTime: (id: string, phase: Phase) => void;
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
   onClose: () => void;
@@ -21,6 +24,9 @@ export function PeopleSheet({
   currentId,
   onAdd,
   onSelect,
+  onOpenAt,
+  onEditTime,
+  onClearTime,
   onDelete,
   onRename,
   onClose,
@@ -57,10 +63,10 @@ export function PeopleSheet({
                 person={p}
                 variant="overview"
                 isCurrent={p.id === currentId}
-                onSelect={() => {
-                  onSelect(p.id);
-                  onClose();
-                }}
+                onSelect={() => onOpenAt(p.id, null)}
+                onSelectPhase={(phase) => onOpenAt(p.id, phase)}
+                onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                onClear={(phase) => onClearTime(p.id, phase)}
                 onDelete={() => onDelete(p.id)}
                 onExport={() => downloadPersonCsv(p)}
                 onRename={(name) => onRename(p.id, name)}

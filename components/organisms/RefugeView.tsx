@@ -16,6 +16,10 @@ interface RefugeViewProps {
   onResetAll: (personId: string) => void;
   onExport: (person: Person) => void;
   onRename: (personId: string, name: string) => void;
+  onEditTime: (personId: string, phase: Phase, at: number) => void;
+  /** A field picked in the overview, to arm once this view takes over. */
+  requestedPhase?: Phase | null;
+  onRequestedPhaseConsumed?: () => void;
 }
 
 /**
@@ -53,6 +57,9 @@ export function RefugeView({
   onResetAll,
   onExport,
   onRename,
+  onEditTime,
+  requestedPhase = null,
+  onRequestedPhaseConsumed,
 }: RefugeViewProps) {
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
   const touchStartX = useRef<number | null>(null);
@@ -66,6 +73,13 @@ export function RefugeView({
   useEffect(() => {
     setSelectedPhase(null);
   }, [current?.id]);
+
+  // Honour a field tapped in the overview, then hand the request back.
+  useEffect(() => {
+    if (!requestedPhase) return;
+    setSelectedPhase(requestedPhase);
+    onRequestedPhaseConsumed?.();
+  }, [requestedPhase, onRequestedPhaseConsumed]);
 
   function handleCaptureClick() {
     if (!current || !target) return;
@@ -127,6 +141,7 @@ export function RefugeView({
                     onResetAll={() => onResetAll(p.id)}
                     onExport={() => onExport(p)}
                     onRename={(name) => onRename(p.id, name)}
+                    onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
                   />
                 </div>
               );

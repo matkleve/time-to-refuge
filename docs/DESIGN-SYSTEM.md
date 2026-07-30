@@ -119,6 +119,7 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 
 | Icon | Means |
 | --- | --- |
+| `Eye` / `Pencil` | Open that person · edit that time |
 | `History` / `Undo2` | History panel · undo one step |
 | `Download` / `Share2` | Export CSV · share the card as an image |
 | `Users` / `Plus` | People overview · add a person |
@@ -126,11 +127,23 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | `Check` / `X` | Confirm · cancel or dismiss |
 | `ChevronLeft` / `ChevronRight` | Previous / next person |
 
-**Confirming.** One component,
-[`ConfirmInline`](../components/atoms/ConfirmInline.tsx): a short question and
-the `X` / `Check` pair (`Trash2` when deleting). Row reset, reset-all, delete
-person and clear-log all use it, so destructive confirmation looks identical
-everywhere.
+**Confirming — two clicks, never a dialog.**
+[`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
+action happens. The first press *arms* it: **the value about to be destroyed
+turns red**, the control gains a red wash, and the row gains a red ring. The
+second press carries it out. It disarms itself after a few seconds if you walk
+away.
+
+| Action | What turns red |
+| --- | --- |
+| Reset one time | That time |
+| Reset all times | All three times |
+| Delete a person | Their name |
+| Delete a logged time | That time |
+| Clear the whole log | Every logged time |
+
+Nothing is destroyed by a single tap, and nothing interrupts with a modal —
+which matters in a ceremony, where a dialog is the wrong thing to be reading.
 
 **Focus.** One ring for the whole app — 2px `flagblue-600` at 2px offset, on
 `:focus-visible`, declared once in the base layer. Never remove it locally.
@@ -173,12 +186,27 @@ swipe never also drives the person carousel.
 
 | Surface | Swipe left |
 | --- | --- |
-| Field row (focused card) | Reset that time |
+| Field row (either card) | Arm reset on that time |
 | Person card (overview) | Delete that person |
 | Quick Log entry | Delete that entry |
 
 **Every gesture has a visible pointer equivalent.** Swipe alone is unreachable
-with a mouse, and undiscoverable without a hint.
+with a mouse, and undiscoverable without a hint. A swipe arms the same
+two-click action rather than performing it, so the gesture can't destroy
+anything on its own either.
+
+## 6a. Tapping a field
+
+| Field | Tap does |
+| --- | --- |
+| Empty, in the focused card | Arms it for the record button |
+| Empty, in the overview | Opens that person in focus with it armed |
+| Recorded, either card | Reveals its actions — **never** navigates |
+
+A recorded time is data, so tapping it opens what can be done *to* it (open,
+edit, reset) instead of moving you somewhere. Editing writes the corrected
+time rather than re-capturing, because re-capturing would stamp *now* — not the
+moment that actually happened.
 
 ## 7. Accessibility floor
 

@@ -40,6 +40,7 @@ export default function Home() {
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
+  const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
 
   useEffect(() => {
     setPeople(loadPeople());
@@ -155,6 +156,33 @@ export default function Home() {
     setPeople((prev) => prev.filter((p) => p.id !== id));
   }
 
+  function handleEditTime(personId: string, phase: Phase, at: number) {
+    const person = people.find((p) => p.id === personId);
+    if (!person) return;
+    const prevValue = person[phase];
+    const entry = createLogEntry(personId, person.name, phase, "recorded", at);
+    setPeople((prev) => prev.map((p) => (p.id === personId ? { ...p, [phase]: at } : p)));
+    setLog((prev) => [...prev, entry]);
+    setUndoStack((prev) => [
+      ...prev,
+      {
+        logId: entry.id,
+        personId,
+        phase,
+        prevValue,
+        kind: "recorded",
+        message: `Edited ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      },
+    ]);
+  }
+
+  /** From the overview: focus this person with that empty field already armed. */
+  function handleOpenPersonAt(id: string, phase: Phase | null) {
+    handleSelectPerson(id);
+    setRequestedPhase(phase);
+    setPeopleOpen(false);
+  }
+
   function handleRenamePerson(id: string, name: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -256,6 +284,9 @@ export default function Home() {
               onResetAll={handleResetAll}
               onExport={downloadPersonCsv}
               onRename={handleRenamePerson}
+              onEditTime={handleEditTime}
+              requestedPhase={requestedPhase}
+              onRequestedPhaseConsumed={() => setRequestedPhase(null)}
             />
           )}
 
@@ -265,8 +296,11 @@ export default function Home() {
               currentId={people[index]?.id ?? null}
               onAdd={handleAddPerson}
               onSelect={handleSelectPerson}
+              onOpenAt={handleOpenPersonAt}
               onDelete={handleDeletePerson}
               onRename={handleRenamePerson}
+              onEditTime={handleEditTime}
+              onClearTime={handleClear}
               onClose={() => setPeopleOpen(false)}
             />
           )}

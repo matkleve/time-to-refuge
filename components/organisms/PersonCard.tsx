@@ -7,7 +7,7 @@ import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
-import { ConfirmInline } from "@/components/atoms/ConfirmInline";
+import { useArmedAction } from "@/lib/use-armed-action";
 import { PersonFields } from "./PersonFields";
 
 interface PersonCardProps {
@@ -17,6 +17,8 @@ interface PersonCardProps {
   target?: Phase | null;
   onSelectPhase?: (phase: Phase) => void;
   onClear?: (phase: Phase) => void;
+  /** Correct an already-recorded time. */
+  onEditTime?: (phase: Phase, at: number) => void;
   onResetAll?: () => void;
   /** When provided, the card can be deleted (trash icon + swipe left). */
   onDelete?: () => void;
@@ -35,6 +37,7 @@ export function PersonCard({
   target = null,
   onSelectPhase,
   onClear,
+  onEditTime,
   onResetAll,
   onDelete,
   onExport,
@@ -42,8 +45,6 @@ export function PersonCard({
   onRename,
   isCurrent = false,
 }: PersonCardProps) {
-  const [confirmResetAll, setConfirmResetAll] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [shareNote, setShareNote] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(person.name);
@@ -51,11 +52,17 @@ export function PersonCard({
   const overview = variant === "overview";
   const anyFilled = PHASES.some((phase) => person[phase] !== null);
 
+  // Two-click: the first press turns the values red, the second carries it out.
+  const resetAll = useArmedAction(() => onResetAll?.());
+  const remove = useArmedAction(() => onDelete?.());
+
+  const { disarm: disarmResetAll } = resetAll;
+  const { disarm: disarmRemove } = remove;
   useEffect(() => {
-    setConfirmResetAll(false);
-    setConfirmDelete(false);
     setEditing(false);
-  }, [person.id]);
+    disarmResetAll();
+    disarmRemove();
+  }, [person.id, disarmResetAll, disarmRemove]);
 
   function startEditing() {
     if (!onRename) return;
@@ -107,7 +114,14 @@ export function PersonCard({
               className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
             >
               {isComplete(person) && <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />}
-              <span className="truncate font-display text-lg font-semibold text-ink">{person.name}</span>
+              <span
+                className={cn(
+                  "truncate font-display text-lg font-semibold",
+                  remove.armed ? "text-danger-600" : "text-ink",
+                )}
+              >
+                {person.name}
+              </span>
             </button>
           ) : (
             <button
@@ -116,7 +130,14 @@ export function PersonCard({
               disabled={!onRename}
               className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05] disabled:pointer-events-none"
             >
-              <h2 className="no-select truncate text-2xl font-semibold text-ink">{person.name}</h2>
+              <h2
+                className={cn(
+                  "no-select truncate text-2xl font-semibold",
+                  remove.armed ? "text-danger-600" : "text-ink",
+                )}
+              >
+                {person.name}
+              </h2>
             </button>
           )}
 
@@ -134,12 +155,17 @@ export function PersonCard({
             {onResetAll && (
               <IconButton
                 icon={RotateCcw}
-                label={`Reset all times for ${person.name}`}
-                onClick={() => setConfirmResetAll(true)}
+                label={
+                  resetAll.armed
+                    ? `Confirm reset all times for ${person.name}`
+                    : `Reset all times for ${person.name}`
+                }
+                onClick={resetAll.trigger}
                 tone="danger"
                 size="sm"
                 disabled={!anyFilled}
                 hideWhenDisabled
+                className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
               />
             )}
             {onExport && (
@@ -165,10 +191,11 @@ export function PersonCard({
             {onDelete && (
               <IconButton
                 icon={Trash2}
-                label={`Delete ${person.name}`}
-                onClick={() => setConfirmDelete(true)}
+                label={remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`}
+                onClick={remove.trigger}
                 tone="danger"
                 size="sm"
+                className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
               />
             )}
           </div>
@@ -187,40 +214,16 @@ export function PersonCard({
         </p>
       )}
 
-      {confirmResetAll && (
-        <ConfirmInline
-          className="mx-3 mt-2"
-          message="Reset all three times?"
-          confirmLabel={`Reset all times for ${person.name}`}
-          onConfirm={() => {
-            onResetAll?.();
-            setConfirmResetAll(false);
-          }}
-          onCancel={() => setConfirmResetAll(false)}
-        />
-      )}
-
-      {confirmDelete && (
-        <ConfirmInline
-          className="mx-3 mt-2"
-          intent="delete"
-          message={`Delete ${person.name}?`}
-          confirmLabel={`Delete ${person.name}`}
-          onConfirm={() => {
-            onDelete?.();
-            setConfirmDelete(false);
-          }}
-          onCancel={() => setConfirmDelete(false)}
-        />
-      )}
-
       <div className={overview ? "p-2" : "p-3"}>
         <PersonFields
           person={person}
-          onClear={onClear}
+          variant={variant}
           target={target}
           onSelectPhase={onSelectPhase}
-          readOnly={overview}
+          onClear={onClear}
+          onEditTime={onEditTime}
+          onOpenPerson={onSelect}
+          armedAll={resetAll.armed}
         />
       </div>
     </>
@@ -233,12 +236,7 @@ export function PersonCard({
   // without competing with the per-row swipe-to-reset used in the focused card.
   if (overview && onDelete) {
     return (
-      <SwipeToAction
-        onSwipe={() => setConfirmDelete(true)}
-        label="Delete"
-        disabled={confirmDelete}
-        className={shell}
-      >
+      <SwipeToAction onSwipe={remove.trigger} label="Delete" className={shell}>
         {/* Opaque so the delete panel stays hidden until swiped. */}
         <div className={fill}>{body}</div>
       </SwipeToAction>
