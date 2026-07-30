@@ -14,7 +14,7 @@ export default function UndoToast({ message, onUndo, onDismiss }: UndoToastProps
         <button
           type="button"
           onClick={onUndo}
-          className="text-sm font-semibold uppercase tracking-wide text-saffron-600 active:scale-95"
+          className="text-sm font-semibold uppercase tracking-wide text-saffron-600 hover:text-saffron-700 active:scale-95"
         >
           Undo
         </button>

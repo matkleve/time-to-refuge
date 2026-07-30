@@ -176,7 +176,8 @@ export default function Home() {
   if (!ready) return null;
 
   return (
-    <main className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col overflow-hidden bg-white">
+    <div className="min-h-[100dvh] bg-white md:flex md:min-h-[100dvh] md:items-center md:justify-center md:bg-gradient-to-br md:from-flagblue-50 md:via-white md:to-saffron-50 md:p-8">
+    <main className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col overflow-hidden bg-white md:h-[850px] md:max-h-[92vh] md:rounded-[2rem] md:border md:border-gray-200 md:shadow-2xl">
       <div
         className="flex shrink-0 gap-1 border-b border-gray-200 px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
@@ -185,7 +186,7 @@ export default function Home() {
           type="button"
           onClick={() => setView("refuge")}
           className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
-            view === "refuge" ? "bg-flagblue-600 text-white" : "text-gray-500"
+            view === "refuge" ? "bg-flagblue-600 text-white" : "text-gray-500 hover:bg-gray-100"
           }`}
         >
           Refuge
@@ -194,7 +195,7 @@ export default function Home() {
           type="button"
           onClick={() => setView("quicklog")}
           className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
-            view === "quicklog" ? "bg-saffron-500 text-white" : "text-gray-500"
+            view === "quicklog" ? "bg-saffron-500 text-white" : "text-gray-500 hover:bg-gray-100"
           }`}
         >
           Quick Log
@@ -210,7 +211,7 @@ export default function Home() {
               type="button"
               onClick={() => setHistoryOpen(true)}
               aria-label="History"
-              className="rounded-lg p-2 text-gray-600 active:scale-95"
+              className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="9" />
@@ -233,7 +234,7 @@ export default function Home() {
                 onClick={() => downloadCsv(people)}
                 disabled={people.length === 0}
                 aria-label="Export CSV"
-                className="rounded-lg p-2 text-gray-600 disabled:opacity-30 active:scale-95"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 active:scale-95"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" strokeLinejoin="round" />
@@ -243,7 +244,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setPeopleOpen(true)}
                 aria-label="Add or manage people"
-                className="rounded-lg p-2 text-gray-600 active:scale-95"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round" />
@@ -272,7 +273,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
-                className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-5 py-2.5 font-medium text-white active:scale-95"
+                className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-5 py-2.5 font-medium text-white hover:bg-flagblue-700 active:scale-95"
               >
                 Add a person
               </button>
@@ -303,7 +304,7 @@ export default function Home() {
                   type="button"
                   onClick={() => goTo(index - 1)}
                   aria-label="Previous person"
-                  className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md active:scale-95"
+                  className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md hover:bg-gray-100 active:scale-95"
                 >
                   ‹
                 </button>
@@ -313,7 +314,7 @@ export default function Home() {
                   type="button"
                   onClick={() => goTo(index + 1)}
                   aria-label="Next person"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md active:scale-95"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white/90 p-2 text-gray-600 shadow-md hover:bg-gray-100 active:scale-95"
                 >
                   ›
                 </button>
@@ -336,5 +337,6 @@ export default function Home() {
         </>
       )}
     </main>
+    </div>
   );
 }

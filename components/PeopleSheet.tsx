@@ -34,13 +34,13 @@ export default function PeopleSheet({
   }
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col bg-white">
+    <div className="absolute inset-0 z-30 flex flex-col bg-white">
       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
         <h2 className="text-lg font-semibold text-gray-900">People</h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 active:scale-95"
+          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 active:scale-95"
         >
           Close
         </button>
@@ -86,20 +86,32 @@ export default function PeopleSheet({
                       </div>
                     </div>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onSelect(p.id);
-                        onClose();
-                      }}
-                      className="flex w-full items-center justify-between px-4 py-3.5 text-left"
-                    >
-                      <span className="flex items-center gap-2 text-gray-900">
-                        {isComplete(p) && <span className="text-saffron-600">✓</span>}
-                        {p.name}
-                      </span>
-                      <span className="text-xs text-gray-400">{done} / 3</span>
-                    </button>
+                    <div className="flex w-full items-center justify-between pr-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSelect(p.id);
+                          onClose();
+                        }}
+                        className="flex flex-1 items-center justify-between px-4 py-3.5 text-left hover:bg-black/[0.02]"
+                      >
+                        <span className="flex items-center gap-2 text-gray-900">
+                          {isComplete(p) && <span className="text-saffron-600">✓</span>}
+                          {p.name}
+                        </span>
+                        <span className="text-xs text-gray-400">{done} / 3</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPendingDelete(p.id)}
+                        aria-label={`Delete ${p.name}`}
+                        className="rounded-lg p-2 text-gray-300 hover:bg-red-50 hover:text-red-500 active:scale-95"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-.8 12.2a2 2 0 0 1-2 1.8H9.8a2 2 0 0 1-2-1.8L7 7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                    </div>
                   )}
                 </SwipeToAction>
               </li>
@@ -123,7 +135,7 @@ export default function PeopleSheet({
                 <button
                   type="button"
                   onClick={submit}
-                  className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-4 py-2 font-medium text-white active:scale-95"
+                  className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-4 py-2 font-medium text-white hover:bg-flagblue-700 active:scale-95"
                 >
                   Add
                 </button>
@@ -132,7 +144,7 @@ export default function PeopleSheet({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 px-4 py-3.5 text-gray-500 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 px-4 py-3.5 text-gray-500 hover:border-flagblue-400 hover:text-flagblue-600 active:scale-95"
               >
                 <span className="text-lg leading-none">+</span> Add person
               </button>

@@ -81,7 +81,7 @@ export default function LocationCheck() {
           handleOpen();
         }}
         aria-label="Confirm current time and location"
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-saffron-500 bg-white text-saffron-600 shadow-md active:scale-95 transition-transform"
+        className="flex h-8 w-8 items-center justify-center rounded-full border border-saffron-500 bg-white text-saffron-600 shadow-md hover:bg-saffron-50 active:scale-95 transition-transform"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />

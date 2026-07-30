@@ -26,8 +26,8 @@ export default function QuickLogButton({ flash }: QuickLogButtonProps) {
 
   return (
     <div
-      className={`no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl border transition-all
-        border-saffron-600 bg-gradient-to-b from-saffron-400 to-saffron-600
+      className={`no-select flex w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl border transition-all
+        border-saffron-600 bg-gradient-to-b from-saffron-400 to-saffron-600 hover:from-saffron-300 hover:to-saffron-500
         ${flash ? "scale-[0.98] ring-4 ring-flagblue-500/60" : ""}
         py-6 shadow-lg`}
       style={{ minHeight: "8rem" }}

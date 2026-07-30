@@ -41,7 +41,7 @@ export default function QuickLogView() {
   const sorted = [...entries].sort((a, b) => b.at - a.at);
 
   return (
-    <div className="no-select flex flex-1 flex-col overflow-hidden" onClick={handleLog}>
+    <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
       <div className="border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-500">{entries.length} logged</span>
@@ -98,11 +98,26 @@ export default function QuickLogView() {
                   label="Delete"
                   className="border border-gray-200 bg-gray-50"
                 >
-                  <div className="flex items-center justify-between px-4 py-2.5">
+                  <div className="flex items-center justify-between py-2.5 pl-4 pr-2">
                     <span className="text-xs text-gray-400">#{sorted.length - i}</span>
-                    <span className="font-mono tabular-nums text-gray-900">
-                      {date} · {time}
-                      <span className="text-gray-400">.{ms}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono tabular-nums text-gray-900">
+                        {date} · {time}
+                        <span className="text-gray-400">.{ms}</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteEntry(entry.id);
+                        }}
+                        aria-label="Delete entry"
+                        className="rounded-md p-1 text-gray-300 hover:bg-red-50 hover:text-red-500 active:scale-95"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+                        </svg>
+                      </button>
                     </span>
                   </div>
                 </SwipeToAction>

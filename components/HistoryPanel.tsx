@@ -28,13 +28,13 @@ export default function HistoryPanel({ log, onClose }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col bg-white">
+    <div className="absolute inset-0 z-30 flex flex-col bg-white">
       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
         <h2 className="text-lg font-semibold text-gray-900">History</h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 active:scale-95"
+          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 active:scale-95"
         >
           Close
         </button>

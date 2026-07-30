@@ -43,7 +43,7 @@ export default function LiveClockButton({ onCapture, armed, label }: LiveClockBu
         onClick={handleClick}
         disabled={!armed}
         className={`no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl border transition-all
-          ${armed ? "border-flagblue-700 bg-gradient-to-b from-flagblue-500 to-flagblue-700 active:scale-[0.98]" : "border-gray-200 bg-gray-100"}
+          ${armed ? "border-flagblue-700 bg-gradient-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]" : "border-gray-200 bg-gray-100"}
           ${flash ? "ring-4 ring-saffron-400" : ""}
           py-6 shadow-lg`}
         style={{ minHeight: "9.5rem" }}

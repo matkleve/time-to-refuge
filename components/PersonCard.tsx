@@ -89,7 +89,7 @@ export default function PersonCard({ person, onCapture, onClear }: PersonCardPro
                   <button
                     type="button"
                     onClick={() => handleRowClick(phase)}
-                    className="flex w-full items-center justify-between px-4 py-3.5 text-left"
+                    className="flex w-full items-center justify-between px-4 py-3.5 text-left hover:bg-black/[0.02]"
                   >
                     <span className={`text-lg font-medium ${filled ? "text-gray-900" : "text-gray-400"}`}>
                       {PHASE_LABELS[phase]}
