@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Person,
   Phase,
@@ -10,8 +10,8 @@ import {
   createLogEntry,
 } from "@/lib/types";
 import { loadPeople, savePeople, loadLog, saveLog } from "@/lib/storage";
-import { downloadCsv } from "@/lib/csv";
-import PersonPane from "@/components/PersonPane";
+import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
+import RefugeView from "@/components/RefugeView";
 import PeopleSheet from "@/components/PeopleSheet";
 import HistoryPanel from "@/components/HistoryPanel";
 import QuickLogView from "@/components/QuickLogView";
@@ -36,9 +36,6 @@ export default function Home() {
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
-
-  const trackRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     setPeople(loadPeople());
@@ -161,19 +158,6 @@ export default function Home() {
 
   function goTo(i: number) {
     setIndex(Math.max(0, Math.min(people.length - 1, i)));
-  }
-
-  function onTouchStart(e: React.TouchEvent) {
-    touchStartX.current = e.touches[0].clientX;
-  }
-
-  function onTouchEnd(e: React.TouchEvent) {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    touchStartX.current = null;
-    if (Math.abs(delta) < 50) return;
-    if (delta < 0) goTo(index + 1);
-    else goTo(index - 1);
   }
 
   if (!ready) return null;
@@ -309,27 +293,15 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div
-              className="relative flex-1 overflow-hidden"
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-            >
-              <div
-                ref={trackRef}
-                className="flex h-full transition-transform duration-300 ease-out"
-                style={{ transform: `translateX(-${index * 100}%)` }}
-              >
-                {people.map((p) => (
-                  <PersonPane
-                    key={p.id}
-                    person={p}
-                    onCapture={(phase) => handleCapture(p.id, phase)}
-                    onClear={(phase) => handleClear(p.id, phase)}
-                    onResetAll={() => handleResetAll(p.id)}
-                  />
-                ))}
-              </div>
-            </div>
+            <RefugeView
+              people={people}
+              index={index}
+              onIndexChange={goTo}
+              onCapture={handleCapture}
+              onClear={handleClear}
+              onResetAll={handleResetAll}
+              onExport={downloadPersonCsv}
+            />
           )}
 
           {peopleOpen && (

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Person } from "@/lib/types";
+import { downloadPersonCsv } from "@/lib/csv";
 import PersonCard from "./PersonCard";
 
 interface PeopleSheetProps {
@@ -58,6 +59,7 @@ export default function PeopleSheet({
                   onClose();
                 }}
                 onDelete={() => onDelete(p.id)}
+                onExport={() => downloadPersonCsv(p)}
               />
             </li>
           ))}

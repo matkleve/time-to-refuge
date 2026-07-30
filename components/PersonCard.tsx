@@ -16,6 +16,8 @@ interface PersonCardProps {
   onResetAll?: () => void;
   /** When provided, the card can be deleted (trash icon + swipe left). */
   onDelete?: () => void;
+  /** Downloads just this person's times as CSV. */
+  onExport?: () => void;
   /** When provided, tapping the name focuses this person. */
   onSelect?: () => void;
   isCurrent?: boolean;
@@ -29,6 +31,7 @@ export default function PersonCard({
   onClear,
   onResetAll,
   onDelete,
+  onExport,
   onSelect,
   isCurrent = false,
 }: PersonCardProps) {
@@ -80,6 +83,21 @@ export default function PersonCard({
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M4 4v5h5" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M4.5 9a7.5 7.5 0 1 1 1.8 7.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      )}
+
+      {onExport && (
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={!anyFilled}
+          aria-label={`Export ${person.name}`}
+          className="shrink-0 rounded-full p-1.5 text-gray-300 hover:bg-flagblue-50 hover:text-flagblue-600 disabled:pointer-events-none disabled:opacity-0 active:scale-95"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M12 3v12m0 0-4-4m4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
       )}
