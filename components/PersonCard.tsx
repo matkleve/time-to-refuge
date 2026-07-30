@@ -20,6 +20,8 @@ interface PersonCardProps {
   onExport?: () => void;
   /** When provided, tapping the name focuses this person. */
   onSelect?: () => void;
+  /** When provided, the name can be edited (pencil icon, or tapping the name on the focused card). */
+  onRename?: (name: string) => void;
   isCurrent?: boolean;
 }
 
@@ -33,11 +35,14 @@ export default function PersonCard({
   onDelete,
   onExport,
   onSelect,
+  onRename,
   isCurrent = false,
 }: PersonCardProps) {
   const [confirmResetAll, setConfirmResetAll] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(person.name);
 
   const overview = variant === "overview";
   const anyFilled = PHASES.some((phase) => person[phase] !== null);
@@ -45,7 +50,20 @@ export default function PersonCard({
   useEffect(() => {
     setConfirmResetAll(false);
     setConfirmDelete(false);
+    setEditing(false);
   }, [person.id]);
+
+  function startEditing() {
+    if (!onRename) return;
+    setDraft(person.name);
+    setEditing(true);
+  }
+
+  function commitName() {
+    const trimmed = draft.trim();
+    if (trimmed && trimmed !== person.name) onRename?.(trimmed);
+    setEditing(false);
+  }
 
   async function handleShare() {
     const result = await sharePerson(person);
@@ -57,19 +75,52 @@ export default function PersonCard({
 
   const nameRow = (
     <div className="flex items-center gap-1 px-3 pt-3">
-      {onSelect ? (
+      {editing ? (
+        <input
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commitName}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commitName();
+            if (e.key === "Escape") setEditing(false);
+          }}
+          aria-label="Person's name"
+          className={`min-w-0 flex-1 rounded-lg border border-flagblue-500 bg-white px-2 py-1 font-semibold text-gray-900 focus:outline-none ${
+            overview ? "" : "text-center text-2xl"
+          }`}
+        />
+      ) : onSelect ? (
         <button
           type="button"
           onClick={onSelect}
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-1 py-1 text-left hover:bg-black/[0.03]"
+          className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-1 py-1 text-left hover:bg-black/[0.04]"
         >
           {isComplete(person) && <span className="text-saffron-600">✓</span>}
           <span className="truncate font-semibold text-gray-900">{person.name}</span>
         </button>
       ) : (
-        <div className="flex min-w-0 flex-1 items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={startEditing}
+          disabled={!onRename}
+          className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-lg px-1 py-1 hover:bg-black/[0.04] disabled:pointer-events-none"
+        >
           <h2 className="no-select truncate text-2xl font-semibold text-gray-900">{person.name}</h2>
-        </div>
+        </button>
+      )}
+
+      {onRename && !editing && (
+        <button
+          type="button"
+          onClick={startEditing}
+          aria-label={`Rename ${person.name}`}
+          className="shrink-0 rounded-full p-1.5 text-gray-300 hover:bg-flagblue-50 hover:text-flagblue-600 active:scale-95"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M4 20h4L19 9a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5 4 20z" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
       )}
 
       {onResetAll && (
@@ -199,9 +250,8 @@ export default function PersonCard({
     </>
   );
 
-  const shell = `overflow-hidden rounded-3xl border bg-white ${
-    isCurrent ? "border-saffron-500" : "border-gray-200"
-  } ${overview ? "" : "shadow-sm"}`;
+  const fill = isCurrent ? "bg-saffron-100" : "bg-gray-100";
+  const shell = `overflow-hidden rounded-3xl ${fill}`;
 
   // Overview cards are read-only inside, so a whole-card swipe can mean "delete"
   // without competing with the per-row swipe-to-reset used in the focused card.
@@ -213,7 +263,8 @@ export default function PersonCard({
         disabled={confirmDelete}
         className={shell}
       >
-        <div className="bg-white">{body}</div>
+        {/* Opaque so the delete panel stays hidden until swiped. */}
+        <div className={fill}>{body}</div>
       </SwipeToAction>
     );
   }

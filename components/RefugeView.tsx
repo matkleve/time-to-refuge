@@ -13,6 +13,39 @@ interface RefugeViewProps {
   onClear: (personId: string, phase: Phase) => void;
   onResetAll: (personId: string) => void;
   onExport: (person: Person) => void;
+  onRename: (personId: string, name: string) => void;
+}
+
+/**
+ * Ghost arrow beside the record button. When there's no person that way it goes
+ * invisible rather than unmounting, so the record button never changes width.
+ */
+function GhostNav({
+  direction,
+  available,
+  onClick,
+}: {
+  direction: "prev" | "next";
+  available: boolean;
+  onClick: () => void;
+}) {
+  const prev = direction === "prev";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!available}
+      aria-hidden={!available}
+      aria-label={prev ? "Previous person" : "Next person"}
+      className={`shrink-0 rounded-full p-2 text-gray-400 transition-opacity hover:bg-gray-100 hover:text-gray-700 active:scale-90 ${
+        available ? "" : "pointer-events-none opacity-0"
+      }`}
+    >
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d={prev ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
 }
 
 export default function RefugeView({
@@ -23,6 +56,7 @@ export default function RefugeView({
   onClear,
   onResetAll,
   onExport,
+  onRename,
 }: RefugeViewProps) {
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
   const touchStartX = useRef<number | null>(null);
@@ -82,6 +116,7 @@ export default function RefugeView({
                   onClear={(phase) => onClear(p.id, phase)}
                   onResetAll={() => onResetAll(p.id)}
                   onExport={() => onExport(p)}
+                  onRename={(name) => onRename(p.id, name)}
                 />
               </div>
             );
@@ -90,11 +125,25 @@ export default function RefugeView({
       </div>
 
       {/* Stays put while the cards swipe past. */}
-      <div className="shrink-0 px-4 pt-4">
-        <LiveClockButton
-          onCapture={handleCaptureClick}
-          armed={target !== null}
-          label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
+      <div className="flex shrink-0 items-center gap-1 px-2 pt-4">
+        <GhostNav
+          direction="prev"
+          available={index > 0}
+          onClick={() => onIndexChange(index - 1)}
+        />
+
+        <div className="min-w-0 flex-1">
+          <LiveClockButton
+            onCapture={handleCaptureClick}
+            armed={target !== null}
+            label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
+          />
+        </div>
+
+        <GhostNav
+          direction="next"
+          available={index < people.length - 1}
+          onClick={() => onIndexChange(index + 1)}
         />
       </div>
     </div>

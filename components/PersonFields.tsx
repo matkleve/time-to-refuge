@@ -41,8 +41,9 @@ export default function PersonFields({
         const filled = person[phase] !== null;
         const isTarget = target === phase;
         const asking = confirmPhase === phase;
-        const rowClassName = `no-select border transition-colors
-          ${filled ? "border-saffron-500/50 bg-saffron-50" : "border-gray-200 bg-gray-50"}
+        // Rows stay white so they read clearly against the card's fill.
+        const rowClassName = `no-select bg-white transition-shadow
+          ${filled ? "shadow-sm" : ""}
           ${isTarget ? "ring-2 ring-flagblue-500/70" : ""}`;
 
         const content = asking ? (

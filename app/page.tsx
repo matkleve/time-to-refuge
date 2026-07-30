@@ -151,6 +151,12 @@ export default function Home() {
     setPeople((prev) => prev.filter((p) => p.id !== id));
   }
 
+  function handleRenamePerson(id: string, name: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setPeople((prev) => prev.map((p) => (p.id === id ? { ...p, name: trimmed } : p)));
+  }
+
   function handleSelectPerson(id: string) {
     const i = people.findIndex((p) => p.id === id);
     if (i >= 0) setIndex(i);
@@ -229,29 +235,9 @@ export default function Home() {
             <div className="text-center">
               <p className="text-sm font-semibold text-gray-900">Time to Refuge</p>
               {people.length > 0 && (
-                <div className="flex items-center justify-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => goTo(index - 1)}
-                    disabled={index === 0}
-                    aria-label="Previous person"
-                    className="rounded px-1 leading-none text-gray-400 hover:text-gray-700 disabled:opacity-20 active:scale-90"
-                  >
-                    ‹
-                  </button>
-                  <p className="text-xs tabular-nums text-gray-400">
-                    {index + 1} / {people.length}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => goTo(index + 1)}
-                    disabled={index === people.length - 1}
-                    aria-label="Next person"
-                    className="rounded px-1 leading-none text-gray-400 hover:text-gray-700 disabled:opacity-20 active:scale-90"
-                  >
-                    ›
-                  </button>
-                </div>
+                <p className="text-xs tabular-nums text-gray-400">
+                  {index + 1} / {people.length}
+                </p>
               )}
             </div>
 
@@ -301,6 +287,7 @@ export default function Home() {
               onClear={handleClear}
               onResetAll={handleResetAll}
               onExport={downloadPersonCsv}
+              onRename={handleRenamePerson}
             />
           )}
 
@@ -311,6 +298,7 @@ export default function Home() {
               onAdd={handleAddPerson}
               onSelect={handleSelectPerson}
               onDelete={handleDeletePerson}
+              onRename={handleRenamePerson}
               onClose={() => setPeopleOpen(false)}
             />
           )}

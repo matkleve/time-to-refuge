@@ -11,6 +11,7 @@ interface PeopleSheetProps {
   onAdd: (name: string) => void;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, name: string) => void;
   onClose: () => void;
 }
 
@@ -20,6 +21,7 @@ export default function PeopleSheet({
   onAdd,
   onSelect,
   onDelete,
+  onRename,
   onClose,
 }: PeopleSheetProps) {
   const [adding, setAdding] = useState(false);
@@ -60,6 +62,7 @@ export default function PeopleSheet({
                 }}
                 onDelete={() => onDelete(p.id)}
                 onExport={() => downloadPersonCsv(p)}
+                onRename={(name) => onRename(p.id, name)}
               />
             </li>
           ))}
