@@ -104,6 +104,10 @@ function FieldRow({
     setShowActions(false);
   }
 
+  /* Every state renders at the same height, so revealing a row's actions
+     never resizes it or nudges the rows below. */
+  const rowHeight = overview ? "min-h-11" : "min-h-13";
+
   const rowClassName = cn(
     "no-select bg-white transition-shadow duration-200",
     filled && "shadow-sm",
@@ -127,7 +131,7 @@ function FieldRow({
 
   if (editing) {
     body = (
-      <div className="flex items-center gap-2 px-4 py-2">
+      <div className={cn("flex w-full items-center gap-2 px-4", rowHeight)}>
         {label}
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
@@ -155,7 +159,7 @@ function FieldRow({
     );
   } else if (showActions) {
     body = (
-      <div className="flex items-center gap-2 py-1 pr-1 pl-4">
+      <div className={cn("flex w-full items-center gap-2 pr-1 pl-4", rowHeight)}>
         {label}
         {/* The time stays on screen so the armed state has something to redden. */}
         {/* Always text-sm here: at text-lg the time plus three buttons
@@ -227,7 +231,7 @@ function FieldRow({
         onClick={handleRowClick}
         className={cn(
           "flex w-full items-center justify-between px-4 text-left hover:bg-ink/[0.03]",
-          overview ? "py-2.5" : "py-3.5",
+          rowHeight,
         )}
       >
         {label}

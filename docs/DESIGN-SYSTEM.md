@@ -97,6 +97,9 @@ gets caught.
 - **Cards are filled, never outlined**: `bg-card`, or `bg-card-current` for the
   person in view.
 - **Field rows are white** so they read against the card fill.
+- **A row is a fixed height** — 3.25rem focused, 2.75rem in the overview — in
+  every state: idle, actions revealed, armed, editing. Revealing a row's
+  actions must never resize it or nudge the rows below.
 - Radii use Tailwind's steps: `rounded-xl` controls · `rounded-2xl` rows ·
   `rounded-3xl` cards · `rounded-4xl` the desktop shell.
 - Shadows use Tailwind's steps: `shadow-sm` (a filled row) · `shadow-lg`
