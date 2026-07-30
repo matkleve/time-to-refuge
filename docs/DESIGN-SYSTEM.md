@@ -173,15 +173,78 @@ Everything else is rem.
 
 ## 5. Motion
 
-| Token | Value | Used for |
-| --- | --- | --- |
-| `--duration-fast` | 120ms | Press feedback |
-| `--duration-ui` | 180ms | Colour and opacity changes |
-| `--duration-slide` | 280ms | The card carousel |
+Three durations, all Tailwind's own `duration-*` on `ease-out` — no custom
+tokens, for the same reason the type scale re-values Tailwind's steps rather
+than inventing names (§4a):
 
-All of it on `--ease-out-ui`. A capture flashes a ring in **the accent the
-surface is not** — the blue Refuge button flashes saffron, the gold Quick Log
-button flashes blue — so the confirmation always reads against its background.
+| Duration | Used for |
+| --- | --- |
+| `duration-150` | Press feedback (`active:scale-95`) |
+| `duration-200` | Colour, opacity, size changes; the default |
+| `duration-300` | The person carousel — the biggest movement gets the most time |
+
+A capture flashes a ring in **the accent the surface is not** — the blue
+Refuge button flashes saffron, the gold Quick Log button flashes blue — so the
+confirmation always reads against its background.
+
+**Nothing that changes size or position happens instantly.** The two patterns
+below are how that rule gets applied to the two situations it comes up in:
+revealing controls in place, and mounting a panel.
+
+### 5a. Reveal — controls appearing in place
+
+Used by a field row opening its actions. The row is **one persistent element**
+across idle and open — never two different elements swapped by a conditional
+— so its properties can transition instead of jumping:
+
+- The action cluster animates `max-width` (0 → content) and `opacity`
+  (0 → 1) together, `overflow-hidden` so children clip rather than wrap.
+  Growing `max-width` on a flex sibling is what makes the row's *other*
+  content visibly slide over to make room — that's the effect, not a
+  transform on the time itself.
+- The time's font size transitions too (it's smaller once actions are open,
+  to fit), so it eases rather than jumping between sizes.
+- Height never changes (§3): only width and opacity move.
+
+> **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**
+> Two different elements can't be transitioned between by CSS — that's what
+> produced the original jump. One element, changing classes, transitions;
+> two elements, one replacing the other, cannot.
+
+### 5b. Entrance — a panel or popover mounting
+
+Used by anything that mounts conditionally and covers new space: `PeopleSheet`,
+`HistoryPanel`, the location popover, an inline status note appearing. A CSS
+keyframe (`.animate-fade-in-up` in `globals.css`) runs automatically on mount —
+opacity 0→1 with a small upward drift, 200ms ease-out. No exit animation:
+these close by unmounting immediately, which needs no extra state and is a
+deliberate scope line — an exit animation needs the unmount delayed until it
+finishes, which is real added machinery for a close action that's already
+instant and expected to be.
+
+### 5c. Dismiss — closing a reveal on its own
+
+[`useDismissible`](../lib/use-dismissible.ts) is the one implementation of
+"this is open; close it if I stop paying attention to it, or close it right
+away if I look at something else." Every reveal that isn't a committed input
+uses it: a field row's actions, the location popover.
+
+- No interaction for the timeout closes it.
+- A click **outside** it closes it immediately.
+- A click **inside** it resets the timeout, so working through eye → copy →
+  edit isn't cut off mid-task.
+
+It does **not** apply to the inline time editor — that's a real text input mid
+in-progress correction, and a timer silently discarding it would be a
+surprise, not a convenience. That input already has its own lifecycle: `Enter`
+or losing focus commits, `Escape` cancels.
+
+The two-click armed state (§4, "Confirming") is deliberately a *different*
+pattern and does not use `useDismissible`: its timeout is fixed from the
+moment of arming and does not reset on hover or nearby interaction, because a
+fuse you can indefinitely re-extend by staying nearby isn't a safety measure.
+
+## 6. Gestures
 
 ## 6. Gestures
 
@@ -208,7 +271,8 @@ anything on its own either.
 | Recorded, either card | Reveals its actions — **never** navigates |
 
 A recorded time is data, so tapping it opens what can be done *to* it instead
-of moving you somewhere. The actions read left to right as **eye · copy** —
+of moving you somewhere — see §5a for how that reveal animates and §5c for how
+it closes again. The actions read left to right as **eye · copy** —
 things that only look at the time — then a gap, then **edit · reset**, which
 change it. The gap is the point: the harmless pair is never adjacent to the
 destructive one. Editing writes the corrected

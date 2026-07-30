@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { Check } from "lucide-react";
+import { useDismissible } from "@/lib/use-dismissible";
 
 type Status = "idle" | "checking" | "ok" | "denied" | "error";
 
@@ -24,17 +25,18 @@ export function LocationCheck() {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [info, setInfo] = useState<LocationInfo | null>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [open]);
+  // Same disclosure pattern as a field row's actions (design system §5c),
+  // just a longer pause — there's three lines to read here, not an icon row.
+  // onDismiss must stay referentially stable: this button sits beside the
+  // live clock, which re-renders every animation frame, so an inline arrow
+  // function here would reset the idle timer before it ever got to fire.
+  const dismiss = useCallback(() => setOpen(false), []);
+  const popoverRef = useDismissible<HTMLDivElement>({
+    active: open,
+    onDismiss: dismiss,
+    timeoutMs: 8000,
+  });
 
   function handleOpen() {
     setOpen(true);
@@ -88,7 +90,7 @@ export function LocationCheck() {
       </button>
 
       {open && (
-        <div className="absolute right-0 bottom-11 z-20 w-64 rounded-2xl bg-white p-3 text-left shadow-2xl">
+        <div className="animate-fade-in-up absolute right-0 bottom-11 z-20 w-64 rounded-2xl bg-white p-3 text-left shadow-2xl">
           <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">
             Time accuracy check
           </p>

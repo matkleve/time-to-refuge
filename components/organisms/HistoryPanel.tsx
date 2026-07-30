@@ -28,7 +28,7 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col bg-white">
+    <div className="absolute inset-0 z-30 flex flex-col bg-white animate-fade-in-up">
       <div className="flex items-center justify-between border-b border-line px-5 py-4">
         <h2 className="text-lg font-semibold text-ink">History</h2>
         <button
