@@ -1,22 +1,14 @@
 import { clsx, type ClassValue } from "clsx";
-import { extendTailwindMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge";
 
 /**
- * tailwind-merge has to be told about the design system's font-size names.
- * Without this it reads `text-clock` as a *colour* utility (it matches
- * `text-<something>`) and drops it the moment a real colour follows in the
- * same call — so `cn("text-clock", "text-white")` silently rendered at the
- * base size. Every custom `--text-*` token must be listed here.
+ * Merge Tailwind classes safely (clsx + tailwind-merge).
+ *
+ * No custom class groups are registered here on purpose: the design system
+ * re-values Tailwind's own scales rather than inventing names like
+ * `text-clock`, which tailwind-merge would mistake for a colour utility and
+ * silently drop.
  */
-const twMerge = extendTailwindMerge({
-  extend: {
-    classGroups: {
-      "font-size": [{ text: ["clock", "display", "title", "body", "label", "caption"] }],
-    },
-  },
-});
-
-/** Merge Tailwind classes safely (clsx + tailwind-merge). */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

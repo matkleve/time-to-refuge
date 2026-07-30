@@ -82,32 +82,32 @@ export function LocationCheck() {
           handleOpen();
         }}
         aria-label="Confirm current time and location"
-        className="flex size-9 items-center justify-center rounded-full border border-saffron-500 bg-white text-saffron-700 shadow-row transition-colors duration-(--duration-ui) hover:bg-saffron-50 active:scale-95"
+        className="flex size-9 items-center justify-center rounded-full border border-saffron-500 bg-white text-saffron-700 shadow-sm transition-colors duration-200 hover:bg-saffron-50 active:scale-95"
       >
         <Check className="h-4 w-4" strokeWidth={2.5} />
       </button>
 
       {open && (
-        <div className="absolute right-0 bottom-11 z-20 w-64 rounded-row bg-white p-3 text-left shadow-panel">
-          <p className="mb-1 text-caption tracking-wide text-saffron-700 uppercase">
+        <div className="absolute right-0 bottom-11 z-20 w-64 rounded-2xl bg-white p-3 text-left shadow-2xl">
+          <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">
             Time accuracy check
           </p>
           {status === "checking" && (
-            <p className="text-label text-muted">Locating…</p>
+            <p className="text-sm text-muted">Locating…</p>
           )}
           {(status === "ok" || status === "denied") && info && (
             <div className="space-y-1 text-sm">
-              <p className="text-body text-ink">{info.place}</p>
-              <p className="text-label text-muted">
+              <p className="text-base text-ink">{info.place}</p>
+              <p className="text-sm text-muted">
                 {info.timezone} · {info.offset}
               </p>
-              <p className="text-caption text-subtle">
+              <p className="text-xs text-subtle">
                 The clock uses this device&apos;s system time for the detected timezone above.
               </p>
             </div>
           )}
           {status === "error" && (
-            <p className="text-label text-muted">Location isn&apos;t available on this device.</p>
+            <p className="text-sm text-muted">Location isn&apos;t available on this device.</p>
           )}
         </div>
       )}

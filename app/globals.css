@@ -13,34 +13,40 @@
 @theme {
   /* ── Type ─────────────────────────────────────────────────────────────
    * Three families, each with a job:
-   *   display — Spectral. Names and phase labels. This is a record of a
-   *             ceremony; a serif reads calmer than a UI sans at that size.
-   *   sans    — Inter. Everything functional.
-   *   mono    — JetBrains Mono. Times only, for genuinely tabular figures so
-   *             a running clock doesn't jitter as digits change.
+   *   display — Newsreader. Names and phase labels. A contemplative book
+   *             serif: this is a record of a ceremony, and it should read
+   *             like one rather than like an interface.
+   *   sans    — DM Sans. Everything functional. Calm and unfussy.
+   *   mono    — DM Mono. Times only. A sibling of DM Sans, so the numbers
+   *             sit with the interface instead of looking like code, and
+   *             monospaced so a running clock never jitters.
    */
-  --font-display: var(--font-spectral), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, SFMono-Regular, monospace;
 
   /*
-   * Type scale — six steps, and no ad-hoc sizes outside them.
+   * Type scale — Tailwind's own steps, re-valued.
    *
-   * Sizes are px. See the unit rule at the bottom of this block: relative
-   * units are reserved for the few values that must scale with something.
+   * These are deliberately NOT custom names. Inventing `text-clock` meant
+   * tailwind-merge read it as a colour utility and silently dropped it (the
+   * hero clock shipped at 15px once). Overriding the built-in scale keeps
+   * every tool that already understands Tailwind working.
+   *
+   * rem, so the whole scale grows with the reader's browser font size.
    */
-  --text-clock: 36px;      /* the hero clock */
-  --text-clock--line-height: 1.1;
-  --text-display: 24px;    /* person name, focused card */
-  --text-display--line-height: 1.2;
-  --text-title: 17px;      /* panel titles, name in the overview */
-  --text-title--line-height: 1.3;
-  --text-body: 15px;       /* default UI text */
-  --text-body--line-height: 1.45;
-  --text-label: 13px;      /* meta, counters, secondary rows */
-  --text-label--line-height: 1.4;
-  --text-caption: 11px;    /* tracked uppercase captions */
-  --text-caption--line-height: 1.3;
+  --text-xs: 0.6875rem;    /* 11px — tracked uppercase captions */
+  --text-xs--line-height: 1.3;
+  --text-sm: 0.8125rem;    /* 13px — meta, counters, secondary rows */
+  --text-sm--line-height: 1.4;
+  --text-base: 0.9375rem;  /* 15px — default UI text */
+  --text-base--line-height: 1.45;
+  --text-lg: 1.0625rem;    /* 17px — panel titles, overview name, field rows */
+  --text-lg--line-height: 1.3;
+  --text-2xl: 1.5rem;      /* 24px — person name on the focused card */
+  --text-2xl--line-height: 1.2;
+  --text-4xl: 2.25rem;     /* 36px — the hero clock */
+  --text-4xl--line-height: 1.1;
 
   /* ── Colour ───────────────────────────────────────────────────────────
    * Saffron marks a *recorded* time and the Quick Log.
@@ -77,36 +83,37 @@
   --color-card: #f3f1ee;
   --color-card-current: #fbe8bf;
 
-  /* ── Radius ───────────────────────────────────────────────────────── */
-  --radius-control: 12px;
-  --radius-row: 16px;
-  --radius-card: 24px;
-  --radius-shell: 32px;
+  /* ── Radius ───────────────────────────────────────────────────────────
+   * Again Tailwind's own steps, re-valued in px:
+   *   xl  controls · 2xl rows · 3xl cards · 4xl the desktop shell
+   */
+  --radius-xl: 0.75rem;  /* 12px */
+  --radius-2xl: 1rem;    /* 16px */
+  --radius-3xl: 1.5rem;  /* 24px */
+  --radius-4xl: 2rem;    /* 32px */
 
-  /* ── Elevation ────────────────────────────────────────────────────── */
-  --shadow-row: 0 1px 2px rgb(31 27 22 / 0.06);
-  --shadow-raised: 0 4px 16px rgb(31 27 22 / 0.12);
-  --shadow-panel: 0 12px 40px rgb(31 27 22 / 0.16);
+  /* ── Elevation ────────────────────────────────────────────────────────
+   * Shadow geometry stays in px: a shadow is a rendering detail, not
+   * something that should grow with the reader's font size. */
+  --shadow-sm: 0 1px 2px rgb(31 27 22 / 0.06);    /* a filled row */
+  --shadow-lg: 0 4px 16px rgb(31 27 22 / 0.12);   /* the record button */
+  --shadow-2xl: 0 12px 40px rgb(31 27 22 / 0.16); /* popovers */
 
-  /* ── Motion ───────────────────────────────────────────────────────── */
-  --ease-out-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --duration-fast: 120ms;   /* press feedback */
-  --duration-ui: 180ms;     /* colour/opacity changes */
-  --duration-slide: 280ms;  /* card carousel */
+  /* Motion uses Tailwind's built-in `duration-*` and `ease-out`: 150ms for
+   * press feedback, 200ms for colour changes, 300ms for the card carousel. */
 
   /*
    * ── Units ────────────────────────────────────────────────────────────
-   * px is the unit of this system. Setting --spacing in px puts Tailwind's
-   * whole spacing/sizing scale on it too, so `size-9` is 36px, not 2.25rem.
+   * rem is the unit of this system — type, spacing, radii and control sizes
+   * all scale together with the reader's browser font size. Tailwind's own
+   * rem-based spacing scale is left alone, so `size-9` is 2.25rem.
    *
-   * Relative units are used only where the value must scale with something
-   * else, which is the only case they earn their keep:
-   *   em  — letter-spacing on the tracked captions, so tracking stays
-   *         proportional to the glyphs it is spacing.
-   *   dvh — the app shell, which must track the mobile viewport.
-   *   vh  — the desktop frame's max height.
+   * px is reserved for the special cases where a value must NOT scale:
+   *   hairlines and rings — a 1px border stays 1px
+   *   shadow geometry     — a rendering detail, above
+   * em is used for letter-spacing on the tracked captions, so tracking stays
+   * proportional to the glyphs it is spacing.
    */
-  --spacing: 4px;
 }
 
 @layer base {
@@ -120,7 +127,7 @@
     background-color: white;
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: var(--text-body);
+    font-size: var(--text-base);
     -webkit-font-smoothing: antialiased;
   }
 

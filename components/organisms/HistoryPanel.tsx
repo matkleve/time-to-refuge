@@ -30,18 +30,18 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
   return (
     <div className="absolute inset-0 z-30 flex flex-col bg-white">
       <div className="flex items-center justify-between border-b border-line px-5 py-4">
-        <h2 className="text-title font-semibold text-ink">History</h2>
+        <h2 className="text-lg font-semibold text-ink">History</h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-control border border-line px-3 py-1.5 text-label text-ink transition-colors duration-(--duration-ui) hover:bg-card active:scale-95"
+          className="rounded-xl border border-line px-3 py-1.5 text-sm text-ink transition-colors duration-200 hover:bg-card active:scale-95"
         >
           Close
         </button>
       </div>
       <div className="flex-1 overflow-y-auto px-5 py-4">
         {sorted.length === 0 ? (
-          <p className="mt-10 text-center text-label text-subtle">
+          <p className="mt-10 text-center text-sm text-subtle">
             Nothing recorded yet.
           </p>
         ) : (
@@ -49,10 +49,10 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
             {sorted.map((entry) => (
               <li
                 key={entry.id}
-                className="rounded-row bg-card px-4 py-2.5"
+                className="rounded-2xl bg-card px-4 py-2.5"
               >
-                <p className="text-body text-ink">{describe(entry)}</p>
-                <p className="mt-0.5 font-mono text-caption tabular-nums text-subtle">
+                <p className="text-base text-ink">{describe(entry)}</p>
+                <p className="mt-0.5 font-mono text-xs tabular-nums text-subtle">
                   {formatLogTime(entry.at)}
                 </p>
               </li>

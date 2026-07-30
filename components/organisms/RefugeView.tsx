@@ -88,7 +88,7 @@ export function RefugeView({
   return (
     <div
       className="flex flex-1 flex-col overflow-hidden pt-4"
-      style={{ paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}
+      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         {/* Position + navigation, directly above the card. */}
@@ -98,7 +98,7 @@ export function RefugeView({
             available={index > 0}
             onClick={() => onIndexChange(index - 1)}
           />
-          <span className="min-w-14 text-center text-label tabular-nums text-muted">
+          <span className="min-w-14 text-center text-sm tabular-nums text-muted">
             {index + 1} / {people.length}
           </span>
           <NavButton
@@ -111,7 +111,7 @@ export function RefugeView({
         {/* Only this track moves when swiping between people. */}
         <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div
-            className="flex w-full transition-transform duration-(--duration-slide) ease-(--ease-out-ui)"
+            className="flex w-full transition-transform duration-300 ease-out"
             style={{ transform: `translateX(-${index * 100}%)` }}
           >
             {people.map((p) => {

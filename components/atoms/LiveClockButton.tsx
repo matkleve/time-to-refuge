@@ -44,8 +44,8 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         onClick={handleClick}
         disabled={!armed}
         className={cn(
-          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-card py-6 shadow-raised",
-          "transition-all duration-(--duration-fast) ease-(--ease-out-ui)",
+          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg",
+          "transition-all duration-150 ease-out",
           armed
             ? "bg-linear-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]"
             : "bg-card",
@@ -54,16 +54,16 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
       >
         <span
           className={cn(
-            "font-mono text-clock font-semibold tabular-nums tracking-wide",
+            "font-mono text-4xl font-semibold tabular-nums tracking-wide",
             armed ? "text-white" : "text-muted",
           )}
         >
           {time}
-          <span className={cn("text-display", armed ? "text-white/70" : "text-subtle")}>.{ms}</span>
+          <span className={cn("text-2xl", armed ? "text-white/70" : "text-subtle")}>.{ms}</span>
         </span>
         <span
           className={cn(
-            "text-caption tracking-[0.2em] uppercase",
+            "text-xs tracking-[0.2em] uppercase",
             armed ? "text-white/85" : "text-muted",
           )}
         >

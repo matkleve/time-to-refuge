@@ -33,9 +33,9 @@ function roundedRect(
  * silently falls back to a system face.
  */
 async function readyFonts(): Promise<{ display: string; mono: string; sans: string }> {
-  const display = "Spectral, Georgia, serif";
-  const sans = "Inter, system-ui, sans-serif";
-  const mono = '"JetBrains Mono", ui-monospace, monospace';
+  const display = "Newsreader, Georgia, serif";
+  const sans = '"DM Sans", system-ui, sans-serif';
+  const mono = '"DM Mono", ui-monospace, monospace';
 
   if (typeof document !== "undefined" && document.fonts) {
     try {

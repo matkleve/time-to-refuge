@@ -34,11 +34,11 @@ export function ConfirmInline({
   return (
     <div
       className={cn(
-        "no-select flex items-center justify-between gap-2 rounded-row bg-danger-50 py-1 pr-1 pl-3",
+        "no-select flex items-center justify-between gap-2 rounded-2xl bg-danger-50 py-1 pr-1 pl-3",
         className,
       )}
     >
-      <span className="min-w-0 truncate text-label text-danger-600">{message}</span>
+      <span className="min-w-0 truncate text-sm text-danger-600">{message}</span>
       <div className="flex shrink-0 items-center gap-0.5">
         <IconButton icon={X} label="Cancel" onClick={onCancel} tone="neutral" size={size} />
         <IconButton

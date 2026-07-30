@@ -26,30 +26,42 @@ Three families, each earning its place:
 
 | Token | Face | Job |
 | --- | --- | --- |
-| `font-display` | Spectral | Names, phase labels, panel titles |
-| `font-sans` | Inter | All interface text |
-| `font-mono` | JetBrains Mono | Times, and only times |
+| `font-display` | Newsreader | Names, phase labels, panel titles |
+| `font-sans` | DM Sans | All interface text |
+| `font-mono` | DM Mono | Times, and only times |
 
-The serif carries the ceremonial vocabulary — a person's name and the Three
-Jewels — because it reads calmer than a UI sans at display size. JetBrains Mono
-is chosen for genuinely tabular figures: a clock ticking at 60fps must not
-jitter as digits change width.
+**Newsreader** is a contemplative book serif. It carries the ceremonial
+vocabulary — a person's name and the Three Jewels — so the record reads like a
+record rather than like an interface. **DM Sans** handles everything functional:
+calm, unfussy, no personality competing with the serif. **DM Mono** is DM Sans'
+sibling, so the times sit with the interface instead of looking like code, and
+being monospaced it keeps a 60fps clock from jittering as digits change width.
+
+> **Font variables belong on `<html>`, not `<body>`.** `--font-sans` is declared
+> in `@theme`, i.e. on `:root`. If `--font-dm-sans` is only defined further down
+> on `<body>`, the `var()` at `:root` is undefined, the whole custom property
+> goes *guaranteed-invalid*, and every `font-family` in the app silently falls
+> back to the system stack. That shipped once — the custom faces were never
+> applying in the UI at all, only in the shared card image (which names the
+> families directly on the canvas).
 
 **Scale.** Six steps. Do not introduce a size outside it.
 
-| Token | Size | Used for |
-| --- | --- | --- |
-| `text-clock` | 36px | The hero clock |
-| `text-display` | 24px | Person name on the focused card |
-| `text-title` | 17px | Panel titles, name in the overview, field rows |
-| `text-body` | 15px | Default UI text |
-| `text-label` | 13px | Meta, counters, secondary rows |
-| `text-caption` | 11px | Tracked uppercase captions |
+These are **Tailwind's own steps**, re-valued — not custom names.
 
-> **These names must also be registered in [`lib/utils.ts`](../lib/utils.ts).**
-> `tailwind-merge` matches `text-<x>` as a *colour* utility, so an unregistered
-> `text-clock` is silently dropped whenever a colour follows it in the same
-> `cn()` call. That bug shipped once already — the hero clock rendered at 15px.
+| Utility | Size | Used for |
+| --- | --- | --- |
+| `text-4xl` | 2.25rem (36px) | The hero clock |
+| `text-2xl` | 1.5rem (24px) | Person name on the focused card |
+| `text-lg` | 1.0625rem (17px) | Panel titles, name in the overview, field rows |
+| `text-base` | 0.9375rem (15px) | Default UI text |
+| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows |
+| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions |
+
+> **Don't invent size names.** A custom `text-clock` is read by tailwind-merge
+> as a *colour* utility and silently dropped whenever a colour follows it in the
+> same `cn()` call — that bug shipped once, with the hero clock at 15px.
+> Re-valuing the built-in scale avoids the whole class of problem.
 
 ## 2. Colour
 
@@ -85,10 +97,10 @@ gets caught.
 - **Cards are filled, never outlined**: `bg-card`, or `bg-card-current` for the
   person in view.
 - **Field rows are white** so they read against the card fill.
-- Radii: `rounded-control` (12px) · `rounded-row` (16px) · `rounded-card` (24px) ·
-  `rounded-shell` (32px, the desktop frame).
-- Shadows: `shadow-row` (a filled row) · `shadow-raised` (record button) ·
-  `shadow-panel` (popovers).
+- Radii use Tailwind's steps: `rounded-xl` controls · `rounded-2xl` rows ·
+  `rounded-3xl` cards · `rounded-4xl` the desktop shell.
+- Shadows use Tailwind's steps: `shadow-sm` (a filled row) · `shadow-lg`
+  (record button) · `shadow-2xl` (popovers).
 
 ## 4. Controls
 
@@ -96,8 +108,8 @@ gets caught.
 
 | Size | Box | Used for |
 | --- | --- | --- |
-| `sm` | 36px | Dense clusters inside a card header, list-row actions |
-| `md` | 44px | Standalone controls: header actions, person navigation |
+| `sm` | 2.25rem (36px) | Dense clusters inside a card header, list-row actions |
+| `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
 
 **Icons over words.** Anything small is an icon with an `aria-label`, never a
 text button. [`IconButton`](../components/atoms/IconButton.tsx) is the only way
@@ -125,19 +137,22 @@ everywhere.
 
 ## 4a. Units
 
-**px is the unit of this system.** `--spacing` is set to `4px`, which puts
-Tailwind's whole spacing and sizing scale on px too — `size-9` is 36px, not
-2.25rem — so a number in the code is the number on screen.
+**rem is the unit of this system.** Type, spacing, radii and control sizes all
+scale together with the reader's browser font size, so someone who has set a
+larger default gets a larger app rather than the same small one.
 
-Relative units are used only where a value must scale with something else:
+Tailwind's own rem-based scales are used as-is; only their *values* are
+re-tuned. `px` is reserved for the few things that must **not** scale:
 
 | Unit | Where | Why |
 | --- | --- | --- |
-| `em` | Letter-spacing on tracked captions | Tracking must stay proportional to the glyphs it spaces |
-| `dvh` | App shell height | Must track the mobile viewport as browser chrome moves |
+| `px` | Hairlines, borders, focus ring | A 1px rule should stay 1px at any text size |
+| `px` | Shadow geometry | A rendering detail, not a reading size |
+| `em` | Letter-spacing on tracked captions | Tracking stays proportional to its glyphs |
+| `dvh` | App shell height | Must track the mobile viewport as chrome moves |
 | `vh` | Desktop frame max-height | Must track the window |
 
-Nothing else. If you reach for `rem`, it is almost certainly a px value.
+Everything else is rem.
 
 ## 5. Motion
 
@@ -172,4 +187,4 @@ with a mouse, and undiscoverable without a hint.
 - Everything interactive is reachable and operable by keyboard. The Quick Log
   "tap anywhere" layer is a pointer *convenience*; the real focusable control is
   the record button inside it.
-- Targets are never below 36px.
+- Targets are never below 2.25rem (36px).

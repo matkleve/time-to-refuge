@@ -51,7 +51,7 @@ export function QuickLogView() {
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
       <div className="border-b border-line px-3 py-2">
         <div className="flex items-center justify-between">
-          <span className="pl-1 text-label text-muted">{entries.length} logged</span>
+          <span className="pl-1 text-sm text-muted">{entries.length} logged</span>
           {confirmingReset ? (
             <ConfirmInline
               className="bg-transparent"
@@ -85,7 +85,7 @@ export function QuickLogView() {
 
       <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <p className="text-center text-label text-subtle">Tap anywhere to log a time.</p>
+          <p className="text-center text-sm text-subtle">Tap anywhere to log a time.</p>
         ) : (
           sorted.map((entry, i) => {
             const { date, time, ms } = formatInZone(entry.at, tz);
@@ -97,9 +97,9 @@ export function QuickLogView() {
                   className="bg-card"
                 >
                   <div className="flex items-center justify-between py-1.5 pr-1 pl-4">
-                    <span className="text-caption tabular-nums text-subtle">#{sorted.length - i}</span>
+                    <span className="text-xs tabular-nums text-subtle">#{sorted.length - i}</span>
                     <span className="flex items-center gap-2">
-                      <span className="font-mono text-label tabular-nums text-ink">
+                      <span className="font-mono text-sm tabular-nums text-ink">
                         {date} · {time}
                         <span className="text-subtle">.{ms}</span>
                       </span>
@@ -122,7 +122,7 @@ export function QuickLogView() {
         )}
       </div>
 
-      <div className="px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-2">
+      <div className="px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
         <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>

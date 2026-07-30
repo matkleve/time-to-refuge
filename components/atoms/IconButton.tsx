@@ -23,7 +23,7 @@ const sizeClass = {
 } as const;
 
 const iconSize = {
-  sm: "size-[18px]",
+  sm: "size-[1.125rem]",
   md: "size-5",
 } as const;
 
@@ -59,7 +59,7 @@ export function IconButton({
       title={label}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
-        "transition-colors duration-(--duration-ui) ease-(--ease-out-ui)",
+        "transition-colors duration-200 ease-out",
         "active:scale-95 disabled:pointer-events-none",
         sizeClass[size],
         toneClass[tone],

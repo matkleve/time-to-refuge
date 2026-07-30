@@ -1,23 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Spectral } from "next/font/google";
+import { DM_Mono, DM_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 
-const spectral = Spectral({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-spectral",
+  variable: "--font-newsreader",
   display: "swap",
 });
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const dmMono = DM_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
   display: "swap",
 });
 
@@ -38,12 +38,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body
-        className={`${spectral.variable} ${inter.variable} ${jetbrainsMono.variable}`}
-      >
-        {children}
-      </body>
+    /*
+     * The font variables must sit on <html>, not <body>. `--font-sans` is
+     * declared in @theme (i.e. on :root); if `--font-dm-sans` is only defined
+     * further down on <body>, the var() at :root is undefined, the whole
+     * custom property goes guaranteed-invalid, and every font-family silently
+     * falls back to the system stack.
+     */
+    <html
+      lang="en"
+      className={`${newsreader.variable} ${dmSans.variable} ${dmMono.variable}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }

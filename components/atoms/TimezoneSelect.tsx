@@ -49,7 +49,7 @@ export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
         value={value}
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => onChange(e.target.value)}
-      className="max-w-[60vw] appearance-none rounded-control border border-line bg-white py-1.5 pr-7 pl-8 text-label text-ink transition-colors duration-(--duration-ui) hover:border-muted"
+      className="max-w-[60vw] appearance-none rounded-xl border border-line bg-white py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200 hover:border-muted"
     >
         {zones.map((z) => (
           <option key={z} value={z}>

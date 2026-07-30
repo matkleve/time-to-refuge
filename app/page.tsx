@@ -176,13 +176,13 @@ export default function Home() {
     <AppShell>
       <div
         className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
-        style={{ paddingTop: "max(8px, env(safe-area-inset-top))" }}
+        style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <button
           type="button"
           onClick={() => setView("refuge")}
           className={cn(
-            "flex-1 rounded-control py-2 text-label font-medium transition-colors duration-(--duration-ui)",
+            "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
             view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-ink/[0.05]",
           )}
         >
@@ -192,7 +192,7 @@ export default function Home() {
           type="button"
           onClick={() => setView("quicklog")}
           className={cn(
-            "flex-1 rounded-control py-2 text-label font-medium transition-colors duration-(--duration-ui)",
+            "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
             view === "quicklog" ? "bg-saffron-400 text-ink" : "text-muted hover:bg-ink/[0.05]",
           )}
         >
@@ -215,14 +215,14 @@ export default function Home() {
                   disabled={undoStack.length === 0}
                 />
                 {undoStack.length > 0 && (
-                  <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[10px] font-semibold text-white tabular-nums">
+                  <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[0.625rem] font-semibold text-white tabular-nums">
                     {undoStack.length}
                   </span>
                 )}
               </span>
             </div>
 
-            <p className="font-display text-title font-semibold text-ink">Time to Refuge</p>
+            <p className="font-display text-lg font-semibold text-ink">Time to Refuge</p>
 
             <div className="flex items-center gap-1">
               <IconButton
@@ -237,11 +237,11 @@ export default function Home() {
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="text-body text-muted">Add the people taking refuge to begin.</p>
+              <p className="text-base text-muted">Add the people taking refuge to begin.</p>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
-                className="rounded-control bg-flagblue-600 px-5 py-2.5 text-body font-medium text-white shadow-raised transition-colors duration-(--duration-ui) hover:bg-flagblue-700 active:scale-95"
+                className="rounded-xl bg-flagblue-600 px-5 py-2.5 text-base font-medium text-white shadow-lg transition-colors duration-200 hover:bg-flagblue-700 active:scale-95"
               >
                 Add a person
               </button>

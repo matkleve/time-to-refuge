@@ -45,8 +45,8 @@ export function PersonFields({
         const asking = confirmPhase === phase;
         // Rows stay white so they read clearly against the card's fill.
         const rowClassName = cn(
-          "no-select bg-white transition-shadow duration-(--duration-ui)",
-          filled && "shadow-row",
+          "no-select bg-white transition-shadow duration-200",
+          filled && "shadow-sm",
           isTarget && "ring-2 ring-flagblue-500",
         );
 
@@ -73,7 +73,7 @@ export function PersonFields({
             <span
               className={cn(
                 "font-display font-medium",
-                readOnly ? "text-label" : "text-title",
+                readOnly ? "text-sm" : "text-lg",
                 filled ? "text-ink" : "text-subtle",
               )}
             >
@@ -82,7 +82,7 @@ export function PersonFields({
             <span
               className={cn(
                 "font-mono tabular-nums",
-                readOnly ? "text-label" : "text-title",
+                readOnly ? "text-sm" : "text-lg",
                 filled ? "text-saffron-700" : "text-subtle",
               )}
             >
@@ -93,7 +93,7 @@ export function PersonFields({
 
         if (readOnly) {
           return (
-            <div key={phase} className={cn("overflow-hidden rounded-row", rowClassName)}>
+            <div key={phase} className={cn("overflow-hidden rounded-2xl", rowClassName)}>
               {content}
             </div>
           );

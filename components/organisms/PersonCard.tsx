@@ -93,8 +93,8 @@ export function PersonCard({
           }}
           aria-label="Person's name"
           className={cn(
-            "min-w-0 flex-1 rounded-control border border-flagblue-500 bg-white px-2 py-1 font-display font-semibold text-ink",
-            overview ? "text-title" : "text-display",
+            "min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 py-1 font-display font-semibold text-ink",
+            overview ? "text-lg" : "text-2xl",
           )}
         />
       ) : (
@@ -104,19 +104,19 @@ export function PersonCard({
             <button
               type="button"
               onClick={onSelect}
-              className="flex min-w-0 items-center gap-2 rounded-control px-1 py-1 text-left transition-colors duration-(--duration-ui) hover:bg-ink/[0.05]"
+              className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
             >
               {isComplete(person) && <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />}
-              <span className="truncate font-display text-title font-semibold text-ink">{person.name}</span>
+              <span className="truncate font-display text-lg font-semibold text-ink">{person.name}</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={startEditing}
               disabled={!onRename}
-              className="flex min-w-0 items-center gap-2 rounded-control px-1 py-1 text-left transition-colors duration-(--duration-ui) hover:bg-ink/[0.05] disabled:pointer-events-none"
+              className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05] disabled:pointer-events-none"
             >
-              <h2 className="no-select truncate text-display font-semibold text-ink">{person.name}</h2>
+              <h2 className="no-select truncate text-2xl font-semibold text-ink">{person.name}</h2>
             </button>
           )}
 
@@ -182,7 +182,7 @@ export function PersonCard({
       {nameRow}
 
       {shareNote && (
-        <p className="no-select px-4 pt-1 text-caption text-flagblue-600" role="status">
+        <p className="no-select px-4 pt-1 text-xs text-flagblue-600" role="status">
           {shareNote}
         </p>
       )}
@@ -227,7 +227,7 @@ export function PersonCard({
   );
 
   const fill = isCurrent ? "bg-card-current" : "bg-card";
-  const shell = cn("overflow-hidden rounded-card", fill);
+  const shell = cn("overflow-hidden rounded-3xl", fill);
 
   // Overview cards are read-only inside, so a whole-card swipe can mean "delete"
   // without competing with the per-row swipe-to-reset used in the focused card.
