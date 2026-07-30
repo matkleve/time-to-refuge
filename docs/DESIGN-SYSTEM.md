@@ -284,6 +284,43 @@ destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 
+## 6b. Verifying the clock
+
+[`LocationCheck`](../components/atoms/LocationCheck.tsx) sits beside the
+record button. Every tap it captures is a moment that happened once — the
+teacher's fingers snapped, or they didn't — so the one thing worth checking
+*before* the ceremony, when there's no time pressure, is whether this
+device's clock is telling the truth.
+
+It cannot prove the clock is accurate to the second: that would need a
+trusted time server, and retreat centers are often offline or on bad wifi —
+a check that silently fails exactly when it matters would be worse than no
+check. What it verifies instead is the failure mode that actually happens:
+a phone still set to a *different* time zone, left over from traveling, or
+never set at all. GPS location and the device's own reported time zone are
+two independently-sourced facts, so the app cross-checks them itself — a
+whole-hour estimate of the expected offset from longitude, generously
+toleranced (`MISMATCH_TOLERANCE_HOURS`, currently 3.5h) since real time
+zones follow borders, not meridians, and can sit a couple of hours off solar
+time even when correct (Spain, China). It only speaks up for the gap that
+actually matters: a clock left many hours off from a different time zone
+entirely, not political quirks.
+
+- **The badge is a pill, not a bare icon** — idle reads "Verify time", and
+  once confirmed it shows the place itself (e.g. "Vienna"), not a generic
+  "done" glyph. A problem — location denied, unsupported, *or* a detected
+  mismatch — switches it to the danger tone with "Check clock" — a
+  checkmark-shaped icon shown before anything was actually verified would
+  silently claim success it hasn't earned, so idle gets its own icon
+  (`Clock`), not a dimmed `Check`.
+- **The popover explains the reasoning, not just the result**: the detected
+  place, the device's time zone and UTC offset, and a sentence stating
+  plainly whether they agree — never an unconditional "this is correct"
+  regardless of what was actually found.
+- Denied, unsupported, or mismatched states still surface whatever the
+  device *can* say about its own clock, framed honestly as unverified (or
+  wrong) rather than hidden.
+
 ## 7. Accessibility floor
 
 - `npm run lint` (jsx-a11y) passes with zero errors.
