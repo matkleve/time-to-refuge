@@ -119,7 +119,8 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 
 | Icon | Means |
 | --- | --- |
-| `Eye` / `Pencil` | Open that person · edit that time |
+| `Eye` / `Copy` | Open that person · copy that time |
+| `Pencil` / `RotateCcw` | Edit that time · reset it |
 | `History` / `Undo2` | History panel · undo one step |
 | `Download` / `Share2` | Export CSV · share the card as an image |
 | `Users` / `Plus` | People overview · add a person |
@@ -203,8 +204,11 @@ anything on its own either.
 | Empty, in the overview | Opens that person in focus with it armed |
 | Recorded, either card | Reveals its actions — **never** navigates |
 
-A recorded time is data, so tapping it opens what can be done *to* it (open,
-edit, reset) instead of moving you somewhere. Editing writes the corrected
+A recorded time is data, so tapping it opens what can be done *to* it instead
+of moving you somewhere. The actions read left to right as **eye · copy** —
+things that only look at the time — then a gap, then **edit · reset**, which
+change it. The gap is the point: the harmless pair is never adjacent to the
+destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 

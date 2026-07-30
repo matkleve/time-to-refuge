@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, Pencil, RotateCcw } from "lucide-react";
+import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
 import { Person, PHASES, PHASE_LABELS, Phase } from "@/lib/types";
 import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -57,6 +57,7 @@ function FieldRow({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
   const [invalid, setInvalid] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const armedReset = useArmedAction(() => {
     onClear?.(phase);
@@ -80,6 +81,16 @@ function FieldRow({
     // Filled: never jump — reveal what can be done to it instead.
     setShowActions((v) => !v);
     disarm();
+  }
+
+  async function copyTime() {
+    try {
+      await navigator.clipboard.writeText(formatTimestamp(value));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // Clipboard denied (insecure origin, or the user said no) — say nothing.
+    }
   }
 
   function commitEdit() {
@@ -147,15 +158,17 @@ function FieldRow({
       <div className="flex items-center gap-2 py-1 pr-1 pl-4">
         {label}
         {/* The time stays on screen so the armed state has something to redden. */}
+        {/* Always text-sm here: at text-lg the time plus three buttons
+            overflows the row and the timestamp gets truncated. */}
         <span
           className={cn(
-            "ml-auto font-mono tabular-nums",
-            overview ? "text-sm" : "text-lg",
+            "ml-auto shrink-0 font-mono text-sm tabular-nums",
             reset.armed ? "text-danger-600" : "text-saffron-700",
           )}
         >
           {formatTimestamp(value)}
         </span>
+        {/* Reading actions, then a gap, then the ones that change something. */}
         <div className="flex shrink-0 items-center gap-0.5">
           {overview && onOpenPerson && (
             <IconButton
@@ -166,6 +179,17 @@ function FieldRow({
               size="sm"
             />
           )}
+          <IconButton
+            icon={copied ? Check : Copy}
+            label={copied ? `${PHASE_LABELS[phase]} time copied` : `Copy ${PHASE_LABELS[phase]} time`}
+            onClick={copyTime}
+            tone="accent"
+            size="sm"
+            className={copied ? "text-saffron-700" : undefined}
+          />
+        </div>
+
+        <div className="ml-1.5 flex shrink-0 items-center gap-0.5">
           {onEditTime && (
             <IconButton
               icon={Pencil}
