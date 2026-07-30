@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Person,
   Phase,
+  PHASES,
   LogEntry,
   createPerson,
   createLogEntry,
@@ -13,12 +14,11 @@ import { downloadCsv } from "@/lib/csv";
 import PersonCard from "@/components/PersonCard";
 import PeopleSheet from "@/components/PeopleSheet";
 import HistoryPanel from "@/components/HistoryPanel";
-import UndoToast from "@/components/UndoToast";
 import QuickLogView from "@/components/QuickLogView";
 
 type View = "refuge" | "quicklog";
 
-interface LastAction {
+interface UndoEntry {
   logId: string;
   personId: string;
   phase: Phase;
@@ -35,11 +35,10 @@ export default function Home() {
   const [index, setIndex] = useState(0);
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [lastAction, setLastAction] = useState<LastAction | null>(null);
+  const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
 
   const trackRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
-  const undoTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     setPeople(loadPeople());
@@ -70,11 +69,6 @@ export default function Home() {
     return () => window.removeEventListener("keydown", onKey);
   }, [people.length]);
 
-  function armUndoTimeout() {
-    if (undoTimer.current) clearTimeout(undoTimer.current);
-    undoTimer.current = setTimeout(() => setLastAction(null), 6000);
-  }
-
   function handleCapture(personId: string, phase: Phase) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
@@ -84,15 +78,17 @@ export default function Home() {
       prev.map((p) => (p.id === personId ? { ...p, [phase]: value } : p))
     );
     setLog((prev) => [...prev, entry]);
-    setLastAction({
-      logId: entry.id,
-      personId,
-      phase,
-      prevValue: null,
-      kind: "recorded",
-      message: `Recorded ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
-    });
-    armUndoTimeout();
+    setUndoStack((prev) => [
+      ...prev,
+      {
+        logId: entry.id,
+        personId,
+        phase,
+        prevValue: null,
+        kind: "recorded",
+        message: `Recorded ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      },
+    ]);
   }
 
   function handleClear(personId: string, phase: Phase) {
@@ -104,38 +100,45 @@ export default function Home() {
       prev.map((p) => (p.id === personId ? { ...p, [phase]: null } : p))
     );
     setLog((prev) => [...prev, entry]);
-    setLastAction({
-      logId: entry.id,
-      personId,
-      phase,
-      prevValue,
-      kind: "reset",
-      message: `Reset ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+    setUndoStack((prev) => [
+      ...prev,
+      {
+        logId: entry.id,
+        personId,
+        phase,
+        prevValue,
+        kind: "reset",
+        message: `Reset ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      },
+    ]);
+  }
+
+  function handleResetAll(personId: string) {
+    const person = people.find((p) => p.id === personId);
+    if (!person) return;
+    PHASES.forEach((phase) => {
+      if (person[phase] !== null) handleClear(personId, phase);
     });
-    armUndoTimeout();
   }
 
   function handleUndo() {
-    if (!lastAction) return;
-    const { personId, phase, prevValue, kind } = lastAction;
-    const person = people.find((p) => p.id === personId);
-    if (!person) {
-      setLastAction(null);
-      return;
+    if (undoStack.length === 0) return;
+    const last = undoStack[undoStack.length - 1];
+    const person = people.find((p) => p.id === last.personId);
+    if (person) {
+      setPeople((prev) =>
+        prev.map((p) => (p.id === last.personId ? { ...p, [last.phase]: last.prevValue } : p))
+      );
+      const entry = createLogEntry(
+        last.personId,
+        person.name,
+        last.phase,
+        last.kind === "recorded" ? "undo-recorded" : "undo-reset",
+        last.prevValue
+      );
+      setLog((prev) => [...prev, entry]);
     }
-    setPeople((prev) =>
-      prev.map((p) => (p.id === personId ? { ...p, [phase]: prevValue } : p))
-    );
-    const entry = createLogEntry(
-      personId,
-      person.name,
-      phase,
-      kind === "recorded" ? "undo-recorded" : "undo-reset",
-      prevValue
-    );
-    setLog((prev) => [...prev, entry]);
-    setLastAction(null);
-    if (undoTimer.current) clearTimeout(undoTimer.current);
+    setUndoStack((prev) => prev.slice(0, -1));
   }
 
   function handleAddPerson(name: string) {
@@ -207,17 +210,37 @@ export default function Home() {
       ) : (
         <>
           <header className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 py-3">
-            <button
-              type="button"
-              onClick={() => setHistoryOpen(true)}
-              aria-label="History"
-              className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setHistoryOpen(true)}
+                aria-label="History"
+                className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleUndo}
+                disabled={undoStack.length === 0}
+                aria-label="Undo last action"
+                title={undoStack[undoStack.length - 1]?.message}
+                className="relative rounded-lg p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-30 active:scale-95"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 14 4 9l5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M4 9h10a6 6 0 1 1 0 12h-1" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {undoStack.length > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-flagblue-600 px-1 text-[10px] font-semibold text-white">
+                    {undoStack.length}
+                  </span>
+                )}
+              </button>
+            </div>
 
             <div className="text-center">
               <p className="text-sm font-semibold text-gray-900">Time to Refuge</p>
@@ -247,25 +270,12 @@ export default function Home() {
                 className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 active:scale-95"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M19 8v6M22 11h-6" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 4-6 8-6s8 2 8 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>
           </header>
-
-          <div className="pointer-events-none absolute left-0 right-0 top-28 z-20 flex justify-center px-4">
-            {lastAction && (
-              <div className="w-full max-w-sm">
-                <UndoToast
-                  message={lastAction.message}
-                  onUndo={handleUndo}
-                  onDismiss={() => setLastAction(null)}
-                />
-              </div>
-            )}
-          </div>
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
@@ -295,6 +305,7 @@ export default function Home() {
                     person={p}
                     onCapture={(phase) => handleCapture(p.id, phase)}
                     onClear={(phase) => handleClear(p.id, phase)}
+                    onResetAll={() => handleResetAll(p.id)}
                   />
                 ))}
               </div>

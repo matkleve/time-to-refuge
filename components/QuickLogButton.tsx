@@ -30,7 +30,7 @@ export default function QuickLogButton({ flash }: QuickLogButtonProps) {
         border-saffron-600 bg-gradient-to-b from-saffron-400 to-saffron-600 hover:from-saffron-300 hover:to-saffron-500
         ${flash ? "scale-[0.98] ring-4 ring-flagblue-500/60" : ""}
         py-6 shadow-lg`}
-      style={{ minHeight: "8rem" }}
+      style={{ minHeight: "9.5rem" }}
     >
       <span className="text-4xl font-mono font-semibold tabular-nums tracking-wide text-white">
         {time}

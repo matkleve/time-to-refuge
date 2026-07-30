@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Person, PHASES, isComplete } from "@/lib/types";
+import { Person, PHASES, PHASE_LABELS, isComplete } from "@/lib/types";
+import { formatTimeShort } from "@/lib/format";
 import SwipeToAction from "./SwipeToAction";
 
 interface PeopleSheetProps {
@@ -49,7 +50,6 @@ export default function PeopleSheet({
       <div className="flex-1 overflow-y-auto px-5 py-4">
         <ul className="space-y-2">
           {people.map((p) => {
-            const done = PHASES.filter((phase) => p[phase] !== null).length;
             return (
               <li key={p.id}>
                 <SwipeToAction
@@ -93,13 +93,22 @@ export default function PeopleSheet({
                           onSelect(p.id);
                           onClose();
                         }}
-                        className="flex flex-1 items-center justify-between px-4 py-3.5 text-left hover:bg-black/[0.02]"
+                        className="flex-1 px-4 py-3 text-left hover:bg-black/[0.02]"
                       >
                         <span className="flex items-center gap-2 text-gray-900">
                           {isComplete(p) && <span className="text-saffron-600">✓</span>}
                           {p.name}
                         </span>
-                        <span className="text-xs text-gray-400">{done} / 3</span>
+                        <div className="mt-1 flex gap-3 text-xs">
+                          {PHASES.map((phase) => (
+                            <span
+                              key={phase}
+                              className={p[phase] !== null ? "text-saffron-600" : "text-gray-300"}
+                            >
+                              {PHASE_LABELS[phase][0]} {formatTimeShort(p[phase])}
+                            </span>
+                          ))}
+                        </div>
                       </button>
                       <button
                         type="button"
