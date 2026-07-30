@@ -107,7 +107,13 @@ gets caught.
 - **The backdrop photo** (`public/backdrop.jpg`) is pre-blurred and lightened
   at build time, not with a CSS filter, so it stays decorative rather than
   something that could ever need text laid over it at a passing contrast
-  ratio. `DesktopWorkspace`'s panels sit on it at `bg-white/85` with
+  ratio. It's the background of both shells — `AppShell` (mobile) and
+  `DesktopShell` — not something confined to desktop margins: a phone has no
+  margin to put it in, so on mobile it shows through the app's own empty
+  space instead (above the card, below the record button). Every surface
+  that needs to stay solid sets its own opaque background explicitly rather
+  than inheriting one — the header, the tab switcher, the card, the record
+  button. `DesktopWorkspace`'s panels do this at `bg-white/85` with
   `backdrop-blur-xl` — 85% white is a deliberate floor: blended against even
   a pure-black pixel it still can't drop text contrast below what the
   darkest of the app's own solid surfaces already needs, and the actual

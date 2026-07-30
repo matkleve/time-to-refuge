@@ -291,7 +291,7 @@ export default function Home() {
   return (
     <AppShell>
       <div
-        className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
+        className="flex shrink-0 gap-1 border-b border-line bg-white px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <button
@@ -320,7 +320,7 @@ export default function Home() {
         <QuickLogView />
       ) : (
         <>
-          <header className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
+          <header className="flex shrink-0 items-center justify-between border-b border-line bg-white px-4 py-3">
             <div className="flex items-center gap-1">
               <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
               <span className="relative inline-flex">
@@ -353,7 +353,9 @@ export default function Home() {
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="text-base text-muted">Add the people taking refuge to begin.</p>
+              <p className="rounded-2xl bg-white/90 px-5 py-3 text-base text-ink shadow-lg backdrop-blur-xl">
+                Add the people taking refuge to begin.
+              </p>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
