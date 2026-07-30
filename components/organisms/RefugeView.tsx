@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
-import { Person, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
+import { Person, PHASE_LABELS, Phase } from "@/lib/types";
+import { usePhaseTarget } from "@/lib/use-phase-target";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { PersonCard } from "./PersonCard";
 
@@ -61,25 +62,10 @@ export function RefugeView({
   requestedPhase = null,
   onRequestedPhaseConsumed,
 }: RefugeViewProps) {
-  const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
   const touchStartX = useRef<number | null>(null);
 
   const current = people[index];
-  const autoNext = current ? nextEmptyPhase(current) : null;
-  const target =
-    current && selectedPhase !== null && current[selectedPhase] === null ? selectedPhase : autoNext;
-
-  // A phase picked on one person shouldn't stay armed when you swipe to another.
-  useEffect(() => {
-    setSelectedPhase(null);
-  }, [current?.id]);
-
-  // Honour a field tapped in the overview, then hand the request back.
-  useEffect(() => {
-    if (!requestedPhase) return;
-    setSelectedPhase(requestedPhase);
-    onRequestedPhaseConsumed?.();
-  }, [requestedPhase, onRequestedPhaseConsumed]);
+  const { target, setSelectedPhase } = usePhaseTarget(current, requestedPhase, onRequestedPhaseConsumed);
 
   function handleCaptureClick() {
     if (!current || !target) return;

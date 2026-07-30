@@ -28,37 +28,48 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col bg-white animate-fade-in-up">
-      <div className="flex items-center justify-between border-b border-line px-5 py-4">
-        <h2 className="text-lg font-semibold text-ink">History</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-xl border border-line px-3 py-1.5 text-sm text-ink transition-colors duration-200 hover:bg-card active:scale-95"
-        >
-          Close
-        </button>
-      </div>
-      <div className="flex-1 overflow-y-auto px-5 py-4">
-        {sorted.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-subtle">
-            Nothing recorded yet.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {sorted.map((entry) => (
-              <li
-                key={entry.id}
-                className="rounded-2xl bg-card px-4 py-2.5"
-              >
-                <p className="text-base text-ink">{describe(entry)}</p>
-                <p className="mt-0.5 font-mono text-xs tabular-nums text-subtle">
-                  {formatLogTime(entry.at)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
+    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+       Pointer-only convenience: clicking the dimmed backdrop closes the dialog
+       (desktop only — on mobile it's edge-to-edge, so there's no backdrop to
+       click). The real, keyboard-reachable control is the Close button below. */
+    <div
+      className="absolute inset-0 z-30 flex flex-col bg-white animate-fade-in-up lg:items-center lg:justify-center lg:bg-black/30"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="flex h-full w-full flex-col bg-white lg:h-[36rem] lg:max-h-[80vh] lg:w-[28rem] lg:rounded-3xl lg:shadow-2xl">
+        <div className="flex items-center justify-between border-b border-line px-5 py-4">
+          <h2 className="text-lg font-semibold text-ink">History</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border border-line px-3 py-1.5 text-sm text-ink transition-colors duration-200 hover:bg-card active:scale-95"
+          >
+            Close
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {sorted.length === 0 ? (
+            <p className="mt-10 text-center text-sm text-subtle">
+              Nothing recorded yet.
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {sorted.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="rounded-2xl bg-card px-4 py-2.5"
+                >
+                  <p className="text-base text-ink">{describe(entry)}</p>
+                  <p className="mt-0.5 font-mono text-xs tabular-nums text-subtle">
+                    {formatLogTime(entry.at)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

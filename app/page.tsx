@@ -14,10 +14,13 @@ import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { Download, History, Undo2, Users } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { AppShell } from "@/components/AppShell";
+import { DesktopShell } from "@/components/DesktopShell";
 import { RefugeView } from "@/components/organisms/RefugeView";
+import { DesktopWorkspace } from "@/components/organisms/DesktopWorkspace";
 import { PeopleSheet } from "@/components/organisms/PeopleSheet";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
 type View = "refuge" | "quicklog";
@@ -41,6 +44,7 @@ export default function Home() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
   const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     setPeople(loadPeople());
@@ -199,6 +203,90 @@ export default function Home() {
   }
 
   if (!ready) return null;
+
+  if (isDesktop) {
+    return (
+      <DesktopShell>
+        <header className="flex shrink-0 items-center gap-4 bg-white/85 px-6 py-4 shadow-lg backdrop-blur-xl">
+          <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
+
+          <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1">
+            <button
+              type="button"
+              onClick={() => setView("refuge")}
+              className={cn(
+                "rounded-xl px-4 py-1.5 text-sm font-medium transition-colors duration-200",
+                view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-ink/[0.05]",
+              )}
+            >
+              Refuge
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("quicklog")}
+              className={cn(
+                "rounded-xl px-4 py-1.5 text-sm font-medium transition-colors duration-200",
+                view === "quicklog" ? "bg-saffron-400 text-ink" : "text-muted hover:bg-ink/[0.05]",
+              )}
+            >
+              Quick Log
+            </button>
+          </div>
+
+          {view === "refuge" && (
+            <div className="flex items-center gap-1">
+              <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
+              <span className="relative inline-flex">
+                <IconButton
+                  icon={Undo2}
+                  label={undoStack[undoStack.length - 1]?.message ?? "Undo last action"}
+                  onClick={handleUndo}
+                  disabled={undoStack.length === 0}
+                />
+                {undoStack.length > 0 && (
+                  <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[0.625rem] font-semibold text-white tabular-nums">
+                    {undoStack.length}
+                  </span>
+                )}
+              </span>
+              <IconButton
+                icon={Download}
+                label="Export everyone as CSV"
+                onClick={() => downloadCsv(people)}
+                disabled={people.length === 0}
+              />
+            </div>
+          )}
+        </header>
+
+        {view === "quicklog" ? (
+          <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
+            <div className="w-full max-w-md overflow-hidden rounded-3xl bg-white/85 shadow-xl backdrop-blur-xl">
+              <QuickLogView />
+            </div>
+          </div>
+        ) : (
+          <DesktopWorkspace
+            people={people}
+            index={index}
+            onOpenAt={handleOpenPersonAt}
+            onAdd={handleAddPerson}
+            onCapture={handleCapture}
+            onClear={handleClear}
+            onResetAll={handleResetAll}
+            onDelete={handleDeletePerson}
+            onExport={downloadPersonCsv}
+            onRename={handleRenamePerson}
+            onEditTime={handleEditTime}
+            requestedPhase={requestedPhase}
+            onRequestedPhaseConsumed={() => setRequestedPhase(null)}
+          />
+        )}
+
+        {historyOpen && <HistoryPanel log={log} onClose={() => setHistoryOpen(false)} />}
+      </DesktopShell>
+    );
+  }
 
   return (
     <AppShell>

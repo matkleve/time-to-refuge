@@ -101,14 +101,40 @@ gets caught.
   every state: idle, actions revealed, armed, editing. Revealing a row's
   actions must never resize it or nudge the rows below.
 - Radii use Tailwind's steps: `rounded-xl` controls · `rounded-2xl` rows ·
-  `rounded-3xl` cards · `rounded-4xl` the desktop shell.
+  `rounded-3xl` cards and panels.
 - Shadows use Tailwind's steps: `shadow-sm` (a filled row) · `shadow-lg`
-  (record button) · `shadow-2xl` (popovers).
-- **The desktop backdrop** (`public/backdrop.jpg`, behind the phone-shaped
-  card from `md` up — mobile is full-bleed and never shows it) is pre-blurred
-  and lightened at build time, not with a CSS filter, so it stays decorative
-  rather than something that could ever need text laid over it at a passing
-  contrast ratio.
+  (record button) · `shadow-2xl` (popovers, the desktop History dialog).
+- **The backdrop photo** (`public/backdrop.jpg`) is pre-blurred and lightened
+  at build time, not with a CSS filter, so it stays decorative rather than
+  something that could ever need text laid over it at a passing contrast
+  ratio. `DesktopWorkspace`'s panels sit on it at `bg-white/85` with
+  `backdrop-blur-xl` — 85% white is a deliberate floor: blended against even
+  a pure-black pixel it still can't drop text contrast below what the
+  darkest of the app's own solid surfaces already needs, and the actual
+  processed photo never gets remotely that dark.
+
+## 3a. Desktop, not mobile-stretched
+
+Below `lg` (1024px) the app is the phone-first flow in `AppShell` — full
+bleed, one column, exactly what §0–§3 describe. At `lg` and up, `page.tsx`
+switches to an entirely different tree: `DesktopShell` (the backdrop photo
+filling the real viewport, not boxed behind a resized phone mockup) around
+`DesktopWorkspace` — a persistent list of everyone on the left (there's
+finally room for it, so it replaces the mobile People sheet outright rather
+than staying a modal) and the current person's card with the record button
+directly beneath it on the right. Only one of the two trees is ever mounted
+(`useMediaQuery`, not a CSS breakpoint toggling visibility) — mounting both
+would run two copies of `LiveClockButton`'s animation-frame loop at once.
+
+`RefugeView` (mobile) and `DesktopWorkspace` (desktop) share their targeting
+logic through one hook, [`usePhaseTarget`](../lib/use-phase-target.ts),
+precisely so "which phase is armed" can't quietly diverge between the two
+layouts. What's deliberately *not* shared is the interaction model: mobile
+swipes between people in a carousel because that's what a touch screen
+affords; desktop has no carousel at all — clicking someone in the list
+*is* the navigation, because a persistent list is what a pointer and a wide
+screen afford. Resizing the mobile card up doesn't produce this; the two
+had to be designed separately from the same data and handlers.
 
 ## 4. Controls
 
