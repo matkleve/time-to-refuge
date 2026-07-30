@@ -6,12 +6,14 @@ import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
 import TimezoneSelect from "./TimezoneSelect";
 import QuickLogButton from "./QuickLogButton";
+import SwipeToAction from "./SwipeToAction";
 
 export default function QuickLogView() {
   const [ready, setReady] = useState(false);
   const [entries, setEntries] = useState<QuickLogEntry[]>([]);
   const [tz, setTz] = useState("UTC");
   const [flash, setFlash] = useState(false);
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   useEffect(() => {
     setEntries(loadQuickLog());
@@ -30,15 +32,57 @@ export default function QuickLogView() {
     if (navigator.vibrate) navigator.vibrate(15);
   }
 
+  function deleteEntry(id: string) {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+  }
+
   if (!ready) return null;
 
   const sorted = [...entries].sort((a, b) => b.at - a.at);
 
   return (
     <div className="no-select flex flex-1 flex-col overflow-hidden" onClick={handleLog}>
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-        <span className="text-sm text-gray-500">{entries.length} logged</span>
-        <TimezoneSelect value={tz} onChange={setTz} />
+      <div className="border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500">{entries.length} logged</span>
+          {confirmingReset ? (
+            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+              <span className="text-sm text-gray-700">Clear all?</span>
+              <button
+                type="button"
+                onClick={() => setConfirmingReset(false)}
+                className="rounded-lg border border-gray-300 px-2.5 py-1 text-xs text-gray-600 active:scale-95"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEntries([]);
+                  setConfirmingReset(false);
+                }}
+                className="rounded-lg border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-600 active:scale-95"
+              >
+                Clear
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setConfirmingReset(true);
+              }}
+              disabled={entries.length === 0}
+              className="text-sm font-medium text-red-500 disabled:opacity-30 active:scale-95"
+            >
+              Reset
+            </button>
+          )}
+        </div>
+        <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+          <TimezoneSelect value={tz} onChange={setTz} />
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
@@ -48,15 +92,20 @@ export default function QuickLogView() {
           sorted.map((entry, i) => {
             const { date, time, ms } = formatInZone(entry.at, tz);
             return (
-              <div
-                key={entry.id}
-                className="flex shrink-0 items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5"
-              >
-                <span className="text-xs text-gray-400">#{sorted.length - i}</span>
-                <span className="font-mono tabular-nums text-gray-900">
-                  {date} · {time}
-                  <span className="text-gray-400">.{ms}</span>
-                </span>
+              <div key={entry.id} className="shrink-0">
+                <SwipeToAction
+                  onSwipe={() => deleteEntry(entry.id)}
+                  label="Delete"
+                  className="border border-gray-200 bg-gray-50"
+                >
+                  <div className="flex items-center justify-between px-4 py-2.5">
+                    <span className="text-xs text-gray-400">#{sorted.length - i}</span>
+                    <span className="font-mono tabular-nums text-gray-900">
+                      {date} · {time}
+                      <span className="text-gray-400">.{ms}</span>
+                    </span>
+                  </div>
+                </SwipeToAction>
               </div>
             );
           })

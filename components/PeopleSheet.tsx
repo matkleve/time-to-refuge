@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Person, isComplete } from "@/lib/types";
+import { Person, PHASES, isComplete } from "@/lib/types";
+import SwipeToAction from "./SwipeToAction";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -20,6 +21,7 @@ export default function PeopleSheet({
   onDelete,
   onClose,
 }: PeopleSheetProps) {
+  const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
@@ -28,6 +30,7 @@ export default function PeopleSheet({
     if (!trimmed) return;
     onAdd(trimmed);
     setName("");
+    setAdding(false);
   }
 
   return (
@@ -43,86 +46,99 @@ export default function PeopleSheet({
         </button>
       </div>
 
-      <div className="flex gap-2 px-5 py-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
-          }}
-          placeholder="Person's name"
-          className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 placeholder:text-gray-400 focus:border-flagblue-500 focus:outline-none"
-        />
-        <button
-          type="button"
-          onClick={submit}
-          className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-4 py-2.5 font-medium text-white active:scale-95"
-        >
-          Add
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-5 pb-6">
-        {people.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-gray-500">
-            No one added yet. Add the first person above.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {people.map((p) => (
-              <li
-                key={p.id}
-                className={`flex items-center justify-between rounded-xl border px-4 py-3 ${
-                  p.id === currentId
-                    ? "border-saffron-500 bg-saffron-50"
-                    : "border-gray-200 bg-gray-50"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    onSelect(p.id);
-                    onClose();
-                  }}
-                  className="flex flex-1 items-center gap-2 text-left"
+      <div className="flex-1 overflow-y-auto px-5 py-4">
+        <ul className="space-y-2">
+          {people.map((p) => {
+            const done = PHASES.filter((phase) => p[phase] !== null).length;
+            return (
+              <li key={p.id}>
+                <SwipeToAction
+                  onSwipe={() => setPendingDelete(p.id)}
+                  label="Delete"
+                  disabled={pendingDelete === p.id}
+                  className={`border ${
+                    p.id === currentId
+                      ? "border-saffron-500 bg-saffron-50"
+                      : "border-gray-200 bg-gray-50"
+                  }`}
                 >
-                  {isComplete(p) && <span className="text-saffron-600">✓</span>}
-                  <span className="text-gray-900">{p.name}</span>
-                </button>
-                {pendingDelete === p.id ? (
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setPendingDelete(null)}
-                      className="rounded-lg border border-gray-300 px-2.5 py-1 text-xs text-gray-600 active:scale-95"
-                    >
-                      Cancel
-                    </button>
+                  {pendingDelete === p.id ? (
+                    <div className="flex items-center justify-between px-4 py-3.5">
+                      <span className="text-sm text-gray-700">Delete {p.name}?</span>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setPendingDelete(null)}
+                          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 active:scale-95"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onDelete(p.id);
+                            setPendingDelete(null);
+                          }}
+                          className="rounded-lg border border-red-300 bg-red-50 px-3 py-1.5 text-sm text-red-600 active:scale-95"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
                     <button
                       type="button"
                       onClick={() => {
-                        onDelete(p.id);
-                        setPendingDelete(null);
+                        onSelect(p.id);
+                        onClose();
                       }}
-                      className="rounded-lg border border-red-300 bg-red-50 px-2.5 py-1 text-xs text-red-600 active:scale-95"
+                      className="flex w-full items-center justify-between px-4 py-3.5 text-left"
                     >
-                      Delete
+                      <span className="flex items-center gap-2 text-gray-900">
+                        {isComplete(p) && <span className="text-saffron-600">✓</span>}
+                        {p.name}
+                      </span>
+                      <span className="text-xs text-gray-400">{done} / 3</span>
                     </button>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setPendingDelete(p.id)}
-                    aria-label={`Remove ${p.name}`}
-                    className="px-2 text-gray-400 active:scale-95"
-                  >
-                    ✕
-                  </button>
-                )}
+                  )}
+                </SwipeToAction>
               </li>
-            ))}
-          </ul>
-        )}
+            );
+          })}
+
+          <li>
+            {adding ? (
+              <div className="flex gap-2 rounded-2xl border border-flagblue-500 bg-flagblue-50 p-2">
+                <input
+                  autoFocus
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submit();
+                    if (e.key === "Escape") setAdding(false);
+                  }}
+                  placeholder="Person's name"
+                  className="flex-1 rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-flagblue-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={submit}
+                  className="rounded-xl border border-flagblue-700 bg-flagblue-600 px-4 py-2 font-medium text-white active:scale-95"
+                >
+                  Add
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setAdding(true)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-300 px-4 py-3.5 text-gray-500 active:scale-95"
+              >
+                <span className="text-lg leading-none">+</span> Add person
+              </button>
+            )}
+          </li>
+        </ul>
       </div>
     </div>
   );
