@@ -112,14 +112,46 @@ gets caught.
   margin to put it in, so on mobile it shows through the app's own empty
   space instead (above the card, below the record button). Every surface
   that needs to stay solid sets its own opaque background explicitly rather
-  than inheriting one — the header, the tab switcher, the card, the record
-  button. `DesktopWorkspace`'s panels do this at `bg-white/85` with
-  `backdrop-blur-xl` — 85% white is a deliberate floor: blended against even
-  a pure-black pixel it still can't drop text contrast below what the
-  darkest of the app's own solid surfaces already needs, and the actual
-  processed photo never gets remotely that dark.
+  than inheriting one — either **filled** (this section) or **glass** (§3a).
 
-## 3a. Desktop, not mobile-stretched
+## 3a. Glass
+
+The `glass` utility (`app/globals.css`) is the frosted material for floating
+chrome sitting above the backdrop photo — the iOS-style effect: `bg-white`
+at 85% opacity plus `backdrop-blur` and a saturation boost, so whatever's
+behind it (the photo, a dimmed dialog scrim) shows through softened and a
+little more vivid, not just dimmed. It is **not** a replacement for "cards
+are filled" above — it's a second, distinct material for a different job,
+and the two are not interchangeable:
+
+| Gets glass | Stays filled (never glass) |
+| --- | --- |
+| The mobile header and tab switcher | The person card (`bg-card`) |
+| The Quick Log controls bar | Field rows (`bg-white`) |
+| Empty-state messages, floating over the photo | The record button |
+| `LocationCheck`'s popover | `SwipeToAction`'s revealed delete panel |
+| `DesktopWorkspace`'s people rail and top bar | `HistoryPanel` and `PeopleSheet` — see below |
+
+The rule: glass only sits over the **backdrop photo** — a smooth, empty
+surface with nothing underneath worth reading. `backdrop-filter` blurs
+whatever is *actually* behind it, not "the wallpaper" as a concept, so a
+glass surface placed over anything else blurs *that* instead. `HistoryPanel`
+and `PeopleSheet` are full-screen sheets that sit directly on top of the
+live Refuge view, not the photo — tried as glass, the card and record
+button underneath ghosted through the dialog, legible enough to be a
+distraction (its own `Buddha`/`Dharma`/`Sangha` fields readable behind the
+"Close" button). A dim scrim behind a *desktop* dialog doesn't fix this
+either — dimming isn't hiding, so the same bleed-through shows up fainter.
+Both stay filled. The individual rows inside a glass panel that *does* stay
+above the photo — `DesktopWorkspace`'s people rail, say — were never the
+deciding factor either way; what's behind the panel is.
+
+Components add their own border and shadow on top of `glass` from the
+existing scale above — a bar that already has a hairline `border-b` doesn't
+need a second border framing it; a floating panel with no other edge gets
+one (`border border-white/60`, a rim catching light, plus its shadow step).
+
+## 3b. Desktop, not mobile-stretched
 
 Below `lg` (1024px) the app is the phone-first flow in `AppShell` — full
 bleed, one column, exactly what §0–§3 describe. At `lg` and up, `page.tsx`

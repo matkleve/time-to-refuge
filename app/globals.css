@@ -175,3 +175,24 @@
 @utility animate-fade-in-up {
   animation: fade-in-up 200ms ease-out;
 }
+
+/*
+ * Glass — the frosted material for floating chrome: bars, popovers, sheets,
+ * dialogs. See design system §3a for exactly which surfaces this applies to
+ * and, just as importantly, which it deliberately doesn't (the card, field
+ * rows, the record button — anything that IS the recorded data stays
+ * unambiguously solid, never this).
+ *
+ * 85% white, not something lower: blended against even a pure-black pixel
+ * behind it, that's still enough to clear the contrast this app already
+ * requires everywhere else (see the same reasoning for LocationCheck's
+ * popover) — and the backdrop photo itself never gets remotely that dark,
+ * so the real-world margin is wider still. Components add their own border
+ * and shadow on top of this from the existing scale in §3 — a bar that
+ * already has a hairline `border-b` doesn't need a second border framing it.
+ */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(20px) saturate(1.7);
+  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+}
