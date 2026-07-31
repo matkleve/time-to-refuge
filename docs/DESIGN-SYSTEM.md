@@ -284,23 +284,32 @@ revealing controls in place, and mounting a panel.
 
 ### 5a. Reveal — controls appearing in place
 
-Used by a field row opening its actions. The row is **one persistent structure**
-across idle and open — never two different elements swapped by a conditional
-— so its properties can transition instead of jumping:
+Used by a field row and a Quick Log stamp opening their actions. The stamp is
+**one persistent structure** across idle and open — never two different
+elements swapped by a conditional — so its properties can transition instead
+of jumping:
 
-- Idle: phase label on the left, time on the right (`ml-auto`).
-- Open: the time packs in beside the label on the **left** (drops `ml-auto`,
-  shrinks to `text-sm`); round icon-only actions slide in on the **right**.
-- The action cluster animates `max-width` (0 → content) and `opacity`
-  (0 → 1) together, `overflow-hidden` so children clip rather than wrap.
+- Idle: label / index on the left, time on the right (via a **flex spacer**
+  that `grow`s — never `ml-auto`, which cannot interpolate).
+- Open: the spacer collapses (`grow-0`), the time packs beside the label;
+  round **glass** icon chips slide in on the **right** in a sibling tray.
+- The tray animates `grid-template-columns` `0fr` → `1fr` (exact content
+  width) with opacity — not a oversized `max-width`, which overshoots.
 - Actions are two groups with a wide gap: **eye · copy** (look) then
-  **edit · reset** (change) — never inline with the time.
-- Height never changes (§3): only width, margin, and opacity move.
+  **edit · reset** (change) — never inside the glass stamp.
+- Height never changes (§3): only flex-grow, grid columns, and opacity move.
+
+Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
+[`RowActionTray`](../components/atoms/RowReveal.tsx),
+`IconButton glass` + [`glassChipClass`](../lib/surfaces.ts).
 
 > **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**
 > Two different elements can't be transitioned between by CSS — that's what
 > produced the original jump. One element, changing classes, transitions;
 > two elements, one replacing the other, cannot.
+
+> **Do not pack with `margin-left: auto`.** Toggling `ml-auto` jumps. Use a
+> flex spacer whose `flex-grow` transitions 1 → 0.
 
 ### 5b. Entrance — a panel or popover mounting
 

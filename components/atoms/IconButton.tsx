@@ -1,6 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
+import { glassChipClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 type Tone = "neutral" | "accent" | "danger" | "onAccent";
@@ -14,6 +15,14 @@ const toneClass: Record<Tone, string> = {
   accent: "text-muted hover:bg-flagblue-50 hover:text-flagblue-600",
   danger: "text-muted hover:bg-danger-50 hover:text-danger-600",
   onAccent: "text-white/80 hover:bg-white/15 hover:text-white",
+};
+
+/** Glass chip tones — keep the cloudy fill; hover only nudges the icon. */
+const glassToneClass: Record<Tone, string> = {
+  neutral: "text-muted hover:text-ink",
+  accent: "text-muted hover:text-flagblue-600",
+  danger: "text-muted hover:text-danger-600",
+  onAccent: "text-white/80 hover:text-white",
 };
 
 /** Icon-only footprint. Labeled buttons size from content instead. */
@@ -42,6 +51,11 @@ interface IconButtonProps {
    * Falls back to `label` when `true`.
    */
   showLabel?: boolean | string;
+  /**
+   * Round cloudy-glass chip — row reveal actions (Copy, Delete, …).
+   * Same fill/rim recipe as a field row.
+   */
+  glass?: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   tone?: Tone;
   size?: keyof typeof sizeClass;
@@ -55,6 +69,7 @@ export function IconButton({
   icon: Icon,
   label,
   showLabel,
+  glass = false,
   onClick,
   tone = "neutral",
   size = "md",
@@ -74,10 +89,11 @@ export function IconButton({
       title={label}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
-        "transition-colors duration-200 ease-out",
+        "transition-[color,background-color,box-shadow,transform] duration-200 ease-out",
         "active:scale-95 disabled:pointer-events-none",
         visible ? labeledSizeClass[size] : sizeClass[size],
-        toneClass[tone],
+        glass ? glassChipClass() : null,
+        glass ? glassToneClass[tone] : toneClass[tone],
         hideWhenDisabled ? "disabled:opacity-0" : "disabled:opacity-35",
         className,
       )}

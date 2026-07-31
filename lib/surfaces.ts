@@ -136,6 +136,11 @@ export function glassRowClass(): string {
   return cx(GLASS.cardRow.fill, "shadow-glass-row");
 }
 
+/** Round action chip on a revealed row — same fill/rim recipe as the row. */
+export function glassChipClass(): string {
+  return cx(GLASS.cardRow.fill, GLASS_RIM, "shadow-glass-row");
+}
+
 export function filledCardClass(isCurrent = false): string {
   return isCurrent ? FILLED.cardCurrent : FILLED.card;
 }

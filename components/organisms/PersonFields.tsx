@@ -9,6 +9,7 @@ import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
+import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
 interface PersonFieldsProps {
@@ -145,12 +146,10 @@ function FieldRow({
   const rowHeight = overview ? "min-h-11" : "min-h-13";
 
   /*
-   * Row material follows the card (lib/surfaces.ts). Both focused and overview
-   * cards are glass now — rows stay translucent so the card doesn't read as a
-   * solid block. Swipe-delete stays safe because SwipeToAction keeps the red
-   * panel at opacity 0 until the drag starts.
+   * Empty / editing / skip shells keep glass on the outer wrap. Filled rows
+   * put glass only on the stamp button — the action tray is a sibling (§5a).
    */
-  const rowClassName = cn(
+  const shellClassName = cn(
     "no-select transition-shadow duration-200",
     glassRowClass(),
     filled && "shadow-sm",
@@ -262,10 +261,9 @@ function FieldRow({
     );
   } else {
     /*
-     * Idle → open: one persistent row (design system §5a). The phase label
-     * and time pack left; round actions slide in on the right with a clear
-     * gap between "look" (open/copy) and "change" (edit/reset). Destructive
-     * reset arms on the same control (turns red) — no second Confirm/Cancel.
+     * Idle → open (§5a): glass stamp packs left via a flex spacer (not
+     * `ml-auto`); Copy / Edit / Reset sit in a sibling tray with round glass
+     * chips. Destructive reset arms on the same control (turns red).
      */
     const lookActions = (
       <div className="flex shrink-0 items-center gap-0.5">
@@ -273,7 +271,7 @@ function FieldRow({
           <IconButton
             icon={Eye}
             label={`Open ${person.name}`}
-            showLabel="Open"
+            glass
             onClick={onOpenPerson}
             tone="accent"
             size="sm"
@@ -282,6 +280,7 @@ function FieldRow({
         <IconButton
           icon={copied ? Check : Copy}
           label={copied ? `${PHASE_LABELS[phase]} time copied` : `Copy ${PHASE_LABELS[phase]} time`}
+          glass
           onClick={copyTime}
           tone="accent"
           size="sm"
@@ -296,6 +295,7 @@ function FieldRow({
           <IconButton
             icon={Pencil}
             label={`Edit ${PHASE_LABELS[phase]} time`}
+            glass
             onClick={() => {
               setDraft(toTimeInput(value as number));
               setInvalid(false);
@@ -313,10 +313,13 @@ function FieldRow({
                 ? `Confirm reset ${PHASE_LABELS[phase]}`
                 : `Reset ${PHASE_LABELS[phase]}`
             }
+            glass
             onClick={armedReset.trigger}
             tone="danger"
             size="sm"
-            className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
+            className={
+              armedReset.armed ? "text-danger-600 ring-2 ring-danger-500" : undefined
+            }
           />
         )}
       </div>
@@ -327,16 +330,24 @@ function FieldRow({
         <button
           type="button"
           onClick={handleRowClick}
+          aria-expanded={showActions}
           className={cn(
-            "flex min-w-0 flex-1 items-center gap-2 px-4 text-left transition-colors duration-200",
+            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
+            "transition-[flex-grow,box-shadow,background-color,font-size] duration-200 ease-out",
             "hover:bg-ink/[0.03]",
+            rowHeight,
+            glassRowClass(),
+            filled && "shadow-sm",
+            isTarget && "ring-2 ring-flagblue-500",
+            reset.armed && "ring-2 ring-danger-500",
           )}
         >
           {label}
+          <RowPackSpacer packed={showActions} />
           <span
             className={cn(
-              "min-w-0 truncate font-mono tabular-nums transition-[font-size,margin] duration-200 ease-out",
-              showActions ? "text-sm" : cn("ml-auto", overview ? "text-sm" : "text-lg"),
+              "min-w-0 shrink truncate font-mono tabular-nums transition-[font-size] duration-200 ease-out",
+              showActions || overview ? "text-sm" : "text-lg",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >
@@ -344,26 +355,17 @@ function FieldRow({
           </span>
         </button>
 
-        <div
-          className={cn(
-            "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity,padding] duration-200 ease-out",
-            showActions ? "max-w-72 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
-          )}
-          aria-hidden={!showActions}
-        >
-          {/* Look · gap · change — round IconButtons only, never inlined with the time. */}
-          <div className="flex shrink-0 items-center gap-3">
-            {lookActions}
-            {changeActions}
-          </div>
-        </div>
+        <RowActionTray open={showActions}>
+          {lookActions}
+          {changeActions}
+        </RowActionTray>
       </div>
     );
   }
 
   if (!filled || editing || !onClear) {
     return (
-      <div className={cn("overflow-hidden rounded-2xl", rowClassName)} ref={confirmSkipRef}>
+      <div className={cn("overflow-hidden rounded-2xl", shellClassName)} ref={confirmSkipRef}>
         {body}
       </div>
     );
@@ -377,7 +379,7 @@ function FieldRow({
         armedReset.trigger();
       }}
       label="Reset"
-      className={rowClassName}
+      className="overflow-hidden rounded-2xl"
     >
       <div className="bg-inherit">{body}</div>
     </SwipeToAction>
