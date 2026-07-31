@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "a11y:contrast": "node scripts/a11y-contrast.mjs"
+    "a11y:contrast": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/a11y-contrast.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

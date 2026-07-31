@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { AlertTriangle, Check, Clock, Loader2 } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
+import { Surface } from "@/components/atoms/Surface";
 
 type Status = "idle" | "checking" | "ok" | "denied" | "unavailable" | "error";
 
@@ -184,7 +185,11 @@ export function LocationCheck() {
       </button>
 
       {open && (
-        <div className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl border border-white/60 p-3.5 text-left shadow-2xl">
+        <Surface
+          material="glass-panel"
+          rim
+          className="animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left shadow-2xl"
+        >
           {status === "checking" && (
             <>
               <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">
@@ -271,7 +276,7 @@ export function LocationCheck() {
               </p>
             </div>
           )}
-        </div>
+        </Surface>
       )}
     </div>
   );

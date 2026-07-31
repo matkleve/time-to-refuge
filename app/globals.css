@@ -4,7 +4,7 @@
  * Design tokens — the single source of truth.
  *
  * Tailwind v4 is CSS-first: every token here becomes a utility
- * (`--color-saffron-100` → `bg-saffron-100`, `--radius-card` → `rounded-card`),
+ * (`--color-saffron-100` → `bg-saffron-100`, `--radius-3xl` → `rounded-3xl`),
  * so there is no JS config file. Add a token here before using it — an
  * undefined one fails silently as a dropped declaration, not a build error.
  *
@@ -79,12 +79,13 @@
   --color-subtle: #7d7469;  /* tertiary text: counters, empty values */
   --color-line: #ddd8d1;    /* hairlines and dividers */
 
-  /* Surfaces. Cards are filled, never outlined. */
+  /* Surfaces — see lib/surfaces.ts for glass / filled / solid materials.
+   * Overview cards use these opaque fills; the focused card is cloudy glass. */
   --color-card: #f3f1ee;
   --color-card-current: #fbe8bf;
 
   /* ── Radius ───────────────────────────────────────────────────────────
-   * Again Tailwind's own steps, re-valued in px:
+   * Tailwind's own steps, re-valued:
    *   xl  controls · 2xl rows · 3xl cards · 4xl the desktop shell
    */
   --radius-xl: 0.75rem;  /* 12px */

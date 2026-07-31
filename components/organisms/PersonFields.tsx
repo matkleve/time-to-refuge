@@ -7,6 +7,7 @@ import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
+import { filledRowClass, glassRowClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
@@ -144,20 +145,14 @@ function FieldRow({
   const rowHeight = overview ? "min-h-11" : "min-h-13";
 
   /*
-   * Translucent, not solid — and this is the line that actually decides
-   * whether the focused card reads as glass (design system §3a). The rows
-   * cover most of the card's area, so a solid `bg-white` here made the whole
-   * card look opaque no matter how translucent its shell was. Measured: 55%
-   * of the card's pixels were painting pure #ffffff while the shell was
-   * already at 75%.
-   *
-   * The overview card is filled, so its rows stay solid: they sit on an
-   * opaque surface with a delete panel behind it, and there is nothing to
-   * show through.
+   * Row material follows the card's material (lib/surfaces.ts). Focused rows
+   * are translucent — they cover most of the card, so a solid fill here makes
+   * the whole card read opaque no matter how glassy the shell is. Overview
+   * rows stay filled: that card is opaque with a delete panel behind it.
    */
   const rowClassName = cn(
     "no-select transition-shadow duration-200",
-    overview ? "bg-white" : "bg-white/50",
+    overview ? filledRowClass() : glassRowClass(),
     filled && "shadow-sm",
     isTarget && "ring-2 ring-flagblue-500",
     reset.armed && "ring-2 ring-danger-500",

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
+import { SOLID } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { LocationCheck } from "./LocationCheck";
 
@@ -45,11 +46,10 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         disabled={!armed}
         className={cn(
           "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg",
-          "transition-all duration-150 ease-out",
-          armed
-            ? "bg-linear-to-b from-flagblue-500 to-flagblue-700 hover:from-flagblue-400 hover:to-flagblue-600 active:scale-[0.98]"
-            : "bg-card",
-          flash && "ring-4 ring-saffron-400",  // flashes the *other* accent
+          "transition-colors duration-150 ease-out active:scale-[0.98]",
+          /* Flat solid fill — no gradient (design system §4 / UC-1). */
+          armed ? SOLID.primary : SOLID.primaryIdle,
+          flash && "ring-4 ring-saffron-400",
         )}
       >
         <span

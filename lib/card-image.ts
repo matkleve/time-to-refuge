@@ -5,10 +5,10 @@ const WIDTH = 1080;
 const HEIGHT = 1350;
 
 const INK = "#1f1b16";
-const MUTED = "#6b6259";
+const MUTED = "#5f574e"; // keep in sync with --color-muted / contrast TOKENS
 const CARD = "#f3f1ee";
-const SAFFRON = "#c9740a";
-const FAINT = "#c9c3ba";
+const SAFFRON = "#8f5207"; // saffron-700 — recorded time text
+const FAINT = "#7d7469"; // subtle
 
 function roundedRect(
   ctx: CanvasRenderingContext2D,

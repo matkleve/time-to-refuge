@@ -2,6 +2,7 @@
 
 import { LogEntry, PHASE_LABELS } from "@/lib/types";
 import { formatLogTime, formatTimestamp } from "@/lib/format";
+import { Surface } from "@/components/atoms/Surface";
 
 interface HistoryPanelProps {
   log: LogEntry[];
@@ -38,12 +39,11 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      {/* Filled, not glass — this sits directly over the live Refuge view
-          (the card, the record button), not the plain backdrop photo.
-          `backdrop-filter` blurs whatever is actually behind it, so a glass
-          dialog here shows a distracting ghost of that live UI through
-          itself, not the photo — see design system §3a. */}
-      <div className="flex h-full w-full flex-col bg-white lg:h-[36rem] lg:max-h-[80vh] lg:w-[28rem] lg:rounded-3xl lg:shadow-2xl">
+      {/* Filled sheet — sits over live Refuge UI, not the backdrop photo. */}
+      <Surface
+        material="filled-sheet"
+        className="flex h-full w-full flex-col lg:h-[36rem] lg:max-h-[80vh] lg:w-[28rem] lg:rounded-3xl lg:shadow-2xl"
+      >
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <h2 className="text-lg font-semibold text-ink">History</h2>
           <button
@@ -75,7 +75,7 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
             </ul>
           )}
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
+import { SOLID } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 interface QuickLogButtonProps {
@@ -36,9 +37,10 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
       }}
       className={cn(
         "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg",
-        "transition-all duration-150 ease-out",
-        "bg-linear-to-b from-saffron-300 to-saffron-500 hover:from-saffron-200 hover:to-saffron-400",
-        flash && "scale-[0.98] ring-4 ring-flagblue-500",  // flashes the *other* accent
+        "transition-colors duration-150 ease-out",
+        /* Flat solid saffron — no gradient. Ink on gold (contrast rule). */
+        SOLID.accent,
+        flash && "scale-[0.98] ring-4 ring-flagblue-500",
       )}
     >
       <span className="font-mono text-4xl font-semibold tabular-nums tracking-wide text-ink">

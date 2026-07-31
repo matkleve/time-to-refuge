@@ -1,11 +1,23 @@
 /**
  * The foreground/background pairs the design system actually ships.
  *
+ * Colour hex values stay mirrored with `app/globals.css` `@theme` — the CSS
+ * file is what Tailwind reads; this module is what `a11y:contrast` reads.
+ * Glass *opacities* are not duplicated: they come from `lib/surfaces.ts`.
+ *
  * `min` follows WCAG 2.2:
  *   4.5 — body text
  *   3.0 — large text (>=24px, or >=19px bold) and non-text UI (icons, borders,
  *         focus rings, control boundaries) per 1.4.11
  */
+import {
+  GLASS,
+  GLASS_SURFACES,
+  GLASS_WORST_CASE_BG,
+} from "../lib/surfaces.ts";
+
+export { GLASS_SURFACES, GLASS_WORST_CASE_BG };
+
 export const TOKENS = {
   white: "#ffffff",
   ink: "#1f1b16",
@@ -68,50 +80,12 @@ export const PAIRS = [
 ];
 
 /**
- * Glass surfaces (design system §3a) don't have one fixed background —
- * `bg-white/75` (the card) blends over whatever the backdrop photo happens to be
- * behind it.
+ * Glass pairs — composites use GLASS_SURFACES from lib/surfaces.ts so the
+ * opacity floor and the Tailwind fill class cannot drift apart silently.
  *
- * Checked against GLASS_WORST_CASE_BG, not pure black. Pure black was tried
- * first and produced a technically-safe but visually dead opacity (92%) —
- * only 8% of whatever was behind it could ever show through, which is why
- * the card read as flat instead of glassy despite `backdrop-filter` working
- * correctly. `public/backdrop.jpg` is a fixed, pre-lightened asset, not
- * arbitrary user content, so its actual darkest pixel is a legitimate worst
- * case to design against, not a guess: measured directly (Pillow,
- * full-resolution scan) at rgb(156,158,153), luminance 0.338 — nowhere near
- * black. GLASS_WORST_CASE_BG uses rgb(130,130,128) instead, a margin below
- * that measured floor. If `backdrop.jpg` is ever replaced, re-measure it —
- * a much darker photo would invalidate this floor.
- *
- * This list exists because the opacity floor was computed wrong once already
- * (checked against `ink` only, missed `muted`/`subtle`/`flagblue600`/
- * `danger600`, all of which sit directly on glass somewhere in this app).
- * Add a pair here for every text colour that ever sits directly on a glass
- * surface — not just the one on screen when you're doing the math.
+ * Cloudy floors (panel /68, card /74, row /38) are limited by the least-
+ * contrasty text on each surface over GLASS_WORST_CASE_BG.
  */
-export const GLASS_WORST_CASE_BG = "#828280";
-
-/**
- * Opacity per glass surface, because they do NOT share a floor — each one is
- * limited by the least-contrasty text that sits on it, and that differs.
- *
- * `card` can go furthest (0.75) because only `ink`, `muted` and icons sit on
- * it. `panel` (header bars, the location popover, empty-state notes) stops at
- * 0.85 because it carries `subtle` fine print.
- *
- * `cardRow` is a SECOND layer stacked on `card`: a field row is
- * `bg-white/50` painted on top of the already-translucent shell, so its
- * effective background is white@0.50 over card@0.75 over the photo. Checking
- * the row against the photo directly would understate how opaque it really
- * is; `a11y-contrast.mjs` composites the two layers in order.
- */
-export const GLASS_SURFACES = {
-  card: { alpha: 0.75 },
-  panel: { alpha: 0.85 },
-  cardRow: { alpha: 0.5, over: "card", color: "white" },
-};
-
 export const GLASS_PAIRS = [
   // ── panel: header bars, the location popover, empty-state notes ─────────
   { name: "ink on panel glass", fg: "ink", bg: "white", surface: "panel", min: 4.5 },
@@ -120,9 +94,7 @@ export const GLASS_PAIRS = [
   { name: "flagblue-600 on panel glass", fg: "flagblue600", bg: "white", surface: "panel", min: 4.5 },
   { name: "danger-600 on panel glass", fg: "danger600", bg: "white", surface: "panel", min: 4.5 },
 
-  // ── card shell: what sits directly on it, at its real size ──────────────
-  // cardCurrent is the current-person tint (bg-saffron-100) — same hex.
-  // The person's name is 24px, i.e. WCAG "large text", so 3.0 not 4.5.
+  // ── card shell ──────────────────────────────────────────────────────────
   { name: "name 24px on card glass", fg: "ink", bg: "white", surface: "card", min: 3.0 },
   { name: "name 24px on card glass (current)", fg: "ink", bg: "cardCurrent", surface: "card", min: 3.0 },
   { name: "armed name 24px on card glass", fg: "danger600", bg: "white", surface: "card", min: 3.0 },
@@ -132,7 +104,7 @@ export const GLASS_PAIRS = [
   { name: "share note on card glass", fg: "flagblue600", bg: "white", surface: "card", min: 4.5 },
   { name: "share note on card glass (current)", fg: "flagblue600", bg: "cardCurrent", surface: "card", min: 4.5 },
 
-  // ── field rows: bg-white/50 stacked on the card shell ───────────────────
+  // ── field rows stacked on the card shell ────────────────────────────────
   { name: "filled label on card row", fg: "ink", bg: "white", surface: "cardRow", min: 4.5 },
   { name: "filled label on card row (current)", fg: "ink", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
   { name: "empty label on card row", fg: "muted", bg: "white", surface: "cardRow", min: 4.5 },
@@ -142,3 +114,19 @@ export const GLASS_PAIRS = [
   { name: "row icons on card row", fg: "muted", bg: "white", surface: "cardRow", min: 3.0 },
   { name: "row icons on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRow", min: 3.0 },
 ];
+
+/** Guard: fill class `/NN` must match `alpha` or the UI and the checker diverge. */
+export function assertGlassFillSync() {
+  for (const [kind, spec] of Object.entries(GLASS)) {
+    const match = /\/(\d+)$/.exec(spec.fill);
+    if (!match) {
+      throw new Error(`Glass fill "${spec.fill}" (${kind}) has no /NN opacity suffix`);
+    }
+    const fromClass = Number(match[1]) / 100;
+    if (Math.abs(fromClass - spec.alpha) > 0.001) {
+      throw new Error(
+        `Glass ${kind}: fill ${spec.fill} ≠ alpha ${spec.alpha}. Fix lib/surfaces.ts.`,
+      );
+    }
+  }
+}

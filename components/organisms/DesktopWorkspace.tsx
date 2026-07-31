@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { Person, PHASE_LABELS, Phase } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
+import { Surface } from "@/components/atoms/Surface";
 import { PersonCard } from "./PersonCard";
 
 interface DesktopWorkspaceProps {
@@ -70,8 +71,12 @@ export function DesktopWorkspace({
 
   return (
     <div className="flex flex-1 gap-5 overflow-hidden p-5">
-      {/* People rail. Persistent — this is what replaces the People sheet on desktop. */}
-      <div className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl border border-white/60 shadow-xl">
+      {/* People rail — cloudy glass over the backdrop photo. */}
+      <Surface
+        material="glass-panel"
+        rim
+        className="flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl shadow-xl"
+      >
         <div className="border-b border-line px-4 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
         </div>
@@ -129,7 +134,7 @@ export function DesktopWorkspace({
             )}
           </li>
         </ul>
-      </div>
+      </Surface>
 
       {/* Main pane: the card, and beneath it the button — floating straight over
           the backdrop, not boxed in another opaque panel behind it. */}
@@ -155,11 +160,16 @@ export function DesktopWorkspace({
             />
           </div>
         ) : (
-          <p className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 mt-20 rounded-2xl border border-white/60 px-6 py-4 text-center text-base text-ink shadow-lg">
+          <Surface
+            as="p"
+            material="glass-panel"
+            rim
+            className="mt-20 rounded-2xl px-6 py-4 text-center text-base text-ink shadow-lg"
+          >
             {people.length === 0
               ? "Add the first person taking refuge to begin."
               : "Select someone from the list to begin."}
-          </p>
+          </Surface>
         )}
       </div>
     </div>

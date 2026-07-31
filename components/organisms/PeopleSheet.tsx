@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Person, Phase } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
+import { Surface } from "@/components/atoms/Surface";
 import { PersonCard } from "./PersonCard";
 
 interface PeopleSheetProps {
@@ -49,7 +50,7 @@ export function PeopleSheet({
     // (the card, the record button), not the plain backdrop photo. Glass
     // would blur that live content through itself, not the photo — see
     // design system §3a.
-    <div className="absolute inset-0 z-30 flex flex-col bg-white animate-fade-in-up">
+    <Surface material="filled-sheet" className="absolute inset-0 z-30 flex flex-col animate-fade-in-up">
       <div className="flex items-center justify-between border-b border-line px-5 py-4">
         <h2 className="text-lg font-semibold text-ink">People</h2>
         <button
@@ -117,6 +118,6 @@ export function PeopleSheet({
           </li>
         </ul>
       </div>
-    </div>
+    </Surface>
   );
 }

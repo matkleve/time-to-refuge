@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { Check, Download, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react";
 import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
+import { filledCardClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
+import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { PersonFields } from "./PersonFields";
@@ -34,16 +36,12 @@ interface PersonCardProps {
 }
 
 /**
- * The focused card is GLASS; the overview card is FILLED. That split is the
- * whole shell logic, and it's at the bottom of this file rather than woven
- * through it.
+ * The focused card is cloudy glass; the overview card is filled. Materials
+ * come from lib/surfaces.ts via <Surface> — do not hand-roll glass classes.
  *
- * Why the focused one can be glass at all: it floats directly over the
- * backdrop photo with nothing between, so `backdrop-filter` has the photo to
- * blur and translucency has the photo to reveal. The overview one cannot —
- * a whole-card swipe means delete, and the red panel underneath has to stay
- * hidden until it's actually swiped, which a translucent surface would leak.
- * See design system §3a.
+ * Why the focused one can be glass: it floats over the backdrop photo.
+ * Why the overview one cannot: swipe-to-delete needs an opaque face so the
+ * red panel stays hidden until swiped. See design system §3 / §3a.
  */
 export function PersonCard({
   person,
@@ -251,8 +249,10 @@ export function PersonCard({
   );
 
   // ── Overview: filled, opaque. ────────────────────────────────────────────
+  // Stays filled: a whole-card swipe reveals a delete panel that must not
+  // ghost through a translucent surface (design system §3).
   if (overview) {
-    const fill = isCurrent ? "bg-card-current" : "bg-card";
+    const fill = filledCardClass(isCurrent);
     if (onDelete) {
       return (
         <SwipeToAction
@@ -260,32 +260,30 @@ export function PersonCard({
           label="Delete"
           className={cn("overflow-hidden rounded-3xl", fill)}
         >
-          {/* Opaque, so the delete panel stays hidden until actually swiped. */}
           <div className={fill}>{body}</div>
         </SwipeToAction>
       );
     }
-    return <div className={cn("overflow-hidden rounded-3xl", fill)}>{body}</div>;
+    return (
+      <Surface
+        material={isCurrent ? "filled-card-current" : "filled-card"}
+        className="overflow-hidden rounded-3xl"
+      >
+        {body}
+      </Surface>
+    );
   }
 
-  // ── Focused: glass. ──────────────────────────────────────────────────────
-  // Three plain Tailwind utilities, nothing custom: a translucent fill for the
-  // photo to show through, a blur of whatever it shows, and a saturate so the
-  // blurred photo keeps its colour instead of going grey.
-  //
-  // 75% is a measured floor, not a taste call — see design system §3a. The
-  // caption/name/icons sit directly on this surface, so it can only go as
-  // transparent as the *least* contrasty of them survives over the darkest
-  // pixel the backdrop photo actually contains.
+  // ── Focused: cloudy glass over the backdrop photo. ───────────────────────
+  // Material lives in lib/surfaces.ts — shell AND field rows (PersonFields)
+  // must both be translucent or the card still reads as a solid block.
   return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-3xl border border-white/50 shadow-xl",
-        "backdrop-blur-2xl backdrop-saturate-200",
-        isCurrent ? "bg-saffron-100/75" : "bg-white/75",
-      )}
+    <Surface
+      material={isCurrent ? "glass-card-current" : "glass-card"}
+      rim
+      className="overflow-hidden rounded-3xl shadow-xl"
     >
       {body}
-    </div>
+    </Surface>
   );
 }

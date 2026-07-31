@@ -21,6 +21,7 @@ import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { Download, History, Undo2, Users } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
+import { Surface } from "@/components/atoms/Surface";
 import { AppShell } from "@/components/AppShell";
 import { DesktopShell } from "@/components/DesktopShell";
 import { RefugeView } from "@/components/organisms/RefugeView";
@@ -29,6 +30,7 @@ import { PeopleSheet } from "@/components/organisms/PeopleSheet";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { SOLID } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 type View = "refuge" | "quicklog";
@@ -221,7 +223,11 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
-        <header className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg">
+        <Surface
+          as="header"
+          material="glass-panel"
+          className="flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg"
+        >
           <div className="flex flex-col">
             <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
             <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
@@ -274,13 +280,17 @@ export default function Home() {
               />
             </div>
           )}
-        </header>
+        </Surface>
 
         {view === "quicklog" ? (
           <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
-            <div className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 w-full max-w-md overflow-hidden rounded-3xl border border-white/60 shadow-xl">
+            <Surface
+              material="glass-panel"
+              rim
+              className="w-full max-w-md overflow-hidden rounded-3xl shadow-xl"
+            >
               <QuickLogView />
-            </div>
+            </Surface>
           </div>
         ) : (
           <DesktopWorkspace
@@ -308,8 +318,9 @@ export default function Home() {
 
   return (
     <AppShell>
-      <div
-        className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 flex shrink-0 gap-1 border-b border-line px-3 pb-2"
+      <Surface
+        material="glass-panel"
+        className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <button
@@ -332,13 +343,17 @@ export default function Home() {
         >
           Quick Log
         </button>
-      </div>
+      </Surface>
 
       {view === "quicklog" ? (
         <QuickLogView />
       ) : (
         <>
-          <header className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
+          <Surface
+            as="header"
+            material="glass-panel"
+            className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3"
+          >
             <div className="flex items-center gap-1">
               <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
               <span className="relative inline-flex">
@@ -370,17 +385,25 @@ export default function Home() {
               />
               <IconButton icon={Users} label="People" onClick={() => setPeopleOpen(true)} />
             </div>
-          </header>
+          </Surface>
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="bg-white/85 backdrop-blur-2xl backdrop-saturate-200 rounded-2xl border border-white/60 px-5 py-3 text-base text-ink shadow-lg">
+              <Surface
+                as="p"
+                material="glass-panel"
+                rim
+                className="rounded-2xl px-5 py-3 text-base text-ink shadow-lg"
+              >
                 Add the people taking refuge to begin.
-              </p>
+              </Surface>
               <button
                 type="button"
                 onClick={() => setPeopleOpen(true)}
-                className="rounded-xl bg-flagblue-600 px-5 py-2.5 text-base font-medium text-white shadow-lg transition-colors duration-200 hover:bg-flagblue-700 active:scale-95"
+                className={cn(
+                  "rounded-xl px-5 py-2.5 text-base font-medium text-white shadow-lg transition-colors duration-200 active:scale-95",
+                  SOLID.primary,
+                )}
               >
                 Add a person
               </button>

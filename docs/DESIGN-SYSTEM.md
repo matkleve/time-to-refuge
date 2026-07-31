@@ -74,7 +74,7 @@ Saffron marks a **recorded** time and the Quick Log. Flag blue marks the
 | `muted` | Secondary text — **and every icon at rest** |
 | `subtle` | Tertiary text: counters, empty values, hints |
 | `line` | Hairlines and dividers, **never a foreground** |
-| `card` / `card-current` | Person-card fills |
+| `card` / `card-current` | Opaque person-card fills (overview only) |
 | `saffron-700` | Recorded time text |
 | `flagblue-600` | Primary control, focus ring |
 | `danger-*` | Destructive actions |
@@ -94,151 +94,66 @@ gets caught.
 
 ## 3. Surfaces & elevation
 
-- **Cards are filled, never outlined**: `bg-card`, or `bg-card-current` for the
-  person in view.
-- **Field rows are white** so they read against the card fill.
+Materials live in **one module**: [`lib/surfaces.ts`](../lib/surfaces.ts).
+Components consume them through [`Surface`](../components/atoms/Surface.tsx)
+or the helpers (`glassClass`, `glassRowClass`, `filledCardClass`, `SOLID`).
+Never hand-roll `bg-white/NN backdrop-blur-…` in a component.
+
+| Material | When | API |
+| --- | --- | --- |
+| **Cloudy glass** | Surface sits over the backdrop photo | `material="glass-panel"` / `glass-card` / `glass-card-current` |
+| **Filled** | Surface sits over live UI, or must hide a swipe panel | `filled-sheet`, `filled-card`, `filled-card-current` |
+| **Solid** | Primary actions (record / quick-log) | `SOLID.primary` / `SOLID.accent` — **flat colour, no gradients** |
+
+Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
+on the solid record button). Sheets that cover the live Refuge view stay
+filled so the card and button do not ghost through (**UC-3**, **UC-5**,
+**UC-8**). Overview cards stay filled because a swipe reveals a delete panel
+that must stay hidden until swiped.
+
+- **Field rows share the card's material.** Focused rows use `glassRowClass()`
+  (translucent, no blur of their own). Overview rows use `filledRowClass()`.
+  Changing only the shell leaves the card looking solid — the rows cover most
+  of its area.
 - **A row is a fixed height** — 3.25rem focused, 2.75rem in the overview — in
-  every state: idle, actions revealed, armed, editing. Revealing a row's
-  actions must never resize it or nudge the rows below.
-- Radii use Tailwind's steps: `rounded-xl` controls · `rounded-2xl` rows ·
-  `rounded-3xl` cards and panels.
-- Shadows use Tailwind's steps: `shadow-sm` (a filled row) · `shadow-lg`
-  (record button) · `shadow-2xl` (popovers, the desktop History dialog).
+  every state: idle, actions revealed, armed, editing. Revealing actions must
+  never resize the row or nudge the ones below.
+- Radii: `rounded-xl` controls · `rounded-2xl` rows · `rounded-3xl` cards.
+- Shadows: `shadow-sm` (a filled row) · `shadow-lg` (record button) ·
+  `shadow-2xl` (popovers, desktop History dialog).
 - **The backdrop photo** (`public/backdrop.jpg`) is pre-blurred and lightened
-  at build time, not with a CSS filter, so it stays decorative rather than
-  something that could ever need text laid over it at a passing contrast
-  ratio. It's the background of both shells — `AppShell` (mobile) and
-  `DesktopShell` — not something confined to desktop margins: a phone has no
-  margin to put it in, so on mobile it shows through the app's own empty
-  space instead (above the card, below the record button). Every surface
-  that needs to stay solid sets its own opaque background explicitly rather
-  than inheriting one — either **filled** (this section) or **glass** (§3a).
+  at build time. Every surface that needs to stay solid sets its own opaque
+  background explicitly.
 
-## 3a. Glass
+## 3a. Cloudy glass
 
-A translucent fill plus `backdrop-blur-2xl backdrop-saturate-200` — e.g.
-`bg-white/75` on the focused card, or the current-person tint
-`bg-saffron-100/75`. The opacity differs per surface (see the table below);
-the blur and saturate don't. Tailwind's own utilities, written out on the
-element directly, not a custom one. That's deliberate: an earlier version
-defined a `@utility glass` shorthand in `app/globals.css`, and it hid a real
-bug for a while — writing both `backdrop-filter` and a manual
-`-webkit-backdrop-filter` inside it made the build tool drop the standard
-property from the compiled CSS, so the effect quietly only worked in
-Safari. Diagnosing that meant reading generated CSS output and
-cross-checking `getComputedStyle` against a plain, undecorated test element
-to prove where the CSS itself broke — real signal, not a custom abstraction
-with its own failure mode to rule out first. Plain Tailwind utilities don't
-have that problem: they're first-party, and if `backdrop-blur-2xl` isn't
-visible, the cause is something else (an unsupported/GPU-less renderer, a
-stale deployment) rather than this app's own CSS layer.
-
-**To change how strong the effect looks**: edit the three classes directly
-wherever they're used — the `/NN` on the fill (opacity), `backdrop-blur-2xl`
-(blur radius), `backdrop-saturate-200` (colour vividness). There's no single
-shared definition to hunt for, which costs a little repetition across
-components but means each surface's own file shows exactly what it's
-rendering, no indirection. Changing an opacity means re-running
-`npm run a11y:contrast` and updating `GLASS_SURFACES` to match — the script
-is what proves the new value is still legible over the photo.
-
-**A translucent shell is not a translucent card.** The focused card spent
-three rounds of "make it glass" still looking like a solid white block,
-because its *shell* was the only thing being made translucent — and the shell
-is barely visible. The three field rows inside it were `bg-white`, fully
-opaque, and they cover most of the card's area. Measured on the rendered
-page: with the shell already at 75%, **55% of the card's pixels were still
-painting pure `#ffffff`**. No shell opacity could have fixed that; the rows
-were painting over it.
-
-The way that finally got diagnosed is worth repeating, because three rounds
-of reading CSS did not find it. Delete the component outright, render the
-page, and sample the pixels where it used to be — the region came back with
-6,954 distinct colours, proving the photo, the backdrop element and every
-ancestor were fine and the fault was inside the card. Then rebuild and sample
-the same region again: pure-white pixels went 55% → 0%. **Count the pixels
-that actually get painted.** A computed style of `rgba(…, 0.75)` on the shell
-is true and tells you nothing about what the user sees, because it says
-nothing about what is stacked on top of it.
-
-So field rows on the focused card are `bg-white/50` — translucent, stacked on
-the translucent shell. On the *overview* card they stay solid `bg-white`:
-that card is opaque anyway, with a delete panel behind it, so there is
-nothing to show through. And the empty-phase label moved `subtle` → `muted`:
-`subtle` cleared 4.5:1 only against solid white (4.59), so the moment the row
-went translucent it had no headroom left.
-
-The opacity floor took **three** tries, and the third is the one worth
-remembering, because it's a different kind of mistake than the first two.
-Pass one checked only `ink` and landed on `/70`. Pass two checked every text
-colour that actually sits on glass (`muted`, `subtle`, `flagblue-600`,
-`danger-600` too — a header caption, a popover's fine print, a share
-confirmation) and landed on `/92` — technically correct, but checked against
-the *wrong* worst case: pure black. Pure black can never actually appear
-behind a glass surface in this app — `public/backdrop.jpg` is a fixed,
-pre-lightened photo, not arbitrary content — so `/92` was solving for a
-scenario that doesn't happen, at the cost of a surface so opaque that barely
-8% of anything behind it could ever show through. That's *why* the card
-still read as flat after getting glass classes at all: the math was right
-and the result was still invisible, because the input to the math was wrong.
-
-Pass three measured the actual asset instead of assuming: a full-resolution
-scan of `public/backdrop.jpg` (Pillow, in `scripts/`) puts its darkest pixel
-at `rgb(156,158,153)`, luminance 0.338 — nowhere near black, because the
-photo was already lightened before being committed for exactly this reason.
-`GLASS_WORST_CASE_BG` in `contrast-pairs.mjs` uses `rgb(130,130,128)`, a
-margin below that measured floor, as the worst case to design against. **A
-worst case has to be the real worst case for what's actually behind the
-surface, not the theoretical worst case for any surface anywhere** —
-computing correctly against the wrong assumption still ships a surface nobody
-can see through. If `backdrop.jpg` is ever replaced, re-measure it and
-recompute `GLASS_WORST_CASE_BG` — a darker photo invalidates this floor.
-
-**Glass surfaces do not share one opacity**, because each is limited by the
-least-contrasty text sitting on it, and that differs. `GLASS_SURFACES` in
-`contrast-pairs.mjs` holds them, and `npm run a11y:contrast` composites
-stacked layers in paint order:
+A soft translucent fill plus `backdrop-blur-2xl backdrop-saturate-150` —
+defined once as `GLASS_FX` in `lib/surfaces.ts`. Saturate is *150* (not 200)
+so the photo reads as mist, not candy. Opacity differs per surface; blur and
+saturate do not.
 
 | Surface | Opacity | Limited by |
 | --- | --- | --- |
-| `card` — the focused card shell | `/75` | the retreat caption (`muted`, 11px) on the saffron tint |
-| `cardRow` — a field row, stacked on `card` | `/50` | the recorded time (`saffron-700`) |
-| `panel` — header bars, popovers, empty states | `/85` | `subtle` fine print |
+| `panel` — headers, popovers, empty notes | `/68` | `danger-600` / body text on panel |
+| `card` — focused person-card shell | `/74` | retreat caption (`muted`) on saffron tint |
+| `cardRow` — field row stacked on `card` | `/38` | recorded time (`saffron-700`) |
 
-| Gets the glass treatment | Stays filled (never glass) |
-| --- | --- |
-| The mobile header and tab switcher | Field rows (`bg-white`) — the recorded data itself |
-| The Quick Log controls bar | The record button |
-| Empty-state messages, floating over the photo | Overview cards (People sheet, the desktop rail) — see below |
-| `LocationCheck`'s popover | `SwipeToAction`'s revealed delete panel |
-| `DesktopWorkspace`'s people rail and top bar | `HistoryPanel` and `PeopleSheet` — see below |
-| **The focused person card** (`PersonCard`, not the overview one) | |
+`npm run a11y:contrast` imports these alphas from `lib/surfaces.ts` and also
+asserts that each fill class's `/NN` matches its `alpha` — so the UI and the
+checker cannot drift apart.
 
-The rule: glass only sits over the **backdrop photo** — a smooth, empty
-surface with nothing underneath worth reading. `backdrop-filter` blurs
-whatever is *actually* behind it, not "the wallpaper" as a concept, so a
-glass surface placed over anything else blurs *that* instead. `HistoryPanel`
-and `PeopleSheet` are full-screen sheets that sit directly on top of the
-live Refuge view, not the photo — tried as glass, the card and record
-button underneath ghosted through the dialog, legible enough to be a
-distraction (its own `Buddha`/`Dharma`/`Sangha` fields readable behind the
-"Close" button). A dim scrim behind a *desktop* dialog doesn't fix this
-either — dimming isn't hiding, so the same bleed-through shows up fainter.
-Both stay filled. **Overview cards stay filled too, for a narrower reason**:
-a whole-card swipe means delete, and the red panel underneath has to be
-fully hidden until swiped, not visible through a translucent surface —
-`PersonCard`'s own inner fill div is explicitly opaque for exactly this
-(see the comment there). The **focused** card has no such panel underneath
-it, sits directly over the photo like everything else in this table, and
-was excluded from an earlier pass of this table for no better reason than
-an unchecked assumption that "cards are filled" (§3) meant *every* card,
-rather than specifically the data-bearing surfaces inside one.
+Plain Tailwind utilities only. An earlier `@utility glass` that wrote both
+`backdrop-filter` and `-webkit-backdrop-filter` made the build tool drop the
+standard property; diagnosing that required reading compiled CSS. First-party
+utilities don't have that failure mode.
 
-Components add their own border and shadow on top of the glass classes from
-the existing scale above — a bar that already has a hairline `border-b`
-doesn't need a second border framing it; a floating panel with no other
-edge gets one (`border border-white/60`, a rim catching light, plus its
-shadow step).
+**Glass only over the backdrop photo.** `HistoryPanel` and `PeopleSheet` stay
+filled — they sit on the live Refuge view. Overview cards stay filled for the
+delete-panel reason above. The **focused** card is glass: it floats on the
+photo with no panel underneath.
+
+Floating cloudy panels take `rim` (`border border-white/50`). Edge-to-edge
+bars (headers, tab switchers) do not.
 
 ## 3b. Desktop, not mobile-stretched
 
@@ -264,6 +179,11 @@ screen afford. Resizing the mobile card up doesn't produce this; the two
 had to be designed separately from the same data and handlers.
 
 ## 4. Controls
+
+**No gradients.** Primary actions use flat solid fills from `SOLID` in
+`lib/surfaces.ts` — `flagblue-600` for the record button, `saffron-400` for
+Quick Log. A light-to-dark wash fights the cloudy glass and muddies the one
+control that must read instantly under ceremony pressure (**UC-1**).
 
 **Sizes.** Two, and nothing smaller than the `sm`:
 
@@ -404,8 +324,6 @@ fuse you can indefinitely re-extend by staying nearby isn't a safety measure.
 
 ## 6. Gestures
 
-## 6. Gestures
-
 `SwipeToAction` wraps anything swipeable and always stops propagation, so a row
 swipe never also drives the person carousel.
 
@@ -521,26 +439,12 @@ row), and the PNG's second header line simply doesn't render.
 
 ## 8. Shipping a change described as "everywhere"
 
-`PersonCard`'s focused card went a full round of glass work without getting
-glass at all — not a rendering bug, a scope gap. An earlier note said "cards
-are filled" (§3), and every later change that touched glass surfaces treated
-that as settled and moved on, never re-checking whether it was still true for
-the one card that actually mattered. Nothing was wrong with the code that
-existed; `tsc`, lint, the build, and `a11y:contrast` all passed the whole
-time, because none of them can flag something that's *missing*. The gap only
-surfaced when someone looked at the running app and said "the cards are still
-not glassy" — which is a slower, worse way to catch it than checking before
-shipping.
+Materials are centralized in `lib/surfaces.ts`. To change cloudy glass
+strength: edit `GLASS.*.alpha` **and** the matching `fill` class there, then
+run `npm run a11y:contrast` (it asserts `/NN` matches `alpha`). Do not
+scatter new `bg-white/NN` strings into components.
 
-So: **whenever a change is described as applying to a whole category — "every
-card," "everywhere the app shows a time," "all glass surfaces" — grep for
-every literal usage of the pattern being touched before calling it done, and
-enumerate the hits.** Don't rely on a variable name, a comment, or memory of
-the codebase as proof of completeness; those are exactly what went stale
-here. A category name is a claim, not a fact — the only way to check it is a
-search.
-
-This isn't specific to glass. The same check applies to a colour token
-swapped everywhere, an icon replaced app-wide, a new prop threaded through
-"all the card variants" — anything where the unit of correctness is *every
-occurrence*, not the ones that happened to be open in an editor.
+If a change is described as applying to a whole category — "every glass
+surface," "all cards" — grep for `Surface` / `glassClass` / `GLASS` usages
+and enumerate the hits before calling it done. A category name is a claim;
+a search is a check.
