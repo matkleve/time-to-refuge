@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { Person, PHASE_LABELS, Phase } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
+import { IconButton } from "@/components/atoms/IconButton";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { Surface } from "@/components/atoms/Surface";
 import { PersonCard } from "./PersonCard";
@@ -101,7 +102,7 @@ export function DesktopWorkspace({
 
           <li>
             {adding ? (
-              <div className="flex gap-2 rounded-3xl bg-flagblue-50 p-2">
+              <div className="flex items-center gap-1 rounded-3xl bg-white/70 p-2">
                 <input
                   /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
                      appears on an explicit user action, so focusing it is expected. */
@@ -113,21 +114,30 @@ export function DesktopWorkspace({
                     if (e.key === "Escape") setAdding(false);
                   }}
                   placeholder="Person's name"
-                  className="min-w-0 flex-1 rounded-xl border border-line bg-white px-3 py-2 text-ink placeholder:text-muted/70 focus:border-flagblue-500 focus:outline-none"
+                  aria-label="Person's name"
+                  className="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
                 />
-                <button
-                  type="button"
+                <IconButton
+                  icon={Check}
+                  label="Add person"
                   onClick={submitAdd}
-                  className="rounded-xl bg-flagblue-600 px-4 py-2 text-base font-medium text-white transition-colors duration-200 hover:bg-flagblue-700 active:scale-95"
-                >
-                  Add
-                </button>
+                  tone="accent"
+                  disabled={!name.trim()}
+                />
+                <IconButton
+                  icon={X}
+                  label="Cancel adding person"
+                  onClick={() => {
+                    setAdding(false);
+                    setName("");
+                  }}
+                />
               </div>
             ) : (
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-line px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:border-flagblue-400 hover:bg-flagblue-50 hover:text-flagblue-600 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-white/50 px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:bg-white/80 hover:text-flagblue-600 active:scale-95"
               >
                 <Plus className="size-4" aria-hidden /> Add person
               </button>

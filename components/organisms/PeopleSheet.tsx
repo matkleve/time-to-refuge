@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { Person, Phase } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { PersonCard } from "./PersonCard";
 
@@ -11,7 +12,6 @@ interface PeopleSheetProps {
   people: Person[];
   currentId: string | null;
   onAdd: (name: string) => void;
-  onSelect: (id: string) => void;
   onOpenAt: (id: string, phase: Phase | null) => void;
   onEditTime: (id: string, phase: Phase, at: number) => void;
   onClearTime: (id: string, phase: Phase) => void;
@@ -25,7 +25,6 @@ export function PeopleSheet({
   people,
   currentId,
   onAdd,
-  onSelect,
   onOpenAt,
   onEditTime,
   onClearTime,
@@ -51,15 +50,9 @@ export function PeopleSheet({
     // would blur that live content through itself, not the photo — see
     // design system §3a.
     <Surface material="filled-sheet" className="absolute inset-0 z-30 flex flex-col animate-fade-in-up">
-      <div className="flex items-center justify-between border-b border-line px-5 py-4">
-        <h2 className="text-lg font-semibold text-ink">People</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-xl border border-line px-3 py-1.5 text-sm text-ink transition-colors duration-200 hover:bg-card active:scale-95"
-        >
-          Close
-        </button>
+      <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <h2 className="font-display text-lg font-semibold text-ink">People</h2>
+        <IconButton icon={X} label="Close people" onClick={onClose} />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -84,7 +77,7 @@ export function PeopleSheet({
 
           <li>
             {adding ? (
-              <div className="flex gap-2 rounded-3xl bg-flagblue-50 p-2">
+              <div className="flex items-center gap-1 rounded-3xl bg-card p-2">
                 <input
                   /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
                      appears on an explicit user action, so focusing it is expected. */
@@ -96,21 +89,30 @@ export function PeopleSheet({
                     if (e.key === "Escape") setAdding(false);
                   }}
                   placeholder="Person's name"
-                  className="flex-1 rounded-xl border border-line bg-white px-3 py-2 text-ink placeholder:text-muted/70 focus:border-flagblue-500 focus:outline-none"
+                  aria-label="Person's name"
+                  className="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
                 />
-                <button
-                  type="button"
+                <IconButton
+                  icon={Check}
+                  label="Add person"
                   onClick={submit}
-                  className="rounded-xl bg-flagblue-600 px-4 py-2 text-base font-medium text-white transition-colors duration-200 hover:bg-flagblue-700 active:scale-95"
-                >
-                  Add
-                </button>
+                  tone="accent"
+                  disabled={!name.trim()}
+                />
+                <IconButton
+                  icon={X}
+                  label="Cancel adding person"
+                  onClick={() => {
+                    setAdding(false);
+                    setName("");
+                  }}
+                />
               </div>
             ) : (
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-line px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:border-flagblue-400 hover:bg-flagblue-50 hover:text-flagblue-600 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-card px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:bg-flagblue-50 hover:text-flagblue-600 active:scale-95"
               >
                 <Plus className="size-4" aria-hidden /> Add person
               </button>

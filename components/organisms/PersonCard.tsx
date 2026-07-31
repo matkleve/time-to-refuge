@@ -146,7 +146,7 @@ export function PersonCard({
             >
               <h2
                 className={cn(
-                  "no-select truncate text-2xl font-semibold",
+                  "no-select truncate font-display text-2xl font-semibold",
                   remove.armed ? "text-danger-600" : "text-ink",
                 )}
               >
