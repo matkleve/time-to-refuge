@@ -207,7 +207,7 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
-        <header className="glass flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg">
+        <header className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg">
           <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
 
           <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1">
@@ -261,7 +261,7 @@ export default function Home() {
 
         {view === "quicklog" ? (
           <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
-            <div className="glass w-full max-w-md overflow-hidden rounded-3xl border border-white/60 shadow-xl">
+            <div className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 w-full max-w-md overflow-hidden rounded-3xl border border-white/60 shadow-xl">
               <QuickLogView />
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function Home() {
   return (
     <AppShell>
       <div
-        className="glass flex shrink-0 gap-1 border-b border-line px-3 pb-2"
+        className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 flex shrink-0 gap-1 border-b border-line px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <button
@@ -320,7 +320,7 @@ export default function Home() {
         <QuickLogView />
       ) : (
         <>
-          <header className="glass flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
+          <header className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
             <div className="flex items-center gap-1">
               <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
               <span className="relative inline-flex">
@@ -353,7 +353,7 @@ export default function Home() {
 
           {people.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <p className="glass rounded-2xl border border-white/60 px-5 py-3 text-base text-ink shadow-lg">
+              <p className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 rounded-2xl border border-white/60 px-5 py-3 text-base text-ink shadow-lg">
                 Add the people taking refuge to begin.
               </p>
               <button

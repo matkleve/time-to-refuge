@@ -116,35 +116,32 @@ gets caught.
 
 ## 3a. Glass
 
-The `glass` utility (`app/globals.css`) is the frosted material for floating
-chrome sitting above the backdrop photo — the iOS-style effect: `bg-white`
-at 70% opacity plus `backdrop-blur` and a saturation boost, so whatever's
-behind it (the photo, a dimmed dialog scrim) shows through softened and a
-little more vivid, not just dimmed. It is **not** a replacement for "cards
-are filled" above — it's a second, distinct material for a different job,
-and the two are not interchangeable.
+`bg-white/70 backdrop-blur-xl backdrop-saturate-150` — Tailwind's own
+utilities, written out on the element directly, not a custom one. That's
+deliberate: an earlier version defined a `@utility glass` shorthand in
+`app/globals.css`, and it hid a real bug for a while — writing both
+`backdrop-filter` and a manual `-webkit-backdrop-filter` inside it made the
+build tool drop the standard property from the compiled CSS, so the effect
+quietly only worked in Safari. Diagnosing that meant reading generated CSS
+output and cross-checking `getComputedStyle` against a plain, undecorated
+test element to prove where the CSS itself broke — real signal, not a
+custom abstraction with its own failure mode to rule out first. Plain
+Tailwind utilities don't have that problem: they're first-party, and if
+`backdrop-blur-xl` isn't visible, the cause is something else (an
+unsupported/GPU-less renderer, a stale deployment) rather than this app's
+own CSS layer.
 
-**To change how strong the effect looks, there is exactly one place to
-edit**: the `@utility glass` block in `app/globals.css`. It's three values,
-each documented right there — opacity, blur radius, saturation — and every
-glass surface in the app inherits from that single definition, so there's
-nothing to hunt for across components. The opacity floor (~0.51, computed
-against ink text over a worst-case pure-black photo pixel) is written next
-to it; 0.70 is a deliberate choice above that floor, not the floor itself,
-so there's real room to push it lower for a more see-through look without
-redoing the contrast math yourself.
+**To change how strong the effect looks**: edit the three classes directly
+wherever they're used — `bg-white/70` (opacity), `backdrop-blur-xl` (blur
+radius), `backdrop-saturate-150` (colour vividness). The opacity floor for
+ink text to hold 4.5:1 against a worst-case pure-black photo pixel is
+~0.51 (computed, not guessed); `/70` keeps a real margin above that
+(8.1:1 actual) while staying visibly translucent — don't go below `/55`
+without redoing that math. There's no single shared definition to hunt
+for, which costs a little repetition across components but means each
+surface's own file shows exactly what it's rendering, no indirection.
 
-That block is also where a real bug lived: writing both `backdrop-filter`
-and a manual `-webkit-backdrop-filter` made the build tool drop the
-standard property from the compiled CSS, so the effect only worked in
-Safari and was invisible everywhere else — for weeks, it looked like
-"nothing has a glass effect" when the code all looked right. Only the
-standard property is written now; the build generates the vendor-prefixed
-one itself. If the effect ever seems to vanish again, check the compiled
-output first (`grep '.glass{' .next/static/css/*.css` after a build) before
-assuming the component markup is wrong.
-
-| Gets glass | Stays filled (never glass) |
+| Gets the glass treatment | Stays filled (never glass) |
 | --- | --- |
 | The mobile header and tab switcher | The person card (`bg-card`) |
 | The Quick Log controls bar | Field rows (`bg-white`) |
@@ -162,14 +159,13 @@ button underneath ghosted through the dialog, legible enough to be a
 distraction (its own `Buddha`/`Dharma`/`Sangha` fields readable behind the
 "Close" button). A dim scrim behind a *desktop* dialog doesn't fix this
 either — dimming isn't hiding, so the same bleed-through shows up fainter.
-Both stay filled. The individual rows inside a glass panel that *does* stay
-above the photo — `DesktopWorkspace`'s people rail, say — were never the
-deciding factor either way; what's behind the panel is.
+Both stay filled.
 
-Components add their own border and shadow on top of `glass` from the
-existing scale above — a bar that already has a hairline `border-b` doesn't
-need a second border framing it; a floating panel with no other edge gets
-one (`border border-white/60`, a rim catching light, plus its shadow step).
+Components add their own border and shadow on top of the glass classes from
+the existing scale above — a bar that already has a hairline `border-b`
+doesn't need a second border framing it; a floating panel with no other
+edge gets one (`border border-white/60`, a rim catching light, plus its
+shadow step).
 
 ## 3b. Desktop, not mobile-stretched
 

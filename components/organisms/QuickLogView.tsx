@@ -106,7 +106,7 @@ export function QuickLogView() {
        keyboard-accessible equivalent is the real <button> in QuickLogButton
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
-      <div className="glass border-b border-line px-3 py-2">
+      <div className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-line px-3 py-2">
         <div className="flex items-center justify-between">
           <span className="pl-1 text-sm text-muted">{entries.length} logged</span>
           <IconButton
@@ -129,7 +129,7 @@ export function QuickLogView() {
 
       <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <p className="glass mx-auto rounded-2xl border border-white/60 px-4 py-2 text-center text-sm text-subtle shadow-sm">
+          <p className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 mx-auto rounded-2xl border border-white/60 px-4 py-2 text-center text-sm text-subtle shadow-sm">
             Tap anywhere to log a time.
           </p>
         ) : (
