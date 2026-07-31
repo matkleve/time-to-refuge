@@ -1,20 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { RotateCcw, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Check, Copy, RotateCcw, Trash2 } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
+import { useArmedAction } from "@/lib/use-armed-action";
+import { useDismissible } from "@/lib/use-dismissible";
+import { glassRowClass } from "@/lib/surfaces";
+import { cn } from "@/lib/utils";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
-import { useArmedAction } from "@/lib/use-armed-action";
-import { glassRowClass } from "@/lib/surfaces";
-import { cn } from "@/lib/utils";
 
-/** One logged time. Owns its own two-click delete. */
+/**
+ * One logged time — same tap-to-reveal pattern as a person-card field row
+ * (design system §5a): idle shows the stamp; tap packs it left and reveals
+ * Copy · Delete on the right.
+ */
 function LogRow({
   index,
   at,
@@ -28,28 +33,95 @@ function LogRow({
   armedAll: boolean;
   onDelete: () => void;
 }) {
+  const [showActions, setShowActions] = useState(false);
+  const [copied, setCopied] = useState(false);
   const remove = useArmedAction(onDelete);
   const { date, time, ms } = formatInZone(at, tz);
+  const stamp = `${date} · ${time}.${ms}`;
   const red = remove.armed || armedAll;
 
-  return (
-    <div className="shrink-0">
-      <SwipeToAction onSwipe={remove.trigger} label="Delete" className="overflow-hidden rounded-2xl">
-        <div
+  const { disarm } = remove;
+  const closeActions = useCallback(() => {
+    setShowActions(false);
+    disarm();
+  }, [disarm]);
+
+  const dismissRef = useDismissible<HTMLDivElement>({
+    active: showActions,
+    onDismiss: closeActions,
+  });
+
+  useEffect(() => {
+    setShowActions(false);
+    setCopied(false);
+    disarm();
+  }, [at, disarm]);
+
+  async function copyTime(e: React.MouseEvent) {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(stamp);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      /* clipboard denied */
+    }
+  }
+
+  function handleRowClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    setShowActions((v) => !v);
+    disarm();
+  }
+
+  const body = (
+    <div
+      ref={dismissRef}
+      className={cn(
+        "flex min-h-11 w-full items-center overflow-hidden rounded-2xl",
+        glassRowClass(),
+        red && "ring-2 ring-danger-500",
+      )}
+    >
+      <button
+        type="button"
+        onClick={handleRowClick}
+        aria-expanded={showActions}
+        aria-label={
+          showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
+        }
+        className="flex min-w-0 flex-1 items-center gap-2 px-4 py-1.5 text-left transition-colors duration-200 hover:bg-ink/[0.03]"
+      >
+        <span className="shrink-0 text-xs tabular-nums text-subtle">#{index}</span>
+        <span
           className={cn(
-            "flex items-center justify-between py-1.5 pr-1 pl-4",
-            glassRowClass(),
-            red && "ring-2 ring-danger-500",
+            "min-w-0 truncate font-mono text-sm tabular-nums transition-[margin] duration-200 ease-out",
+            !showActions && "ml-auto",
+            red ? "text-danger-600" : "text-ink",
           )}
         >
-          <span className="text-xs tabular-nums text-subtle">#{index}</span>
-          <span className="flex items-center gap-0.5">
-            <span
-              className={cn("font-mono text-sm tabular-nums", red ? "text-danger-600" : "text-ink")}
-            >
-              {date} · {time}
-              <span className={red ? "text-danger-600/70" : "text-subtle"}>.{ms}</span>
-            </span>
+          {date} · {time}
+          <span className={red ? "text-danger-600/70" : "text-subtle"}>.{ms}</span>
+        </span>
+      </button>
+
+      <div
+        className={cn(
+          "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity,padding] duration-200 ease-out",
+          showActions ? "max-w-52 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
+        )}
+        aria-hidden={!showActions}
+      >
+        <div className="flex shrink-0 items-center gap-3">
+          <IconButton
+            icon={copied ? Check : Copy}
+            label={copied ? "Time copied" : "Copy time"}
+            onClick={copyTime}
+            tone="accent"
+            size="sm"
+            className={copied ? "text-saffron-700" : undefined}
+          />
+          <div className="flex shrink-0 items-center gap-0.5">
             <IconButton
               icon={Trash2}
               label={remove.armed ? "Confirm delete entry" : "Delete entry"}
@@ -63,8 +135,23 @@ function LogRow({
               }}
             />
             {remove.armed && <ArmedCancelButton onClick={remove.disarm} />}
-          </span>
+          </div>
         </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+      <SwipeToAction
+        onSwipe={() => {
+          setShowActions(true);
+          remove.trigger();
+        }}
+        label="Delete"
+        className="overflow-hidden rounded-2xl"
+      >
+        {body}
       </SwipeToAction>
     </div>
   );
@@ -113,7 +200,7 @@ export function QuickLogView() {
       <Surface material="glass-panel" className="border-b border-line px-3 py-2">
         <div className="flex items-center justify-between gap-2">
           <span className="pl-1 text-sm text-muted">{entries.length} logged</span>
-          <span className="flex items-center gap-0.5">
+          <span className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
             <IconButton
               icon={RotateCcw}
               label={
@@ -132,7 +219,7 @@ export function QuickLogView() {
             {clearAll.armed && <ArmedCancelButton onClick={clearAll.disarm} />}
           </span>
         </div>
-        <div className="mt-1 px-1 pb-1">
+        <div className="mt-1 px-1 pb-1" onClick={(e) => e.stopPropagation()}>
           <TimezoneSelect value={tz} onChange={setTz} />
         </div>
       </Surface>
