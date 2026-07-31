@@ -364,6 +364,18 @@ destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 
+**Arming an empty field out of order** (Sangha while Buddha's still empty)
+asks first instead of either silently allowing it or blocking it outright —
+see [`USE-CASES.md`](./USE-CASES.md) gap #5. This is the one deliberate
+exception to "a row never resizes" in §3: that rule exists so ordinary
+interaction — revealing actions, editing — never shifts anything the reader
+isn't already looking at. A skip confirmation is different in kind, not
+degree: it only ever appears immediately after the tap that triggered it,
+with attention already locked on that exact row, asking about something
+about to become permanent. Tapping the phase that's actually next stays
+exactly as instant as capture itself needs to be — the question only ever
+interrupts the *uncommon* path.
+
 ## 6b. Verifying the clock
 
 [`LocationCheck`](../components/atoms/LocationCheck.tsx) sits beside the

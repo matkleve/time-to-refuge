@@ -69,10 +69,14 @@ which is the closest this app gets to the real moment, and is why
 than something folded into this one.
 
 **Alternate flows:**
-- **Wrong phase armed** — the timekeeper can tap a *different* empty field
-  to arm that one instead of the auto-suggested next one. Nothing stops a
-  phase from being recorded out of order (Sangha before Buddha, say). See
-  gap summary.
+- **Wrong phase armed** — tapping a different empty field than the
+  auto-suggested next one asks first ("Record Sangha before Buddha?") rather
+  than either silently allowing it or blocking it outright. Confirming still
+  arms it — this stays a soft speed bump, not enforcement, since there may be
+  real reasons to go out of order that the app has no business second-guessing.
+  Tapping the phase that actually *is* next is unaffected — no question, no
+  delay, capture stays exactly as instant as it needs to be. See
+  `DESIGN-SYSTEM.md` §6a.
 - **Mistap** — see **UC-3**.
 - **Wrong person in focus** — the tap still lands on whoever's card is
   showing. There's no "confirm this is the right person" step; getting the
@@ -284,7 +288,7 @@ ceremony, not by how easy each is to fix.
 | 2 | Single-device, no sync/handoff — a dead phone mid-ceremony loses everything not already exported | UC-10 |
 | 3 | Undo stack isn't persisted — survives a mistap, doesn't survive a reload | UC-3 |
 | 4 | Nothing enforces or even prompts the clock/location check before a ceremony starts — fully opt-in, easy to skip | UC-2, UC-6 |
-| 5 | No phase-order enforcement — Sangha can be recorded before Buddha with no warning | UC-1 |
+| 5 | ~~No phase-order enforcement~~ — **addressed**: an out-of-order tap now asks first ("Record Sangha before Buddha?") rather than proceeding silently. Deliberately still not *enforced* — confirming still allows it | UC-1 |
 | 6 | Unconfirmed architectural assumption: one-aspirant-at-a-time vs. round-robin-across-aspirants ceremony format | UC-1, actors note |
 | 7 | Quick Log entries can't be attributed to a person after the fact — no reconciliation path back into the Refuge roster | UC-7 |
 | 8 | No aspirant reordering — insertion order is permanent short of delete-and-re-add, which discards recorded times | UC-4 |
@@ -293,6 +297,7 @@ ceremony, not by how easy each is to fix.
 | 11 | No formatted "certificate" output distinct from the app's own UI card | UC-9 |
 | 12 | Quick Log has no undo, only two-tap confirm, unlike the Refuge flow | UC-7 |
 
-None of these are implemented by writing this document — this is the audit,
-not the fix. Worth treating #1–#3 as the ones that turn a bad moment into a
-lost one; the rest are real, but recoverable by a human working around them.
+None of the rest are implemented by writing this document — this is still
+mostly the audit, not the fix, with #5 as the one exception so far. Worth
+treating #1–#3 as the ones that turn a bad moment into a lost one; the rest
+are real, but recoverable by a human working around them.

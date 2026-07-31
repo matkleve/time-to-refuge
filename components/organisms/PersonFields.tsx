@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
-import { Person, PHASES, PHASE_LABELS, Phase } from "@/lib/types";
+import { Person, PHASES, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
 import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
@@ -59,6 +59,11 @@ function FieldRow({
   const [draft, setDraft] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [confirmSkip, setConfirmSkip] = useState(false);
+
+  /* The phase that's actually next in order — null once nothing's skipped. */
+  const expected = nextEmptyPhase(person);
+  const skipsAhead = !filled && expected !== null && expected !== phase;
 
   const armedReset = useArmedAction(() => {
     onClear?.(phase);
@@ -80,15 +85,31 @@ function FieldRow({
     onDismiss: closeActions,
   });
 
+  const closeConfirmSkip = useCallback(() => setConfirmSkip(false), []);
+  const confirmSkipRef = useDismissible<HTMLDivElement>({
+    active: confirmSkip,
+    onDismiss: closeConfirmSkip,
+    timeoutMs: 5000,
+  });
+
   useEffect(() => {
     setShowActions(false);
     setEditing(false);
+    setConfirmSkip(false);
     disarm();
   }, [person.id, value, disarm]);
 
   function handleRowClick() {
     if (!filled) {
-      // Empty: go straight to recording it.
+      // Skipping ahead of an earlier empty phase — a real thing that can
+      // happen (the timekeeper reaching for the wrong row), so it gets a
+      // question instead of either silently allowing it or blocking it
+      // outright. The common case — tapping the phase that's actually next
+      // — stays exactly as instant as recording itself needs to be.
+      if (skipsAhead) {
+        setConfirmSkip(true);
+        return;
+      }
       onSelectPhase?.(phase);
       return;
     }
@@ -169,6 +190,40 @@ function FieldRow({
             invalid ? "border-danger-500 text-danger-600" : "border-flagblue-500 text-ink",
           )}
         />
+      </div>
+    );
+  } else if (!filled && confirmSkip && expected) {
+    /*
+     * The one deliberate exception to "a row never resizes" (design system
+     * §3): that rule is about not shifting things during ordinary
+     * interaction, and this isn't ordinary — it only ever shows up right
+     * after the tap that triggered it, with attention already on this
+     * exact row, asking about something that's about to become permanent.
+     */
+    body = (
+      <div className="flex w-full flex-col gap-2 px-4 py-2.5 animate-fade-in-up">
+        <p className="text-sm text-ink">
+          Record {PHASE_LABELS[phase]} before {PHASE_LABELS[expected]}?
+        </p>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => setConfirmSkip(false)}
+            className="rounded-xl px-3 py-1.5 text-sm text-muted transition-colors duration-200 hover:bg-ink/[0.05]"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setConfirmSkip(false);
+              onSelectPhase?.(phase);
+            }}
+            className="rounded-xl bg-flagblue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-flagblue-700"
+          >
+            Record it
+          </button>
+        </div>
       </div>
     );
   } else if (!filled) {
@@ -281,7 +336,11 @@ function FieldRow({
   }
 
   if (!filled || editing || !onClear) {
-    return <div className={cn("overflow-hidden rounded-2xl", rowClassName)}>{body}</div>;
+    return (
+      <div className={cn("overflow-hidden rounded-2xl", rowClassName)} ref={confirmSkipRef}>
+        {body}
+      </div>
+    );
   }
 
   // Swiping a filled row arms the same two-click reset and opens its actions.
