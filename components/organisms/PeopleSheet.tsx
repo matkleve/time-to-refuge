@@ -58,7 +58,7 @@ export function PeopleSheet({
         <div className="flex-1 overflow-y-auto px-4 py-4">
           <ul className="space-y-3">
             {people.map((p) => (
-              <li key={p.id}>
+              <li key={p.id} className="animate-fade-in-up">
                 <PersonCard
                   person={p}
                   variant="overview"

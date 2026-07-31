@@ -32,7 +32,7 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
     if (!armed) return;
     onCapture();
     setFlash(true);
-    setTimeout(() => setFlash(false), 200);
+    setTimeout(() => setFlash(false), 280);
     if (navigator.vibrate) navigator.vibrate(15);
   }
 
@@ -48,10 +48,10 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         disabled={!armed}
         className={cn(
           "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6",
-          "transition-[box-shadow,background-color,transform] duration-150 ease-out active:scale-[0.98]",
+          "transition-[box-shadow,background-color,transform,opacity] duration-200 ease-out active:scale-[0.98]",
           /* Tinted glass + specular light catch — not a solid fill, not a gradient. */
           armed ? actionClass("primary") : actionClass("primaryIdle"),
-          flash && "ring-4 ring-saffron-400/80",
+          flash && "animate-flash-saffron",
         )}
       >
         <span

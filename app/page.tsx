@@ -20,6 +20,7 @@ import {
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
+import { PageEnter } from "@/components/atoms/PageEnter";
 import { Surface } from "@/components/atoms/Surface";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
 import { AppShell } from "@/components/AppShell";
@@ -350,14 +351,17 @@ export default function Home() {
     />
   );
 
-  const page =
-    view === "quicklog"
-      ? quickLogPage
-      : view === "history"
-        ? historyPage
-        : view === "people"
-          ? peoplePage
-          : refugePage;
+  const page = (
+    <PageEnter viewKey={view}>
+      {view === "quicklog"
+        ? quickLogPage
+        : view === "history"
+          ? historyPage
+          : view === "people"
+            ? peoplePage
+            : refugePage}
+    </PageEnter>
+  );
 
   if (isDesktop) {
     return (

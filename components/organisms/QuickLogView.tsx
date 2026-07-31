@@ -138,7 +138,7 @@ function LogRow({
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
        Stops the page-wide tap-to-log layer; the row's real controls are buttons. */
-    <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+    <div className="shrink-0 animate-fade-in-up" onClick={(e) => e.stopPropagation()}>
       {body}
     </div>
   );
@@ -166,7 +166,7 @@ export function QuickLogView() {
   function handleLog() {
     setEntries((prev) => [...prev, createQuickLogEntry()]);
     setFlash(true);
-    setTimeout(() => setFlash(false), 200);
+    setTimeout(() => setFlash(false), 280);
     if (navigator.vibrate) navigator.vibrate(15);
   }
 

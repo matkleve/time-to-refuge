@@ -92,3 +92,12 @@ Spacing is now driven by the scale, and the card gets more internal room.
   card actions open on tap only, with the same controls for pointer and touch.
 - **The tap-anywhere Quick Log layer** stays as a pointer convenience, with the
   real focusable button inside it.
+
+## 8. Motion — continuity and press feedback
+
+A second pass found the local patterns (row reveal, carousel, a few fade-ups)
+were fine, but **page switches and list mounts still hard-cut**, and capture
+feedback was easy to miss. See [`MOTION-AUDIT.md`](./MOTION-AUDIT.md) for the
+full priority table; P0 shipped as page entrances, list mounts, stronger
+capture flashes, menu scale-in, sharper carousel easing, and
+`prefers-reduced-motion`.

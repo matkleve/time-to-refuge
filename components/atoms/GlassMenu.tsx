@@ -251,7 +251,7 @@ export function GlassMenu({
           rim
           role="menu"
           aria-label={label}
-          className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
+          className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-scale-in"
         >
           {body}
           {iconStrip}

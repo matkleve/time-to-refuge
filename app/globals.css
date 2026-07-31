@@ -114,8 +114,8 @@
     0 1px 2px rgb(31 27 22 / 0.04);
 
 
-  /* Motion uses Tailwind's built-in `duration-*` and `ease-out`: 150ms for
-   * press feedback, 200ms for colour changes, 300ms for the card carousel. */
+  /* Motion — three durations on ease-out (design system §5).
+   * Prefer the shared utilities below for entrances so reduced-motion applies. */
 
   /*
    * ── Units ────────────────────────────────────────────────────────────
@@ -179,7 +179,7 @@
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -187,6 +187,64 @@
   }
 }
 
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flash-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(245 166 35 / 0);
+  }
+  35% {
+    box-shadow: 0 0 0 4px rgb(245 166 35 / 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(245 166 35 / 0);
+  }
+}
+
+@keyframes flash-ring-blue {
+  0% {
+    box-shadow: 0 0 0 0 rgb(36 86 201 / 0);
+  }
+  35% {
+    box-shadow: 0 0 0 4px rgb(36 86 201 / 0.75);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(36 86 201 / 0);
+  }
+}
+
 @utility animate-fade-in-up {
-  animation: fade-in-up 200ms ease-out;
+  animation: fade-in-up 220ms ease-out both;
+}
+
+@utility animate-scale-in {
+  animation: scale-in 200ms ease-out both;
+}
+
+@utility animate-flash-saffron {
+  animation: flash-ring 280ms ease-out;
+}
+
+@utility animate-flash-blue {
+  animation: flash-ring-blue 280ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

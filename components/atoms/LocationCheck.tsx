@@ -309,7 +309,7 @@ export function LocationCheck() {
         <Surface
           material="glass-panel"
           rim
-          className="animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left"
+          className="animate-scale-in absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left"
           onClick={(e) => e.stopPropagation()}
         >
           {status === "checking" && (

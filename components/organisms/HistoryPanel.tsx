@@ -56,7 +56,10 @@ export function HistoryPanel({ log }: HistoryPanelProps) {
               {sorted.map((entry) => (
                 <li
                   key={entry.id}
-                  className={cn("rounded-2xl px-4 py-3", glassClass("card", { rim: true }))}
+                  className={cn(
+                    "rounded-2xl px-4 py-3 animate-fade-in-up",
+                    glassClass("card", { rim: true }),
+                  )}
                 >
                   <p className="font-display text-base font-semibold text-ink">
                     {entry.personName}

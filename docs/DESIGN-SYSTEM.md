@@ -281,23 +281,39 @@ Everything else is rem.
 
 ## 5. Motion
 
-Three durations, all Tailwind's own `duration-*` on `ease-out` — no custom
-tokens, for the same reason the type scale re-values Tailwind's steps rather
-than inventing names (§4a):
+Full findings: [`MOTION-AUDIT.md`](./MOTION-AUDIT.md).
+
+Three durations, all Tailwind's own `duration-*` — no custom duration names,
+for the same reason the type scale re-values Tailwind's steps (§4a):
 
 | Duration | Used for |
 | --- | --- |
-| `duration-150` | Press feedback (`active:scale-95`) |
-| `duration-200` | Colour, opacity, size changes; the default |
-| `duration-300` | The person carousel — the biggest movement gets the most time |
+| `duration-150` | Press feedback only (`active:scale-95`) |
+| `duration-200` | Colour, opacity, arming a control; menu scale-in |
+| `duration-300` | Travel across the screen — carousel, row-action tray |
+
+**Easing.** Default `ease-out`. The person carousel uses
+`cubic-bezier(0.32, 0.72, 0, 1)` so the card settles like a native sheet.
+
+**Entrances.** Anything that mounts into the main slot or a list uses a shared
+utility — never a hard paint:
+
+| Utility | When |
+| --- | --- |
+| `animate-fade-in-up` | `PageEnter` (AppView switch), History / People / Quick Log rows |
+| `animate-scale-in` | Glass menus, Check-zone popover (feels attached to the trigger) |
+| `animate-flash-saffron` / `animate-flash-blue` | Capture confirmation on Refuge / Quick Log |
 
 A capture flashes a ring in **the accent the surface is not** — the blue
 Refuge button flashes saffron, the gold Quick Log button flashes blue — so the
-confirmation always reads against its background.
+confirmation always reads against its background (~280ms keyframed pulse).
+
+**`prefers-reduced-motion: reduce`** collapses animation and transition
+durations globally. End states stay; motion does not.
 
 **Nothing that changes size or position happens instantly.** The two patterns
 below are how that rule gets applied to the two situations it comes up in:
-revealing controls in place, and mounting a panel.
+revealing controls in place, and mounting a panel / page.
 
 ### 5a. Reveal — controls appearing in place
 

@@ -113,7 +113,7 @@ export function RefugeView({
         {/* Only this track moves when swiping between people. */}
         <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div
-            className="flex w-full transition-transform duration-300 ease-out"
+            className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
             style={{ transform: `translateX(-${index * 100}%)` }}
           >
             {people.map((p) => {

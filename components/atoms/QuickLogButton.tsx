@@ -41,10 +41,10 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
         }}
         className={cn(
           "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
-          "transition-[box-shadow,background-color,transform] duration-150 ease-out",
+          "transition-[box-shadow,background-color,transform] duration-200 ease-out active:scale-[0.98]",
           /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
           actionClass("accent"),
-          flash && "scale-[0.98] ring-4 ring-flagblue-500/80",
+          flash && "animate-flash-blue",
         )}
       >
         <span className="text-xs tracking-[0.18em] text-ink/80 uppercase">{day}</span>
