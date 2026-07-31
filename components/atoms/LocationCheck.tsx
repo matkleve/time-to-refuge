@@ -8,69 +8,124 @@ import { Surface } from "@/components/atoms/Surface";
 
 type Status = "idle" | "checking" | "ok" | "denied" | "unavailable" | "error";
 
+type MatchKind = "iana" | "offset" | "rough" | "none";
+
 interface LocationInfo {
   place: string;
   city: string;
-  timezone: string;
-  offset: string;
-  /** Does the device's own time zone plausibly belong to this location? */
+  /** Device-reported IANA zone. */
+  deviceZone: string;
+  deviceOffset: string;
+  /** IANA zone for the GPS place, when the lookup returned one. */
+  placeZone: string | null;
+  placeOffset: string;
   matchesLocation: boolean;
-  expectedOffset: string;
+  matchKind: MatchKind;
 }
 
-function currentOffset(): string {
-  const offsetMin = -new Date().getTimezoneOffset();
+type GeocodePayload = {
+  city?: string;
+  locality?: string;
+  principalSubdivision?: string;
+  countryName?: string;
+  localityInfo?: {
+    informative?: Array<{ name?: string; description?: string }>;
+  };
+};
+
+function formatOffsetMinutes(offsetMin: number): string {
   const sign = offsetMin >= 0 ? "+" : "-";
-  const abs = Math.abs(offsetMin);
+  const abs = Math.abs(Math.round(offsetMin));
   const h = String(Math.floor(abs / 60)).padStart(2, "0");
   const m = String(abs % 60).padStart(2, "0");
   return `UTC${sign}${h}:${m}`;
 }
 
-function offsetHoursNow(): number {
-  return -new Date().getTimezoneOffset() / 60;
-}
-
-function formatOffsetHours(hours: number): string {
-  const sign = hours >= 0 ? "+" : "-";
-  return `UTC${sign}${Math.abs(hours)}`;
+function deviceOffsetMinutes(): number {
+  return -new Date().getTimezoneOffset();
 }
 
 /**
- * A whole-hour estimate from longitude alone — real time zones follow
- * political borders, not meridians, and can sit a couple of hours off solar
- * time (Spain, China). Deliberately loose (see MISMATCH_TOLERANCE_HOURS)
- * so it only ever flags the case that actually matters: a clock left on a
- * time zone many hours from where the device physically is.
+ * Wall-clock UTC offset (minutes) for an IANA zone at `at`.
+ * Same instant, different zone — no network required once the zone id is known.
+ */
+function offsetMinutesInZone(timeZone: string, at = new Date()): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(at);
+
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((p) => p.type === type)?.value);
+
+  const asUtc = Date.UTC(
+    get("year"),
+    get("month") - 1,
+    get("day"),
+    get("hour"),
+    get("minute"),
+    get("second"),
+  );
+  return (asUtc - at.getTime()) / 60_000;
+}
+
+/** Free reverse-geocode client embeds the IANA id under localityInfo.informative. */
+function timezoneFromGeocode(data: GeocodePayload): string | null {
+  const hit = data.localityInfo?.informative?.find(
+    (entry) =>
+      entry.description === "time zone" &&
+      typeof entry.name === "string" &&
+      entry.name.includes("/"),
+  );
+  return hit?.name ?? null;
+}
+
+/**
+ * Longitude ÷ 15 — only a fallback when the place lookup has no IANA zone.
+ * Real zones follow borders; tolerance is deliberately loose (see below).
  */
 function expectedOffsetHoursFromLongitude(longitude: number): number {
   return Math.round(longitude / 15);
 }
 
-const MISMATCH_TOLERANCE_HOURS = 3.5;
+const ROUGH_MISMATCH_TOLERANCE_HOURS = 3.5;
 
-function offsetsRoughlyMatch(a: number, b: number): boolean {
-  const diff = Math.abs(a - b);
-  return Math.min(diff, 24 - diff) <= MISMATCH_TOLERANCE_HOURS;
+function roughOffsetsMatch(deviceHours: number, expectedHours: number): boolean {
+  const diff = Math.abs(deviceHours - expectedHours);
+  return Math.min(diff, 24 - diff) <= ROUGH_MISMATCH_TOLERANCE_HOURS;
+}
+
+function compareZones(deviceZone: string, placeZone: string): {
+  matches: boolean;
+  kind: MatchKind;
+  placeOffsetMin: number;
+} {
+  const placeOffsetMin = offsetMinutesInZone(placeZone);
+  const deviceOffsetMin = deviceOffsetMinutes();
+  if (deviceZone === placeZone) {
+    return { matches: true, kind: "iana", placeOffsetMin };
+  }
+  // Same UTC offset (e.g. Europe/Vienna vs Europe/Berlin) is fine for wall time.
+  if (Math.abs(deviceOffsetMin - placeOffsetMin) < 1) {
+    return { matches: true, kind: "offset", placeOffsetMin };
+  }
+  return { matches: false, kind: "none", placeOffsetMin };
 }
 
 /**
- * The timekeeper only gets one chance at each moment — there's no redo once
- * the teacher's fingers snap. This exists so they can settle "is this
- * device's clock actually right?" once, quietly, before the ceremony
- * starts, instead of wondering mid-ceremony.
+ * Settles "is this device's *time zone* plausible for where we are?" before
+ * the ceremony — the usual way recorded times go wrong (phone still on a
+ * travel zone). It does **not** prove the clock is accurate to the second;
+ * that needs a trusted time server, and retreat centers are often offline.
  *
- * It cannot prove the clock is accurate to the second — there's no trusted
- * time server involved, deliberately: retreat centers are often offline or
- * on poor wifi, and a check that silently fails right when it matters is
- * worse than not having it. What it verifies is the single most common way
- * these times go wrong in practice: a phone still set to a *different* time
- * zone (left over from traveling, or never set at all), running the wrong
- * clock without anyone noticing. GPS location and the device's own time
- * zone are two independently-sourced facts — this cross-checks them (a
- * whole-hour, generously-toleranced estimate; see MISMATCH_TOLERANCE_HOURS)
- * and says plainly whether they agree, rather than just displaying both and
- * leaving the comparison to whoever's reading — see design system §6b.
+ * Prefer IANA zone from reverse-geocode over a longitude estimate. See
+ * design system §6b.
  */
 export function LocationCheck() {
   const [open, setOpen] = useState(false);
@@ -78,15 +133,14 @@ export function LocationCheck() {
   const [info, setInfo] = useState<LocationInfo | null>(null);
 
   // Same disclosure pattern as a field row's actions (design system §5c),
-  // just a longer pause — there's several lines to read here, not an icon row.
-  // onDismiss must stay referentially stable: this button sits beside the
-  // live clock, which re-renders every animation frame, so an inline arrow
-  // function here would reset the idle timer before it ever got to fire.
+  // longer pause — several lines to read. onDismiss must stay stable: this
+  // button sits beside the live clock (rAF re-renders), so an inline arrow
+  // would reset the idle timer every frame.
   const dismiss = useCallback(() => setOpen(false), []);
   const popoverRef = useDismissible<HTMLDivElement>({
     active: open,
     onDismiss: dismiss,
-    timeoutMs: 10000,
+    timeoutMs: 12000,
   });
 
   function handleOpen() {
@@ -99,56 +153,113 @@ export function LocationCheck() {
     setStatus("checking");
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const offset = currentOffset();
-        const expectedHours = expectedOffsetHoursFromLongitude(pos.coords.longitude);
-        const matchesLocation = offsetsRoughlyMatch(offsetHoursNow(), expectedHours);
-        const expectedOffset = formatOffsetHours(expectedHours);
+        const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const deviceOffset = formatOffsetMinutes(deviceOffsetMinutes());
+
         try {
           const res = await fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`,
           );
-          const data = await res.json();
+          if (!res.ok) throw new Error(`geocode ${res.status}`);
+          const data = (await res.json()) as GeocodePayload;
           const city = data.city || data.locality || "";
           const place =
             [city, data.principalSubdivision, data.countryName].filter(Boolean).join(", ") ||
             "Unknown place";
-          setInfo({ place, city: city || place, timezone, offset, matchesLocation, expectedOffset });
+          const placeZone = timezoneFromGeocode(data);
+
+          if (placeZone) {
+            const { matches, kind, placeOffsetMin } = compareZones(deviceZone, placeZone);
+            setInfo({
+              place,
+              city: city || place,
+              deviceZone,
+              deviceOffset,
+              placeZone,
+              placeOffset: formatOffsetMinutes(placeOffsetMin),
+              matchesLocation: matches,
+              matchKind: matches ? kind : "none",
+            });
+            setStatus("ok");
+            return;
+          }
+
+          // Named the place but no IANA — fall back to longitude estimate.
+          const expectedHours = expectedOffsetHoursFromLongitude(pos.coords.longitude);
+          const matches = roughOffsetsMatch(deviceOffsetMinutes() / 60, expectedHours);
+          setInfo({
+            place,
+            city: city || place,
+            deviceZone,
+            deviceOffset,
+            placeZone: null,
+            placeOffset: formatOffsetMinutes(expectedHours * 60),
+            matchesLocation: matches,
+            matchKind: matches ? "rough" : "none",
+          });
           setStatus("ok");
         } catch {
-          // GPS worked, but naming the place didn't — so there's nothing to
-          // cross-check the device's time zone against. Not a success.
-          setInfo({ place: "", city: "", timezone, offset, matchesLocation: false, expectedOffset: "" });
+          // GPS worked; naming / zone lookup did not. Still run the rough
+          // longitude check so a travel-zone phone can be flagged offline.
+          const expectedHours = expectedOffsetHoursFromLongitude(pos.coords.longitude);
+          const matches = roughOffsetsMatch(deviceOffsetMinutes() / 60, expectedHours);
+          setInfo({
+            place: "",
+            city: "",
+            deviceZone,
+            deviceOffset,
+            placeZone: null,
+            placeOffset: formatOffsetMinutes(expectedHours * 60),
+            matchesLocation: matches,
+            matchKind: matches ? "rough" : "none",
+          });
           setStatus("unavailable");
         }
       },
       () => {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         setInfo({
           place: "",
           city: "",
-          timezone,
-          offset: currentOffset(),
+          deviceZone,
+          deviceOffset: formatOffsetMinutes(deviceOffsetMinutes()),
+          placeZone: null,
+          placeOffset: "",
           matchesLocation: false,
-          expectedOffset: "",
+          matchKind: "none",
         });
         setStatus("denied");
       },
-      { enableHighAccuracy: false, timeout: 8000 }
+      { enableHighAccuracy: false, timeout: 8000 },
     );
   }
 
-  const mismatch = status === "ok" && info !== null && !info.matchesLocation;
-  const trouble = status === "denied" || status === "unavailable" || status === "error" || mismatch;
+  const mismatch = (status === "ok" || status === "unavailable") && info !== null && !info.matchesLocation;
+  const trouble =
+    status === "denied" || status === "error" || mismatch || (status === "unavailable" && !info?.matchesLocation);
+  // unavailable + rough match: warn soft on badge? Design: still show place/ok
+  // only when named. If unnamed but match, treat as caution not success.
+  const softUnavailable = status === "unavailable" && info?.matchesLocation;
 
   const badgeLabel =
     status === "checking"
       ? "Checking…"
-      : status === "ok"
-        ? info?.city || "Verified"
-        : trouble
-          ? "Check clock"
-          : "Verify time";
+      : status === "ok" && info?.matchesLocation
+        ? info.city || "Zone OK"
+        : softUnavailable
+          ? "Zone OK?"
+          : trouble
+            ? "Check clock"
+            : "Check zone";
+
+  const successAria =
+    info?.matchKind === "iana"
+      ? `Time zone matches this place (${info.place}). Open to review.`
+      : info?.matchKind === "offset"
+        ? `Device UTC offset matches this place (${info.place}). Open to review.`
+        : info?.matchKind === "rough"
+          ? `Rough time-zone check passed for this place. Open to review.`
+          : "Check this device's time zone before the ceremony";
 
   return (
     <div className="relative" ref={popoverRef}>
@@ -159,27 +270,33 @@ export function LocationCheck() {
           handleOpen();
         }}
         aria-label={
-          status === "ok" && info && !mismatch
-            ? `Time and location verified: ${info.place}. Open to review.`
-            : status === "ok" && info && mismatch
-              ? `Warning: this device's clock may not match ${info.place}. Open to review.`
-              : "Verify this device's clock before the ceremony"
+          status === "ok" && info?.matchesLocation
+            ? successAria
+            : mismatch
+              ? `Warning: this device's time zone may not match ${info?.place || "your location"}. Open to review.`
+              : softUnavailable
+                ? `Place name unavailable; rough time-zone check passed. Open to review.`
+                : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 max-w-32 items-center gap-1 rounded-full border pr-3 pl-2 shadow-sm transition-colors duration-200 active:scale-95",
+          "no-select flex h-9 max-w-36 items-center gap-1 rounded-full border pr-3 pl-2 shadow-sm transition-colors duration-200 active:scale-95",
           trouble
             ? "border-danger-500 bg-danger-50 text-danger-600 hover:bg-danger-50/70"
-            : "border-saffron-500 bg-white text-saffron-700 hover:bg-saffron-50",
+            : softUnavailable
+              ? "border-saffron-500 bg-saffron-50 text-saffron-800 hover:bg-saffron-50/70"
+              : "border-saffron-500 bg-white text-saffron-700 hover:bg-saffron-50",
         )}
       >
         {status === "checking" ? (
-          <Loader2 className="h-4 w-4 shrink-0 animate-spin" strokeWidth={2.5} />
+          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden strokeWidth={2.5} />
         ) : trouble ? (
-          <AlertTriangle className="h-4 w-4 shrink-0" strokeWidth={2.5} />
-        ) : status === "ok" ? (
-          <Check className="h-4 w-4 shrink-0" strokeWidth={2.5} />
+          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
+        ) : status === "ok" && info?.matchesLocation ? (
+          <Check className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
+        ) : softUnavailable ? (
+          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         ) : (
-          <Clock className="h-4 w-4 shrink-0" strokeWidth={2.5} />
+          <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         )}
         <span className="truncate text-xs font-medium">{badgeLabel}</span>
       </button>
@@ -193,87 +310,140 @@ export function LocationCheck() {
         >
           {status === "checking" && (
             <>
-              <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">
-                Checking
-              </p>
-              <p className="text-sm text-muted">Finding this device&apos;s location…</p>
+              <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">Checking</p>
+              <p className="text-sm text-muted">Finding where this device is…</p>
             </>
           )}
 
-          {status === "ok" && info && !mismatch && (
+          {status === "ok" && info && info.matchesLocation && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-ink">
-                This is why the time is accurate:
+                {info.matchKind === "iana"
+                  ? "Time zone matches this place"
+                  : info.matchKind === "offset"
+                    ? "UTC offset matches this place"
+                    : "Time zone looks plausible here"}
               </p>
               <p className="text-base text-ink">{info.place}</p>
-              <p className="text-sm text-muted">
-                Device clock: {info.timezone} · {info.offset}
+              <dl className="space-y-1 text-sm text-muted">
+                {info.placeZone ? (
+                  <div className="flex justify-between gap-2">
+                    <dt className="shrink-0">This place</dt>
+                    <dd className="truncate text-right text-ink">
+                      {info.placeZone} · {info.placeOffset}
+                    </dd>
+                  </div>
+                ) : (
+                  <div className="flex justify-between gap-2">
+                    <dt className="shrink-0">Expected here</dt>
+                    <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
+                  </div>
+                )}
+                <div className="flex justify-between gap-2">
+                  <dt className="shrink-0">This device</dt>
+                  <dd className="truncate text-right text-ink">
+                    {info.deviceZone} · {info.deviceOffset}
+                  </dd>
+                </div>
+              </dl>
+              <p className="text-xs text-muted">
+                {info.matchKind === "iana"
+                  ? "Same zone id as this location — the phone isn’t still set somewhere you traveled from."
+                  : info.matchKind === "offset"
+                    ? "Different zone name, same UTC offset — wall-clock time for this place still lines up."
+                    : "Rough check from GPS longitude (no zone name from the map). Good enough to catch a travel zone many hours off."}
               </p>
               <p className="text-xs text-muted">
-                Your device says it&apos;s here, and its clock&apos;s time zone fits
-                this place — so it isn&apos;t still set to somewhere you traveled
-                from. Worth a glance once before the ceremony starts.
+                Does not prove the clock is synced to the second. If the time itself looks wrong, fix Date &amp; Time in settings before the ceremony.
               </p>
             </div>
           )}
 
-          {status === "ok" && info && mismatch && (
+          {status === "ok" && info && !info.matchesLocation && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-danger-700">
-                This device&apos;s clock may be wrong
+                Time zone doesn&apos;t match this place
               </p>
               <p className="text-base text-ink">{info.place}</p>
-              <p className="text-sm text-muted">
-                Device clock: {info.timezone} · {info.offset} — expected around{" "}
-                {info.expectedOffset} here.
-              </p>
+              <dl className="space-y-1 text-sm text-muted">
+                {info.placeZone ? (
+                  <div className="flex justify-between gap-2">
+                    <dt className="shrink-0">This place</dt>
+                    <dd className="truncate text-right text-ink">
+                      {info.placeZone} · {info.placeOffset}
+                    </dd>
+                  </div>
+                ) : (
+                  <div className="flex justify-between gap-2">
+                    <dt className="shrink-0">Expected here</dt>
+                    <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
+                  </div>
+                )}
+                <div className="flex justify-between gap-2">
+                  <dt className="shrink-0">This device</dt>
+                  <dd className="truncate text-right text-ink">
+                    {info.deviceZone} · {info.deviceOffset}
+                  </dd>
+                </div>
+              </dl>
               <p className="text-xs text-muted">
-                That&apos;s too far off to be this place&apos;s own time zone. If you
-                just traveled here, the clock may still be set to where you came
-                from — check your phone&apos;s date &amp; time settings before the
-                ceremony starts.
+                If you just traveled here, the clock may still be set to where you came from. Open Date &amp; Time settings and turn on automatic time zone (or pick the local zone) before the ceremony starts.
               </p>
             </div>
           )}
 
           {status === "denied" && info && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">
-                Location access is off
+              <p className="text-sm font-medium text-danger-700">Location access is off</p>
+              <p className="text-sm text-muted">
+                Device reports {info.deviceZone} ({info.deviceOffset}). Without location that can&apos;t be checked against where you are.
               </p>
               <p className="text-xs text-muted">
-                This device reports its clock as {info.timezone} ({info.offset}), but
-                without location that can&apos;t be checked against where you actually
-                are. If you just traveled here, open your phone&apos;s date &amp; time
-                settings and confirm the time zone yourself before starting.
+                If you traveled here, confirm the time zone yourself in Date &amp; Time settings before starting.
               </p>
             </div>
           )}
 
           {status === "unavailable" && info && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">
-                Couldn&apos;t name your location
+              <p
+                className={cn(
+                  "text-sm font-medium",
+                  info.matchesLocation ? "text-ink" : "text-danger-700",
+                )}
+              >
+                {info.matchesLocation
+                  ? "Couldn't name the place — rough check passed"
+                  : "Couldn't name the place — zone may be wrong"}
               </p>
+              <p className="text-sm text-muted">
+                Location worked, but the place/zone lookup needs a network this device doesn&apos;t have right now.
+              </p>
+              <dl className="space-y-1 text-sm text-muted">
+                <div className="flex justify-between gap-2">
+                  <dt className="shrink-0">Expected (rough)</dt>
+                  <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="shrink-0">This device</dt>
+                  <dd className="truncate text-right text-ink">
+                    {info.deviceZone} · {info.deviceOffset}
+                  </dd>
+                </div>
+              </dl>
               <p className="text-xs text-muted">
-                Location itself worked, but looking up its name needs a network
-                connection this device doesn&apos;t have right now. This device reports
-                its clock as {info.timezone} ({info.offset}) — if you just traveled
-                here, confirm that&apos;s actually correct in your phone&apos;s date &amp;
-                time settings before starting.
+                {info.matchesLocation
+                  ? "Longitude suggests this offset is plausible. Confirm the zone in Date &amp; Time if you traveled recently."
+                  : "Device offset is far from what longitude suggests here. Check Date &amp; Time before starting."}
               </p>
             </div>
           )}
 
           {status === "error" && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">
-                Can&apos;t check location here
-              </p>
+              <p className="text-sm font-medium text-danger-700">Can&apos;t check location here</p>
               <p className="text-xs text-muted">
-                This browser or device doesn&apos;t support location lookup. Check
-                your phone&apos;s date, time, and time zone settings directly before
-                the ceremony starts.
+                This browser or device doesn&apos;t support location. Check date, time, and time zone in settings directly before the ceremony starts.
               </p>
             </div>
           )}
