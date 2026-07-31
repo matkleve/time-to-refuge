@@ -143,8 +143,21 @@ function FieldRow({
      never resizes it or nudges the rows below (design system §3). */
   const rowHeight = overview ? "min-h-11" : "min-h-13";
 
+  /*
+   * Translucent, not solid — and this is the line that actually decides
+   * whether the focused card reads as glass (design system §3a). The rows
+   * cover most of the card's area, so a solid `bg-white` here made the whole
+   * card look opaque no matter how translucent its shell was. Measured: 55%
+   * of the card's pixels were painting pure #ffffff while the shell was
+   * already at 75%.
+   *
+   * The overview card is filled, so its rows stay solid: they sit on an
+   * opaque surface with a delete panel behind it, and there is nothing to
+   * show through.
+   */
   const rowClassName = cn(
-    "no-select bg-white transition-shadow duration-200",
+    "no-select transition-shadow duration-200",
+    overview ? "bg-white" : "bg-white/50",
     filled && "shadow-sm",
     isTarget && "ring-2 ring-flagblue-500",
     reset.armed && "ring-2 ring-danger-500",
@@ -155,7 +168,10 @@ function FieldRow({
       className={cn(
         "font-display font-medium",
         overview ? "text-sm" : "text-lg",
-        filled ? "text-ink" : "text-subtle",
+        /* `muted`, not `subtle`: at 17px this needs 4.5:1, and `subtle` only
+           cleared that against solid white (4.59). Once the row went
+           translucent there was no headroom left — see design system §3a. */
+        filled ? "text-ink" : "text-muted",
       )}
     >
       {PHASE_LABELS[phase]}
@@ -237,7 +253,9 @@ function FieldRow({
         )}
       >
         {label}
-        <span className={cn("font-mono tabular-nums text-subtle", overview ? "text-sm" : "text-lg")}>
+        {/* `muted` for the same reason as the label above: a translucent row
+            leaves `subtle` no contrast headroom at this size. */}
+        <span className={cn("font-mono tabular-nums text-muted", overview ? "text-sm" : "text-lg")}>
           {formatTimestamp(value)}
         </span>
       </button>

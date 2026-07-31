@@ -69,7 +69,7 @@ export const PAIRS = [
 
 /**
  * Glass surfaces (design system §3a) don't have one fixed background —
- * `bg-white/85` blends over whatever the backdrop photo happens to be
+ * `bg-white/75` (the card) blends over whatever the backdrop photo happens to be
  * behind it.
  *
  * Checked against GLASS_WORST_CASE_BG, not pure black. Pure black was tried
@@ -91,20 +91,54 @@ export const PAIRS = [
  * surface — not just the one on screen when you're doing the math.
  */
 export const GLASS_WORST_CASE_BG = "#828280";
-export const GLASS_OPACITY = 0.85;
+
+/**
+ * Opacity per glass surface, because they do NOT share a floor — each one is
+ * limited by the least-contrasty text that sits on it, and that differs.
+ *
+ * `card` can go furthest (0.75) because only `ink`, `muted` and icons sit on
+ * it. `panel` (header bars, the location popover, empty-state notes) stops at
+ * 0.85 because it carries `subtle` fine print.
+ *
+ * `cardRow` is a SECOND layer stacked on `card`: a field row is
+ * `bg-white/50` painted on top of the already-translucent shell, so its
+ * effective background is white@0.50 over card@0.75 over the photo. Checking
+ * the row against the photo directly would understate how opaque it really
+ * is; `a11y-contrast.mjs` composites the two layers in order.
+ */
+export const GLASS_SURFACES = {
+  card: { alpha: 0.75 },
+  panel: { alpha: 0.85 },
+  cardRow: { alpha: 0.5, over: "card", color: "white" },
+};
 
 export const GLASS_PAIRS = [
-  { name: "ink on white glass", fg: "ink", bg: "white", min: 4.5 },
-  { name: "muted on white glass", fg: "muted", bg: "white", min: 4.5 },
-  { name: "subtle on white glass", fg: "subtle", bg: "white", min: 3.0 },
-  { name: "flagblue-600 on white glass", fg: "flagblue600", bg: "white", min: 4.5 },
-  { name: "danger-600 on white glass", fg: "danger600", bg: "white", min: 4.5 },
+  // ── panel: header bars, the location popover, empty-state notes ─────────
+  { name: "ink on panel glass", fg: "ink", bg: "white", surface: "panel", min: 4.5 },
+  { name: "muted on panel glass", fg: "muted", bg: "white", surface: "panel", min: 4.5 },
+  { name: "subtle on panel glass", fg: "subtle", bg: "white", surface: "panel", min: 3.0 },
+  { name: "flagblue-600 on panel glass", fg: "flagblue600", bg: "white", surface: "panel", min: 4.5 },
+  { name: "danger-600 on panel glass", fg: "danger600", bg: "white", surface: "panel", min: 4.5 },
 
-  // cardCurrent doubles as the current-person glass tint (bg-saffron-100/85)
-  // — same hex, #fbe8bf, so no separate token needed.
-  { name: "ink on saffron-tint glass", fg: "ink", bg: "cardCurrent", min: 4.5 },
-  { name: "muted on saffron-tint glass", fg: "muted", bg: "cardCurrent", min: 4.5 },
-  { name: "subtle on saffron-tint glass", fg: "subtle", bg: "cardCurrent", min: 3.0 },
-  { name: "flagblue-600 on saffron-tint glass", fg: "flagblue600", bg: "cardCurrent", min: 4.5 },
-  { name: "danger-600 on saffron-tint glass", fg: "danger600", bg: "cardCurrent", min: 4.5 },
+  // ── card shell: what sits directly on it, at its real size ──────────────
+  // cardCurrent is the current-person tint (bg-saffron-100) — same hex.
+  // The person's name is 24px, i.e. WCAG "large text", so 3.0 not 4.5.
+  { name: "name 24px on card glass", fg: "ink", bg: "white", surface: "card", min: 3.0 },
+  { name: "name 24px on card glass (current)", fg: "ink", bg: "cardCurrent", surface: "card", min: 3.0 },
+  { name: "armed name 24px on card glass", fg: "danger600", bg: "white", surface: "card", min: 3.0 },
+  { name: "armed name 24px on card glass (current)", fg: "danger600", bg: "cardCurrent", surface: "card", min: 3.0 },
+  { name: "retreat caption on card glass", fg: "muted", bg: "white", surface: "card", min: 4.5 },
+  { name: "retreat caption on card glass (current)", fg: "muted", bg: "cardCurrent", surface: "card", min: 4.5 },
+  { name: "share note on card glass", fg: "flagblue600", bg: "white", surface: "card", min: 4.5 },
+  { name: "share note on card glass (current)", fg: "flagblue600", bg: "cardCurrent", surface: "card", min: 4.5 },
+
+  // ── field rows: bg-white/50 stacked on the card shell ───────────────────
+  { name: "filled label on card row", fg: "ink", bg: "white", surface: "cardRow", min: 4.5 },
+  { name: "filled label on card row (current)", fg: "ink", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "empty label on card row", fg: "muted", bg: "white", surface: "cardRow", min: 4.5 },
+  { name: "empty label on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "recorded time on card row", fg: "saffron700", bg: "white", surface: "cardRow", min: 4.5 },
+  { name: "recorded time on card row (current)", fg: "saffron700", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "row icons on card row", fg: "muted", bg: "white", surface: "cardRow", min: 3.0 },
+  { name: "row icons on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRow", min: 3.0 },
 ];

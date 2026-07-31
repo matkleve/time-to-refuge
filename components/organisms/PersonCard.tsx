@@ -33,6 +33,18 @@ interface PersonCardProps {
   retreatName?: string;
 }
 
+/**
+ * The focused card is GLASS; the overview card is FILLED. That split is the
+ * whole shell logic, and it's at the bottom of this file rather than woven
+ * through it.
+ *
+ * Why the focused one can be glass at all: it floats directly over the
+ * backdrop photo with nothing between, so `backdrop-filter` has the photo to
+ * blur and translucency has the photo to reveal. The overview one cannot —
+ * a whole-card swipe means delete, and the red panel underneath has to stay
+ * hidden until it's actually swiped, which a translucent surface would leak.
+ * See design system §3a.
+ */
 export function PersonCard({
   person,
   variant,
@@ -238,31 +250,39 @@ export function PersonCard({
     </>
   );
 
-  const fill = isCurrent ? "bg-card-current" : "bg-card";
-  const shell = cn("overflow-hidden rounded-3xl", fill);
-
+  // ── Overview: filled, opaque. ────────────────────────────────────────────
   if (overview) {
-    // Overview cards stay filled, always — a whole-card swipe means "delete"
-    // when onDelete exists, and that red panel has to be fully hidden until
-    // swiped, not visible underneath a translucent surface. Even without
-    // onDelete, overview cards read as a dense list; every row should look
-    // the same, not some translucent and some not.
+    const fill = isCurrent ? "bg-card-current" : "bg-card";
     if (onDelete) {
       return (
-        <SwipeToAction onSwipe={remove.trigger} label="Delete" className={shell}>
-          {/* Opaque so the delete panel stays hidden until swiped. */}
+        <SwipeToAction
+          onSwipe={remove.trigger}
+          label="Delete"
+          className={cn("overflow-hidden rounded-3xl", fill)}
+        >
+          {/* Opaque, so the delete panel stays hidden until actually swiped. */}
           <div className={fill}>{body}</div>
         </SwipeToAction>
       );
     }
-    return <div className={shell}>{body}</div>;
+    return <div className={cn("overflow-hidden rounded-3xl", fill)}>{body}</div>;
   }
 
+  // ── Focused: glass. ──────────────────────────────────────────────────────
+  // Three plain Tailwind utilities, nothing custom: a translucent fill for the
+  // photo to show through, a blur of whatever it shows, and a saturate so the
+  // blurred photo keeps its colour instead of going grey.
+  //
+  // 75% is a measured floor, not a taste call — see design system §3a. The
+  // caption/name/icons sit directly on this surface, so it can only go as
+  // transparent as the *least* contrasty of them survives over the darkest
+  // pixel the backdrop photo actually contains.
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-3xl border border-white/60 shadow-xl backdrop-blur-2xl backdrop-saturate-200",
-        isCurrent ? "bg-saffron-100/85" : "bg-white/85",
+        "overflow-hidden rounded-3xl border border-white/50 shadow-xl",
+        "backdrop-blur-2xl backdrop-saturate-200",
+        isCurrent ? "bg-saffron-100/75" : "bg-white/75",
       )}
     >
       {body}

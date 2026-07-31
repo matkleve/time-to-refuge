@@ -116,8 +116,10 @@ gets caught.
 
 ## 3a. Glass
 
-`bg-white/85 backdrop-blur-2xl backdrop-saturate-200` (or the current-person
-tint, `bg-saffron-100/85`) — Tailwind's own utilities, written out on the
+A translucent fill plus `backdrop-blur-2xl backdrop-saturate-200` — e.g.
+`bg-white/75` on the focused card, or the current-person tint
+`bg-saffron-100/75`. The opacity differs per surface (see the table below);
+the blur and saturate don't. Tailwind's own utilities, written out on the
 element directly, not a custom one. That's deliberate: an earlier version
 defined a `@utility glass` shorthand in `app/globals.css`, and it hid a real
 bug for a while — writing both `backdrop-filter` and a manual
@@ -132,11 +134,39 @@ visible, the cause is something else (an unsupported/GPU-less renderer, a
 stale deployment) rather than this app's own CSS layer.
 
 **To change how strong the effect looks**: edit the three classes directly
-wherever they're used — `bg-white/85` (opacity), `backdrop-blur-2xl` (blur
-radius), `backdrop-saturate-200` (colour vividness). There's no single
+wherever they're used — the `/NN` on the fill (opacity), `backdrop-blur-2xl`
+(blur radius), `backdrop-saturate-200` (colour vividness). There's no single
 shared definition to hunt for, which costs a little repetition across
 components but means each surface's own file shows exactly what it's
-rendering, no indirection.
+rendering, no indirection. Changing an opacity means re-running
+`npm run a11y:contrast` and updating `GLASS_SURFACES` to match — the script
+is what proves the new value is still legible over the photo.
+
+**A translucent shell is not a translucent card.** The focused card spent
+three rounds of "make it glass" still looking like a solid white block,
+because its *shell* was the only thing being made translucent — and the shell
+is barely visible. The three field rows inside it were `bg-white`, fully
+opaque, and they cover most of the card's area. Measured on the rendered
+page: with the shell already at 75%, **55% of the card's pixels were still
+painting pure `#ffffff`**. No shell opacity could have fixed that; the rows
+were painting over it.
+
+The way that finally got diagnosed is worth repeating, because three rounds
+of reading CSS did not find it. Delete the component outright, render the
+page, and sample the pixels where it used to be — the region came back with
+6,954 distinct colours, proving the photo, the backdrop element and every
+ancestor were fine and the fault was inside the card. Then rebuild and sample
+the same region again: pure-white pixels went 55% → 0%. **Count the pixels
+that actually get painted.** A computed style of `rgba(…, 0.75)` on the shell
+is true and tells you nothing about what the user sees, because it says
+nothing about what is stacked on top of it.
+
+So field rows on the focused card are `bg-white/50` — translucent, stacked on
+the translucent shell. On the *overview* card they stay solid `bg-white`:
+that card is opaque anyway, with a delete panel behind it, so there is
+nothing to show through. And the empty-phase label moved `subtle` → `muted`:
+`subtle` cleared 4.5:1 only against solid white (4.59), so the moment the row
+went translucent it had no headroom left.
 
 The opacity floor took **three** tries, and the third is the one worth
 remembering, because it's a different kind of mistake than the first two.
@@ -157,17 +187,23 @@ scan of `public/backdrop.jpg` (Pillow, in `scripts/`) puts its darkest pixel
 at `rgb(156,158,153)`, luminance 0.338 — nowhere near black, because the
 photo was already lightened before being committed for exactly this reason.
 `GLASS_WORST_CASE_BG` in `contrast-pairs.mjs` uses `rgb(130,130,128)`, a
-margin below that measured floor, as the worst case to design against. Real
-floor against that: `/81` (`danger-600` on the saffron tint, still the
-tightest case). `/85` keeps a small margin above that — meaningfully more
-transparent than `/92` (15% of the backdrop shows through instead of 8%),
-paired with a stronger blur and saturate so that larger visible fraction
-actually reads as frosted glass rather than a faint tint. **A worst case has
-to be the real worst case for what's actually behind the surface, not the
-theoretical worst case for any surface anywhere** — computing correctly
-against the wrong assumption still ships a surface nobody can see through.
-If `backdrop.jpg` is ever replaced, re-measure it and recompute
-`GLASS_WORST_CASE_BG` — a darker photo invalidates this floor.
+margin below that measured floor, as the worst case to design against. **A
+worst case has to be the real worst case for what's actually behind the
+surface, not the theoretical worst case for any surface anywhere** —
+computing correctly against the wrong assumption still ships a surface nobody
+can see through. If `backdrop.jpg` is ever replaced, re-measure it and
+recompute `GLASS_WORST_CASE_BG` — a darker photo invalidates this floor.
+
+**Glass surfaces do not share one opacity**, because each is limited by the
+least-contrasty text sitting on it, and that differs. `GLASS_SURFACES` in
+`contrast-pairs.mjs` holds them, and `npm run a11y:contrast` composites
+stacked layers in paint order:
+
+| Surface | Opacity | Limited by |
+| --- | --- | --- |
+| `card` — the focused card shell | `/75` | the retreat caption (`muted`, 11px) on the saffron tint |
+| `cardRow` — a field row, stacked on `card` | `/50` | the recorded time (`saffron-700`) |
+| `panel` — header bars, popovers, empty states | `/85` | `subtle` fine print |
 
 | Gets the glass treatment | Stays filled (never glass) |
 | --- | --- |
