@@ -116,38 +116,50 @@ gets caught.
 
 ## 3a. Glass
 
-`bg-white/70 backdrop-blur-xl backdrop-saturate-150` — Tailwind's own
-utilities, written out on the element directly, not a custom one. That's
-deliberate: an earlier version defined a `@utility glass` shorthand in
-`app/globals.css`, and it hid a real bug for a while — writing both
-`backdrop-filter` and a manual `-webkit-backdrop-filter` inside it made the
-build tool drop the standard property from the compiled CSS, so the effect
-quietly only worked in Safari. Diagnosing that meant reading generated CSS
-output and cross-checking `getComputedStyle` against a plain, undecorated
-test element to prove where the CSS itself broke — real signal, not a
-custom abstraction with its own failure mode to rule out first. Plain
-Tailwind utilities don't have that problem: they're first-party, and if
-`backdrop-blur-xl` isn't visible, the cause is something else (an
-unsupported/GPU-less renderer, a stale deployment) rather than this app's
-own CSS layer.
+`bg-white/92 backdrop-blur-xl backdrop-saturate-150` (or the current-person
+tint, `bg-saffron-100/92`) — Tailwind's own utilities, written out on the
+element directly, not a custom one. That's deliberate: an earlier version
+defined a `@utility glass` shorthand in `app/globals.css`, and it hid a real
+bug for a while — writing both `backdrop-filter` and a manual
+`-webkit-backdrop-filter` inside it made the build tool drop the standard
+property from the compiled CSS, so the effect quietly only worked in
+Safari. Diagnosing that meant reading generated CSS output and
+cross-checking `getComputedStyle` against a plain, undecorated test element
+to prove where the CSS itself broke — real signal, not a custom abstraction
+with its own failure mode to rule out first. Plain Tailwind utilities don't
+have that problem: they're first-party, and if `backdrop-blur-xl` isn't
+visible, the cause is something else (an unsupported/GPU-less renderer, a
+stale deployment) rather than this app's own CSS layer.
 
 **To change how strong the effect looks**: edit the three classes directly
-wherever they're used — `bg-white/70` (opacity), `backdrop-blur-xl` (blur
-radius), `backdrop-saturate-150` (colour vividness). The opacity floor for
-ink text to hold 4.5:1 against a worst-case pure-black photo pixel is
-~0.51 (computed, not guessed); `/70` keeps a real margin above that
-(8.1:1 actual) while staying visibly translucent — don't go below `/55`
-without redoing that math. There's no single shared definition to hunt
-for, which costs a little repetition across components but means each
-surface's own file shows exactly what it's rendering, no indirection.
+wherever they're used — `bg-white/92` (opacity), `backdrop-blur-xl` (blur
+radius), `backdrop-saturate-150` (colour vividness). There's no single
+shared definition to hunt for, which costs a little repetition across
+components but means each surface's own file shows exactly what it's
+rendering, no indirection.
+
+The opacity floor took two tries to get right, and the second is the one
+worth remembering. The first pass computed it against `ink` text only and
+landed on `/70` (~0.51 is the actual floor for `ink`, computed, not
+guessed). That missed that `muted`, `subtle`, and `flagblue-600` also sit
+directly on glass surfaces in this app (a header caption, a popover's fine
+print, a share confirmation) — lighter colours, needing far more opaque
+backing to hold their own contrast floor against a worst-case pure-black
+photo pixel. Checked against every text colour actually used on a glass
+surface, not just the one that happened to be on screen when the math got
+done, the real floor is `/88` (`danger-600` on the saffron tint, the
+tightest case). `/92` keeps a small margin above that. **Recompute against
+every text colour genuinely used, not just whichever one is easiest to
+reach for** — a floor computed against one colour is not a floor.
 
 | Gets the glass treatment | Stays filled (never glass) |
 | --- | --- |
-| The mobile header and tab switcher | The person card (`bg-card`) |
-| The Quick Log controls bar | Field rows (`bg-white`) |
-| Empty-state messages, floating over the photo | The record button |
+| The mobile header and tab switcher | Field rows (`bg-white`) — the recorded data itself |
+| The Quick Log controls bar | The record button |
+| Empty-state messages, floating over the photo | Overview cards (People sheet, the desktop rail) — see below |
 | `LocationCheck`'s popover | `SwipeToAction`'s revealed delete panel |
 | `DesktopWorkspace`'s people rail and top bar | `HistoryPanel` and `PeopleSheet` — see below |
+| **The focused person card** (`PersonCard`, not the overview one) | |
 
 The rule: glass only sits over the **backdrop photo** — a smooth, empty
 surface with nothing underneath worth reading. `backdrop-filter` blurs
@@ -159,7 +171,15 @@ button underneath ghosted through the dialog, legible enough to be a
 distraction (its own `Buddha`/`Dharma`/`Sangha` fields readable behind the
 "Close" button). A dim scrim behind a *desktop* dialog doesn't fix this
 either — dimming isn't hiding, so the same bleed-through shows up fainter.
-Both stay filled.
+Both stay filled. **Overview cards stay filled too, for a narrower reason**:
+a whole-card swipe means delete, and the red panel underneath has to be
+fully hidden until swiped, not visible through a translucent surface —
+`PersonCard`'s own inner fill div is explicitly opaque for exactly this
+(see the comment there). The **focused** card has no such panel underneath
+it, sits directly over the photo like everything else in this table, and
+was excluded from an earlier pass of this table for no better reason than
+an unchecked assumption that "cards are filled" (§3) meant *every* card,
+rather than specifically the data-bearing surfaces inside one.
 
 Components add their own border and shadow on top of the glass classes from
 the existing scale above — a bar that already has a hairline `border-b`

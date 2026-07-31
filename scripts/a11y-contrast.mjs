@@ -6,7 +6,7 @@
  * This exists because a contrast failure is invisible in code review — you only
  * catch it by looking, and only if you happen to look at the right screen.
  */
-import { PAIRS, TOKENS } from "./contrast-pairs.mjs";
+import { PAIRS, TOKENS, GLASS_PAIRS, GLASS_OPACITY } from "./contrast-pairs.mjs";
 
 function srgbToLinear(c) {
   const v = c / 255;
@@ -27,17 +27,44 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+/** Worst-case blend of a translucent colour over pure black — see GLASS_PAIRS. */
+function blendOverBlack(hex, alpha) {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!m) throw new Error(`Not a 6-digit hex colour: ${hex}`);
+  const int = parseInt(m[1], 16);
+  const [r, g, b] = [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+  const blended = [r, g, b].map((c) => Math.round(c * alpha));
+  return `#${blended.map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function evalPairs(pairs) {
+  return pairs.map(({ name, fg, bg, min }) => {
+    const fgHex = TOKENS[fg];
+    const bgHex = TOKENS[bg];
+    if (!fgHex) throw new Error(`Unknown token "${fg}" in pair "${name}"`);
+    if (!bgHex) throw new Error(`Unknown token "${bg}" in pair "${name}"`);
+    const ratio = contrast(fgHex, bgHex);
+    const pass = ratio >= min;
+    return { name, ratio: ratio.toFixed(2), min: min.toFixed(1), pass };
+  });
+}
+
 let failed = 0;
-const rows = PAIRS.map(({ name, fg, bg, min }) => {
+const rows = evalPairs(PAIRS);
+
+const glassRows = GLASS_PAIRS.map(({ name, fg, bg, min }) => {
   const fgHex = TOKENS[fg];
   const bgHex = TOKENS[bg];
   if (!fgHex) throw new Error(`Unknown token "${fg}" in pair "${name}"`);
   if (!bgHex) throw new Error(`Unknown token "${bg}" in pair "${name}"`);
-  const ratio = contrast(fgHex, bgHex);
+  const blendedBg = blendOverBlack(bgHex, GLASS_OPACITY);
+  const ratio = contrast(fgHex, blendedBg);
   const pass = ratio >= min;
-  if (!pass) failed += 1;
   return { name, ratio: ratio.toFixed(2), min: min.toFixed(1), pass };
 });
+
+rows.push(...glassRows);
+for (const r of rows) if (!r.pass) failed += 1;
 
 const width = Math.max(...rows.map((r) => r.name.length));
 for (const r of rows) {

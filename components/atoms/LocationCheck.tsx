@@ -184,7 +184,7 @@ export function LocationCheck() {
       </button>
 
       {open && (
-        <div className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl border border-white/60 p-3.5 text-left shadow-2xl">
+        <div className="bg-white/92 backdrop-blur-xl backdrop-saturate-150 animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl border border-white/60 p-3.5 text-left shadow-2xl">
           {status === "checking" && (
             <>
               <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">

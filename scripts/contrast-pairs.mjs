@@ -66,3 +66,34 @@ export const PAIRS = [
   { name: "armed row ring on card", fg: "flagblue500", bg: "card", min: 3.0 },
   { name: "row border on card", fg: "line", bg: "card", min: 1.0 },
 ];
+
+/**
+ * Glass surfaces (design system §3a) don't have one fixed background —
+ * `bg-white/92` blends over whatever the backdrop photo happens to be
+ * behind it. Checked at the worst case that can *ever* occur — the base
+ * colour blended over pure black — not the actual (much lighter) photo, so
+ * a real margin survives even a pixel the photo will never actually show.
+ *
+ * This list exists because the opacity floor was computed wrong once:
+ * checked against `ink` only, missed that `muted`, `subtle`, `flagblue600`,
+ * and `danger600` all sit directly on glass surfaces somewhere in this app
+ * too. Add a pair here for every text colour that ever sits directly on a
+ * glass surface — not just the one on screen when you're doing the math.
+ */
+export const GLASS_OPACITY = 0.92;
+
+export const GLASS_PAIRS = [
+  { name: "ink on white glass", fg: "ink", bg: "white", min: 4.5 },
+  { name: "muted on white glass", fg: "muted", bg: "white", min: 4.5 },
+  { name: "subtle on white glass", fg: "subtle", bg: "white", min: 3.0 },
+  { name: "flagblue-600 on white glass", fg: "flagblue600", bg: "white", min: 4.5 },
+  { name: "danger-600 on white glass", fg: "danger600", bg: "white", min: 4.5 },
+
+  // cardCurrent doubles as the current-person glass tint (bg-saffron-100/92)
+  // — same hex, #fbe8bf, so no separate token needed.
+  { name: "ink on saffron-tint glass", fg: "ink", bg: "cardCurrent", min: 4.5 },
+  { name: "muted on saffron-tint glass", fg: "muted", bg: "cardCurrent", min: 4.5 },
+  { name: "subtle on saffron-tint glass", fg: "subtle", bg: "cardCurrent", min: 3.0 },
+  { name: "flagblue-600 on saffron-tint glass", fg: "flagblue600", bg: "cardCurrent", min: 4.5 },
+  { name: "danger-600 on saffron-tint glass", fg: "danger600", bg: "cardCurrent", min: 4.5 },
+];

@@ -241,16 +241,34 @@ export function PersonCard({
   const fill = isCurrent ? "bg-card-current" : "bg-card";
   const shell = cn("overflow-hidden rounded-3xl", fill);
 
-  // Overview cards are read-only inside, so a whole-card swipe can mean "delete"
-  // without competing with the per-row swipe-to-reset used in the focused card.
-  if (overview && onDelete) {
-    return (
-      <SwipeToAction onSwipe={remove.trigger} label="Delete" className={shell}>
-        {/* Opaque so the delete panel stays hidden until swiped. */}
-        <div className={fill}>{body}</div>
-      </SwipeToAction>
-    );
+  if (overview) {
+    // Overview cards stay filled, always — a whole-card swipe means "delete"
+    // when onDelete exists, and that red panel has to be fully hidden until
+    // swiped, not visible underneath a translucent surface. Even without
+    // onDelete, overview cards read as a dense list; every row should look
+    // the same, not some translucent and some not.
+    if (onDelete) {
+      return (
+        <SwipeToAction onSwipe={remove.trigger} label="Delete" className={shell}>
+          {/* Opaque so the delete panel stays hidden until swiped. */}
+          <div className={fill}>{body}</div>
+        </SwipeToAction>
+      );
+    }
+    return <div className={shell}>{body}</div>;
   }
 
-  return <div className={shell}>{body}</div>;
+  // The focused card is glass, floating directly over the backdrop photo —
+  // design system §6c. Field rows inside stay their own opaque `bg-white`
+  // regardless (design system §3a): the moment a surface's fill carries
+  // real meaning — a recorded time, not a photo showing through — it stays
+  // filled, full stop.
+  const focusedFill = isCurrent
+    ? "bg-saffron-100/92 backdrop-blur-xl backdrop-saturate-150"
+    : "bg-white/92 backdrop-blur-xl backdrop-saturate-150";
+  return (
+    <div className={cn("overflow-hidden rounded-3xl border border-white/60 shadow-xl", focusedFill)}>
+      {body}
+    </div>
+  );
 }

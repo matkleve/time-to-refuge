@@ -71,7 +71,7 @@ export function DesktopWorkspace({
   return (
     <div className="flex flex-1 gap-5 overflow-hidden p-5">
       {/* People rail. Persistent — this is what replaces the People sheet on desktop. */}
-      <div className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl border border-white/60 shadow-xl">
+      <div className="bg-white/92 backdrop-blur-xl backdrop-saturate-150 flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl border border-white/60 shadow-xl">
         <div className="border-b border-line px-4 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
         </div>
@@ -155,7 +155,7 @@ export function DesktopWorkspace({
             />
           </div>
         ) : (
-          <p className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 mt-20 rounded-2xl border border-white/60 px-6 py-4 text-center text-base text-ink shadow-lg">
+          <p className="bg-white/92 backdrop-blur-xl backdrop-saturate-150 mt-20 rounded-2xl border border-white/60 px-6 py-4 text-center text-base text-ink shadow-lg">
             {people.length === 0
               ? "Add the first person taking refuge to begin."
               : "Select someone from the list to begin."}
