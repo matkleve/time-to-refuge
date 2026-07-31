@@ -294,7 +294,7 @@ export function LocationCheck() {
         ) : status === "ok" && info?.matchesLocation ? (
           <Check className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         ) : softUnavailable ? (
-          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
+          <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         ) : (
           <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         )}
