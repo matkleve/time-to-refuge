@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Menu } from "lucide-react";
+import { Clock, Menu, Users, type LucideIcon } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
@@ -9,9 +9,9 @@ import { Surface } from "@/components/atoms/Surface";
 
 export type AppView = "refuge" | "quicklog";
 
-const PAGES: { id: AppView; label: string }[] = [
-  { id: "refuge", label: "Refuge" },
-  { id: "quicklog", label: "Quick Log" },
+const PAGES: { id: AppView; label: string; icon: LucideIcon }[] = [
+  { id: "refuge", label: "Refuge", icon: Users },
+  { id: "quicklog", label: "Quick Log", icon: Clock },
 ];
 
 interface ViewMenuProps {
@@ -52,6 +52,7 @@ export function ViewMenu({ view, onChange, size = "md" }: ViewMenuProps) {
         >
           {PAGES.map((page) => {
             const selected = view === page.id;
+            const Icon = page.icon;
             return (
               <button
                 key={page.id}
@@ -63,7 +64,7 @@ export function ViewMenu({ view, onChange, size = "md" }: ViewMenuProps) {
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors duration-200",
+                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors duration-200",
                   selected
                     ? page.id === "refuge"
                       ? "bg-flagblue-600 text-white"
@@ -71,6 +72,7 @@ export function ViewMenu({ view, onChange, size = "md" }: ViewMenuProps) {
                     : "text-ink hover:bg-ink/[0.05]",
                 )}
               >
+                <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
                 {page.label}
               </button>
             );
