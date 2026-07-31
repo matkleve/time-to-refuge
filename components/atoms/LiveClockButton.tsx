@@ -36,7 +36,9 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
     if (navigator.vibrate) navigator.vibrate(15);
   }
 
-  const { time, ms } = now ? formatClock(now) : { time: "--:--:--", ms: "---" };
+  const { day, time, ms } = now
+    ? formatClock(now)
+    : { day: "—", time: "--:--:--", ms: "---" };
 
   return (
     <div className="relative">
@@ -52,6 +54,14 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
           flash && "ring-4 ring-saffron-400/80",
         )}
       >
+        <span
+          className={cn(
+            "text-xs tracking-[0.18em] uppercase",
+            armed ? "text-white/85" : "text-muted",
+          )}
+        >
+          {day}
+        </span>
         <span
           className={cn(
             "font-mono text-4xl font-semibold tabular-nums tracking-wide",

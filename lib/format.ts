@@ -1,4 +1,9 @@
-export function formatClock(date: Date): { time: string; ms: string } {
+export function formatClock(date: Date): { day: string; time: string; ms: string } {
+  const day = date.toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
   const time = date.toLocaleTimeString(undefined, {
     hour12: false,
     hour: "2-digit",
@@ -6,7 +11,7 @@ export function formatClock(date: Date): { time: string; ms: string } {
     second: "2-digit",
   });
   const ms = String(date.getMilliseconds()).padStart(3, "0");
-  return { time, ms };
+  return { day, time, ms };
 }
 
 export function formatTimestamp(ts: number | null): string {

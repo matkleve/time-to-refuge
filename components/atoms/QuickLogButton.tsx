@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
 import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
+import { LocationCheck } from "./LocationCheck";
 
 interface QuickLogButtonProps {
   flash: boolean;
@@ -25,29 +26,38 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
     };
   }, []);
 
-  const { time, ms } = now ? formatClock(now) : { time: "--:--:--", ms: "---" };
+  const { day, time, ms } = now
+    ? formatClock(now)
+    : { day: "—", time: "--:--:--", ms: "---" };
 
   return (
-    <button
-      type="button"
-      /* The page-wide tap layer also logs, so keep this from counting twice. */
-      onClick={(e) => {
-        e.stopPropagation();
-        onLog();
-      }}
-      className={cn(
-        "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
-        "transition-[box-shadow,background-color,transform] duration-150 ease-out",
-        /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
-        actionClass("accent"),
-        flash && "scale-[0.98] ring-4 ring-flagblue-500/80",
-      )}
-    >
-      <span className="font-mono text-4xl font-semibold tabular-nums tracking-wide text-ink">
-        {time}
-        <span className="text-2xl text-ink/65">.{ms}</span>
-      </span>
-      <span className="text-xs tracking-[0.2em] text-ink/80 uppercase">Tap anywhere to log</span>
-    </button>
+    <div className="relative">
+      <button
+        type="button"
+        /* The page-wide tap layer also logs, so keep this from counting twice. */
+        onClick={(e) => {
+          e.stopPropagation();
+          onLog();
+        }}
+        className={cn(
+          "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
+          "transition-[box-shadow,background-color,transform] duration-150 ease-out",
+          /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
+          actionClass("accent"),
+          flash && "scale-[0.98] ring-4 ring-flagblue-500/80",
+        )}
+      >
+        <span className="text-xs tracking-[0.18em] text-ink/80 uppercase">{day}</span>
+        <span className="font-mono text-4xl font-semibold tabular-nums tracking-wide text-ink">
+          {time}
+          <span className="text-2xl text-ink/65">.{ms}</span>
+        </span>
+        <span className="text-xs tracking-[0.2em] text-ink/80 uppercase">Tap anywhere to log</span>
+      </button>
+      {/* Same verify control as the Refuge record button (UC-6). */}
+      <div className="absolute -top-3 -right-2">
+        <LocationCheck />
+      </div>
+    </div>
   );
 }
