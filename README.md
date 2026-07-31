@@ -27,8 +27,8 @@ npm run dev
 **Refuge** — one card per person, swipe between them on mobile. Tap any of
 the three fields to choose which one the record button fills next; it
 advances to the next empty one after each capture. Tap a recorded time for
-Copy / Edit / Reset; card ⋯ for reset-all, export, share, delete. Undo is a
-stack under the hamburger Actions menu.
+Copy / Edit / Reset; card ⋯ for reset-all, export, share, delete. Undo /
+Redo are icon-only at the bottom of the hamburger menu.
 
 **Quick Log** — tap anywhere to stamp the current time. Useful when you are
 recording first and attributing later. The timezone selector re-renders every

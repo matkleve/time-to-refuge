@@ -25,6 +25,10 @@ function actionLabel(entry: LogEntry): string {
       return `Undid ${phase}`;
     case "undo-reset":
       return `Restored ${phase}`;
+    case "redo-recorded":
+      return `Redid ${phase}`;
+    case "redo-reset":
+      return `Redid reset ${phase}`;
     default:
       return phase;
   }

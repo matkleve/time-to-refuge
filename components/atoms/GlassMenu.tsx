@@ -27,12 +27,25 @@ export type GlassMenuSection = {
   items: GlassMenuItem[];
 };
 
+/** Icon-only strip at the bottom of a sectioned menu (Undo / Redo). */
+export type GlassMenuIconAction = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  onSelect: () => void;
+  disabled?: boolean;
+  /** Keep the menu open (multi-step undo/redo). */
+  keepOpen?: boolean;
+};
+
 interface GlassMenuProps {
   label: string;
   /** Flat list — person-card ⋯ and other single-group menus. */
   items?: GlassMenuItem[];
   /** Titled groups with a hairline between them (app hamburger). */
   sections?: GlassMenuSection[];
+  /** Icon-only row under sections, after a hairline. */
+  iconActions?: GlassMenuIconAction[];
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
   size?: "sm" | "md";
@@ -92,6 +105,7 @@ export function GlassMenu({
   label,
   items,
   sections,
+  iconActions,
   triggerIcon: TriggerIcon = MoreVertical,
   size = "md",
   glassTrigger = false,
@@ -160,6 +174,11 @@ export function GlassMenu({
     if (!item.keepOpen) setOpen(false);
   }
 
+  function pickIcon(action: GlassMenuIconAction) {
+    action.onSelect();
+    if (!action.keepOpen) setOpen(false);
+  }
+
   const body = sections?.length
     ? sections.map((section, i) => (
         <div key={section.title}>
@@ -173,6 +192,25 @@ export function GlassMenu({
     : items
       ? <MenuRows items={items} onPick={pick} />
       : null;
+
+  const iconStrip =
+    iconActions && iconActions.length > 0 ? (
+      <div>
+        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
+        <div className="flex items-center justify-center gap-1 px-1 py-0.5">
+          {iconActions.map((action) => (
+            <IconButton
+              key={action.id}
+              icon={action.icon}
+              label={action.label}
+              size="sm"
+              disabled={action.disabled}
+              onClick={() => pickIcon(action)}
+            />
+          ))}
+        </div>
+      </div>
+    ) : null;
 
   const panel =
     open &&
@@ -192,6 +230,7 @@ export function GlassMenu({
           className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
         >
           {body}
+          {iconStrip}
         </Surface>
       </div>,
       document.body,

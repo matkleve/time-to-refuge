@@ -39,7 +39,13 @@ export function isComplete(person: Person): boolean {
   return nextEmptyPhase(person) === null;
 }
 
-export type LogAction = "recorded" | "reset" | "undo-recorded" | "undo-reset";
+export type LogAction =
+  | "recorded"
+  | "reset"
+  | "undo-recorded"
+  | "undo-reset"
+  | "redo-recorded"
+  | "redo-reset";
 
 export interface LogEntry {
   id: string;

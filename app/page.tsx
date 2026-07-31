@@ -36,7 +36,10 @@ interface UndoEntry {
   logId: string;
   personId: string;
   phase: Phase;
+  /** Field value before the action (what undo restores). */
   prevValue: number | null;
+  /** Field value after the action (what redo restores). */
+  nextValue: number | null;
   kind: "recorded" | "reset";
   message: string;
 }
@@ -50,6 +53,7 @@ export default function Home() {
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
+  const [redoStack, setRedoStack] = useState<UndoEntry[]>([]);
   const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
   const [retreatName, setRetreatName] = useState("");
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -88,6 +92,11 @@ export default function Home() {
     return () => window.removeEventListener("keydown", onKey);
   }, [people.length]);
 
+  function pushUndo(entry: UndoEntry) {
+    setUndoStack((prev) => [...prev, entry]);
+    setRedoStack([]);
+  }
+
   function handleCapture(personId: string, phase: Phase) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
@@ -97,17 +106,15 @@ export default function Home() {
       prev.map((p) => (p.id === personId ? { ...p, [phase]: value } : p))
     );
     setLog((prev) => [...prev, entry]);
-    setUndoStack((prev) => [
-      ...prev,
-      {
-        logId: entry.id,
-        personId,
-        phase,
-        prevValue: null,
-        kind: "recorded",
-        message: `Recorded ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
-      },
-    ]);
+    pushUndo({
+      logId: entry.id,
+      personId,
+      phase,
+      prevValue: null,
+      nextValue: value,
+      kind: "recorded",
+      message: `Recorded ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+    });
   }
 
   function handleClear(personId: string, phase: Phase) {
@@ -119,17 +126,15 @@ export default function Home() {
       prev.map((p) => (p.id === personId ? { ...p, [phase]: null } : p))
     );
     setLog((prev) => [...prev, entry]);
-    setUndoStack((prev) => [
-      ...prev,
-      {
-        logId: entry.id,
-        personId,
-        phase,
-        prevValue,
-        kind: "reset",
-        message: `Reset ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
-      },
-    ]);
+    pushUndo({
+      logId: entry.id,
+      personId,
+      phase,
+      prevValue,
+      nextValue: null,
+      kind: "reset",
+      message: `Reset ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+    });
   }
 
   function handleResetAll(personId: string) {
@@ -158,6 +163,28 @@ export default function Home() {
       setLog((prev) => [...prev, entry]);
     }
     setUndoStack((prev) => prev.slice(0, -1));
+    setRedoStack((prev) => [...prev, last]);
+  }
+
+  function handleRedo() {
+    if (redoStack.length === 0) return;
+    const last = redoStack[redoStack.length - 1];
+    const person = people.find((p) => p.id === last.personId);
+    if (person) {
+      setPeople((prev) =>
+        prev.map((p) => (p.id === last.personId ? { ...p, [last.phase]: last.nextValue } : p))
+      );
+      const entry = createLogEntry(
+        last.personId,
+        person.name,
+        last.phase,
+        last.kind === "recorded" ? "redo-recorded" : "redo-reset",
+        last.nextValue
+      );
+      setLog((prev) => [...prev, entry]);
+    }
+    setRedoStack((prev) => prev.slice(0, -1));
+    setUndoStack((prev) => [...prev, last]);
   }
 
   function handleAddPerson(name: string) {
@@ -180,17 +207,15 @@ export default function Home() {
     const entry = createLogEntry(personId, person.name, phase, "recorded", at);
     setPeople((prev) => prev.map((p) => (p.id === personId ? { ...p, [phase]: at } : p)));
     setLog((prev) => [...prev, entry]);
-    setUndoStack((prev) => [
-      ...prev,
-      {
-        logId: entry.id,
-        personId,
-        phase,
-        prevValue,
-        kind: "recorded",
-        message: `Edited ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
-      },
-    ]);
+    pushUndo({
+      logId: entry.id,
+      personId,
+      phase,
+      prevValue,
+      nextValue: at,
+      kind: "recorded",
+      message: `Edited ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+    });
   }
 
   /** From the overview: focus this person with that empty field already armed. */
@@ -241,11 +266,16 @@ export default function Home() {
               onUndo={handleUndo}
               undoDisabled={undoStack.length === 0}
               undoLabel={
-                undoStack.length === 0
-                  ? "Undo"
-                  : undoStack.length === 1
-                    ? "Undo"
-                    : `Undo (${undoStack.length})`
+                undoStack[undoStack.length - 1]
+                  ? `Undo: ${undoStack[undoStack.length - 1].message}`
+                  : "Undo"
+              }
+              onRedo={handleRedo}
+              redoDisabled={redoStack.length === 0}
+              redoLabel={
+                redoStack[redoStack.length - 1]
+                  ? `Redo: ${redoStack[redoStack.length - 1].message}`
+                  : "Redo"
               }
               onExportAll={() => downloadCsv(people, retreatName)}
               exportDisabled={people.length === 0}
@@ -319,11 +349,16 @@ export default function Home() {
             onUndo={handleUndo}
             undoDisabled={undoStack.length === 0}
             undoLabel={
-              undoStack.length === 0
-                ? "Undo"
-                : undoStack.length === 1
-                  ? "Undo"
-                  : `Undo (${undoStack.length})`
+              undoStack[undoStack.length - 1]
+                ? `Undo: ${undoStack[undoStack.length - 1].message}`
+                : "Undo"
+            }
+            onRedo={handleRedo}
+            redoDisabled={redoStack.length === 0}
+            redoLabel={
+              redoStack[redoStack.length - 1]
+                ? `Redo: ${redoStack[redoStack.length - 1].message}`
+                : "Redo"
             }
             onExportAll={() => downloadCsv(people, retreatName)}
             exportDisabled={people.length === 0}

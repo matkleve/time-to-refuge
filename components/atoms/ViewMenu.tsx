@@ -1,7 +1,11 @@
 "use client";
 
-import { Clock, Contact, Download, History, Menu, Undo2, Users } from "lucide-react";
-import { GlassMenu, type GlassMenuSection } from "@/components/atoms/GlassMenu";
+import { Clock, Contact, Download, History, Menu, Redo2, Undo2, Users } from "lucide-react";
+import {
+  GlassMenu,
+  type GlassMenuIconAction,
+  type GlassMenuSection,
+} from "@/components/atoms/GlassMenu";
 
 export type AppView = "refuge" | "quicklog";
 
@@ -13,16 +17,18 @@ interface ViewMenuProps {
   onOpenPeople?: () => void;
   onUndo: () => void;
   undoDisabled?: boolean;
-  /** Shown in the menu label when the stack has steps, e.g. "Undo (2)". */
   undoLabel?: string;
+  onRedo: () => void;
+  redoDisabled?: boolean;
+  redoLabel?: string;
   onExportAll: () => void;
   exportDisabled?: boolean;
   size?: "sm" | "md";
 }
 
 /**
- * Hamburger → Pages (Refuge, Quick Log, History, People) and Actions
- * (Undo, Export). Shared cloudy menu chrome with the person-card ⋯.
+ * Hamburger → Pages, Actions (Export), then icon-only Undo / Redo at the
+ * bottom. Shared cloudy menu chrome with the person-card ⋯.
  */
 export function ViewMenu({
   view,
@@ -32,6 +38,9 @@ export function ViewMenu({
   onUndo,
   undoDisabled = false,
   undoLabel = "Undo",
+  onRedo,
+  redoDisabled = false,
+  redoLabel = "Redo",
   onExportAll,
   exportDisabled = false,
   size = "md",
@@ -76,13 +85,6 @@ export function ViewMenu({
     title: "Actions",
     items: [
       {
-        id: "undo",
-        label: undoLabel,
-        icon: Undo2,
-        disabled: undoDisabled,
-        onSelect: onUndo,
-      },
-      {
         id: "export",
         label: "Export all",
         icon: Download,
@@ -92,12 +94,32 @@ export function ViewMenu({
     ],
   };
 
+  const iconActions: GlassMenuIconAction[] = [
+    {
+      id: "undo",
+      label: undoLabel,
+      icon: Undo2,
+      disabled: undoDisabled,
+      onSelect: onUndo,
+      keepOpen: true,
+    },
+    {
+      id: "redo",
+      label: redoLabel,
+      icon: Redo2,
+      disabled: redoDisabled,
+      onSelect: onRedo,
+      keepOpen: true,
+    },
+  ];
+
   return (
     <GlassMenu
       label="Open menu"
       triggerIcon={Menu}
       size={size}
       sections={[pages, actions]}
+      iconActions={iconActions}
     />
   );
 }

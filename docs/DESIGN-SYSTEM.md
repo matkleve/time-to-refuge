@@ -201,8 +201,9 @@ pressure (**UC-1**).
 
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
 destructive actions, export/share on a person card, and add-flow
-submit/cancel. The header hamburger lists History, People, Undo, and Export
-with icon+label inside the menu — those are not separate header chips.
+submit/cancel. The header hamburger lists History, People, and Export
+with icon+label inside the menu; Undo / Redo are icon-only at the bottom
+of that menu. Those are not separate header chips.
 Reserve icon-only for Close, Prev/Next, the hamburger/⋯ triggers, and
 low-risk utilities next to their object (copy, edit).
 [`IconButton`](../components/atoms/IconButton.tsx) is the only control for
@@ -215,7 +216,7 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | --- | --- |
 | `Eye` / `Copy` | Open that person · copy that time |
 | `Pencil` / `RotateCcw` | Edit that time · reset it |
-| `History` / `Undo2` | History page · undo one step |
+| `History` / `Undo2` / `Redo2` | History page · undo one step · redo one step |
 | `Download` / `Share2` | Export CSV · share the card as an image |
 | `Users` / `Contact` / `Plus` | Refuge page · People page · add a person |
 | `Clock` | Quick Log page |
@@ -226,13 +227,14 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | `Trash2` | Delete (Quick Log entries — never `X`, which means close/cancel) |
 
 **App hamburger** ([`ViewMenu`](../components/atoms/ViewMenu.tsx) via
-[`GlassMenu`](../components/atoms/GlassMenu.tsx) sections): two groups with
-tracked captions and a hairline between them —
+[`GlassMenu`](../components/atoms/GlassMenu.tsx) sections): titled groups
+with a hairline between them, then an icon-only strip —
 
 | Group | Items |
 | --- | --- |
 | **Pages** | Refuge · Quick Log · History · People (People on mobile only — desktop keeps the persistent rail) |
-| **Actions** | Undo · Export all |
+| **Actions** | Export all |
+| *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
 Person-card ⋯ stays a flat menu (no section titles).
 

@@ -123,10 +123,11 @@ caught late, or a preceptor who restarted a phase.
 - **Shouldn't have happened at all** — reset the field (two-tap armed
   action on the revealed reset control), clearing it back to empty so it can be captured again
   when the real moment comes.
-- **Undo** — a stack, most-recent-first, covering captures and resets from
-  the current session. Steps back exactly one action at a time; there's no
-  redo, and no way to jump to an arbitrary earlier state except by walking
-  undo backward one step at a time.
+- **Undo / Redo** — a stack, most-recent-first, covering captures and resets from
+  the current session. Undo steps back one action; Redo walks forward again
+  until a new capture/reset/edit clears the redo side. Icon-only controls at
+  the bottom of the hamburger menu. No way to jump to an arbitrary earlier
+  state except by walking one step at a time.
 
 **Status: Partial.** The undo stack lives in React state only — it is
 **not** persisted to `localStorage` the way people, the log, and Quick Log
@@ -197,10 +198,11 @@ open. See gap summary.
 moment matters more, in the instant, than knowing whose moment it was —
 tap first, sort out who's who from a list afterward.
 
-**Main flow:** switch to the Quick Log tab; tapping anywhere on the screen
-(not just the button) logs `now()`. Entries list newest-first with an
-index number; each can be individually deleted (two-tap) or all cleared at
-once. A timezone selector re-renders every logged time in another zone for
+**Main flow:** open Quick Log from the hamburger Pages menu; tapping
+anywhere on the screen (not just the button) logs `now()`. Entries list
+newest-first with an index number; each can be individually deleted
+(two-tap) or all cleared at once. A timezone selector re-renders every
+logged time in another zone for
 review, without changing what's stored.
 
 **Status: Partial.** Deliberately disconnected from the People list —
