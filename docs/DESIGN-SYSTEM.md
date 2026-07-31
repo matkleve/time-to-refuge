@@ -104,16 +104,14 @@ Never hand-roll `bg-white/NN backdrop-blur-…` in a component.
 
 | Material | When | API |
 | --- | --- | --- |
-| **Cloudy glass** | Surface sits over the backdrop photo — including People / History sheets (which paint the same photo under themselves) | `material="glass-panel"` / `glass-card` / `glass-card-current` |
+| **Cloudy glass** | Surface sits over the backdrop photo — including People / History pages | `material="glass-panel"` / `glass-card` / `glass-card-current` |
 | **Filled** | Rare opaque needs (inputs, solid form fields) | Prefer glass; `filled-sheet` is legacy |
 | **Action glass** | Record / Quick Log over the photo | `actionClass("primary" \| "accent" \| "primaryIdle")` — tinted glass + specular, **no gradients** |
 
 Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
-on the glass record button). Full-screen People and History sheets reuse
-[`lib/backdrop.ts`](../lib/backdrop.ts) under a glass panel so the photo
-reads through without ghosting the live Refuge card behind them. Overview
-person cards are glass too. Row and card destructives open on tap (⋯ menu
-or field-row reveal), not by swipe — so nothing red sits under the glass.
+on the glass record button). People and History are full pages in the same
+shell slot as Refuge and Quick Log — they are not overlays that paint a
+second backdrop over a live card.
 
 - **Field rows share the card's material.** Both focused and overview rows use
   `glassRowClass()` so the card does not read as a solid block.
@@ -155,11 +153,11 @@ asserts each fill class's `/NN` matches its `alpha`.
 Plain Tailwind utilities only — never a custom `@utility` that writes both
 `backdrop-filter` and `-webkit-backdrop-filter`.
 
-**Backdrop photo everywhere.** Shells (`AppShell`, `DesktopShell`) and
-full-screen sheets (`PeopleSheet`, `HistoryPanel`) all use
-[`lib/backdrop.ts`](../lib/backdrop.ts). Sheets paint the photo under their
-own glass so live UI does not ghost through. Overview cards, the focused
-card, and the record / Quick Log buttons are glass over that photo.
+**Backdrop photo everywhere.** Shells (`AppShell`, `DesktopShell`) use
+[`lib/backdrop.ts`](../lib/backdrop.ts). Pages (Refuge, Quick Log, History,
+People) sit in that shell — glass over the photo, not a second full-screen
+backdrop layer. Overview cards, the focused card, and the record / Quick Log
+buttons are glass over that photo.
 
 ## 3b. Desktop, not mobile-stretched
 
@@ -167,10 +165,11 @@ Below `lg` (1024px) the app is the phone-first flow in `AppShell` — full
 bleed, one column, exactly what §0–§3 describe. At `lg` and up, `page.tsx`
 switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
-`DesktopWorkspace` — a persistent list of everyone on the left (there's
-finally room for it, so it replaces the mobile People sheet outright rather
-than staying a modal) and the current person's card with the record button
-directly beneath it on the right. Only one of the two trees is ever mounted
+`DesktopWorkspace` — on the **Refuge** page, a persistent list of everyone
+on the left (quick switch while recording) and the current person's card
+with the record button directly beneath it on the right. **People** and
+**History** are their own pages via the hamburger (same `AppView` switch as
+Quick Log), not overlays. Only one shell tree is ever mounted
 (`useMediaQuery`, not a CSS breakpoint toggling visibility) — mounting both
 would run two copies of `LiveClockButton`'s animation-frame loop at once.
 
@@ -232,7 +231,7 @@ with a hairline between them, then an icon-only strip —
 
 | Group | Items |
 | --- | --- |
-| **Pages** | Refuge · Quick Log · History · People (People on mobile only — desktop keeps the persistent rail) |
+| **Pages** | Refuge · Quick Log · History · People — each is an `AppView`, not an overlay |
 | **Actions** | Export all |
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
@@ -329,8 +328,9 @@ Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
 
 ### 5b. Entrance — a panel or popover mounting
 
-Used by anything that mounts conditionally and covers new space: `PeopleSheet`,
-`HistoryPanel`, the location popover, an inline status note appearing. A CSS
+Used by anything that mounts conditionally and covers new space: the
+location popover, an inline status note appearing. (People and History are
+pages — they switch via `AppView`, not an entrance overlay.) A CSS
 keyframe (`.animate-fade-in-up` in `globals.css`) runs automatically on mount —
 opacity 0→1 with a small upward drift, 200ms ease-out. No exit animation:
 these close by unmounting immediately, which needs no extra state and is a

@@ -7,13 +7,11 @@ import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
  * outer margin on a phone screen for it to live in like there is on
  * desktop, so it has to show through the app's own empty space instead
  * (above the card, below the record button). Glass surfaces let the photo
- * read through; full-screen sheets (People, History) paint the same photo
- * under their own glass so live UI does not ghost through. See design
- * system §3 / §3a.
+ * read through. People and History are pages in the same shell slot as
+ * Refuge / Quick Log (not overlays). See design system §3 / §3a.
  *
  * Rendered below the `lg` breakpoint — see `app/page.tsx`, which switches
- * to `DesktopShell` above it instead of stretching this one. Overlays
- * inside use `absolute inset-0`, so this stays `relative`.
+ * to `DesktopShell` above it instead of stretching this one.
  */
 export function AppShell({ children }: { children: ReactNode }) {
   return (

@@ -1,17 +1,13 @@
 "use client";
 
-import { X } from "lucide-react";
 import { LogEntry, PHASE_LABELS } from "@/lib/types";
 import { formatLogTime } from "@/lib/format";
-import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
 import { glassClass } from "@/lib/surfaces";
-import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { cn } from "@/lib/utils";
 
 interface HistoryPanelProps {
   log: LogEntry[];
-  onClose: () => void;
 }
 
 function actionLabel(entry: LogEntry): string {
@@ -34,32 +30,18 @@ function actionLabel(entry: LogEntry): string {
   }
 }
 
-export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
+/**
+ * History page — same shell slot as Refuge / Quick Log / People, not a
+ * modal or full-screen overlay.
+ */
+export function HistoryPanel({ log }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-       Pointer-only convenience: clicking outside the panel closes (desktop).
-       The real, keyboard-reachable control is the Close button below. */
-    <div
-      className={cn(
-        "absolute inset-0 z-30 flex flex-col animate-fade-in-up",
-        BACKDROP_CLASS,
-        "lg:items-center lg:justify-center lg:bg-black/25",
-      )}
-      style={backdropStyle}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <Surface
-        material="glass-panel"
-        rim
-        className="flex h-full w-full flex-col lg:h-[36rem] lg:max-h-[80vh] lg:w-[28rem] lg:rounded-3xl lg:shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-white/40 px-5 py-3">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 items-center border-b border-white/40 px-5 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">History</h2>
-          <IconButton icon={X} label="Close history" onClick={onClose} />
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {sorted.length === 0 ? (
@@ -70,7 +52,7 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
               </p>
             </div>
           ) : (
-            <ul className="space-y-2">
+            <ul className="mx-auto w-full max-w-md space-y-2">
               {sorted.map((entry) => (
                 <li
                   key={entry.id}

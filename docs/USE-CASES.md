@@ -164,8 +164,9 @@ anything already recorded for that person.
 **Actor:** Timekeeper. Add, rename, or remove aspirants; add is available
 before and during the ceremony, rename and remove any time.
 
-**Main flow:** open People from the hamburger Pages menu (mobile sheet) or
-use the persistent desktop rail.
+**Main flow:** open People from the hamburger Pages menu. On desktop, the
+Refuge page also keeps a people rail for quick switching while recording;
+opening someone from the People page switches to Refuge.
 
 **Status: Supported**, with two edge cases neither prevented nor flagged:
 - **No duplicate-name check.** Two "David"s are legal. Both export as
@@ -220,10 +221,10 @@ between a tap and losing that entry for good.
 **Actor:** Timekeeper (during, to double check) or whoever debriefs
 afterward. **Trigger:** "did that actually get recorded."
 
-**Main flow:** open History from the hamburger Pages menu. Every recorded,
-reset, and undone action across every person, newest first, in one list — a
-full audit trail of the *session*, not just the current state of each
-person's fields.
+**Main flow:** open History from the hamburger Pages menu — a full page,
+same slot as Refuge / Quick Log / People. Every recorded, reset, and undone
+action across every person, newest first, in one list — a full audit trail
+of the *session*, not just the current state of each person's fields.
 
 **Status: Supported.** History is read-only and session-scoped — there's
 no filter by person or by phase, so for a large roster it's a long flat

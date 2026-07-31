@@ -34,8 +34,9 @@ Redo are icon-only at the bottom of the hamburger menu.
 recording first and attributing later. The timezone selector re-renders every
 logged time in another zone.
 
-**History** and **People** open from the hamburger Pages menu (People is a
-full-screen sheet on mobile; desktop keeps a persistent people rail).
+**History** and **People** are pages in the hamburger Pages menu (same
+`AppView` switch as Refuge / Quick Log — not overlays). On desktop, Refuge
+also keeps a people rail for quick switching while recording.
 
 Each card can be **exported** (CSV of that person) or **shared** (a PNG of the
 card, through the OS share sheet where available). **Export all** in the

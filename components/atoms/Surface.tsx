@@ -14,8 +14,7 @@ type SurfaceOwnProps<T extends ElementType> = {
   as?: T;
   /**
    * Material from the design system. Prefer glass over the backdrop photo
-   * (sheets paint that photo under themselves via lib/backdrop.ts).
-   * filled when sitting over live UI (see DESIGN-SYSTEM.md §3).
+   * (shells paint that photo via lib/backdrop.ts). See DESIGN-SYSTEM.md §3.
    */
   material: SurfaceMaterial;
   /** Soft white rim — for floating cloudy panels, not for edge-to-edge bars. */

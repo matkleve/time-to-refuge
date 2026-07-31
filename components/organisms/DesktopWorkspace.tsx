@@ -27,12 +27,10 @@ interface DesktopWorkspaceProps {
 }
 
 /**
- * The desktop-native layout for the Refuge view: a persistent list on the
- * left (there's room for it, so it replaces the mobile People sheet
- * entirely) and the current person's card with the record button beneath it
- * on the right — the layout the actual timekeeper described using: a list
- * of people on the left, and on the right, up top the big card and below it
- * the big button.
+ * The desktop-native layout for the Refuge page: a persistent list on the
+ * left for quick switching while recording, and the current person's card
+ * with the record button beneath it on the right. The dedicated People page
+ * (hamburger) is the full roster with add/delete; this rail is Refuge-only.
  */
 export function DesktopWorkspace({
   people,

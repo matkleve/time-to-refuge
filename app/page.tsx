@@ -50,8 +50,6 @@ export default function Home() {
   const [people, setPeople] = useState<Person[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [index, setIndex] = useState(0);
-  const [peopleOpen, setPeopleOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
   const [redoStack, setRedoStack] = useState<UndoEntry[]>([]);
   const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
@@ -218,11 +216,11 @@ export default function Home() {
     });
   }
 
-  /** From the overview: focus this person with that empty field already armed. */
+  /** From People: focus this person on the Refuge page with that field armed. */
   function handleOpenPersonAt(id: string, phase: Phase | null) {
     handleSelectPerson(id);
     setRequestedPhase(phase);
-    setPeopleOpen(false);
+    setView("refuge");
   }
 
   function handleRenamePerson(id: string, name: string) {
@@ -242,6 +240,124 @@ export default function Home() {
 
   if (!ready) return null;
 
+  const menu = (
+    <ViewMenu
+      view={view}
+      onChange={setView}
+      onUndo={handleUndo}
+      undoDisabled={undoStack.length === 0}
+      undoLabel={
+        undoStack[undoStack.length - 1]
+          ? `Undo: ${undoStack[undoStack.length - 1].message}`
+          : "Undo"
+      }
+      onRedo={handleRedo}
+      redoDisabled={redoStack.length === 0}
+      redoLabel={
+        redoStack[redoStack.length - 1]
+          ? `Redo: ${redoStack[redoStack.length - 1].message}`
+          : "Redo"
+      }
+      onExportAll={() => downloadCsv(people, retreatName)}
+      exportDisabled={people.length === 0}
+      size={isDesktop ? "md" : "sm"}
+    />
+  );
+
+  const peoplePage = (
+    <PeopleSheet
+      people={people}
+      currentId={people[index]?.id ?? null}
+      onAdd={handleAddPerson}
+      onOpenAt={handleOpenPersonAt}
+      onDelete={handleDeletePerson}
+      onRename={handleRenamePerson}
+      onEditTime={handleEditTime}
+      onClearTime={handleClear}
+      retreatName={retreatName}
+    />
+  );
+
+  const historyPage = <HistoryPanel log={log} />;
+
+  const quickLogPage = isDesktop ? (
+    <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
+      <Surface
+        material="glass-panel"
+        rim
+        className="w-full max-w-md overflow-hidden rounded-3xl"
+      >
+        <QuickLogView />
+      </Surface>
+    </div>
+  ) : (
+    <QuickLogView />
+  );
+
+  const refugePage = isDesktop ? (
+    <DesktopWorkspace
+      people={people}
+      index={index}
+      onOpenAt={handleOpenPersonAt}
+      onAdd={handleAddPerson}
+      onCapture={handleCapture}
+      onClear={handleClear}
+      onResetAll={handleResetAll}
+      onDelete={handleDeletePerson}
+      onExport={(p) => downloadPersonCsv(p, retreatName)}
+      onRename={handleRenamePerson}
+      onEditTime={handleEditTime}
+      requestedPhase={requestedPhase}
+      onRequestedPhaseConsumed={() => setRequestedPhase(null)}
+      retreatName={retreatName}
+    />
+  ) : people.length === 0 ? (
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
+      <Surface
+        as="p"
+        material="glass-panel"
+        rim
+        className="rounded-2xl px-5 py-3 text-base text-ink"
+      >
+        Add the people taking refuge to begin.
+      </Surface>
+      <button
+        type="button"
+        onClick={() => setView("people")}
+        className={cn(
+          "rounded-xl px-5 py-2.5 text-base font-medium text-white transition-[box-shadow,background-color,transform] duration-200 active:scale-95",
+          actionClass("primary"),
+        )}
+      >
+        Add a person
+      </button>
+    </div>
+  ) : (
+    <RefugeView
+      people={people}
+      index={index}
+      onIndexChange={goTo}
+      onCapture={handleCapture}
+      onClear={handleClear}
+      onResetAll={handleResetAll}
+      onExport={(p) => downloadPersonCsv(p, retreatName)}
+      onRename={handleRenamePerson}
+      onEditTime={handleEditTime}
+      requestedPhase={requestedPhase}
+      onRequestedPhaseConsumed={() => setRequestedPhase(null)}
+      retreatName={retreatName}
+    />
+  );
+
+  const page =
+    view === "quicklog"
+      ? quickLogPage
+      : view === "history"
+        ? historyPage
+        : view === "people"
+          ? peoplePage
+          : refugePage;
+
   if (isDesktop) {
     return (
       <DesktopShell>
@@ -254,65 +370,9 @@ export default function Home() {
             <p className="font-display text-2xl font-semibold text-ink">Timekeeper</p>
             <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
           </div>
-
-          <div className="ml-auto flex items-center gap-1">
-            <ViewMenu
-              view={view}
-              onChange={(next) => {
-                setHistoryOpen(false);
-                setView(next);
-              }}
-              onOpenHistory={() => setHistoryOpen(true)}
-              onUndo={handleUndo}
-              undoDisabled={undoStack.length === 0}
-              undoLabel={
-                undoStack[undoStack.length - 1]
-                  ? `Undo: ${undoStack[undoStack.length - 1].message}`
-                  : "Undo"
-              }
-              onRedo={handleRedo}
-              redoDisabled={redoStack.length === 0}
-              redoLabel={
-                redoStack[redoStack.length - 1]
-                  ? `Redo: ${redoStack[redoStack.length - 1].message}`
-                  : "Redo"
-              }
-              onExportAll={() => downloadCsv(people, retreatName)}
-              exportDisabled={people.length === 0}
-            />
-          </div>
+          <div className="ml-auto flex items-center gap-1">{menu}</div>
         </Surface>
-
-        {view === "quicklog" ? (
-          <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
-            <Surface
-              material="glass-panel"
-              rim
-              className="w-full max-w-md overflow-hidden rounded-3xl"
-            >
-              <QuickLogView />
-            </Surface>
-          </div>
-        ) : (
-          <DesktopWorkspace
-            people={people}
-            index={index}
-            onOpenAt={handleOpenPersonAt}
-            onAdd={handleAddPerson}
-            onCapture={handleCapture}
-            onClear={handleClear}
-            onResetAll={handleResetAll}
-            onDelete={handleDeletePerson}
-            onExport={(p) => downloadPersonCsv(p, retreatName)}
-            onRename={handleRenamePerson}
-            onEditTime={handleEditTime}
-            requestedPhase={requestedPhase}
-            onRequestedPhaseConsumed={() => setRequestedPhase(null)}
-            retreatName={retreatName}
-          />
-        )}
-
-        {historyOpen && <HistoryPanel log={log} onClose={() => setHistoryOpen(false)} />}
+        {page}
       </DesktopShell>
     );
   }
@@ -329,104 +389,9 @@ export default function Home() {
           <p className="font-display text-lg font-semibold text-ink">Timekeeper</p>
           <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
         </div>
-
-        <div className="flex min-w-0 items-center gap-0.5">
-          <ViewMenu
-            view={view}
-            onChange={(next) => {
-              setPeopleOpen(false);
-              setHistoryOpen(false);
-              setView(next);
-            }}
-            onOpenHistory={() => {
-              setPeopleOpen(false);
-              setHistoryOpen(true);
-            }}
-            onOpenPeople={() => {
-              setHistoryOpen(false);
-              setPeopleOpen(true);
-            }}
-            onUndo={handleUndo}
-            undoDisabled={undoStack.length === 0}
-            undoLabel={
-              undoStack[undoStack.length - 1]
-                ? `Undo: ${undoStack[undoStack.length - 1].message}`
-                : "Undo"
-            }
-            onRedo={handleRedo}
-            redoDisabled={redoStack.length === 0}
-            redoLabel={
-              redoStack[redoStack.length - 1]
-                ? `Redo: ${redoStack[redoStack.length - 1].message}`
-                : "Redo"
-            }
-            onExportAll={() => downloadCsv(people, retreatName)}
-            exportDisabled={people.length === 0}
-            size="sm"
-          />
-        </div>
+        <div className="flex min-w-0 items-center gap-0.5">{menu}</div>
       </Surface>
-
-      {view === "quicklog" ? (
-        <QuickLogView />
-      ) : (
-        <>
-          {people.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-              <Surface
-                as="p"
-                material="glass-panel"
-                rim
-                className="rounded-2xl px-5 py-3 text-base text-ink"
-              >
-                Add the people taking refuge to begin.
-              </Surface>
-              <button
-                type="button"
-                onClick={() => setPeopleOpen(true)}
-                className={cn(
-                  "rounded-xl px-5 py-2.5 text-base font-medium text-white transition-[box-shadow,background-color,transform] duration-200 active:scale-95",
-                  actionClass("primary"),
-                )}
-              >
-                Add a person
-              </button>
-            </div>
-          ) : (
-            <RefugeView
-              people={people}
-              index={index}
-              onIndexChange={goTo}
-              onCapture={handleCapture}
-              onClear={handleClear}
-              onResetAll={handleResetAll}
-              onExport={(p) => downloadPersonCsv(p, retreatName)}
-              onRename={handleRenamePerson}
-              onEditTime={handleEditTime}
-              requestedPhase={requestedPhase}
-              onRequestedPhaseConsumed={() => setRequestedPhase(null)}
-              retreatName={retreatName}
-            />
-          )}
-
-          {peopleOpen && (
-            <PeopleSheet
-              people={people}
-              currentId={people[index]?.id ?? null}
-              onAdd={handleAddPerson}
-              onOpenAt={handleOpenPersonAt}
-              onDelete={handleDeletePerson}
-              onRename={handleRenamePerson}
-              onEditTime={handleEditTime}
-              onClearTime={handleClear}
-              onClose={() => setPeopleOpen(false)}
-              retreatName={retreatName}
-            />
-          )}
-
-          {historyOpen && <HistoryPanel log={log} onClose={() => setHistoryOpen(false)} />}
-        </>
-      )}
+      {page}
     </AppShell>
   );
 }

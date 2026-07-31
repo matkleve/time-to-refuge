@@ -7,14 +7,11 @@ import {
   type GlassMenuSection,
 } from "@/components/atoms/GlassMenu";
 
-export type AppView = "refuge" | "quicklog";
+export type AppView = "refuge" | "quicklog" | "history" | "people";
 
 interface ViewMenuProps {
   view: AppView;
   onChange: (view: AppView) => void;
-  onOpenHistory: () => void;
-  /** Mobile People sheet. Omit on desktop (people rail is always visible). */
-  onOpenPeople?: () => void;
   onUndo: () => void;
   undoDisabled?: boolean;
   undoLabel?: string;
@@ -27,14 +24,12 @@ interface ViewMenuProps {
 }
 
 /**
- * Hamburger → Pages, Actions (Export), then icon-only Undo / Redo at the
- * bottom. Shared cloudy menu chrome with the person-card ⋯.
+ * Hamburger → Pages (Refuge, Quick Log, History, People), Actions (Export),
+ * then icon-only Undo / Redo. Shared cloudy menu chrome with person-card ⋯.
  */
 export function ViewMenu({
   view,
   onChange,
-  onOpenHistory,
-  onOpenPeople,
   onUndo,
   undoDisabled = false,
   undoLabel = "Undo",
@@ -66,18 +61,16 @@ export function ViewMenu({
         id: "history",
         label: "History",
         icon: History,
-        onSelect: onOpenHistory,
+        selected: view === "history",
+        onSelect: () => onChange("history"),
       },
-      ...(onOpenPeople
-        ? [
-            {
-              id: "people",
-              label: "People",
-              icon: Contact,
-              onSelect: onOpenPeople,
-            },
-          ]
-        : []),
+      {
+        id: "people",
+        label: "People",
+        icon: Contact,
+        selected: view === "people",
+        onSelect: () => onChange("people"),
+      },
     ],
   };
 

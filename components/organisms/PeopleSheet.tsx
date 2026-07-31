@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Check, Plus, X } from "lucide-react";
 import { Person, Phase } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
-import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
 import { glassClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -20,10 +19,13 @@ interface PeopleSheetProps {
   onClearTime: (id: string, phase: Phase) => void;
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
-  onClose: () => void;
   retreatName?: string;
 }
 
+/**
+ * People page — same shell slot as Refuge / Quick Log / History, not an
+ * overlay. Opening a person switches to the Refuge page.
+ */
 export function PeopleSheet({
   people,
   currentId,
@@ -33,7 +35,6 @@ export function PeopleSheet({
   onClearTime,
   onDelete,
   onRename,
-  onClose,
   retreatName = "",
 }: PeopleSheetProps) {
   const [adding, setAdding] = useState(false);
@@ -48,16 +49,10 @@ export function PeopleSheet({
   }
 
   return (
-    // Own backdrop photo under glass — so the list sits on the image without
-    // ghosting the live Refuge card/button behind the sheet (design system §3a).
-    <div
-      className={cn("absolute inset-0 z-30 flex flex-col animate-fade-in-up", BACKDROP_CLASS)}
-      style={backdropStyle}
-    >
-      <Surface material="glass-panel" className="flex h-full flex-col">
-        <div className="flex items-center justify-between border-b border-white/40 px-5 py-3">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 items-center border-b border-white/40 px-5 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
-          <IconButton icon={X} label="Close people" onClick={onClose} />
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -82,7 +77,12 @@ export function PeopleSheet({
 
             <li>
               {adding ? (
-                <div className={cn("flex items-center gap-1 rounded-3xl p-2", glassClass("card", { rim: true }))}>
+                <div
+                  className={cn(
+                    "flex items-center gap-1 rounded-3xl p-2",
+                    glassClass("card", { rim: true }),
+                  )}
+                >
                   <input
                     /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
                        appears on an explicit user action, so focusing it is expected. */

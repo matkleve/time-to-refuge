@@ -2,9 +2,8 @@
  * Materials — the one place glass / filled / action fills are defined.
  *
  * Use-case rule (see docs/USE-CASES.md + DESIGN-SYSTEM.md §3):
- *   - Glass over the backdrop photo (headers, cards, sheets, actions, notes).
- *   - Full-screen sheets paint the same photo under themselves (lib/backdrop.ts)
- *     so live UI does not ghost through the glass.
+ *   - Glass over the backdrop photo (headers, cards, pages, actions, notes).
+ *   - Shells paint the photo once (lib/backdrop.ts); pages sit in that shell.
  *
  * The glass identity is **light deflection**, not heavy blur — a specular
  * highlight along the top edge and a bright refractive rim, the way iOS
@@ -70,7 +69,7 @@ export const GLASS = {
 
 export type GlassKind = keyof typeof GLASS;
 
-/** Opaque materials — sheets over live UI, overview cards with a delete panel. */
+/** Opaque materials — rare solid fills (legacy filled-sheet / card). */
 export const FILLED = {
   card: "bg-card",
   cardCurrent: "bg-card-current",
