@@ -6,7 +6,6 @@ import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { GlassMenu, type GlassMenuItem } from "@/components/atoms/GlassMenu";
-import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { PersonFields } from "./PersonFields";
@@ -27,7 +26,7 @@ interface PersonCardProps {
   onExport?: () => void;
   /** When provided, tapping the name focuses this person. */
   onSelect?: () => void;
-  /** When provided, the name can be edited (pencil, or tapping the name when focused). */
+  /** When provided, Rename appears in the ⋯ menu. */
   onRename?: (name: string) => void;
   isCurrent?: boolean;
   /** Stamped into the shared PNG; shown as a caption on the focused card only. */
@@ -95,6 +94,14 @@ export function PersonCard({
   }
 
   const menuItems: GlassMenuItem[] = [];
+  if (onRename) {
+    menuItems.push({
+      id: "rename",
+      label: "Rename",
+      icon: Pencil,
+      onSelect: startEditing,
+    });
+  }
   if (onResetAll) {
     menuItems.push({
       id: "reset",
@@ -159,13 +166,12 @@ export function PersonCard({
         />
       ) : (
         <>
-          {/* Name is left-aligned, with its edit affordance immediately beside it. */}
           {onSelect ? (
             <button
               type="button"
               onClick={onSelect}
               aria-label={`Open ${person.name}`}
-              className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
             >
               {isComplete(person) && (
                 <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />
@@ -180,32 +186,14 @@ export function PersonCard({
               </span>
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={startEditing}
-              disabled={!onRename}
-              className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05] disabled:pointer-events-none"
+            <h2
+              className={cn(
+                "no-select min-w-0 flex-1 truncate px-1 py-1 font-display text-2xl font-semibold",
+                remove.armed ? "text-danger-600" : "text-ink",
+              )}
             >
-              <h2
-                className={cn(
-                  "no-select truncate font-display text-2xl font-semibold",
-                  remove.armed ? "text-danger-600" : "text-ink",
-                )}
-              >
-                {person.name}
-              </h2>
-            </button>
-          )}
-
-          {onRename && (
-            <IconButton
-              icon={Pencil}
-              label={`Rename ${person.name}`}
-              onClick={startEditing}
-              tone="accent"
-              size="sm"
-              glass
-            />
+              {person.name}
+            </h2>
           )}
 
           {menuItems.length > 0 && (
@@ -214,7 +202,6 @@ export function PersonCard({
               triggerIcon={MoreVertical}
               size="sm"
               glassTrigger
-              className="ml-auto"
               items={menuItems}
             />
           )}

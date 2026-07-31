@@ -372,7 +372,7 @@ tap so pointer and touch share one path.
 | Surface | How actions open |
 | --- | --- |
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
-| Person card (overview / focused) | ⋯ menu → Reset all / Export / Share / Delete |
+| Person card (overview / focused) | ⋯ menu → Rename / Reset all / Export / Share / Delete |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 
 Destructive controls still use the two-click armed pattern (§4): the first
