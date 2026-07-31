@@ -257,29 +257,79 @@ function FieldRow({
     );
   } else {
     /*
-     * Idle and open are ONE persistent structure, not two elements swapped by
-     * a conditional (design system §5a) — that swap is what used to make the
-     * row jump. The action cluster is always mounted; only its max-width and
-     * opacity change, which is what makes the time visibly slide over to
-     * make room instead of the row's content just changing in place.
+     * Idle → open: one persistent row (design system §5a). The phase label
+     * and time pack left; round icon-only actions slide in on the right with
+     * a clear gap between "look" (eye/copy) and "change" (edit/reset).
      */
+    const lookActions = (
+      <div className="flex shrink-0 items-center gap-0.5">
+        {overview && onOpenPerson && (
+          <IconButton
+            icon={Eye}
+            label={`Open ${person.name}`}
+            onClick={onOpenPerson}
+            tone="accent"
+            size="sm"
+          />
+        )}
+        <IconButton
+          icon={copied ? Check : Copy}
+          label={copied ? `${PHASE_LABELS[phase]} time copied` : `Copy ${PHASE_LABELS[phase]} time`}
+          onClick={copyTime}
+          tone="accent"
+          size="sm"
+          className={copied ? "text-saffron-700" : undefined}
+        />
+      </div>
+    );
+
+    const changeActions = (
+      <div className="flex shrink-0 items-center gap-0.5">
+        {onEditTime && (
+          <IconButton
+            icon={Pencil}
+            label={`Edit ${PHASE_LABELS[phase]} time`}
+            onClick={() => {
+              setDraft(toTimeInput(value as number));
+              setInvalid(false);
+              setEditing(true);
+            }}
+            tone="accent"
+            size="sm"
+          />
+        )}
+        {onClear && (
+          <IconButton
+            icon={RotateCcw}
+            label={
+              armedReset.armed
+                ? `Confirm reset ${PHASE_LABELS[phase]}`
+                : `Reset ${PHASE_LABELS[phase]}`
+            }
+            onClick={armedReset.trigger}
+            tone="danger"
+            size="sm"
+            className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
+          />
+        )}
+      </div>
+    );
+
     body = (
-      <div ref={dismissRef} className={cn("flex items-stretch", rowHeight)}>
+      <div ref={dismissRef} className={cn("flex w-full items-center", rowHeight)}>
         <button
           type="button"
           onClick={handleRowClick}
-          disabled={showActions}
           className={cn(
-            "flex flex-1 items-center justify-between px-4 text-left transition-colors duration-200",
-            !showActions && "hover:bg-ink/[0.03]",
-            "disabled:cursor-default",
+            "flex min-w-0 flex-1 items-center gap-2 px-4 text-left transition-colors duration-200",
+            "hover:bg-ink/[0.03]",
           )}
         >
           {label}
           <span
             className={cn(
-              "shrink-0 font-mono tabular-nums transition-[font-size] duration-200",
-              showActions || overview ? "text-sm" : "text-lg",
+              "min-w-0 truncate font-mono tabular-nums transition-[font-size,margin] duration-200 ease-out",
+              showActions ? "text-sm" : cn("ml-auto", overview ? "text-sm" : "text-lg"),
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >
@@ -289,59 +339,15 @@ function FieldRow({
 
         <div
           className={cn(
-            "flex shrink-0 items-center overflow-hidden pr-1 transition-[max-width,opacity] duration-200 ease-out",
-            showActions ? "ml-1 max-w-40 opacity-100" : "ml-0 max-w-0 opacity-0",
+            "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity,padding] duration-200 ease-out",
+            showActions ? "max-w-52 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
           )}
+          aria-hidden={!showActions}
         >
-          {/* Reading actions, then a gap, then the ones that change something. */}
-          <div className="flex shrink-0 items-center gap-0.5">
-            {overview && onOpenPerson && (
-              <IconButton
-                icon={Eye}
-                label={`Open ${person.name}`}
-                onClick={onOpenPerson}
-                tone="accent"
-                size="sm"
-              />
-            )}
-            <IconButton
-              icon={copied ? Check : Copy}
-              label={copied ? `${PHASE_LABELS[phase]} time copied` : `Copy ${PHASE_LABELS[phase]} time`}
-              onClick={copyTime}
-              tone="accent"
-              size="sm"
-              className={copied ? "text-saffron-700" : undefined}
-            />
-          </div>
-
-          <div className="ml-1.5 flex shrink-0 items-center gap-0.5">
-            {onEditTime && (
-              <IconButton
-                icon={Pencil}
-                label={`Edit ${PHASE_LABELS[phase]} time`}
-                onClick={() => {
-                  setDraft(toTimeInput(value as number));
-                  setInvalid(false);
-                  setEditing(true);
-                }}
-                tone="accent"
-                size="sm"
-              />
-            )}
-            {onClear && (
-              <IconButton
-                icon={RotateCcw}
-                label={
-                  armedReset.armed
-                    ? `Confirm reset ${PHASE_LABELS[phase]}`
-                    : `Reset ${PHASE_LABELS[phase]}`
-                }
-                onClick={armedReset.trigger}
-                tone="danger"
-                size="sm"
-                className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
-              />
-            )}
+          {/* Look · gap · change — round IconButtons only, never inlined with the time. */}
+          <div className="flex shrink-0 items-center gap-3">
+            {lookActions}
+            {changeActions}
           </div>
         </div>
       </div>

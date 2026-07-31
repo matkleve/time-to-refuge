@@ -273,18 +273,18 @@ revealing controls in place, and mounting a panel.
 
 ### 5a. Reveal — controls appearing in place
 
-Used by a field row opening its actions. The row is **one persistent element**
+Used by a field row opening its actions. The row is **one persistent structure**
 across idle and open — never two different elements swapped by a conditional
 — so its properties can transition instead of jumping:
 
+- Idle: phase label on the left, time on the right (`ml-auto`).
+- Open: the time packs in beside the label on the **left** (drops `ml-auto`,
+  shrinks to `text-sm`); round icon-only actions slide in on the **right**.
 - The action cluster animates `max-width` (0 → content) and `opacity`
   (0 → 1) together, `overflow-hidden` so children clip rather than wrap.
-  Growing `max-width` on a flex sibling is what makes the row's *other*
-  content visibly slide over to make room — that's the effect, not a
-  transform on the time itself.
-- The time's font size transitions too (it's smaller once actions are open,
-  to fit), so it eases rather than jumping between sizes.
-- Height never changes (§3): only width and opacity move.
+- Actions are two groups with a wide gap: **eye · copy** (look) then
+  **edit · reset** (change) — never inline with the time.
+- Height never changes (§3): only width, margin, and opacity move.
 
 > **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**
 > Two different elements can't be transitioned between by CSS — that's what
@@ -350,10 +350,10 @@ anything on its own either.
 
 A recorded time is data, so tapping it opens what can be done *to* it instead
 of moving you somewhere — see §5a for how that reveal animates and §5c for how
-it closes again. The actions read left to right as **eye · copy** —
-things that only look at the time — then a gap, then **edit · reset**, which
-change it. The gap is the point: the harmless pair is never adjacent to the
-destructive one. Editing writes the corrected
+it closes again. On open, the time shrinks in beside the phase label on the
+left; round icon-only buttons appear on the right as **eye · copy** (look),
+then a gap, then **edit · reset** (change). The gap is the point: the harmless
+pair is never adjacent to the destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 
