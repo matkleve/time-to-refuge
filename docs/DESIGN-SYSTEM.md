@@ -241,8 +241,9 @@ with a hairline between them, then an icon-only strip —
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
 Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
-Triggers (hamburger / ⋯) use an opaque white circle with a `muted` border
-(3:1+ against white) so the control reads as a button on glass headers.
+Triggers (hamburger / ⋯) are icon-only at rest — **no outline circle**.
+Presence comes from a larger glyph (`size-6` / `size-7`); open/hover gets a
+light flag-blue wash only.
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
