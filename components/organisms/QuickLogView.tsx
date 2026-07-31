@@ -13,12 +13,12 @@ import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { Surface } from "@/components/atoms/Surface";
 import { IconButton } from "@/components/atoms/IconButton";
-import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
+import { RowActionTray } from "@/components/atoms/RowReveal";
 
 /**
- * One logged time — same reveal as a person-card field row (§5a):
- * idle = glass stamp only (no actions). Tap packs the stamp left via a
- * flex spacer (not `ml-auto`); Copy / Delete sit in a sibling tray.
+ * One logged time — idle = glass stamp only. Tap opens the Copy / Delete
+ * tray; the stamp shrinks and the right-aligned time rides with it (no
+ * spacer snap). See design system §5a.
  */
 function LogRow({
   index,
@@ -85,18 +85,17 @@ function LogRow({
           showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
         }
         className={cn(
-          "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
+          "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
           "transition-[box-shadow,background-color,transform] duration-200 ease-out",
           "hover:bg-ink/[0.03] active:scale-[0.99]",
           glassRowClass(),
         )}
       >
         <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>
-        <RowPackSpacer packed={showActions} />
         <span
           className={cn(
-            /* nowrap + stamp overflow-hidden clips smoothly; truncate ellipsis jumps. */
-            "min-w-0 shrink whitespace-nowrap font-mono text-sm tabular-nums",
+            /* Right-aligned in the stamp — moves with the tray width animation. */
+            "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-sm tabular-nums",
             red ? "text-danger-600" : "text-ink",
           )}
         >
