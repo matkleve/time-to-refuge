@@ -349,7 +349,7 @@ function FieldRow({
           aria-expanded={showActions}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-            "transition-[flex-grow,box-shadow,background-color,font-size] duration-200 ease-out",
+            "transition-[box-shadow,background-color,font-size] duration-300 ease-out",
             "hover:bg-ink/[0.03]",
             rowHeight,
             glassRowClass(),
@@ -361,7 +361,7 @@ function FieldRow({
           <RowPackSpacer packed={showActions} />
           <span
             className={cn(
-              "min-w-0 shrink truncate font-mono tabular-nums transition-[font-size] duration-200 ease-out",
+              "min-w-0 shrink whitespace-nowrap font-mono tabular-nums transition-[font-size] duration-300 ease-out",
               showActions || overview ? "text-sm" : "text-lg",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}

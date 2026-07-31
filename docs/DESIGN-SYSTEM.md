@@ -308,15 +308,19 @@ of jumping:
 
 - Idle: label / index on the left, time on the right (via a **flex spacer**
   that `grow`s — never `ml-auto`, which cannot interpolate).
-- Open: the spacer collapses (`grow-0`), the time packs beside the label;
-  round **glass** icon chips slide in on the **right** in a sibling tray.
-- The tray animates `grid-template-columns` `0fr` → `1fr` (exact content
-  width) with opacity — not a oversized `max-width`, which overshoots.
+- Open: the spacer **snaps** packed (`grow-0`); only the tray animates width.
+  Animating spacer `flex-grow` and tray `0fr`↔`1fr` together made the time
+  race ahead of the container.
+- The tray animates `grid-template-columns` `0fr` → `1fr` with a `w-max`
+  child (exact content width). Chip opacity lags the open slightly so
+  buttons are never shown clipped mid-expand.
+- Stamp text uses `whitespace-nowrap` + stamp `overflow-hidden` (not
+  `truncate`) so excess clips smoothly instead of ellipsis jumping.
 - Actions are two groups with a wide gap: **eye · copy** (look) then
   **edit · reset** (change) — never inside the glass stamp. Chips are `md`
   (44px) with comfortable gaps; armed destructive uses an **inset** ring on
   the chip so nothing clips at the card edge.
-- Height never changes (§3): only flex-grow, grid columns, and opacity move.
+- Height never changes (§3): only grid columns and opacity move.
 
 Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
 [`RowActionTray`](../components/atoms/RowReveal.tsx),
@@ -328,7 +332,9 @@ Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
 > two elements, one replacing the other, cannot.
 
 > **Do not pack with `margin-left: auto`.** Toggling `ml-auto` jumps. Use a
-> flex spacer whose `flex-grow` transitions 1 → 0.
+> flex spacer (`grow` ↔ `grow-0`). Do **not** transition that spacer in
+> parallel with the tray width — different interpolations desync; snap the
+> spacer and animate only the tray.
 
 ### 5b. Entrance — a panel or popover mounting
 

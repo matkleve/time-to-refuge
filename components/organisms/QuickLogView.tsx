@@ -86,7 +86,7 @@ function LogRow({
         }
         className={cn(
           "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-          "transition-[flex-grow,box-shadow,background-color] duration-200 ease-out",
+          "transition-[box-shadow,background-color] duration-300 ease-out",
           "hover:bg-ink/[0.03]",
           glassRowClass(),
         )}
@@ -95,7 +95,8 @@ function LogRow({
         <RowPackSpacer packed={showActions} />
         <span
           className={cn(
-            "min-w-0 shrink truncate font-mono text-sm tabular-nums",
+            /* nowrap + stamp overflow-hidden clips smoothly; truncate ellipsis jumps. */
+            "min-w-0 shrink whitespace-nowrap font-mono text-sm tabular-nums",
             red ? "text-danger-600" : "text-ink",
           )}
         >
