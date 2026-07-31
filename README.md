@@ -50,7 +50,9 @@ docs/         design system
 ```
 
 See [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) for colour, type and
-gesture conventions.
+gesture conventions, and [`docs/USE-CASES.md`](docs/USE-CASES.md) for what
+the app is actually meant to support during a ceremony — and where, right
+now, it doesn't.
 
 ## Stack
 
