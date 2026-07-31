@@ -11,6 +11,7 @@ import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
 import { useArmedAction } from "@/lib/use-armed-action";
+import { glassRowClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 /** One logged time. Owns its own two-click delete. */
@@ -33,11 +34,12 @@ function LogRow({
 
   return (
     <div className="shrink-0">
-      <SwipeToAction onSwipe={remove.trigger} label="Delete" className="bg-card">
+      <SwipeToAction onSwipe={remove.trigger} label="Delete" className="overflow-hidden rounded-2xl">
         <div
           className={cn(
-            "flex items-center justify-between bg-card py-1.5 pr-1 pl-4",
-            red && "ring-2 ring-danger-500 rounded-2xl",
+            "flex items-center justify-between py-1.5 pr-1 pl-4",
+            glassRowClass(),
+            red && "ring-2 ring-danger-500",
           )}
         >
           <span className="text-xs tabular-nums text-subtle">#{index}</span>

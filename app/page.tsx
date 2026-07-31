@@ -233,7 +233,7 @@ export default function Home() {
             <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
           </div>
 
-          <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1" role="tablist" aria-label="Mode">
+          <div className="mx-auto flex items-center gap-1 rounded-2xl bg-white/50 p-1 backdrop-blur-xl" role="tablist" aria-label="Mode">
             <button
               type="button"
               role="tab"

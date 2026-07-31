@@ -3,8 +3,11 @@
 import { X } from "lucide-react";
 import { LogEntry, PHASE_LABELS } from "@/lib/types";
 import { formatLogTime } from "@/lib/format";
+import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
+import { glassClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
+import { cn } from "@/lib/utils";
 
 interface HistoryPanelProps {
   log: LogEntry[];
@@ -32,21 +35,25 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
 
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-       Pointer-only convenience: clicking the dimmed backdrop closes the dialog
-       (desktop only — on mobile it's edge-to-edge, so there's no backdrop to
-       click). The real, keyboard-reachable control is the Close button below. */
+       Pointer-only convenience: clicking outside the panel closes (desktop).
+       The real, keyboard-reachable control is the Close button below. */
     <div
-      className="absolute inset-0 z-30 flex flex-col bg-white animate-fade-in-up lg:items-center lg:justify-center lg:bg-black/30"
+      className={cn(
+        "absolute inset-0 z-30 flex flex-col animate-fade-in-up",
+        BACKDROP_CLASS,
+        "lg:items-center lg:justify-center lg:bg-black/25",
+      )}
+      style={backdropStyle}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      {/* Filled sheet — sits over live Refuge UI, not the backdrop photo. */}
       <Surface
-        material="filled-sheet"
+        material="glass-panel"
+        rim
         className="flex h-full w-full flex-col lg:h-[36rem] lg:max-h-[80vh] lg:w-[28rem] lg:rounded-3xl lg:shadow-2xl"
       >
-        <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <div className="flex items-center justify-between border-b border-white/40 px-5 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">History</h2>
           <IconButton icon={X} label="Close history" onClick={onClose} />
         </div>
@@ -61,7 +68,10 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
           ) : (
             <ul className="space-y-2">
               {sorted.map((entry) => (
-                <li key={entry.id} className="rounded-2xl bg-card px-4 py-3">
+                <li
+                  key={entry.id}
+                  className={cn("rounded-2xl px-4 py-3", glassClass("card", { rim: true }))}
+                >
                   <p className="font-display text-base font-semibold text-ink">
                     {entry.personName}
                   </p>

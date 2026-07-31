@@ -13,7 +13,8 @@ export type SurfaceMaterial = GlassMaterial | FilledMaterial;
 type SurfaceOwnProps<T extends ElementType> = {
   as?: T;
   /**
-   * Material from the design system. Glass only over the backdrop photo;
+   * Material from the design system. Prefer glass over the backdrop photo
+   * (sheets paint that photo under themselves via lib/backdrop.ts).
    * filled when sitting over live UI (see DESIGN-SYSTEM.md §3).
    */
   material: SurfaceMaterial;

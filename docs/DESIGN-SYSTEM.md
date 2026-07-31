@@ -100,15 +100,16 @@ Never hand-roll `bg-white/NN backdrop-blur-…` in a component.
 
 | Material | When | API |
 | --- | --- | --- |
-| **Cloudy glass** | Surface sits over the backdrop photo, or a person card in the list | `material="glass-panel"` / `glass-card` / `glass-card-current` |
-| **Filled** | Surface sits over live UI (full sheets) | `filled-sheet` |
+| **Cloudy glass** | Surface sits over the backdrop photo — including People / History sheets (which paint the same photo under themselves) | `material="glass-panel"` / `glass-card` / `glass-card-current` |
+| **Filled** | Rare opaque needs (inputs, solid form fields) | Prefer glass; `filled-sheet` is legacy |
 | **Action glass** | Record / Quick Log over the photo | `actionClass("primary" \| "accent" \| "primaryIdle")` — tinted glass + specular, **no gradients** |
 
 Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
-on the glass record button). Sheets that cover the live Refuge view stay
-filled so the card and button do not ghost through (**UC-3**, **UC-5**,
-**UC-8**). Overview person cards are glass too — `SwipeToAction` keeps the
-delete panel at opacity 0 until the drag starts, so red does not leak at rest.
+on the glass record button). Full-screen People and History sheets reuse
+[`lib/backdrop.ts`](../lib/backdrop.ts) under a glass panel so the photo
+reads through without ghosting the live Refuge card behind them. Overview
+person cards are glass too — `SwipeToAction` keeps the delete panel at
+opacity 0 until the drag starts, so red does not leak at rest.
 
 - **Field rows share the card's material.** Both focused and overview rows use
   `glassRowClass()` so the card does not read as a solid block.
@@ -150,9 +151,11 @@ asserts each fill class's `/NN` matches its `alpha`.
 Plain Tailwind utilities only — never a custom `@utility` that writes both
 `backdrop-filter` and `-webkit-backdrop-filter`.
 
-**Glass over the backdrop photo — and person cards in the list.**
-`HistoryPanel` and `PeopleSheet` stay filled (they cover live UI). Overview
-person cards, the focused card, and the record / Quick Log buttons are glass.
+**Backdrop photo everywhere.** Shells (`AppShell`, `DesktopShell`) and
+full-screen sheets (`PeopleSheet`, `HistoryPanel`) all use
+[`lib/backdrop.ts`](../lib/backdrop.ts). Sheets paint the photo under their
+own glass so live UI does not ghost through. Overview cards, the focused
+card, and the record / Quick Log buttons are glass over that photo.
 
 ## 3b. Desktop, not mobile-stretched
 

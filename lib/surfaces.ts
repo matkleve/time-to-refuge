@@ -2,8 +2,9 @@
  * Materials — the one place glass / filled / action fills are defined.
  *
  * Use-case rule (see docs/USE-CASES.md + DESIGN-SYSTEM.md §3):
- *   - Glass only over the backdrop photo (headers, focused card, actions, notes).
- *   - Filled when the surface sits over live UI (sheets, overview swipe cards).
+ *   - Glass over the backdrop photo (headers, cards, sheets, actions, notes).
+ *   - Full-screen sheets paint the same photo under themselves (lib/backdrop.ts)
+ *     so live UI does not ghost through the glass.
  *
  * The glass identity is **light deflection**, not heavy blur — a specular
  * highlight along the top edge and a bright refractive rim, the way iOS

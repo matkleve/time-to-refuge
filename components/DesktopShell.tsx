@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
 
 /**
  * The desktop-native frame: the backdrop photo fills the whole viewport, and
@@ -11,10 +12,7 @@ import type { ReactNode } from "react";
  */
 export function DesktopShell({ children }: { children: ReactNode }) {
   return (
-    <div
-      className="flex h-dvh w-full flex-col bg-flagblue-50 bg-cover bg-center"
-      style={{ backgroundImage: "url('/backdrop.jpg')" }}
-    >
+    <div className={`flex h-dvh w-full flex-col ${BACKDROP_CLASS}`} style={backdropStyle}>
       {children}
     </div>
   );
