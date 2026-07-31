@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Download, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react";
+import { Check, Download, MoreVertical, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react";
 import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
+import { GlassMenu, type GlassMenuItem } from "@/components/atoms/GlassMenu";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
@@ -94,6 +95,49 @@ export function PersonCard({
     }
   }
 
+  const menuItems: GlassMenuItem[] = [];
+  if (onResetAll) {
+    menuItems.push({
+      id: "reset",
+      label: resetAll.armed ? "Confirm reset all" : "Reset all",
+      icon: RotateCcw,
+      tone: "danger",
+      selected: resetAll.armed,
+      disabled: !anyFilled,
+      keepOpen: !resetAll.armed,
+      onSelect: () => resetAll.trigger(),
+    });
+  }
+  if (onExport) {
+    menuItems.push({
+      id: "export",
+      label: "Export CSV",
+      icon: Download,
+      disabled: !anyFilled,
+      onSelect: () => onExport(),
+    });
+  }
+  menuItems.push({
+    id: "share",
+    label: "Share card",
+    icon: Share2,
+    disabled: !anyFilled,
+    onSelect: () => {
+      void handleShare();
+    },
+  });
+  if (onDelete) {
+    menuItems.push({
+      id: "delete",
+      label: remove.armed ? "Confirm delete" : "Delete",
+      icon: Trash2,
+      tone: "danger",
+      selected: remove.armed,
+      keepOpen: !remove.armed,
+      onSelect: () => remove.trigger(),
+    });
+  }
+
   const nameRow = (
     <div className={cn("flex items-center gap-1 px-3", showRetreatCaption ? "pt-1" : "pt-3")}>
       {editing ? (
@@ -124,7 +168,9 @@ export function PersonCard({
               aria-label={`Open ${person.name}`}
               className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
             >
-              {isComplete(person) && <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />}
+              {isComplete(person) && (
+                <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />
+              )}
               <span
                 className={cn(
                   "truncate font-display text-lg font-semibold",
@@ -159,63 +205,20 @@ export function PersonCard({
               onClick={startEditing}
               tone="accent"
               size="sm"
+              glass
             />
           )}
 
-          <div className="ml-auto flex max-w-[60%] flex-wrap items-center justify-end gap-0.5">
-            {onResetAll && (
-              <IconButton
-                icon={RotateCcw}
-                label={
-                  resetAll.armed
-                    ? `Confirm reset all times for ${person.name}`
-                    : `Reset all times for ${person.name}`
-                }
-                showLabel={overview ? undefined : "Reset all"}
-                onClick={resetAll.trigger}
-                tone="danger"
-                size="sm"
-                disabled={!anyFilled}
-                hideWhenDisabled
-                className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-              />
-            )}
-            {onExport && (
-              <IconButton
-                icon={Download}
-                label={`Export ${person.name} as CSV`}
-                showLabel={overview ? undefined : "CSV"}
-                onClick={onExport}
-                tone="accent"
-                size="sm"
-                disabled={!anyFilled}
-                hideWhenDisabled
-              />
-            )}
-            <IconButton
-              icon={Share2}
-              label={`Share card for ${person.name}`}
-              showLabel={overview ? undefined : "Share"}
-              onClick={handleShare}
-              tone="accent"
+          {menuItems.length > 0 && (
+            <GlassMenu
+              label={`Actions for ${person.name}`}
+              triggerIcon={MoreVertical}
               size="sm"
-              disabled={!anyFilled}
-              hideWhenDisabled
+              glassTrigger
+              className="ml-auto"
+              items={menuItems}
             />
-            {onDelete && (
-              <IconButton
-                icon={Trash2}
-                label={
-                  remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`
-                }
-                showLabel={overview ? undefined : "Delete"}
-                onClick={remove.trigger}
-                tone="danger"
-                size="sm"
-                className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
-              />
-            )}
-          </div>
+          )}
         </>
       )}
     </div>

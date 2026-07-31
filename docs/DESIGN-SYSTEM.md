@@ -216,7 +216,7 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | `History` / `Undo2` | History panel · undo one step |
 | `Download` / `Share2` | Export CSV · share the card as an image |
 | `Users` / `Plus` | People overview · add a person |
-| `Menu` | Open the page menu (Refuge · Quick Log) |
+| `Menu` / `MoreVertical` | Page menu · person-card actions (⋯) |
 | `Pencil` / `RotateCcw` / `Trash2` | Rename · reset times · delete |
 | `Check` / `X` | Confirm · cancel or dismiss (label visibly as Add / Cancel in add flows) |
 | `ChevronLeft` / `ChevronRight` | Previous / next person |

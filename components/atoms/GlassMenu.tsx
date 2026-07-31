@@ -1,0 +1,173 @@
+"use client";
+
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { MoreVertical, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { IconButton } from "@/components/atoms/IconButton";
+import { Surface } from "@/components/atoms/Surface";
+
+export type GlassMenuItem = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  onSelect: () => void;
+  /** Danger copy / armed destructive. */
+  tone?: "neutral" | "danger";
+  disabled?: boolean;
+  /** Light glass wash — current page, or an armed destructive row. */
+  selected?: boolean;
+  /** Keep the menu open after this item (e.g. first arm tap). */
+  keepOpen?: boolean;
+};
+
+interface GlassMenuProps {
+  label: string;
+  items: GlassMenuItem[];
+  /** Trigger icon — hamburger or ⋯. */
+  triggerIcon?: LucideIcon;
+  size?: "sm" | "md";
+  /** Glass chip on the trigger (card chrome). */
+  glassTrigger?: boolean;
+  align?: "left" | "right";
+  className?: string;
+}
+
+type MenuBox = { top: number; left: number; minWidth: number };
+
+/**
+ * iOS-style cloudy menu: always icon + label; hover / selected is a light
+ * glass wash — never a solid filled pill. Portaled so card overflow can't
+ * clip it (navbar + person-card ⋯).
+ */
+export function GlassMenu({
+  label,
+  items,
+  triggerIcon: TriggerIcon = MoreVertical,
+  size = "md",
+  glassTrigger = false,
+  align = "right",
+  className,
+}: GlassMenuProps) {
+  const [open, setOpen] = useState(false);
+  const [box, setBox] = useState<MenuBox | null>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const dismiss = useCallback(() => setOpen(false), []);
+
+  const place = useCallback(() => {
+    const el = triggerRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const minWidth = Math.max(192, r.width);
+    const left = align === "right" ? r.right - minWidth : r.left;
+    setBox({
+      top: r.bottom + 6,
+      left: Math.min(Math.max(8, left), window.innerWidth - minWidth - 8),
+      minWidth,
+    });
+  }, [align]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open, place]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    let timer: ReturnType<typeof setTimeout>;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(dismiss, 8000);
+    };
+
+    function onPointerDown(e: PointerEvent) {
+      const t = e.target as Node;
+      if (triggerRef.current?.contains(t)) return;
+      if (panelRef.current?.contains(t)) {
+        arm();
+        return;
+      }
+      dismiss();
+    }
+
+    arm();
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open, dismiss]);
+
+  const panel =
+    open &&
+    box &&
+    typeof document !== "undefined" &&
+    createPortal(
+      <div
+        ref={panelRef}
+        className="fixed z-50"
+        style={{ top: box.top, left: box.left, minWidth: box.minWidth }}
+      >
+        <Surface
+          material="glass-panel"
+          rim
+          role="menu"
+          aria-label={label}
+          className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
+        >
+          {items.map((item) => {
+            const Icon = item.icon;
+            const danger = item.tone === "danger";
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="menuitem"
+                disabled={item.disabled}
+                onClick={() => {
+                  item.onSelect();
+                  if (!item.keepOpen) setOpen(false);
+                }}
+                className={cn(
+                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium",
+                  "transition-colors duration-200 ease-out",
+                  "disabled:pointer-events-none disabled:opacity-35",
+                  danger ? "text-danger-700" : "text-ink",
+                  /* iOS: soft wash, not a solid fill */
+                  item.selected
+                    ? "bg-white/55"
+                    : "hover:bg-white/40 focus-visible:bg-white/40",
+                )}
+              >
+                <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+                <span className="min-w-0 flex-1 truncate">{item.label}</span>
+              </button>
+            );
+          })}
+        </Surface>
+      </div>,
+      document.body,
+    );
+
+  return (
+    <div className={cn("relative", open && "z-50", className)} ref={triggerRef}>
+      <IconButton
+        icon={TriggerIcon}
+        label={open ? `Close ${label}` : label}
+        size={size}
+        glass={glassTrigger}
+        onClick={() => setOpen((v) => !v)}
+        className={open ? "text-ink ring-1 ring-white/60" : undefined}
+      />
+      {panel}
+    </div>
+  );
+}
