@@ -6,26 +6,18 @@ import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 /**
- * Curated zones for Quick Log — not `Intl.supportedValuesOf("timeZone")`,
- * which is hundreds of IANA ids. Device zone is always merged in below.
+ * Short curated list for Quick Log — device zone is always merged in.
+ * Not every IANA id; just enough to re-read a stamp in another place.
  */
 const CURATED_ZONES = [
   "UTC",
-  "America/Los_Angeles",
-  "America/Denver",
-  "America/Chicago",
   "America/New_York",
   "Europe/London",
-  "Europe/Paris",
   "Europe/Berlin",
-  "Europe/Vienna",
   "Europe/Kathmandu",
   "Asia/Kolkata",
   "Asia/Bangkok",
-  "Asia/Shanghai",
   "Asia/Tokyo",
-  "Australia/Sydney",
-  "Pacific/Auckland",
 ];
 
 function listTimezones(): string[] {
