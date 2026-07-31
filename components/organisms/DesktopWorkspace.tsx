@@ -21,6 +21,7 @@ interface DesktopWorkspaceProps {
   onEditTime: (personId: string, phase: Phase, at: number) => void;
   requestedPhase: Phase | null;
   onRequestedPhaseConsumed: () => void;
+  retreatName?: string;
 }
 
 /**
@@ -45,6 +46,7 @@ export function DesktopWorkspace({
   onEditTime,
   requestedPhase,
   onRequestedPhaseConsumed,
+  retreatName = "",
 }: DesktopWorkspaceProps) {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
@@ -87,6 +89,7 @@ export function DesktopWorkspace({
                 onDelete={() => onDelete(p.id)}
                 onExport={() => onExport(p)}
                 onRename={(name) => onRename(p.id, name)}
+                retreatName={retreatName}
               />
             </li>
           ))}
@@ -143,6 +146,7 @@ export function DesktopWorkspace({
               onExport={() => onExport(current)}
               onRename={(name) => onRename(current.id, name)}
               onEditTime={(phase, at) => onEditTime(current.id, phase, at)}
+              retreatName={retreatName}
             />
             <LiveClockButton
               onCapture={handleCaptureClick}

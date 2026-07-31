@@ -9,10 +9,18 @@ import {
   createPerson,
   createLogEntry,
 } from "@/lib/types";
-import { loadPeople, savePeople, loadLog, saveLog } from "@/lib/storage";
+import {
+  loadPeople,
+  savePeople,
+  loadLog,
+  saveLog,
+  loadRetreatName,
+  saveRetreatName,
+} from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { Download, History, Undo2, Users } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
+import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AppShell } from "@/components/AppShell";
 import { DesktopShell } from "@/components/DesktopShell";
 import { RefugeView } from "@/components/organisms/RefugeView";
@@ -44,11 +52,13 @@ export default function Home() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<UndoEntry[]>([]);
   const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
+  const [retreatName, setRetreatName] = useState("");
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     setPeople(loadPeople());
     setLog(loadLog());
+    setRetreatName(loadRetreatName());
     setReady(true);
   }, []);
 
@@ -59,6 +69,10 @@ export default function Home() {
   useEffect(() => {
     if (ready) saveLog(log);
   }, [log, ready]);
+
+  useEffect(() => {
+    if (ready) saveRetreatName(retreatName);
+  }, [retreatName, ready]);
 
   useEffect(() => {
     if (index > people.length - 1) {
@@ -208,7 +222,10 @@ export default function Home() {
     return (
       <DesktopShell>
         <header className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg">
-          <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
+          <div className="flex flex-col">
+            <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
+            <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
+          </div>
 
           <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1">
             <button
@@ -252,7 +269,7 @@ export default function Home() {
               <IconButton
                 icon={Download}
                 label="Export everyone as CSV"
-                onClick={() => downloadCsv(people)}
+                onClick={() => downloadCsv(people, retreatName)}
                 disabled={people.length === 0}
               />
             </div>
@@ -275,11 +292,12 @@ export default function Home() {
             onClear={handleClear}
             onResetAll={handleResetAll}
             onDelete={handleDeletePerson}
-            onExport={downloadPersonCsv}
+            onExport={(p) => downloadPersonCsv(p, retreatName)}
             onRename={handleRenamePerson}
             onEditTime={handleEditTime}
             requestedPhase={requestedPhase}
             onRequestedPhaseConsumed={() => setRequestedPhase(null)}
+            retreatName={retreatName}
           />
         )}
 
@@ -338,13 +356,16 @@ export default function Home() {
               </span>
             </div>
 
-            <p className="font-display text-lg font-semibold text-ink">Time to Refuge</p>
+            <div className="flex flex-col items-center">
+              <p className="font-display text-lg font-semibold text-ink">Time to Refuge</p>
+              <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
+            </div>
 
             <div className="flex items-center gap-1">
               <IconButton
                 icon={Download}
                 label="Export everyone as CSV"
-                onClick={() => downloadCsv(people)}
+                onClick={() => downloadCsv(people, retreatName)}
                 disabled={people.length === 0}
               />
               <IconButton icon={Users} label="People" onClick={() => setPeopleOpen(true)} />
@@ -372,11 +393,12 @@ export default function Home() {
               onCapture={handleCapture}
               onClear={handleClear}
               onResetAll={handleResetAll}
-              onExport={downloadPersonCsv}
+              onExport={(p) => downloadPersonCsv(p, retreatName)}
               onRename={handleRenamePerson}
               onEditTime={handleEditTime}
               requestedPhase={requestedPhase}
               onRequestedPhaseConsumed={() => setRequestedPhase(null)}
+              retreatName={retreatName}
             />
           )}
 
@@ -392,6 +414,7 @@ export default function Home() {
               onEditTime={handleEditTime}
               onClearTime={handleClear}
               onClose={() => setPeopleOpen(false)}
+              retreatName={retreatName}
             />
           )}
 

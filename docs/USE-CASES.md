@@ -95,9 +95,12 @@ actors note above.
 
 **Main flow:**
 1. Add every aspirant by name (People list / rail — **UC-5**).
-2. Check the device's own clock against its GPS location
+2. Name the retreat itself (tap "Add retreat name" in the header) — one name
+   for the whole session, carried into every export and shown on the
+   focused card, not something set per person.
+3. Check the device's own clock against its GPS location
    (`LocationCheck` — **UC-6**).
-3. Double check names for spelling, since they go straight into any
+4. Double check names for spelling, since they go straight into any
    exported record — and get the add order right the first time; see the
    reordering gap in **UC-4**.
 
@@ -229,7 +232,10 @@ ceremony is over.
 **Main flow:** per-person or all-at-once CSV (machine-readable, ISO 8601
 timestamps — unambiguous regardless of the reader's own time zone); a
 per-person PNG card (rendered client-side onto a canvas) shareable through
-the OS share sheet where available, downloaded otherwise.
+the OS share sheet where available, downloaded otherwise. Both carry the
+retreat name if one was set in **UC-2** — a `Retreat` column in the CSV, a
+second header line on the PNG — so a record doesn't need its filename or an
+accompanying message to say which retreat it's from.
 
 **Status: Supported** for what it does. **Gap:** there is no single
 formatted "certificate" output — the PNG is the app's own card design

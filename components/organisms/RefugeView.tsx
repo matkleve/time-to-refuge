@@ -21,6 +21,7 @@ interface RefugeViewProps {
   /** A field picked in the overview, to arm once this view takes over. */
   requestedPhase?: Phase | null;
   onRequestedPhaseConsumed?: () => void;
+  retreatName?: string;
 }
 
 /**
@@ -61,6 +62,7 @@ export function RefugeView({
   onEditTime,
   requestedPhase = null,
   onRequestedPhaseConsumed,
+  retreatName = "",
 }: RefugeViewProps) {
   const touchStartX = useRef<number | null>(null);
 
@@ -128,6 +130,7 @@ export function RefugeView({
                     onExport={() => onExport(p)}
                     onRename={(name) => onRename(p.id, name)}
                     onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                    retreatName={retreatName}
                   />
                 </div>
               );

@@ -54,7 +54,7 @@ async function readyFonts(): Promise<{ display: string; mono: string; sans: stri
 }
 
 /** Draws the person's card as a shareable PNG. */
-export async function renderPersonCardPng(person: Person): Promise<Blob | null> {
+export async function renderPersonCardPng(person: Person, retreatName = ""): Promise<Blob | null> {
   const fonts = await readyFonts();
 
   const canvas = document.createElement("canvas");
@@ -67,13 +67,19 @@ export async function renderPersonCardPng(person: Person): Promise<Blob | null> 
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Header
+  // Header — the brand line, and below it which retreat this actually was.
   ctx.textAlign = "center";
   ctx.fillStyle = MUTED;
   ctx.font = `500 30px ${fonts.sans}`;
   ctx.letterSpacing = "6px";
-  ctx.fillText("TIME TO REFUGE", WIDTH / 2, 130);
+  ctx.fillText("TIME TO REFUGE", WIDTH / 2, 110);
   ctx.letterSpacing = "0px";
+
+  if (retreatName.trim()) {
+    ctx.fillStyle = INK;
+    ctx.font = `500 34px ${fonts.display}`;
+    ctx.fillText(retreatName.trim(), WIDTH / 2, 160);
+  }
 
   // Card
   const cardX = 80;

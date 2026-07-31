@@ -3,6 +3,7 @@ import { Person, LogEntry, QuickLogEntry } from "./types";
 const STORAGE_KEY = "time-to-refuge:people";
 const LOG_KEY = "time-to-refuge:log";
 const QUICKLOG_KEY = "time-to-refuge:quicklog";
+const RETREAT_NAME_KEY = "time-to-refuge:retreat-name";
 
 export function loadPeople(): Person[] {
   if (typeof window === "undefined") return [];
@@ -56,4 +57,19 @@ export function loadQuickLog(): QuickLogEntry[] {
 export function saveQuickLog(log: QuickLogEntry[]): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(QUICKLOG_KEY, JSON.stringify(log));
+}
+
+/** One name for the whole session — which retreat this is — not per-person. */
+export function loadRetreatName(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.localStorage.getItem(RETREAT_NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function saveRetreatName(name: string): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(RETREAT_NAME_KEY, name);
 }

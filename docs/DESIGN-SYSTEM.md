@@ -413,6 +413,30 @@ entirely, not political quirks.
   device *can* say about its own clock, framed honestly as unverified (or
   wrong) rather than hidden.
 
+## 6c. The retreat name
+
+One name for the whole session, not a field on each person — set once
+(`RetreatNameField`, in the header of both shells) and carried everywhere a
+person's record leaves the app: printed on the shared PNG card, and added as
+its own `Retreat` column — repeated per row, not a leading metadata line —
+in every CSV export. Deliberately **not** shown on overview cards (People
+sheet, the desktop rail): the same name on every row in an already-dense
+list is pure repetition, not information. It does show on the focused card,
+right above the person's own name, in the same small tracked-caption style
+the shared PNG already used for its own "TIME TO REFUGE" brand line — so
+the on-screen card and the exported one read as the same object.
+
+Same tap-to-edit shape as a person's name in `PersonCard` (a button that
+becomes an autofocused input, committing on blur or Enter, cancelling on
+Escape) — one interaction pattern for "this text is a name, tap to change
+it," not a second one invented for a second kind of name. Empty is a real,
+common state — most ceremonies start before anyone's typed a retreat name
+in — so the idle button reads "Add retreat name" rather than sitting blank
+or showing a placeholder that looks like unset data. Nothing downstream
+needs to specially handle "no retreat name": the CSV column is omitted
+outright when there's nothing to put in it (not an empty column on every
+row), and the PNG's second header line simply doesn't render.
+
 ## 7. Accessibility floor
 
 - `npm run lint` (jsx-a11y) passes with zero errors.

@@ -29,6 +29,8 @@ interface PersonCardProps {
   /** When provided, the name can be edited (pencil, or tapping the name when focused). */
   onRename?: (name: string) => void;
   isCurrent?: boolean;
+  /** Stamped into the shared PNG; shown as a caption on the focused card only. */
+  retreatName?: string;
 }
 
 export function PersonCard({
@@ -44,6 +46,7 @@ export function PersonCard({
   onSelect,
   onRename,
   isCurrent = false,
+  retreatName = "",
 }: PersonCardProps) {
   const [shareNote, setShareNote] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
@@ -51,6 +54,7 @@ export function PersonCard({
 
   const overview = variant === "overview";
   const anyFilled = PHASES.some((phase) => person[phase] !== null);
+  const showRetreatCaption = !overview && retreatName.trim().length > 0;
 
   // Two-click: the first press turns the values red, the second carries it out.
   const resetAll = useArmedAction(() => onResetAll?.());
@@ -77,7 +81,7 @@ export function PersonCard({
   }
 
   async function handleShare() {
-    const result = await sharePerson(person);
+    const result = await sharePerson(person, retreatName);
     if (result === "downloaded" || result === "unavailable") {
       setShareNote(result === "downloaded" ? "Card image saved" : "Sharing unavailable");
       setTimeout(() => setShareNote(null), 1800);
@@ -85,7 +89,7 @@ export function PersonCard({
   }
 
   const nameRow = (
-    <div className="flex items-center gap-1 px-3 pt-3">
+    <div className={cn("flex items-center gap-1 px-3", showRetreatCaption ? "pt-1" : "pt-3")}>
       {editing ? (
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
@@ -206,6 +210,11 @@ export function PersonCard({
 
   const body = (
     <>
+      {showRetreatCaption && (
+        <p className="truncate px-4 pt-3 text-xs tracking-wide text-muted uppercase">
+          {retreatName}
+        </p>
+      )}
       {nameRow}
 
       {shareNote && (

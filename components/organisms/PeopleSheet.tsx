@@ -17,6 +17,7 @@ interface PeopleSheetProps {
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
   onClose: () => void;
+  retreatName?: string;
 }
 
 export function PeopleSheet({
@@ -30,6 +31,7 @@ export function PeopleSheet({
   onDelete,
   onRename,
   onClose,
+  retreatName = "",
 }: PeopleSheetProps) {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState("");
@@ -72,8 +74,9 @@ export function PeopleSheet({
                 onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
                 onClear={(phase) => onClearTime(p.id, phase)}
                 onDelete={() => onDelete(p.id)}
-                onExport={() => downloadPersonCsv(p)}
+                onExport={() => downloadPersonCsv(p, retreatName)}
                 onRename={(name) => onRename(p.id, name)}
+                retreatName={retreatName}
               />
             </li>
           ))}
