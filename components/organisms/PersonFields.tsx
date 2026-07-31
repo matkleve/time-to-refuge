@@ -195,7 +195,7 @@ function FieldRow({
           aria-label={`${PHASE_LABELS[phase]} time`}
           aria-invalid={invalid}
           className={cn(
-            "ml-auto w-40 rounded-xl border bg-white px-2 py-1 text-right font-mono tabular-nums",
+            "ml-auto h-9 w-40 rounded-xl border bg-white px-2 text-right font-mono tabular-nums",
             overview ? "text-sm" : "text-lg",
             invalid ? "border-danger-500 text-danger-600" : "border-flagblue-500 text-ink",
           )}

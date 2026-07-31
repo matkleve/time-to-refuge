@@ -279,7 +279,7 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 max-w-36 items-center gap-1.5 rounded-full border pr-3 pl-2.5 shadow-sm",
+          "no-select flex h-9 min-w-9 max-w-36 items-center gap-1.5 rounded-full border pr-3 pl-2.5 shadow-sm",
           "transition-[color,background-color,border-color,transform,filter] duration-150 ease-out",
           "active:scale-95 hover:brightness-[0.97]",
           /* Opaque light fill — glass was too see-through on the record button. */

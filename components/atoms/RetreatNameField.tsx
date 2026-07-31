@@ -41,7 +41,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
         placeholder="Retreat name"
         aria-label="Retreat name"
         className={cn(
-          "min-w-0 rounded-lg border border-flagblue-500 bg-white px-1.5 text-center text-ink focus:outline-none",
+          "min-h-9 min-w-0 rounded-lg border border-flagblue-500 bg-white px-2 text-center text-ink focus:outline-none",
           className,
         )}
       />
@@ -57,7 +57,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       }}
       aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
       className={cn(
-        "inline-flex max-w-full items-center gap-1 truncate rounded-lg px-1",
+        "inline-flex min-h-9 max-w-full items-center gap-1.5 truncate rounded-lg px-2",
         "transition-[colors,transform,background-color] duration-150 ease-out",
         "hover:bg-ink/[0.05] active:scale-[0.98]",
         value ? "text-muted" : "text-subtle",
@@ -65,7 +65,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       )}
     >
       <span className="truncate">{value || "Add retreat name"}</span>
-      {value ? <Pencil className="size-3 shrink-0 opacity-70" aria-hidden /> : null}
+      {value ? <Pencil className="size-3.5 shrink-0 opacity-70" aria-hidden /> : null}
     </button>
   );
 }

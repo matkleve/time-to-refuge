@@ -52,7 +52,10 @@ or `Trash2` to confirm), used by all four. Text labels survive only as
 | Nav arrows | 40 × 40 | acceptable |
 
 **Decision.** Two sizes only: `sm` = 36px for dense clusters inside a card
-header, `md` = 44px for standalone controls. Nothing below 36.
+header, `md` = 44px for standalone controls. Nothing below 36. Text fields
+and custom buttons that aren’t `IconButton` also take `min-h-9` (retreat
+name, timezone, inline editors) so the floor holds outside the icon
+primitive.
 
 ## 4. Keyboard focus was invisible
 

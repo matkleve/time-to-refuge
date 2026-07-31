@@ -198,6 +198,11 @@ pressure (**UC-1**).
 | `sm` | 2.25rem (36px) | Dense clusters inside a card header, list-row actions |
 | `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
 
+**Nothing smaller than `sm`.** That floor is this app’s WCAG touch target
+(above the 2.5.8 minimum of 24px). Text fields and custom buttons that are
+not `IconButton` still use `min-h-9` / `h-9` so height never drops below
+36px — retreat name, timezone select, inline editors, Check zone.
+
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
 destructive actions, export/share on a person card, and add-flow
 submit/cancel. The header hamburger lists History, People, and Export

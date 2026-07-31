@@ -160,7 +160,7 @@ export function PersonCard({
           }}
           aria-label="Person's name"
           className={cn(
-            "min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 py-1 font-display font-semibold text-ink",
+            "min-h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display font-semibold text-ink",
             overview ? "text-lg" : "text-2xl",
           )}
         />
@@ -171,7 +171,7 @@ export function PersonCard({
               type="button"
               onClick={onSelect}
               aria-label={`Open ${person.name}`}
-              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-[colors,transform,background-color] duration-150 ease-out hover:bg-ink/[0.05] active:scale-[0.99]"
+              className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-xl px-2 text-left transition-[colors,transform,background-color] duration-150 ease-out hover:bg-ink/[0.05] active:scale-[0.99]"
             >
               {isComplete(person) && (
                 <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />
@@ -188,7 +188,7 @@ export function PersonCard({
           ) : (
             <h2
               className={cn(
-                "no-select min-w-0 flex-1 truncate px-1 py-1 font-display text-2xl font-semibold",
+                "no-select flex min-h-9 min-w-0 flex-1 items-center truncate px-2 font-display text-2xl font-semibold",
                 remove.armed ? "text-danger-600" : "text-ink",
               )}
             >
