@@ -48,7 +48,8 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         disabled={!armed}
         className={cn(
           "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6",
-          "transition-[box-shadow,background-color,transform,opacity] duration-200 ease-out active:scale-[0.98]",
+          "transition-[box-shadow,background-color,transform,opacity,filter] duration-200 ease-out",
+          "active:scale-[0.98] enabled:hover:brightness-[1.04]",
           /* Tinted glass + specular light catch — not a solid fill, not a gradient. */
           armed ? actionClass("primary") : actionClass("primaryIdle"),
           flash && "animate-flash-saffron",

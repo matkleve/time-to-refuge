@@ -171,7 +171,7 @@ export function PersonCard({
               type="button"
               onClick={onSelect}
               aria-label={`Open ${person.name}`}
-              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-1 py-1 text-left transition-[colors,transform,background-color] duration-150 ease-out hover:bg-ink/[0.05] active:scale-[0.99]"
             >
               {isComplete(person) && (
                 <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />

@@ -137,7 +137,7 @@ export function DesktopWorkspace({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-white/50 px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:bg-white/80 hover:text-flagblue-600 active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-white/50 px-4 py-3.5 text-base text-muted transition-[colors,transform,background-color] duration-150 ease-out hover:bg-white/80 hover:text-flagblue-600 active:scale-95"
               >
                 <Plus className="size-4" aria-hidden /> Add person
               </button>

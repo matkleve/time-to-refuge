@@ -292,6 +292,12 @@ for the same reason the type scale re-values Tailwind's steps (§4a):
 | `duration-200` | Colour, opacity, arming a control; menu scale-in |
 | `duration-300` | Travel across the screen — carousel, row-action tray |
 
+**Press feedback.** Every tappable control acknowledges the finger within
+`duration-150` via `active:scale-95` / `active:scale-[0.98]` /
+`active:scale-[0.99]` (larger surfaces scale less). Hover washes or
+`brightness` nudges apply where a pointer can linger. Icon-only chrome goes
+through `IconButton` so this stays consistent.
+
 **Easing.** Default `ease-out`. The person carousel uses
 `cubic-bezier(0.32, 0.72, 0, 1)` so the card settles like a native sheet.
 

@@ -62,8 +62,9 @@ export function TimezoneSelect({
         onChange={(e) => onChange(e.target.value)}
         aria-label="Time zone"
         className={cn(
-          "min-w-0 appearance-none py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200",
-          "rounded-xl",
+          "min-w-0 appearance-none py-1.5 pr-7 pl-8 text-sm text-ink",
+          "transition-[colors,background-color,transform] duration-150 ease-out",
+          "rounded-xl hover:bg-white/70 active:scale-[0.99]",
           glassClass("card", { rim: true }),
           compact ? "w-full max-w-full truncate" : "max-w-[60vw]",
         )}

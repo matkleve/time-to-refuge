@@ -327,7 +327,9 @@ export default function Home() {
         type="button"
         onClick={() => setView("people")}
         className={cn(
-          "rounded-xl px-5 py-2.5 text-base font-medium text-white transition-[box-shadow,background-color,transform] duration-200 active:scale-95",
+          "rounded-xl px-5 py-2.5 text-base font-medium text-white",
+          "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
+          "active:scale-95 hover:brightness-[1.06]",
           actionClass("primary"),
         )}
       >

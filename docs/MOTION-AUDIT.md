@@ -34,7 +34,20 @@ then move the eye, then decorate.
 | **Menus** | Fade-up only | Add a light `scale-in` from the trigger (0.96 → 1) so the panel feels attached to the button. |
 | **`prefers-reduced-motion`** | Ignored | Global reduce: animations/transitions collapse to near-instant. Hierarchy stays; motion does not. |
 
-## P1 — Polish (next if still stiff)
+## P0b — Press / hover on interactive surfaces (follow-up)
+
+Interactive controls that looked tappable but didn’t acknowledge the finger:
+
+| Control | Fix |
+| --- | --- |
+| Empty / filled field stamps, Quick Log stamps | `active:scale-[0.99]` + transform in transition |
+| GlassMenu rows | `active:scale-[0.98]` |
+| Record / Quick Log clocks | `hover:brightness` + existing press scale |
+| Empty-state Add CTA, People Add, timezone select | hover wash + press |
+| Overview name, retreat name, Check zone | press (+ hover on all Check-zone states) |
+
+Rule added to design system §5: **every tappable control has press feedback
+(`active:scale-*`) within 150ms**; hover where a pointer exists.
 
 | Gap | Note |
 | --- | --- |

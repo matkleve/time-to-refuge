@@ -57,7 +57,9 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       }}
       aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
       className={cn(
-        "inline-flex max-w-full items-center gap-1 truncate rounded-lg px-1 transition-colors duration-200 hover:bg-ink/[0.05]",
+        "inline-flex max-w-full items-center gap-1 truncate rounded-lg px-1",
+        "transition-[colors,transform,background-color] duration-150 ease-out",
+        "hover:bg-ink/[0.05] active:scale-[0.98]",
         value ? "text-muted" : "text-subtle",
         className,
       )}

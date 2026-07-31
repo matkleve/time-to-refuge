@@ -86,8 +86,8 @@ function LogRow({
         }
         className={cn(
           "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-          "transition-[box-shadow,background-color] duration-300 ease-out",
-          "hover:bg-ink/[0.03]",
+          "transition-[box-shadow,background-color,transform] duration-200 ease-out",
+          "hover:bg-ink/[0.03] active:scale-[0.99]",
           glassRowClass(),
         )}
       >

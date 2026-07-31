@@ -261,7 +261,9 @@ function FieldRow({
             : `Select ${PHASE_LABELS[phase]} to record`
         }
         className={cn(
-          "flex w-full items-center justify-between px-4 text-left transition-colors duration-200 hover:bg-ink/[0.03]",
+          "flex w-full items-center justify-between px-4 text-left",
+          "transition-[colors,transform,background-color] duration-150 ease-out",
+          "hover:bg-ink/[0.03] active:scale-[0.99]",
           rowHeight,
         )}
       >
@@ -349,8 +351,8 @@ function FieldRow({
           aria-expanded={showActions}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-            "transition-[box-shadow,background-color,font-size] duration-300 ease-out",
-            "hover:bg-ink/[0.03]",
+            "transition-[box-shadow,background-color,font-size,transform] duration-200 ease-out",
+            "hover:bg-ink/[0.03] active:scale-[0.99]",
             rowHeight,
             glassRowClass(),
             filled && "shadow-sm",

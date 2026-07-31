@@ -78,8 +78,9 @@ function MenuRows({
             onClick={() => onPick(item)}
             className={cn(
               "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium",
-              "transition-colors duration-200 ease-out",
+              "transition-[colors,transform,background-color] duration-150 ease-out",
               "disabled:pointer-events-none disabled:opacity-35",
+              "active:scale-[0.98]",
               danger ? "text-danger-700" : "text-ink",
               /* iOS: soft wash, not a solid fill */
               item.selected

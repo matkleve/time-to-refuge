@@ -120,7 +120,9 @@ export function PeopleSheet({
                   type="button"
                   onClick={() => setAdding(true)}
                   className={cn(
-                    "flex w-full items-center justify-center gap-2 rounded-3xl px-4 py-3.5 text-base text-muted transition-colors duration-200 hover:text-flagblue-600 active:scale-95",
+                    "flex w-full items-center justify-center gap-2 rounded-3xl px-4 py-3.5 text-base text-muted",
+                    "transition-[colors,transform,background-color] duration-150 ease-out",
+                    "hover:bg-white/55 hover:text-flagblue-600 active:scale-95",
                     glassClass("card", { rim: true }),
                   )}
                 >
