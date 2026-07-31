@@ -163,6 +163,9 @@ anything already recorded for that person.
 **Actor:** Timekeeper. Add, rename, or remove aspirants; add is available
 before and during the ceremony, rename and remove any time.
 
+**Main flow:** open People from the hamburger Pages menu (mobile sheet) or
+use the persistent desktop rail.
+
 **Status: Supported**, with two edge cases neither prevented nor flagged:
 - **No duplicate-name check.** Two "David"s are legal. Both export as
   `refuge-david.csv` / `refuge-david.png` — filename collision left to the
