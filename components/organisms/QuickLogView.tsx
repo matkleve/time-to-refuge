@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { Surface } from "@/components/atoms/Surface";
-import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
 
@@ -138,16 +137,7 @@ function LogRow({
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
        Stops the page-wide tap-to-log layer; the row's real controls are buttons. */
     <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
-      <SwipeToAction
-        onSwipe={() => {
-          setShowActions(true);
-          remove.trigger();
-        }}
-        label="Delete"
-        className="overflow-hidden rounded-2xl"
-      >
-        {body}
-      </SwipeToAction>
+      {body}
     </div>
   );
 }

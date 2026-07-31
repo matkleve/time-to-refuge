@@ -88,6 +88,7 @@ Spacing is now driven by the scale, and the card gets more internal room.
   mono for times is unusual, but each earns its place: the record is
   ceremonial, the interface is not, and the clock needs tabular figures. See
   the design system for the reasoning.
-- **Swipe gestures** stay, and every one keeps a visible pointer equivalent.
+- **Carousel swipe** (mobile Refuge) stays for moving between people; row and
+  card actions open on tap only, with the same controls for pointer and touch.
 - **The tap-anywhere Quick Log layer** stays as a pointer convenience, with the
   real focusable button inside it.

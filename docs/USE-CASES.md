@@ -121,7 +121,7 @@ caught late, or a preceptor who restarted a phase.
   fresh "recorded" log entry; it deliberately does *not* re-capture `now()`,
   because the point of editing is that `now()` is exactly wrong.
 - **Shouldn't have happened at all** — reset the field (two-tap armed
-  action, or swipe), clearing it back to empty so it can be captured again
+  action on the revealed reset control), clearing it back to empty so it can be captured again
   when the real moment comes.
 - **Undo** — a stack, most-recent-first, covering captures and resets from
   the current session. Steps back exactly one action at a time; there's no

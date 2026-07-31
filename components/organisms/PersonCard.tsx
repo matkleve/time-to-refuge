@@ -8,13 +8,12 @@ import { cn } from "@/lib/utils";
 import { GlassMenu, type GlassMenuItem } from "@/components/atoms/GlassMenu";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
-import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { PersonFields } from "./PersonFields";
 
 interface PersonCardProps {
   person: Person;
-  /** "focused" is the big swipeable card; "overview" is the compact one in the people list. */
+  /** "focused" is the big card; "overview" is the compact one in the people list. */
   variant: "focused" | "overview";
   target?: Phase | null;
   onSelectPhase?: (phase: Phase) => void;
@@ -22,7 +21,7 @@ interface PersonCardProps {
   /** Correct an already-recorded time. */
   onEditTime?: (phase: Phase, at: number) => void;
   onResetAll?: () => void;
-  /** When provided, the card can be deleted (trash icon + swipe left). */
+  /** When provided, the card can be deleted (⋯ menu). */
   onDelete?: () => void;
   /** Downloads just this person's times as CSV. */
   onExport?: () => void;
@@ -37,8 +36,8 @@ interface PersonCardProps {
 
 /**
  * Both focused and overview cards are cloudy glass (lib/surfaces.ts via
- * <Surface>). Overview can be translucent because SwipeToAction keeps the
- * delete panel at opacity 0 until the drag starts. See design system §3 / §3a.
+ * <Surface>). Destructive actions live in the ⋯ menu — tap to open, no
+ * swipe. See design system §3 / §5a / §6.
  */
 export function PersonCard({
   person,
@@ -255,23 +254,8 @@ export function PersonCard({
   );
 
   // ── Overview: glass (same recipe as focused). ────────────────────────────
-  // SwipeToAction keeps the delete panel at opacity 0 until the drag starts,
-  // so a translucent face no longer leaks red at rest.
   if (overview) {
     const material = isCurrent ? "glass-card-current" : "glass-card";
-    if (onDelete) {
-      return (
-        <SwipeToAction
-          onSwipe={remove.trigger}
-          label="Delete"
-          className="overflow-hidden rounded-3xl"
-        >
-          <Surface material={material} rim className="overflow-hidden rounded-3xl">
-            {body}
-          </Surface>
-        </SwipeToAction>
-      );
-    }
     return (
       <Surface material={material} rim className="overflow-hidden rounded-3xl">
         {body}

@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
-import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
 interface PersonFieldsProps {
   person: Person;
@@ -371,19 +370,7 @@ function FieldRow({
     );
   }
 
-  // Swiping a filled row arms the same two-click reset and opens its actions.
-  return (
-    <SwipeToAction
-      onSwipe={() => {
-        setShowActions(true);
-        armedReset.trigger();
-      }}
-      label="Reset"
-      className="overflow-hidden rounded-2xl"
-    >
-      <div className="bg-inherit">{body}</div>
-    </SwipeToAction>
-  );
+  return <div className="overflow-hidden rounded-2xl">{body}</div>;
 }
 
 export function PersonFields({

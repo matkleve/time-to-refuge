@@ -112,8 +112,8 @@ Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
 on the glass record button). Full-screen People and History sheets reuse
 [`lib/backdrop.ts`](../lib/backdrop.ts) under a glass panel so the photo
 reads through without ghosting the live Refuge card behind them. Overview
-person cards are glass too — `SwipeToAction` keeps the delete panel at
-opacity 0 until the drag starts, so red does not leak at rest.
+person cards are glass too. Row and card destructives open on tap (⋯ menu
+or field-row reveal), not by swipe — so nothing red sits under the glass.
 
 - **Field rows share the card's material.** Both focused and overview rows use
   `glassRowClass()` so the card does not read as a solid block.
@@ -346,19 +346,20 @@ fuse you can indefinitely re-extend by staying nearby isn't a safety measure.
 
 ## 6. Gestures
 
-`SwipeToAction` wraps anything swipeable and always stops propagation, so a row
-swipe never also drives the person carousel.
+**Person carousel (mobile Refuge only).** Swipe the focused card left or
+right — or use prev/next — to move between people. That is the only swipe
+gesture in the product. Row and card actions never use swipe; they open on
+tap so pointer and touch share one path.
 
-| Surface | Swipe left |
+| Surface | How actions open |
 | --- | --- |
-| Field row (either card) | Arm reset on that time |
-| Person card (overview) | Delete that person |
-| Quick Log entry | Delete that entry |
+| Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
+| Person card (overview / focused) | ⋯ menu → Reset all / Export / Share / Delete |
+| Quick Log entry | Tap the row → reveal Copy / Delete |
 
-**Every gesture has a visible pointer equivalent.** Swipe alone is unreachable
-with a mouse, and undiscoverable without a hint. A swipe arms the same
-two-click action rather than performing it, so the gesture can't destroy
-anything on its own either.
+Destructive controls still use the two-click armed pattern (§4): the first
+tap arms (turns red), the second confirms. Nothing destroys on a single
+gesture.
 
 ## 6a. Tapping a field
 
