@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { AlertTriangle, Check, Clock, Loader2 } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
+import { glassChipClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -279,12 +280,17 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 max-w-36 items-center gap-1 rounded-full border pr-3 pl-2 shadow-sm transition-colors duration-200 active:scale-95",
+          "no-select flex h-9 max-w-36 items-center gap-1.5 rounded-full pr-3 pl-2.5",
+          "transition-[color,box-shadow,transform] duration-200 ease-out active:scale-95",
+          /* Same cloudy chip recipe as row-reveal actions — not a solid white/saffron pill. */
+          glassChipClass(),
           trouble
-            ? "border-danger-500 bg-danger-50 text-danger-600 hover:bg-danger-50/70"
+            ? "text-danger-700 ring-2 ring-inset ring-danger-500"
             : softUnavailable
-              ? "border-saffron-500 bg-saffron-50 text-saffron-800 hover:bg-saffron-50/70"
-              : "border-saffron-500 bg-white text-saffron-700 hover:bg-saffron-50",
+              ? "text-saffron-800"
+              : status === "ok" && info?.matchesLocation
+                ? "text-saffron-800"
+                : "text-muted hover:text-ink",
         )}
       >
         {status === "checking" ? (
