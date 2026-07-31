@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Check, Download, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react";
 import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
-import { filledCardClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -36,12 +35,9 @@ interface PersonCardProps {
 }
 
 /**
- * The focused card is cloudy glass; the overview card is filled. Materials
- * come from lib/surfaces.ts via <Surface> — do not hand-roll glass classes.
- *
- * Why the focused one can be glass: it floats over the backdrop photo.
- * Why the overview one cannot: swipe-to-delete needs an opaque face so the
- * red panel stays hidden until swiped. See design system §3 / §3a.
+ * Both focused and overview cards are cloudy glass (lib/surfaces.ts via
+ * <Surface>). Overview can be translucent because SwipeToAction keeps the
+ * delete panel at opacity 0 until the drag starts. See design system §3 / §3a.
  */
 export function PersonCard({
   person,
@@ -248,40 +244,40 @@ export function PersonCard({
     </>
   );
 
-  // ── Overview: filled, opaque. ────────────────────────────────────────────
-  // Stays filled: a whole-card swipe reveals a delete panel that must not
-  // ghost through a translucent surface (design system §3).
+  // ── Overview: glass (same recipe as focused). ────────────────────────────
+  // SwipeToAction keeps the delete panel at opacity 0 until the drag starts,
+  // so a translucent face no longer leaks red at rest.
   if (overview) {
-    const fill = filledCardClass(isCurrent);
+    const material = isCurrent ? "glass-card-current" : "glass-card";
     if (onDelete) {
       return (
         <SwipeToAction
           onSwipe={remove.trigger}
           label="Delete"
-          className={cn("overflow-hidden rounded-3xl", fill)}
+          className="overflow-hidden rounded-3xl"
         >
-          <div className={fill}>{body}</div>
+          <Surface material={material} rim className="overflow-hidden rounded-3xl">
+            {body}
+          </Surface>
         </SwipeToAction>
       );
     }
     return (
-      <Surface
-        material={isCurrent ? "filled-card-current" : "filled-card"}
-        className="overflow-hidden rounded-3xl"
-      >
+      <Surface material={material} rim className="overflow-hidden rounded-3xl">
         {body}
       </Surface>
     );
   }
 
-  // ── Focused: cloudy glass over the backdrop photo. ───────────────────────
+  // ── Focused: glass over the backdrop photo. ──────────────────────────────
   // Material lives in lib/surfaces.ts — shell AND field rows (PersonFields)
   // must both be translucent or the card still reads as a solid block.
   return (
     <Surface
       material={isCurrent ? "glass-card-current" : "glass-card"}
       rim
-      className="overflow-hidden rounded-3xl"    >
+      className="overflow-hidden rounded-3xl"
+    >
       {body}
     </Surface>
   );

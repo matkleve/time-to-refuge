@@ -7,7 +7,7 @@ import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
-import { filledRowClass, glassRowClass } from "@/lib/surfaces";
+import { glassRowClass } from "@/lib/surfaces";
 import { IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
@@ -145,14 +145,14 @@ function FieldRow({
   const rowHeight = overview ? "min-h-11" : "min-h-13";
 
   /*
-   * Row material follows the card's material (lib/surfaces.ts). Focused rows
-   * are translucent — they cover most of the card, so a solid fill here makes
-   * the whole card read opaque no matter how glassy the shell is. Overview
-   * rows stay filled: that card is opaque with a delete panel behind it.
+   * Row material follows the card (lib/surfaces.ts). Both focused and overview
+   * cards are glass now — rows stay translucent so the card doesn't read as a
+   * solid block. Swipe-delete stays safe because SwipeToAction keeps the red
+   * panel at opacity 0 until the drag starts.
    */
   const rowClassName = cn(
     "no-select transition-shadow duration-200",
-    overview ? filledRowClass() : glassRowClass(),
+    glassRowClass(),
     filled && "shadow-sm",
     isTarget && "ring-2 ring-flagblue-500",
     reset.armed && "ring-2 ring-danger-500",

@@ -100,20 +100,18 @@ Never hand-roll `bg-white/NN backdrop-blur-…` in a component.
 
 | Material | When | API |
 | --- | --- | --- |
-| **Cloudy glass** | Surface sits over the backdrop photo | `material="glass-panel"` / `glass-card` / `glass-card-current` |
-| **Filled** | Surface sits over live UI, or must hide a swipe panel | `filled-sheet`, `filled-card`, `filled-card-current` |
+| **Cloudy glass** | Surface sits over the backdrop photo, or a person card in the list | `material="glass-panel"` / `glass-card` / `glass-card-current` |
+| **Filled** | Surface sits over live UI (full sheets) | `filled-sheet` |
 | **Action glass** | Record / Quick Log over the photo | `actionClass("primary" \| "accent" \| "primaryIdle")` — tinted glass + specular, **no gradients** |
 
 Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
-on the solid record button). Sheets that cover the live Refuge view stay
+on the glass record button). Sheets that cover the live Refuge view stay
 filled so the card and button do not ghost through (**UC-3**, **UC-5**,
-**UC-8**). Overview cards stay filled because a swipe reveals a delete panel
-that must stay hidden until swiped.
+**UC-8**). Overview person cards are glass too — `SwipeToAction` keeps the
+delete panel at opacity 0 until the drag starts, so red does not leak at rest.
 
-- **Field rows share the card's material.** Focused rows use `glassRowClass()`
-  (translucent, no blur of their own). Overview rows use `filledRowClass()`.
-  Changing only the shell leaves the card looking solid — the rows cover most
-  of its area.
+- **Field rows share the card's material.** Both focused and overview rows use
+  `glassRowClass()` so the card does not read as a solid block.
 - **A row is a fixed height** — 3.25rem focused, 2.75rem in the overview — in
   every state: idle, actions revealed, armed, editing. Revealing actions must
   never resize the row or nudge the ones below.
@@ -136,7 +134,7 @@ is supporting, not the effect.
 | Surface | Opacity | Notes |
 | --- | --- | --- |
 | `panel` | `/62` | Headers, popovers, empty notes |
-| `card` | `/50` | Focused person-card shell |
+| `card` | `/50` | Person-card shell (focused + overview list) |
 | `cardCurrent` | `/58` | Saffron mist when marked current |
 | `cardRow` | `/50` | Field row stacked on the card |
 | `actionPrimary` / `actionAccent` | `/42` | Record / Quick Log — tinted glass |
@@ -152,9 +150,9 @@ asserts each fill class's `/NN` matches its `alpha`.
 Plain Tailwind utilities only — never a custom `@utility` that writes both
 `backdrop-filter` and `-webkit-backdrop-filter`.
 
-**Glass only over the backdrop photo.** `HistoryPanel` and `PeopleSheet`
-stay filled. Overview cards stay filled (swipe-delete panel). The focused
-card and the record / Quick Log buttons are glass.
+**Glass over the backdrop photo — and person cards in the list.**
+`HistoryPanel` and `PeopleSheet` stay filled (they cover live UI). Overview
+person cards, the focused card, and the record / Quick Log buttons are glass.
 
 ## 3b. Desktop, not mobile-stretched
 
