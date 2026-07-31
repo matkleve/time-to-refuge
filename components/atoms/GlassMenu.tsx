@@ -21,9 +21,18 @@ export type GlassMenuItem = {
   keepOpen?: boolean;
 };
 
+export type GlassMenuSection = {
+  /** Small tracked caption above the group (e.g. Pages, Actions). */
+  title: string;
+  items: GlassMenuItem[];
+};
+
 interface GlassMenuProps {
   label: string;
-  items: GlassMenuItem[];
+  /** Flat list — person-card ⋯ and other single-group menus. */
+  items?: GlassMenuItem[];
+  /** Titled groups with a hairline between them (app hamburger). */
+  sections?: GlassMenuSection[];
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
   size?: "sm" | "md";
@@ -35,6 +44,45 @@ interface GlassMenuProps {
 
 type MenuBox = { top: number; left: number; minWidth: number };
 
+function MenuRows({
+  items,
+  onPick,
+}: {
+  items: GlassMenuItem[];
+  onPick: (item: GlassMenuItem) => void;
+}) {
+  return (
+    <>
+      {items.map((item) => {
+        const Icon = item.icon;
+        const danger = item.tone === "danger";
+        return (
+          <button
+            key={item.id}
+            type="button"
+            role="menuitem"
+            disabled={item.disabled}
+            onClick={() => onPick(item)}
+            className={cn(
+              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium",
+              "transition-colors duration-200 ease-out",
+              "disabled:pointer-events-none disabled:opacity-35",
+              danger ? "text-danger-700" : "text-ink",
+              /* iOS: soft wash, not a solid fill */
+              item.selected
+                ? "bg-white/55"
+                : "hover:bg-white/40 focus-visible:bg-white/40",
+            )}
+          >
+            <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+            <span className="min-w-0 flex-1 truncate">{item.label}</span>
+          </button>
+        );
+      })}
+    </>
+  );
+}
+
 /**
  * iOS-style cloudy menu: always icon + label; hover / selected is a light
  * glass wash — never a solid filled pill. Portaled so card overflow can't
@@ -43,6 +91,7 @@ type MenuBox = { top: number; left: number; minWidth: number };
 export function GlassMenu({
   label,
   items,
+  sections,
   triggerIcon: TriggerIcon = MoreVertical,
   size = "md",
   glassTrigger = false,
@@ -106,6 +155,25 @@ export function GlassMenu({
     };
   }, [open, dismiss]);
 
+  function pick(item: GlassMenuItem) {
+    item.onSelect();
+    if (!item.keepOpen) setOpen(false);
+  }
+
+  const body = sections?.length
+    ? sections.map((section, i) => (
+        <div key={section.title}>
+          {i > 0 && <div className="mx-2 my-1.5 border-t border-line" role="separator" />}
+          <p className="px-3 pb-1 pt-1.5 text-xs font-medium uppercase tracking-wide text-muted">
+            {section.title}
+          </p>
+          <MenuRows items={section.items} onPick={pick} />
+        </div>
+      ))
+    : items
+      ? <MenuRows items={items} onPick={pick} />
+      : null;
+
   const panel =
     open &&
     box &&
@@ -123,35 +191,7 @@ export function GlassMenu({
           aria-label={label}
           className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
         >
-          {items.map((item) => {
-            const Icon = item.icon;
-            const danger = item.tone === "danger";
-            return (
-              <button
-                key={item.id}
-                type="button"
-                role="menuitem"
-                disabled={item.disabled}
-                onClick={() => {
-                  item.onSelect();
-                  if (!item.keepOpen) setOpen(false);
-                }}
-                className={cn(
-                  "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium",
-                  "transition-colors duration-200 ease-out",
-                  "disabled:pointer-events-none disabled:opacity-35",
-                  danger ? "text-danger-700" : "text-ink",
-                  /* iOS: soft wash, not a solid fill */
-                  item.selected
-                    ? "bg-white/55"
-                    : "hover:bg-white/40 focus-visible:bg-white/40",
-                )}
-              >
-                <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
-                <span className="min-w-0 flex-1 truncate">{item.label}</span>
-              </button>
-            );
-          })}
+          {body}
         </Surface>
       </div>,
       document.body,

@@ -200,12 +200,14 @@ pressure (**UC-1**).
 | `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
 
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
-destructive actions, Undo, export/share, History, People, and add-flow
-submit/cancel. Reserve icon-only for Close, Prev/Next, and low-risk utilities
-next to their object (copy, edit). [`IconButton`](../components/atoms/IconButton.tsx)
-is the only control for these — tone and size stay consistent. An `aria-label`
-is required either way; it is not a substitute for a visible label on
-consequential actions.
+destructive actions, export/share on a person card, and add-flow
+submit/cancel. The header hamburger lists History, People, Undo, and Export
+with icon+label inside the menu — those are not separate header chips.
+Reserve icon-only for Close, Prev/Next, the hamburger/⋯ triggers, and
+low-risk utilities next to their object (copy, edit).
+[`IconButton`](../components/atoms/IconButton.tsx) is the only control for
+these — tone and size stay consistent. An `aria-label` is required either
+way; it is not a substitute for a visible label on consequential actions.
 
 The icon vocabulary, all [lucide](https://lucide.dev):
 
@@ -213,14 +215,26 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | --- | --- |
 | `Eye` / `Copy` | Open that person · copy that time |
 | `Pencil` / `RotateCcw` | Edit that time · reset it |
-| `History` / `Undo2` | History panel · undo one step |
+| `History` / `Undo2` | History page · undo one step |
 | `Download` / `Share2` | Export CSV · share the card as an image |
-| `Users` / `Plus` | People overview · add a person |
-| `Menu` / `MoreVertical` | Page menu · person-card actions (⋯) |
+| `Users` / `Contact` / `Plus` | Refuge page · People page · add a person |
+| `Clock` | Quick Log page |
+| `Menu` / `MoreVertical` | App menu (Pages + Actions) · person-card actions (⋯) |
 | `Pencil` / `RotateCcw` / `Trash2` | Rename · reset times · delete |
 | `Check` / `X` | Confirm · cancel or dismiss (label visibly as Add / Cancel in add flows) |
 | `ChevronLeft` / `ChevronRight` | Previous / next person |
 | `Trash2` | Delete (Quick Log entries — never `X`, which means close/cancel) |
+
+**App hamburger** ([`ViewMenu`](../components/atoms/ViewMenu.tsx) via
+[`GlassMenu`](../components/atoms/GlassMenu.tsx) sections): two groups with
+tracked captions and a hairline between them —
+
+| Group | Items |
+| --- | --- |
+| **Pages** | Refuge · Quick Log · History · People (People on mobile only — desktop keeps the persistent rail) |
+| **Actions** | Undo · Export all |
+
+Person-card ⋯ stays a flat menu (no section titles).
 
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive

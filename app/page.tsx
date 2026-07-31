@@ -18,8 +18,6 @@ import {
   saveRetreatName,
 } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
-import { Download, History, Undo2, Users } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { Surface } from "@/components/atoms/Surface";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
@@ -233,42 +231,25 @@ export default function Home() {
           </div>
 
           <div className="ml-auto flex items-center gap-1">
-            {view === "refuge" && (
-              <>
-                <IconButton
-                  icon={History}
-                  label="History"
-                  showLabel
-                  onClick={() => setHistoryOpen(true)}
-                />
-                <span className="relative inline-flex">
-                  <IconButton
-                    icon={Undo2}
-                    label={
-                      undoStack[undoStack.length - 1]
-                        ? `Undo: ${undoStack[undoStack.length - 1].message}`
-                        : "Undo last action"
-                    }
-                    showLabel="Undo"
-                    onClick={handleUndo}
-                    disabled={undoStack.length === 0}
-                  />
-                  {undoStack.length > 0 && (
-                    <span className="pointer-events-none absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-flagblue-600 text-sm font-semibold leading-none text-white tabular-nums">
-                      {undoStack.length}
-                    </span>
-                  )}
-                </span>
-                <IconButton
-                  icon={Download}
-                  label="Export everyone as CSV"
-                  showLabel="Export all"
-                  onClick={() => downloadCsv(people, retreatName)}
-                  disabled={people.length === 0}
-                />
-              </>
-            )}
-            <ViewMenu view={view} onChange={setView} />
+            <ViewMenu
+              view={view}
+              onChange={(next) => {
+                setHistoryOpen(false);
+                setView(next);
+              }}
+              onOpenHistory={() => setHistoryOpen(true)}
+              onUndo={handleUndo}
+              undoDisabled={undoStack.length === 0}
+              undoLabel={
+                undoStack.length === 0
+                  ? "Undo"
+                  : undoStack.length === 1
+                    ? "Undo"
+                    : `Undo (${undoStack.length})`
+              }
+              onExportAll={() => downloadCsv(people, retreatName)}
+              exportDisabled={people.length === 0}
+            />
           </div>
         </Surface>
 
@@ -320,48 +301,34 @@ export default function Home() {
         </div>
 
         <div className="flex min-w-0 items-center gap-0.5">
-          {view === "refuge" && (
-            <>
-              <IconButton
-                icon={History}
-                label="History"
-                size="sm"
-                onClick={() => setHistoryOpen(true)}
-              />
-              <span className="relative inline-flex">
-                <IconButton
-                  icon={Undo2}
-                  label={
-                    undoStack[undoStack.length - 1]
-                      ? `Undo: ${undoStack[undoStack.length - 1].message}`
-                      : "Undo last action"
-                  }
-                  size="sm"
-                  onClick={handleUndo}
-                  disabled={undoStack.length === 0}
-                />
-                {undoStack.length > 0 && (
-                  <span className="pointer-events-none absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-flagblue-600 text-sm font-semibold leading-none text-white tabular-nums">
-                    {undoStack.length}
-                  </span>
-                )}
-              </span>
-              <IconButton
-                icon={Download}
-                label="Export everyone as CSV"
-                size="sm"
-                onClick={() => downloadCsv(people, retreatName)}
-                disabled={people.length === 0}
-              />
-              <IconButton
-                icon={Users}
-                label="People"
-                size="sm"
-                onClick={() => setPeopleOpen(true)}
-              />
-            </>
-          )}
-          <ViewMenu view={view} onChange={setView} size="sm" />
+          <ViewMenu
+            view={view}
+            onChange={(next) => {
+              setPeopleOpen(false);
+              setHistoryOpen(false);
+              setView(next);
+            }}
+            onOpenHistory={() => {
+              setPeopleOpen(false);
+              setHistoryOpen(true);
+            }}
+            onOpenPeople={() => {
+              setHistoryOpen(false);
+              setPeopleOpen(true);
+            }}
+            onUndo={handleUndo}
+            undoDisabled={undoStack.length === 0}
+            undoLabel={
+              undoStack.length === 0
+                ? "Undo"
+                : undoStack.length === 1
+                  ? "Undo"
+                  : `Undo (${undoStack.length})`
+            }
+            onExportAll={() => downloadCsv(people, retreatName)}
+            exportDisabled={people.length === 0}
+            size="sm"
+          />
         </div>
       </Surface>
 

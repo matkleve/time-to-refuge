@@ -215,9 +215,10 @@ between a tap and losing that entry for good.
 **Actor:** Timekeeper (during, to double check) or whoever debriefs
 afterward. **Trigger:** "did that actually get recorded."
 
-**Main flow:** every recorded, reset, and undone action across every
-person, newest first, in one list — a full audit trail of the *session*,
-not just the current state of each person's fields.
+**Main flow:** open History from the hamburger Pages menu. Every recorded,
+reset, and undone action across every person, newest first, in one list — a
+full audit trail of the *session*, not just the current state of each
+person's fields.
 
 **Status: Supported.** History is read-only and session-scoped — there's
 no filter by person or by phase, so for a large roster it's a long flat

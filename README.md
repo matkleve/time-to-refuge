@@ -22,21 +22,24 @@ npm run dev
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run a11y:contrast` | WCAG pairings for every shipped colour / glass surface |
 
-## The two views
+## Views
 
-**Refuge** — one card per person, swipe between them. Tap any of the three
-fields to choose which one the record button fills next; it advances to the
-next empty one after each capture. Reset a single time by tapping or swiping
-its row, or all three from the card header. Undo is a stack, so you can step
-back as far as you need.
+**Refuge** — one card per person, swipe between them on mobile. Tap any of
+the three fields to choose which one the record button fills next; it
+advances to the next empty one after each capture. Tap a recorded time for
+Copy / Edit / Reset; card ⋯ for reset-all, export, share, delete. Undo is a
+stack under the hamburger Actions menu.
 
 **Quick Log** — tap anywhere to stamp the current time. Useful when you are
 recording first and attributing later. The timezone selector re-renders every
 logged time in another zone.
 
+**History** and **People** open from the hamburger Pages menu (People is a
+full-screen sheet on mobile; desktop keeps a persistent people rail).
+
 Each card can be **exported** (CSV of that person) or **shared** (a PNG of the
-card, through the OS share sheet where available). The header exports a CSV of
-everyone at once.
+card, through the OS share sheet where available). **Export all** in the
+hamburger Actions menu downloads a CSV of everyone at once.
 
 ## Layout
 
