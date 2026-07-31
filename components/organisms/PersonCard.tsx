@@ -5,7 +5,7 @@ import { Check, Download, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react
 import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { IconButton, ArmedCancelButton } from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -164,26 +164,23 @@ export function PersonCard({
 
           <div className="ml-auto flex max-w-[60%] flex-wrap items-center justify-end gap-0.5">
             {onResetAll && (
-              <>
-                <IconButton
-                  icon={RotateCcw}
-                  label={
-                    resetAll.armed
-                      ? `Confirm reset all times for ${person.name}`
-                      : `Reset all times for ${person.name}`
-                  }
-                  showLabel={resetAll.armed ? "Confirm reset" : "Reset all"}
-                  onClick={resetAll.trigger}
-                  tone="danger"
-                  size="sm"
-                  disabled={!anyFilled}
-                  hideWhenDisabled
-                  className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-                />
-                {resetAll.armed && <ArmedCancelButton onClick={resetAll.disarm} />}
-              </>
+              <IconButton
+                icon={RotateCcw}
+                label={
+                  resetAll.armed
+                    ? `Confirm reset all times for ${person.name}`
+                    : `Reset all times for ${person.name}`
+                }
+                showLabel={overview ? undefined : "Reset all"}
+                onClick={resetAll.trigger}
+                tone="danger"
+                size="sm"
+                disabled={!anyFilled}
+                hideWhenDisabled
+                className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              />
             )}
-            {onExport && !resetAll.armed && !remove.armed && (
+            {onExport && (
               <IconButton
                 icon={Download}
                 label={`Export ${person.name} as CSV`}
@@ -195,33 +192,28 @@ export function PersonCard({
                 hideWhenDisabled
               />
             )}
-            {!resetAll.armed && !remove.armed && (
-              <IconButton
-                icon={Share2}
-                label={`Share card for ${person.name}`}
-                showLabel={overview ? undefined : "Share"}
-                onClick={handleShare}
-                tone="accent"
-                size="sm"
-                disabled={!anyFilled}
-                hideWhenDisabled
-              />
-            )}
+            <IconButton
+              icon={Share2}
+              label={`Share card for ${person.name}`}
+              showLabel={overview ? undefined : "Share"}
+              onClick={handleShare}
+              tone="accent"
+              size="sm"
+              disabled={!anyFilled}
+              hideWhenDisabled
+            />
             {onDelete && (
-              <>
-                <IconButton
-                  icon={Trash2}
-                  label={
-                    remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`
-                  }
-                  showLabel={remove.armed ? "Confirm delete" : overview ? undefined : "Delete"}
-                  onClick={remove.trigger}
-                  tone="danger"
-                  size="sm"
-                  className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
-                />
-                {remove.armed && <ArmedCancelButton onClick={remove.disarm} />}
-              </>
+              <IconButton
+                icon={Trash2}
+                label={
+                  remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`
+                }
+                showLabel={overview ? undefined : "Delete"}
+                onClick={remove.trigger}
+                tone="danger"
+                size="sm"
+                className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
+              />
             )}
           </div>
         </>

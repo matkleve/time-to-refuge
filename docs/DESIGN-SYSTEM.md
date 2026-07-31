@@ -225,8 +225,8 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
 action happens. The first press *arms* it: **the value about to be destroyed
-turns red**, the control shows a visible **Confirm…** label, and a **Cancel**
-control appears beside it (`ArmedCancelButton`). The second press carries it
+turns red**, and **the same control** gains a red wash (it does not sprout a
+second Confirm/Cancel pair). The second press on that same control carries it
 out. It disarms itself after a few seconds if you walk away.
 
 | Action | What turns red |

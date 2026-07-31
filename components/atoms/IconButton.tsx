@@ -89,29 +89,3 @@ export function IconButton({
     </button>
   );
 }
-
-/** Visible Cancel next to an armed destructive IconButton. */
-export function ArmedCancelButton({
-  onClick,
-  size = "sm",
-}: {
-  onClick: () => void;
-  size?: "sm" | "md";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full px-2.5 text-sm font-medium text-muted",
-        "transition-colors duration-200 hover:bg-ink/[0.06] hover:text-ink active:scale-95",
-        size === "md" ? "h-11" : "h-9",
-      )}
-    >
-      Cancel
-    </button>
-  );
-}

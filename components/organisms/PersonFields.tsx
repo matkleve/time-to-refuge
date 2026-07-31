@@ -8,7 +8,7 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
-import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
 interface PersonFieldsProps {
@@ -265,7 +265,7 @@ function FieldRow({
      * Idle → open: one persistent row (design system §5a). The phase label
      * and time pack left; round actions slide in on the right with a clear
      * gap between "look" (open/copy) and "change" (edit/reset). Destructive
-     * reset shows a visible Confirm + Cancel when armed.
+     * reset arms on the same control (turns red) — no second Confirm/Cancel.
      */
     const lookActions = (
       <div className="flex shrink-0 items-center gap-0.5">
@@ -306,22 +306,18 @@ function FieldRow({
           />
         )}
         {onClear && (
-          <>
-            <IconButton
-              icon={RotateCcw}
-              label={
-                armedReset.armed
-                  ? `Confirm reset ${PHASE_LABELS[phase]}`
-                  : `Reset ${PHASE_LABELS[phase]}`
-              }
-              showLabel={armedReset.armed ? "Confirm" : "Reset"}
-              onClick={armedReset.trigger}
-              tone="danger"
-              size="sm"
-              className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
-            />
-            {armedReset.armed && <ArmedCancelButton onClick={armedReset.disarm} />}
-          </>
+          <IconButton
+            icon={RotateCcw}
+            label={
+              armedReset.armed
+                ? `Confirm reset ${PHASE_LABELS[phase]}`
+                : `Reset ${PHASE_LABELS[phase]}`
+            }
+            onClick={armedReset.trigger}
+            tone="danger"
+            size="sm"
+            className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
+          />
         )}
       </div>
     );

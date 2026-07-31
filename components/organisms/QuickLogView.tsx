@@ -13,12 +13,13 @@ import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
-import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
+import { IconButton } from "@/components/atoms/IconButton";
 
 /**
- * One logged time — same tap-to-reveal pattern as a person-card field row
- * (design system §5a): idle shows the stamp; tap packs it left and reveals
- * Copy · Delete on the right.
+ * One logged time — same reveal as a person-card field row (§5a):
+ * idle = glass stamp only (no actions). Tap packs the stamp left; Copy and
+ * Delete live in a sibling tray that is collapsed/invisible until then —
+ * not inside the glass row.
  */
 function LogRow({
   index,
@@ -75,14 +76,8 @@ function LogRow({
   }
 
   const body = (
-    <div
-      ref={dismissRef}
-      className={cn(
-        "flex min-h-11 w-full items-center overflow-hidden rounded-2xl",
-        glassRowClass(),
-        red && "ring-2 ring-danger-500",
-      )}
-    >
+    <div ref={dismissRef} className="flex min-h-11 w-full items-center gap-1">
+      {/* Glass stamp only — actions are not part of this element. */}
       <button
         type="button"
         onClick={handleRowClick}
@@ -90,7 +85,12 @@ function LogRow({
         aria-label={
           showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
         }
-        className="flex min-w-0 flex-1 items-center gap-2 px-4 py-1.5 text-left transition-colors duration-200 hover:bg-ink/[0.03]"
+        className={cn(
+          "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 py-1.5 text-left transition-[flex,box-shadow,background-color] duration-200",
+          "hover:bg-ink/[0.03]",
+          glassRowClass(),
+          red && "ring-2 ring-danger-500",
+        )}
       >
         <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>
         <span
@@ -105,14 +105,15 @@ function LogRow({
         </span>
       </button>
 
+      {/* Meta tray — invisible / zero-width until the row is opened. */}
       <div
         className={cn(
-          "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity,padding] duration-200 ease-out",
-          showActions ? "max-w-52 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
+          "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity] duration-200 ease-out",
+          showActions ? "max-w-28 opacity-100" : "max-w-0 opacity-0",
         )}
         aria-hidden={!showActions}
       >
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-0.5 pl-1">
           <IconButton
             icon={copied ? Check : Copy}
             label={copied ? "Time copied" : "Copy time"}
@@ -121,21 +122,17 @@ function LogRow({
             size="sm"
             className={copied ? "text-saffron-700" : undefined}
           />
-          <div className="flex shrink-0 items-center gap-0.5">
-            <IconButton
-              icon={Trash2}
-              label={remove.armed ? "Confirm delete entry" : "Delete entry"}
-              showLabel={remove.armed ? "Confirm" : "Delete"}
-              tone="danger"
-              size="sm"
-              className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
-              onClick={(e) => {
-                e.stopPropagation();
-                remove.trigger();
-              }}
-            />
-            {remove.armed && <ArmedCancelButton onClick={remove.disarm} />}
-          </div>
+          <IconButton
+            icon={Trash2}
+            label={remove.armed ? `Confirm delete entry #${index}` : `Delete entry #${index}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              remove.trigger();
+            }}
+            tone="danger"
+            size="sm"
+            className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
+          />
         </div>
       </div>
     </div>
@@ -198,32 +195,26 @@ export function QuickLogView() {
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
       <Surface material="glass-panel" className="border-b border-white/40 px-3 py-2">
-        <div
-          className="flex items-center gap-2"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
           <span className="shrink-0 pl-1 text-sm tabular-nums text-muted">
             {entries.length} logged
           </span>
           <TimezoneSelect value={tz} onChange={setTz} compact />
-          <span className="flex shrink-0 items-center gap-0.5">
-            <IconButton
-              icon={RotateCcw}
-              label={
-                clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
-              }
-              showLabel={clearAll.armed ? "Confirm" : "Clear"}
-              tone="danger"
-              size="sm"
-              disabled={entries.length === 0}
-              className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-              onClick={(e) => {
-                e.stopPropagation();
-                clearAll.trigger();
-              }}
-            />
-            {clearAll.armed && <ArmedCancelButton onClick={clearAll.disarm} />}
-          </span>
+          <IconButton
+            icon={RotateCcw}
+            label={
+              clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
+            }
+            showLabel="Clear"
+            tone="danger"
+            size="sm"
+            disabled={entries.length === 0}
+            className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+            onClick={(e) => {
+              e.stopPropagation();
+              clearAll.trigger();
+            }}
+          />
         </div>
       </Surface>
 
