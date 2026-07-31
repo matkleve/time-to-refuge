@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface RetreatNameFieldProps {
@@ -56,12 +57,13 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       }}
       aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
       className={cn(
-        "max-w-full truncate rounded-lg px-1 transition-colors duration-200 hover:bg-ink/[0.05]",
+        "inline-flex max-w-full items-center gap-1 truncate rounded-lg px-1 transition-colors duration-200 hover:bg-ink/[0.05]",
         value ? "text-muted" : "text-subtle",
         className,
       )}
     >
-      {value || "Add retreat name"}
+      <span className="truncate">{value || "Add retreat name"}</span>
+      {value ? <Pencil className="size-3 shrink-0 opacity-70" aria-hidden /> : null}
     </button>
   );
 }

@@ -120,6 +120,7 @@ export function DesktopWorkspace({
                 <IconButton
                   icon={Check}
                   label="Add person"
+                  showLabel="Add"
                   onClick={submitAdd}
                   tone="accent"
                   disabled={!name.trim()}
@@ -127,6 +128,7 @@ export function DesktopWorkspace({
                 <IconButton
                   icon={X}
                   label="Cancel adding person"
+                  showLabel="Cancel"
                   onClick={() => {
                     setAdding(false);
                     setName("");

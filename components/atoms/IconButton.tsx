@@ -16,10 +16,15 @@ const toneClass: Record<Tone, string> = {
   onAccent: "text-white/80 hover:bg-white/15 hover:text-white",
 };
 
-/** sm for dense clusters in a card header; md for standalone controls. */
+/** Icon-only footprint. Labeled buttons size from content instead. */
 const sizeClass = {
   sm: "size-9",
   md: "size-11",
+} as const;
+
+const labeledSizeClass = {
+  sm: "h-9 gap-1 px-2.5",
+  md: "h-11 gap-1.5 px-3",
 } as const;
 
 const iconSize = {
@@ -29,8 +34,14 @@ const iconSize = {
 
 interface IconButtonProps {
   icon: LucideIcon;
-  /** Required: these buttons never carry a visible text label. */
+  /** Accessible name (and tooltip). Always required. */
   label: string;
+  /**
+   * When set, the short string is shown next to the icon. Prefer this for
+   * destructive, undo, export, and navigation — see UX icon/text audit.
+   * Falls back to `label` when `true`.
+   */
+  showLabel?: boolean | string;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   tone?: Tone;
   size?: keyof typeof sizeClass;
@@ -43,6 +54,7 @@ interface IconButtonProps {
 export function IconButton({
   icon: Icon,
   label,
+  showLabel,
   onClick,
   tone = "neutral",
   size = "md",
@@ -50,6 +62,9 @@ export function IconButton({
   hideWhenDisabled = false,
   className,
 }: IconButtonProps) {
+  const visible =
+    showLabel === true ? label : typeof showLabel === "string" ? showLabel : null;
+
   return (
     <button
       type="button"
@@ -61,13 +76,42 @@ export function IconButton({
         "inline-flex shrink-0 items-center justify-center rounded-full",
         "transition-colors duration-200 ease-out",
         "active:scale-95 disabled:pointer-events-none",
-        sizeClass[size],
+        visible ? labeledSizeClass[size] : sizeClass[size],
         toneClass[tone],
         hideWhenDisabled ? "disabled:opacity-0" : "disabled:opacity-35",
         className,
       )}
     >
       <Icon className={iconSize[size]} strokeWidth={2} aria-hidden />
+      {visible && (
+        <span className="max-w-28 truncate text-xs font-medium whitespace-nowrap">{visible}</span>
+      )}
+    </button>
+  );
+}
+
+/** Visible Cancel next to an armed destructive IconButton. */
+export function ArmedCancelButton({
+  onClick,
+  size = "sm",
+}: {
+  onClick: () => void;
+  size?: "sm" | "md";
+}) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium text-muted",
+        "transition-colors duration-200 hover:bg-ink/[0.06] hover:text-ink active:scale-95",
+        size === "md" ? "h-11" : "h-9",
+      )}
+    >
+      Cancel
     </button>
   );
 }

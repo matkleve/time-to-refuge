@@ -43,21 +43,28 @@ export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
   const zones = useMemo(() => getTimezones(), []);
 
   return (
-    <span className="relative inline-flex items-center">
-      <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-      <select
-        value={value}
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => onChange(e.target.value)}
-      className="max-w-[60vw] appearance-none rounded-xl border border-line bg-white py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200 hover:border-muted"
-    >
-        {zones.map((z) => (
-          <option key={z} value={z}>
-            {z.replace(/_/g, " ")}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-2 size-4 text-muted" aria-hidden />
-    </span>
+    <label className="flex flex-col gap-0.5">
+      <span className="pl-1 text-xs font-medium text-muted">Time zone</span>
+      <span className="relative inline-flex items-center">
+        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
+        <select
+          value={value}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label="Time zone"
+          className="max-w-[60vw] appearance-none rounded-xl border border-line bg-white py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200 hover:border-muted"
+        >
+          {zones.map((z) => (
+            <option key={z} value={z}>
+              {z.replace(/_/g, " ")}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-2 size-4 text-muted"
+          aria-hidden
+        />
+      </span>
+    </label>
   );
 }

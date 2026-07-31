@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RotateCcw, X } from "lucide-react";
+import { RotateCcw, Trash2 } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
@@ -9,7 +9,7 @@ import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
-import { IconButton } from "@/components/atoms/IconButton";
+import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ function LogRow({
           )}
         >
           <span className="text-xs tabular-nums text-subtle">#{index}</span>
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-0.5">
             <span
               className={cn("font-mono text-sm tabular-nums", red ? "text-danger-600" : "text-ink")}
             >
@@ -49,8 +49,9 @@ function LogRow({
               <span className={red ? "text-danger-600/70" : "text-subtle"}>.{ms}</span>
             </span>
             <IconButton
-              icon={X}
+              icon={Trash2}
               label={remove.armed ? "Confirm delete entry" : "Delete entry"}
+              showLabel={remove.armed ? "Confirm" : "Delete"}
               tone="danger"
               size="sm"
               className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
@@ -59,6 +60,7 @@ function LogRow({
                 remove.trigger();
               }}
             />
+            {remove.armed && <ArmedCancelButton onClick={remove.disarm} />}
           </span>
         </div>
       </SwipeToAction>
@@ -71,7 +73,6 @@ export function QuickLogView() {
   const [entries, setEntries] = useState<QuickLogEntry[]>([]);
   const [tz, setTz] = useState("UTC");
   const [flash, setFlash] = useState(false);
-
 
   useEffect(() => {
     setEntries(loadQuickLog());
@@ -108,20 +109,26 @@ export function QuickLogView() {
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
       <Surface material="glass-panel" className="border-b border-line px-3 py-2">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <span className="pl-1 text-sm text-muted">{entries.length} logged</span>
-          <IconButton
-            icon={RotateCcw}
-            label={clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"}
-            tone="danger"
-            size="sm"
-            disabled={entries.length === 0}
-            className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-            onClick={(e) => {
-              e.stopPropagation();
-              clearAll.trigger();
-            }}
-          />
+          <span className="flex items-center gap-0.5">
+            <IconButton
+              icon={RotateCcw}
+              label={
+                clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
+              }
+              showLabel={clearAll.armed ? "Confirm clear" : "Clear all"}
+              tone="danger"
+              size="sm"
+              disabled={entries.length === 0}
+              className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              onClick={(e) => {
+                e.stopPropagation();
+                clearAll.trigger();
+              }}
+            />
+            {clearAll.armed && <ArmedCancelButton onClick={clearAll.disarm} />}
+          </span>
         </div>
         <div className="mt-1 px-1 pb-1">
           <TimezoneSelect value={tz} onChange={setTz} />

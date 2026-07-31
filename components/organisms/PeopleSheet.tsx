@@ -95,6 +95,7 @@ export function PeopleSheet({
                 <IconButton
                   icon={Check}
                   label="Add person"
+                  showLabel="Add"
                   onClick={submit}
                   tone="accent"
                   disabled={!name.trim()}
@@ -102,6 +103,7 @@ export function PeopleSheet({
                 <IconButton
                   icon={X}
                   label="Cancel adding person"
+                  showLabel="Cancel"
                   onClick={() => {
                     setAdding(false);
                     setName("");

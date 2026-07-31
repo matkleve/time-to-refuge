@@ -192,9 +192,13 @@ pressure (**UC-1**).
 | `sm` | 2.25rem (36px) | Dense clusters inside a card header, list-row actions |
 | `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
 
-**Icons over words.** Anything small is an icon with an `aria-label`, never a
-text button. [`IconButton`](../components/atoms/IconButton.tsx) is the only way
-to render one, so tone and size stay consistent.
+**Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
+destructive actions, Undo, export/share, History, People, and add-flow
+submit/cancel. Reserve icon-only for Close, Prev/Next, and low-risk utilities
+next to their object (copy, edit). [`IconButton`](../components/atoms/IconButton.tsx)
+is the only control for these — tone and size stay consistent. An `aria-label`
+is required either way; it is not a substitute for a visible label on
+consequential actions.
 
 The icon vocabulary, all [lucide](https://lucide.dev):
 
@@ -206,15 +210,16 @@ The icon vocabulary, all [lucide](https://lucide.dev):
 | `Download` / `Share2` | Export CSV · share the card as an image |
 | `Users` / `Plus` | People overview · add a person |
 | `Pencil` / `RotateCcw` / `Trash2` | Rename · reset times · delete |
-| `Check` / `X` | Confirm · cancel or dismiss |
+| `Check` / `X` | Confirm · cancel or dismiss (label visibly as Add / Cancel in add flows) |
 | `ChevronLeft` / `ChevronRight` | Previous / next person |
+| `Trash2` | Delete (Quick Log entries — never `X`, which means close/cancel) |
 
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
 action happens. The first press *arms* it: **the value about to be destroyed
-turns red**, the control gains a red wash, and the row gains a red ring. The
-second press carries it out. It disarms itself after a few seconds if you walk
-away.
+turns red**, the control shows a visible **Confirm…** label, and a **Cancel**
+control appears beside it (`ArmedCancelButton`). The second press carries it
+out. It disarms itself after a few seconds if you walk away.
 
 | Action | What turns red |
 | --- | --- |

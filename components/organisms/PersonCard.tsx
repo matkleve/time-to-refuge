@@ -5,7 +5,7 @@ import { Check, Download, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react
 import { Person, PHASES, Phase, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { IconButton, ArmedCancelButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -121,6 +121,7 @@ export function PersonCard({
             <button
               type="button"
               onClick={onSelect}
+              aria-label={`Open ${person.name}`}
               className="flex min-w-0 items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors duration-200 hover:bg-ink/[0.05]"
             >
               {isComplete(person) && <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />}
@@ -161,27 +162,32 @@ export function PersonCard({
             />
           )}
 
-          <div className="ml-auto flex items-center">
+          <div className="ml-auto flex max-w-[60%] flex-wrap items-center justify-end gap-0.5">
             {onResetAll && (
-              <IconButton
-                icon={RotateCcw}
-                label={
-                  resetAll.armed
-                    ? `Confirm reset all times for ${person.name}`
-                    : `Reset all times for ${person.name}`
-                }
-                onClick={resetAll.trigger}
-                tone="danger"
-                size="sm"
-                disabled={!anyFilled}
-                hideWhenDisabled
-                className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-              />
+              <>
+                <IconButton
+                  icon={RotateCcw}
+                  label={
+                    resetAll.armed
+                      ? `Confirm reset all times for ${person.name}`
+                      : `Reset all times for ${person.name}`
+                  }
+                  showLabel={resetAll.armed ? "Confirm reset" : "Reset all"}
+                  onClick={resetAll.trigger}
+                  tone="danger"
+                  size="sm"
+                  disabled={!anyFilled}
+                  hideWhenDisabled
+                  className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+                />
+                {resetAll.armed && <ArmedCancelButton onClick={resetAll.disarm} />}
+              </>
             )}
-            {onExport && (
+            {onExport && !resetAll.armed && !remove.armed && (
               <IconButton
                 icon={Download}
-                label={`Export ${person.name}`}
+                label={`Export ${person.name} as CSV`}
+                showLabel={overview ? undefined : "CSV"}
                 onClick={onExport}
                 tone="accent"
                 size="sm"
@@ -189,24 +195,33 @@ export function PersonCard({
                 hideWhenDisabled
               />
             )}
-            <IconButton
-              icon={Share2}
-              label={`Share ${person.name}`}
-              onClick={handleShare}
-              tone="accent"
-              size="sm"
-              disabled={!anyFilled}
-              hideWhenDisabled
-            />
-            {onDelete && (
+            {!resetAll.armed && !remove.armed && (
               <IconButton
-                icon={Trash2}
-                label={remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`}
-                onClick={remove.trigger}
-                tone="danger"
+                icon={Share2}
+                label={`Share card for ${person.name}`}
+                showLabel={overview ? undefined : "Share"}
+                onClick={handleShare}
+                tone="accent"
                 size="sm"
-                className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
+                disabled={!anyFilled}
+                hideWhenDisabled
               />
+            )}
+            {onDelete && (
+              <>
+                <IconButton
+                  icon={Trash2}
+                  label={
+                    remove.armed ? `Confirm delete ${person.name}` : `Delete ${person.name}`
+                  }
+                  showLabel={remove.armed ? "Confirm delete" : overview ? undefined : "Delete"}
+                  onClick={remove.trigger}
+                  tone="danger"
+                  size="sm"
+                  className={remove.armed ? "bg-danger-50 text-danger-600" : undefined}
+                />
+                {remove.armed && <ArmedCancelButton onClick={remove.disarm} />}
+              </>
             )}
           </div>
         </>

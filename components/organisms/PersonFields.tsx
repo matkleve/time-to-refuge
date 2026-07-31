@@ -8,7 +8,7 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
-import { IconButton } from "@/components/atoms/IconButton";
+import { ArmedCancelButton, IconButton } from "@/components/atoms/IconButton";
 import { SwipeToAction } from "@/components/atoms/SwipeToAction";
 
 interface PersonFieldsProps {
@@ -242,6 +242,11 @@ function FieldRow({
       <button
         type="button"
         onClick={handleRowClick}
+        aria-label={
+          overview && onOpenPerson
+            ? `Open ${person.name} and select ${PHASE_LABELS[phase]}`
+            : `Select ${PHASE_LABELS[phase]} to record`
+        }
         className={cn(
           "flex w-full items-center justify-between px-4 text-left transition-colors duration-200 hover:bg-ink/[0.03]",
           rowHeight,
@@ -258,8 +263,9 @@ function FieldRow({
   } else {
     /*
      * Idle → open: one persistent row (design system §5a). The phase label
-     * and time pack left; round icon-only actions slide in on the right with
-     * a clear gap between "look" (eye/copy) and "change" (edit/reset).
+     * and time pack left; round actions slide in on the right with a clear
+     * gap between "look" (open/copy) and "change" (edit/reset). Destructive
+     * reset shows a visible Confirm + Cancel when armed.
      */
     const lookActions = (
       <div className="flex shrink-0 items-center gap-0.5">
@@ -267,6 +273,7 @@ function FieldRow({
           <IconButton
             icon={Eye}
             label={`Open ${person.name}`}
+            showLabel="Open"
             onClick={onOpenPerson}
             tone="accent"
             size="sm"
@@ -299,18 +306,22 @@ function FieldRow({
           />
         )}
         {onClear && (
-          <IconButton
-            icon={RotateCcw}
-            label={
-              armedReset.armed
-                ? `Confirm reset ${PHASE_LABELS[phase]}`
-                : `Reset ${PHASE_LABELS[phase]}`
-            }
-            onClick={armedReset.trigger}
-            tone="danger"
-            size="sm"
-            className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
-          />
+          <>
+            <IconButton
+              icon={RotateCcw}
+              label={
+                armedReset.armed
+                  ? `Confirm reset ${PHASE_LABELS[phase]}`
+                  : `Reset ${PHASE_LABELS[phase]}`
+              }
+              showLabel={armedReset.armed ? "Confirm" : "Reset"}
+              onClick={armedReset.trigger}
+              tone="danger"
+              size="sm"
+              className={armedReset.armed ? "bg-danger-50 text-danger-600" : undefined}
+            />
+            {armedReset.armed && <ArmedCancelButton onClick={armedReset.disarm} />}
+          </>
         )}
       </div>
     );
@@ -340,7 +351,7 @@ function FieldRow({
         <div
           className={cn(
             "flex shrink-0 items-center overflow-hidden transition-[max-width,opacity,padding] duration-200 ease-out",
-            showActions ? "max-w-52 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
+            showActions ? "max-w-72 opacity-100 pr-2" : "max-w-0 opacity-0 pr-0",
           )}
           aria-hidden={!showActions}
         >

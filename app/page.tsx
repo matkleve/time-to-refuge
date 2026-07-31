@@ -233,9 +233,11 @@ export default function Home() {
             <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
           </div>
 
-          <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1">
+          <div className="mx-auto flex items-center gap-1 rounded-2xl bg-card p-1" role="tablist" aria-label="Mode">
             <button
               type="button"
+              role="tab"
+              aria-selected={view === "refuge"}
               onClick={() => setView("refuge")}
               className={cn(
                 "rounded-xl px-4 py-1.5 text-sm font-medium transition-colors duration-200",
@@ -246,6 +248,8 @@ export default function Home() {
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected={view === "quicklog"}
               onClick={() => setView("quicklog")}
               className={cn(
                 "rounded-xl px-4 py-1.5 text-sm font-medium transition-colors duration-200",
@@ -258,11 +262,21 @@ export default function Home() {
 
           {view === "refuge" && (
             <div className="flex items-center gap-1">
-              <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
+              <IconButton
+                icon={History}
+                label="History"
+                showLabel
+                onClick={() => setHistoryOpen(true)}
+              />
               <span className="relative inline-flex">
                 <IconButton
                   icon={Undo2}
-                  label={undoStack[undoStack.length - 1]?.message ?? "Undo last action"}
+                  label={
+                    undoStack[undoStack.length - 1]
+                      ? `Undo: ${undoStack[undoStack.length - 1].message}`
+                      : "Undo last action"
+                  }
+                  showLabel="Undo"
                   onClick={handleUndo}
                   disabled={undoStack.length === 0}
                 />
@@ -275,6 +289,7 @@ export default function Home() {
               <IconButton
                 icon={Download}
                 label="Export everyone as CSV"
+                showLabel="Export all"
                 onClick={() => downloadCsv(people, retreatName)}
                 disabled={people.length === 0}
               />
@@ -323,26 +338,32 @@ export default function Home() {
         className="flex shrink-0 gap-1 border-b border-line px-3 pb-2"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
-        <button
-          type="button"
-          onClick={() => setView("refuge")}
-          className={cn(
-            "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
-            view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-ink/[0.05]",
-          )}
-        >
-          Refuge
-        </button>
-        <button
-          type="button"
-          onClick={() => setView("quicklog")}
-          className={cn(
-            "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
-            view === "quicklog" ? "bg-saffron-400 text-ink" : "text-muted hover:bg-ink/[0.05]",
-          )}
-        >
-          Quick Log
-        </button>
+        <div className="flex flex-1 gap-1" role="tablist" aria-label="Mode">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === "refuge"}
+            onClick={() => setView("refuge")}
+            className={cn(
+              "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
+              view === "refuge" ? "bg-flagblue-600 text-white" : "text-muted hover:bg-ink/[0.05]",
+            )}
+          >
+            Refuge
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === "quicklog"}
+            onClick={() => setView("quicklog")}
+            className={cn(
+              "flex-1 rounded-xl py-2 text-sm font-medium transition-colors duration-200",
+              view === "quicklog" ? "bg-saffron-400 text-ink" : "text-muted hover:bg-ink/[0.05]",
+            )}
+          >
+            Quick Log
+          </button>
+        </div>
       </Surface>
 
       {view === "quicklog" ? (
@@ -352,14 +373,26 @@ export default function Home() {
           <Surface
             as="header"
             material="glass-panel"
-            className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3"
+            className="flex shrink-0 items-center justify-between gap-1 border-b border-line px-2 py-3 sm:px-4"
           >
-            <div className="flex items-center gap-1">
-              <IconButton icon={History} label="History" onClick={() => setHistoryOpen(true)} />
+            <div className="flex min-w-0 items-center gap-0.5">
+              <IconButton
+                icon={History}
+                label="History"
+                showLabel
+                size="sm"
+                onClick={() => setHistoryOpen(true)}
+              />
               <span className="relative inline-flex">
                 <IconButton
                   icon={Undo2}
-                  label={undoStack[undoStack.length - 1]?.message ?? "Undo last action"}
+                  label={
+                    undoStack[undoStack.length - 1]
+                      ? `Undo: ${undoStack[undoStack.length - 1].message}`
+                      : "Undo last action"
+                  }
+                  showLabel="Undo"
+                  size="sm"
                   onClick={handleUndo}
                   disabled={undoStack.length === 0}
                 />
@@ -371,19 +404,27 @@ export default function Home() {
               </span>
             </div>
 
-            <div className="flex flex-col items-center">
+            <div className="flex min-w-0 flex-col items-center px-1">
               <p className="font-display text-lg font-semibold text-ink">Time to Refuge</p>
               <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex min-w-0 items-center gap-0.5">
               <IconButton
                 icon={Download}
                 label="Export everyone as CSV"
+                showLabel="CSV"
+                size="sm"
                 onClick={() => downloadCsv(people, retreatName)}
                 disabled={people.length === 0}
               />
-              <IconButton icon={Users} label="People" onClick={() => setPeopleOpen(true)} />
+              <IconButton
+                icon={Users}
+                label="People"
+                showLabel
+                size="sm"
+                onClick={() => setPeopleOpen(true)}
+              />
             </div>
           </Surface>
 
