@@ -465,3 +465,29 @@ row), and the PNG's second header line simply doesn't render.
   "tap anywhere" layer is a pointer *convenience*; the real focusable control is
   the record button inside it.
 - Targets are never below 2.25rem (36px).
+
+## 8. Shipping a change described as "everywhere"
+
+`PersonCard`'s focused card went a full round of glass work without getting
+glass at all — not a rendering bug, a scope gap. An earlier note said "cards
+are filled" (§3), and every later change that touched glass surfaces treated
+that as settled and moved on, never re-checking whether it was still true for
+the one card that actually mattered. Nothing was wrong with the code that
+existed; `tsc`, lint, the build, and `a11y:contrast` all passed the whole
+time, because none of them can flag something that's *missing*. The gap only
+surfaced when someone looked at the running app and said "the cards are still
+not glassy" — which is a slower, worse way to catch it than checking before
+shipping.
+
+So: **whenever a change is described as applying to a whole category — "every
+card," "everywhere the app shows a time," "all glass surfaces" — grep for
+every literal usage of the pattern being touched before calling it done, and
+enumerate the hits.** Don't rely on a variable name, a comment, or memory of
+the codebase as proof of completeness; those are exactly what went stale
+here. A category name is a claim, not a fact — the only way to check it is a
+search.
+
+This isn't specific to glass. The same check applies to a colour token
+swapped everywhere, an icon replaced app-wide, a new prop threaded through
+"all the card variants" — anything where the unit of correctness is *every
+occurrence*, not the ones that happened to be open in an editor.
