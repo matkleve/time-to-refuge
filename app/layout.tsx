@@ -1,23 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Mono, DM_Sans, Newsreader } from "next/font/google";
+import { Literata, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const newsreader = Newsreader({
+/* Quiet book — Literata · Source Sans 3 · Source Code Pro (dev/fonts option B). */
+
+const literata = Literata({
   subsets: ["latin"],
-  variable: "--font-newsreader",
+  variable: "--font-literata",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-source-sans",
   display: "swap",
 });
 
-const dmMono = DM_Mono({
+const sourceCode = Source_Code_Pro({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-dm-mono",
+  variable: "--font-source-code",
   display: "swap",
 });
 
@@ -40,14 +41,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     /*
      * The font variables must sit on <html>, not <body>. `--font-sans` is
-     * declared in @theme (i.e. on :root); if `--font-dm-sans` is only defined
-     * further down on <body>, the var() at :root is undefined, the whole
-     * custom property goes guaranteed-invalid, and every font-family silently
-     * falls back to the system stack.
+     * declared in @theme (i.e. on :root); if the next/font variable is only
+     * defined further down on <body>, the var() at :root is undefined, the
+     * whole custom property goes guaranteed-invalid, and every font-family
+     * silently falls back to the system stack.
      */
     <html
       lang="en"
-      className={`${newsreader.variable} ${dmSans.variable} ${dmMono.variable}`}
+      className={`${literata.variable} ${sourceSans.variable} ${sourceCode.variable}`}
     >
       <body>{children}</body>
     </html>

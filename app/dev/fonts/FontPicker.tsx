@@ -22,8 +22,8 @@ interface FontOption {
 const OPTIONS: FontOption[] = [
   {
     id: "a",
-    name: "Current",
-    pitch: "Contemplative book serif + calm sibling sans/mono. What ships today.",
+    name: "Former (Newsreader)",
+    pitch: "The previous ship: contemplative book serif + DM siblings.",
     display: "Newsreader",
     sans: "DM Sans",
     mono: "DM Mono",
@@ -31,7 +31,7 @@ const OPTIONS: FontOption[] = [
   {
     id: "b",
     name: "Quiet book",
-    pitch: "Literata reads like a printed page; Source Sans stays neutral under it.",
+    pitch: "Literata reads like a printed page; Source Sans stays neutral under it. Shipping now.",
     display: "Literata",
     sans: "Source Sans 3",
     mono: "Source Code Pro",
@@ -130,7 +130,7 @@ function Sample({ option }: { option: FontOption }) {
 }
 
 export function FontPicker() {
-  const [selected, setSelected] = useState<OptionId>("a");
+  const [selected, setSelected] = useState<OptionId>("b");
   const active = OPTIONS.find((o) => o.id === selected)!;
 
   return (

@@ -26,19 +26,18 @@ Three families, each earning its place:
 
 | Token | Face | Job |
 | --- | --- | --- |
-| `font-display` | Newsreader | Names, phase labels, panel titles |
-| `font-sans` | DM Sans | All interface text |
-| `font-mono` | DM Mono | Times, and only times |
+| `font-display` | Literata | Names, phase labels, panel titles |
+| `font-sans` | Source Sans 3 | All interface text |
+| `font-mono` | Source Code Pro | Times, and only times |
 
-**Newsreader** is a contemplative book serif. It carries the ceremonial
-vocabulary — a person's name and the Three Jewels — so the record reads like a
-record rather than like an interface. **DM Sans** handles everything functional:
-calm, unfussy, no personality competing with the serif. **DM Mono** is DM Sans'
-sibling, so the times sit with the interface instead of looking like code, and
-being monospaced it keeps a 60fps clock from jittering as digits change width.
+**Literata** reads like a printed page — the ceremonial vocabulary (a person's
+name and the Three Jewels) so the record feels like a record rather than an
+interface. **Source Sans 3** stays neutral under it for everything functional.
+**Source Code Pro** is monospaced so a 60fps clock never jitters as digits
+change width.
 
 > **Font variables belong on `<html>`, not `<body>`.** `--font-sans` is declared
-> in `@theme`, i.e. on `:root`. If `--font-dm-sans` is only defined further down
+> in `@theme`, i.e. on `:root`. If `--font-source-sans` is only defined further down
 > on `<body>`, the `var()` at `:root` is undefined, the whole custom property
 > goes *guaranteed-invalid*, and every `font-family` in the app silently falls
 > back to the system stack. That shipped once — the custom faces were never

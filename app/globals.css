@@ -12,18 +12,14 @@
  */
 @theme {
   /* ── Type ─────────────────────────────────────────────────────────────
-   * Three families, each with a job:
-   *   display — Newsreader. Names and phase labels. A contemplative book
-   *             serif: this is a record of a ceremony, and it should read
-   *             like one rather than like an interface.
-   *   sans    — DM Sans. Everything functional. Calm and unfussy.
-   *   mono    — DM Mono. Times only. A sibling of DM Sans, so the numbers
-   *             sit with the interface instead of looking like code, and
-   *             monospaced so a running clock never jitters.
+   * Quiet book trio (dev/fonts option B):
+   *   display — Literata. Names and phase labels. Reads like a printed page.
+   *   sans    — Source Sans 3. Everything functional. Neutral under the serif.
+   *   mono    — Source Code Pro. Times only. Tabular so the clock never jitters.
    */
-  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-dm-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-literata), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-source-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-source-code), ui-monospace, SFMono-Regular, monospace;
 
   /*
    * Type scale — Tailwind's own steps, re-valued.
