@@ -246,10 +246,10 @@ out. It disarms itself after a few seconds if you walk away.
 
 | Action | What turns red |
 | --- | --- |
-| Reset one time | That time |
+| Reset one time | That time (text) + inset ring on the reset chip — never a ring on the stamp |
 | Reset all times | All three times |
 | Delete a person | Their name |
-| Delete a logged time | That time |
+| Delete a logged time | That time (text) + inset ring on the delete chip |
 | Clear the whole log | Every logged time |
 
 Nothing is destroyed by a single tap, and nothing interrupts with a modal —
@@ -311,7 +311,9 @@ of jumping:
 - The tray animates `grid-template-columns` `0fr` → `1fr` (exact content
   width) with opacity — not a oversized `max-width`, which overshoots.
 - Actions are two groups with a wide gap: **eye · copy** (look) then
-  **edit · reset** (change) — never inside the glass stamp.
+  **edit · reset** (change) — never inside the glass stamp. Chips are `md`
+  (44px) with comfortable gaps; armed destructive uses an **inset** ring on
+  the chip so nothing clips at the card edge.
 - Height never changes (§3): only flex-grow, grid columns, and opacity move.
 
 Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),

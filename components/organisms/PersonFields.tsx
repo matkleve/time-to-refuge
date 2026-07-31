@@ -153,7 +153,8 @@ function FieldRow({
     glassRowClass(),
     filled && "shadow-sm",
     isTarget && "ring-2 ring-flagblue-500",
-    reset.armed && "ring-2 ring-danger-500",
+    /* Armed reset: only the time turns red + the reset chip rings — never a
+       danger ring on the stamp (it reads as a clipped right-edge border). */
   );
 
   const label = (
@@ -265,7 +266,7 @@ function FieldRow({
      * chips. Destructive reset arms on the same control (turns red).
      */
     const lookActions = (
-      <div className="flex shrink-0 items-center gap-0.5">
+      <div className="flex shrink-0 items-center gap-2">
         {overview && onOpenPerson && (
           <IconButton
             icon={Eye}
@@ -273,7 +274,7 @@ function FieldRow({
             glass
             onClick={onOpenPerson}
             tone="accent"
-            size="sm"
+            size="md"
           />
         )}
         <IconButton
@@ -282,14 +283,14 @@ function FieldRow({
           glass
           onClick={copyTime}
           tone="accent"
-          size="sm"
+          size="md"
           className={copied ? "text-saffron-700" : undefined}
         />
       </div>
     );
 
     const changeActions = (
-      <div className="flex shrink-0 items-center gap-0.5">
+      <div className="flex shrink-0 items-center gap-2">
         {onEditTime && (
           <IconButton
             icon={Pencil}
@@ -301,7 +302,7 @@ function FieldRow({
               setEditing(true);
             }}
             tone="accent"
-            size="sm"
+            size="md"
           />
         )}
         {onClear && (
@@ -315,9 +316,11 @@ function FieldRow({
             glass
             onClick={armedReset.trigger}
             tone="danger"
-            size="sm"
+            size="md"
             className={
-              armedReset.armed ? "text-danger-600 ring-2 ring-danger-500" : undefined
+              armedReset.armed
+                ? "text-danger-600 ring-2 ring-inset ring-danger-500"
+                : undefined
             }
           />
         )}
@@ -338,7 +341,6 @@ function FieldRow({
             glassRowClass(),
             filled && "shadow-sm",
             isTarget && "ring-2 ring-flagblue-500",
-            reset.armed && "ring-2 ring-danger-500",
           )}
         >
           {label}
@@ -370,7 +372,8 @@ function FieldRow({
     );
   }
 
-  return <div className="overflow-hidden rounded-2xl">{body}</div>;
+  /* Action chips sit outside the stamp — don't clip their rings. */
+  return <div className="rounded-2xl">{body}</div>;
 }
 
 export function PersonFields({

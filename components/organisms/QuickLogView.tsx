@@ -89,7 +89,6 @@ function LogRow({
           "transition-[flex-grow,box-shadow,background-color] duration-200 ease-out",
           "hover:bg-ink/[0.03]",
           glassRowClass(),
-          red && "ring-2 ring-danger-500",
         )}
       >
         <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>
@@ -106,14 +105,14 @@ function LogRow({
       </button>
 
       <RowActionTray open={showActions}>
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="flex shrink-0 items-center gap-2">
           <IconButton
             icon={copied ? Check : Copy}
             label={copied ? "Time copied" : "Copy time"}
             glass
             onClick={copyTime}
             tone="accent"
-            size="sm"
+            size="md"
             className={copied ? "text-saffron-700" : undefined}
           />
           <IconButton
@@ -125,8 +124,10 @@ function LogRow({
               remove.trigger();
             }}
             tone="danger"
-            size="sm"
-            className={remove.armed ? "text-danger-600 ring-2 ring-danger-500" : undefined}
+            size="md"
+            className={
+              remove.armed ? "text-danger-600 ring-2 ring-inset ring-danger-500" : undefined
+            }
           />
         </div>
       </RowActionTray>

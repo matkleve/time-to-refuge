@@ -41,7 +41,7 @@ export function RowActionTray({
       aria-hidden={!open}
     >
       <div className="min-w-0 overflow-hidden">
-        <div className="flex items-center gap-3 pl-1.5">{children}</div>
+        <div className="flex items-center gap-4 py-0.5 pl-2 pr-1.5">{children}</div>
       </div>
     </div>
   );
