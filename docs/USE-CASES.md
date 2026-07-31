@@ -70,8 +70,9 @@ than something folded into this one.
 
 **Alternate flows:**
 - **Wrong phase armed** — tapping a different empty field than the
-  auto-suggested next one asks first ("Record Sangha before Buddha?") rather
-  than either silently allowing it or blocking it outright. Confirming still
+  auto-suggested next one asks first: the row packs to "Jump here" with
+  X / OK chips (same reveal as recorded-row actions), rather than either
+  silently allowing it or blocking it outright. Confirming still
   arms it — this stays a soft speed bump, not enforcement, since there may be
   real reasons to go out of order that the app has no business second-guessing.
   Tapping the phase that actually *is* next is unaffected — no question, no
@@ -301,7 +302,7 @@ ceremony, not by how easy each is to fix.
 | 2 | Single-device, no sync/handoff — a dead phone mid-ceremony loses everything not already exported | UC-10 |
 | 3 | Undo stack isn't persisted — survives a mistap, doesn't survive a reload | UC-3 |
 | 4 | Nothing enforces or even prompts the clock/location check before a ceremony starts — fully opt-in, easy to skip | UC-2, UC-6 |
-| 5 | ~~No phase-order enforcement~~ — **addressed**: an out-of-order tap now asks first ("Record Sangha before Buddha?") rather than proceeding silently. Deliberately still not *enforced* — confirming still allows it | UC-1 |
+| 5 | ~~No phase-order enforcement~~ — **addressed**: an out-of-order tap packs the row to "Jump here" with X / OK rather than proceeding silently. Deliberately still not *enforced* — confirming still allows it | UC-1 |
 | 6 | Unconfirmed architectural assumption: one-aspirant-at-a-time vs. round-robin-across-aspirants ceremony format | UC-1, actors note |
 | 7 | Quick Log entries can't be attributed to a person after the fact — no reconciliation path back into the Refuge roster | UC-7 |
 | 8 | No aspirant reordering — insertion order is permanent short of delete-and-re-add, which discards recorded times | UC-4 |

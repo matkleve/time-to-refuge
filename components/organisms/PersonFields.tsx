@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
+import { Check, Copy, Eye, Pencil, RotateCcw, X } from "lucide-react";
 import { Person, PHASES, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
 import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -202,38 +202,52 @@ function FieldRow({
         />
       </div>
     );
-  } else if (!filled && confirmSkip && expected) {
+  } else if (!filled && confirmSkip) {
     /*
-     * The one deliberate exception to "a row never resizes" (design system
-     * §3): that rule is about not shifting things during ordinary
-     * interaction, and this isn't ordinary — it only ever shows up right
-     * after the tap that triggered it, with attention already on this
-     * exact row, asking about something that's about to become permanent.
+     * Out-of-order arm: same reveal as filled-row actions (§5a) — fixed
+     * height, stamp packs left to "Jump here", X / OK glass chips on the right.
      */
     body = (
-      <div className="flex w-full flex-col gap-2 px-4 py-2.5 animate-fade-in-up">
-        <p className="text-sm text-ink">
-          Record {PHASE_LABELS[phase]} before {PHASE_LABELS[expected]}?
-        </p>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => setConfirmSkip(false)}
-            className="rounded-xl px-3 py-1.5 text-sm text-muted transition-colors duration-200 hover:bg-ink/[0.05]"
+      <div ref={confirmSkipRef} className={cn("flex w-full items-center", rowHeight)}>
+        <div
+          className={cn(
+            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
+            rowHeight,
+            glassRowClass(),
+          )}
+        >
+          <span
+            className={cn(
+              "font-display font-medium text-ink",
+              overview ? "text-sm" : "text-lg",
+            )}
           >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setConfirmSkip(false);
-              onSelectPhase?.(phase);
-            }}
-            className="rounded-xl bg-flagblue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-flagblue-700"
-          >
-            Record it
-          </button>
+            Jump here
+          </span>
+          <RowPackSpacer packed />
         </div>
+        <RowActionTray open>
+          <div className="flex shrink-0 items-center gap-2">
+            <IconButton
+              icon={X}
+              label="Cancel"
+              glass
+              onClick={() => setConfirmSkip(false)}
+              size="md"
+            />
+            <IconButton
+              icon={Check}
+              label={`Record ${PHASE_LABELS[phase]} out of order`}
+              glass
+              onClick={() => {
+                setConfirmSkip(false);
+                onSelectPhase?.(phase);
+              }}
+              tone="accent"
+              size="md"
+            />
+          </div>
+        </RowActionTray>
       </div>
     );
   } else if (!filled) {
@@ -362,6 +376,11 @@ function FieldRow({
         </RowActionTray>
       </div>
     );
+  }
+
+  if (confirmSkip && !filled) {
+    /* Stamp + tray already carry glass; don't wrap in another glass shell. */
+    return <div className="rounded-2xl">{body}</div>;
   }
 
   if (!filled || editing || !onClear) {
