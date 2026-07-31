@@ -344,6 +344,7 @@ export default function Home() {
       onCapture={handleCapture}
       onClear={handleClear}
       onResetAll={handleResetAll}
+      onDelete={handleDeletePerson}
       onExport={(p) => downloadPersonCsv(p, retreatName)}
       onRename={handleRenamePerson}
       onEditTime={handleEditTime}

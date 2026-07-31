@@ -135,7 +135,7 @@ export function PersonCard({
   if (onDelete) {
     menuItems.push({
       id: "delete",
-      label: remove.armed ? "Confirm delete" : "Delete",
+      label: remove.armed ? "Confirm delete" : "Delete person",
       icon: Trash2,
       tone: "danger",
       selected: remove.armed,

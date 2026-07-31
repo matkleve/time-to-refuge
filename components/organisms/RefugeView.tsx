@@ -15,6 +15,7 @@ interface RefugeViewProps {
   onCapture: (personId: string, phase: Phase) => void;
   onClear: (personId: string, phase: Phase) => void;
   onResetAll: (personId: string) => void;
+  onDelete: (personId: string) => void;
   onExport: (person: Person) => void;
   onRename: (personId: string, name: string) => void;
   onEditTime: (personId: string, phase: Phase, at: number) => void;
@@ -57,6 +58,7 @@ export function RefugeView({
   onCapture,
   onClear,
   onResetAll,
+  onDelete,
   onExport,
   onRename,
   onEditTime,
@@ -127,6 +129,7 @@ export function RefugeView({
                     onSelectPhase={isCurrent ? setSelectedPhase : undefined}
                     onClear={(phase) => onClear(p.id, phase)}
                     onResetAll={() => onResetAll(p.id)}
+                    onDelete={() => onDelete(p.id)}
                     onExport={() => onExport(p)}
                     onRename={(name) => onRename(p.id, name)}
                     onEditTime={(phase, at) => onEditTime(p.id, phase, at)}

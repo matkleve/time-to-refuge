@@ -158,6 +158,7 @@ export function DesktopWorkspace({
               onSelectPhase={setSelectedPhase}
               onClear={(phase) => onClear(current.id, phase)}
               onResetAll={() => onResetAll(current.id)}
+              onDelete={() => onDelete(current.id)}
               onExport={() => onExport(current)}
               onRename={(name) => onRename(current.id, name)}
               onEditTime={(phase, at) => onEditTime(current.id, phase, at)}
