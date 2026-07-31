@@ -5,14 +5,20 @@ import { ChevronDown, Globe } from "lucide-react";
 import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
-const FALLBACK_ZONES = [
+/**
+ * Curated zones for Quick Log — not `Intl.supportedValuesOf("timeZone")`,
+ * which is hundreds of IANA ids. Device zone is always merged in below.
+ */
+const CURATED_ZONES = [
   "UTC",
   "America/Los_Angeles",
   "America/Denver",
   "America/Chicago",
   "America/New_York",
   "Europe/London",
+  "Europe/Paris",
   "Europe/Berlin",
+  "Europe/Vienna",
   "Europe/Kathmandu",
   "Asia/Kolkata",
   "Asia/Bangkok",
@@ -22,18 +28,17 @@ const FALLBACK_ZONES = [
   "Pacific/Auckland",
 ];
 
-function getTimezones(): string[] {
-  const supportedValuesOf = (Intl as unknown as { supportedValuesOf?: (key: string) => string[] })
-    .supportedValuesOf;
-  let zones = FALLBACK_ZONES;
-  if (typeof supportedValuesOf === "function") {
-    try {
-      zones = supportedValuesOf("timeZone");
-    } catch {
-      zones = FALLBACK_ZONES;
-    }
-  }
-  return zones.includes("UTC") ? zones : ["UTC", ...zones];
+function listTimezones(): string[] {
+  const device = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const set = new Set(CURATED_ZONES);
+  if (device) set.add(device);
+  return Array.from(set).sort((a, b) => {
+    if (a === "UTC") return -1;
+    if (b === "UTC") return 1;
+    if (a === device) return -1;
+    if (b === device) return 1;
+    return a.localeCompare(b);
+  });
 }
 
 interface TimezoneSelectProps {
@@ -50,7 +55,11 @@ export function TimezoneSelect({
   compact = false,
   className,
 }: TimezoneSelectProps) {
-  const zones = useMemo(() => getTimezones(), []);
+  const zones = useMemo(() => {
+    const list = listTimezones();
+    // If value somehow isn't in the list (stale storage), keep it selectable.
+    return list.includes(value) ? list : [value, ...list];
+  }, [value]);
 
   const field = (
     <span className={cn("relative inline-flex min-w-0 items-center", compact && "w-full")}>
