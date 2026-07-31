@@ -19,6 +19,7 @@ import {
 } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
+import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { Surface } from "@/components/atoms/Surface";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
 import { AppShell } from "@/components/AppShell";
@@ -366,9 +367,13 @@ export default function Home() {
           material="glass-panel"
           className="relative z-20 flex shrink-0 items-center gap-4 px-6 py-4"
         >
-          <div className="flex min-w-0 flex-col">
-            <p className="font-display text-2xl font-semibold text-ink">Timekeeper</p>
-            <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <BrandLockup titleSize="4xl" />
+            <RetreatNameField
+              value={retreatName}
+              onChange={setRetreatName}
+              className="pl-[calc(2.5rem+0.625rem)] text-sm"
+            />
           </div>
           <div className="ml-auto flex items-center gap-1">{menu}</div>
         </Surface>
@@ -385,9 +390,13 @@ export default function Home() {
         className="relative z-20 flex shrink-0 items-center justify-between gap-2 border-b border-line px-3 py-2.5"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
-        <div className="flex min-w-0 flex-col">
-          <p className="font-display text-lg font-semibold text-ink">Timekeeper</p>
-          <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <BrandLockup titleSize="2xl" />
+          <RetreatNameField
+            value={retreatName}
+            onChange={setRetreatName}
+            className="pl-[calc(2rem+0.625rem)] text-sm"
+          />
         </div>
         <div className="flex min-w-0 items-center gap-0.5">{menu}</div>
       </Surface>

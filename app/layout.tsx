@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   title: "Time to Refuge",
   description:
     "Record the exact moment each person takes refuge in the Buddha, the Dharma and the Sangha.",
+  icons: {
+    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
+    apple: "/logo.png",
+  },
 };
 
 export const viewport: Viewport = {

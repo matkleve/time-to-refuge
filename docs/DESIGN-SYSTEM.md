@@ -50,8 +50,8 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.25rem (36px) | The hero clock |
-| `text-2xl` | 1.5rem (24px) | Person name on the focused card |
+| `text-4xl` | 2.25rem (36px) | Hero clock · desktop header “Timekeeper” |
+| `text-2xl` | 1.5rem (24px) | Person name on the focused card · mobile header “Timekeeper” |
 | `text-lg` | 1.0625rem (17px) | Panel titles, name in the overview, field rows |
 | `text-base` | 0.9375rem (15px) | Default UI text |
 | `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
