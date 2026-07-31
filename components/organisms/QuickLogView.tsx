@@ -134,7 +134,7 @@ export function QuickLogView() {
             as="p"
             material="glass-panel"
             rim
-            className="mx-auto rounded-2xl px-4 py-2 text-center text-sm text-subtle shadow-sm"
+            className="mx-auto rounded-2xl px-4 py-2 text-center text-sm text-muted"
           >
             Tap anywhere to log a time.
           </Surface>

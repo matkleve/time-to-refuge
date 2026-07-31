@@ -188,7 +188,7 @@ export function LocationCheck() {
         <Surface
           material="glass-panel"
           rim
-          className="animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left shadow-2xl"
+          className="animate-fade-in-up absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left"
         >
           {status === "checking" && (
             <>
@@ -208,7 +208,7 @@ export function LocationCheck() {
               <p className="text-sm text-muted">
                 Device clock: {info.timezone} · {info.offset}
               </p>
-              <p className="text-xs text-subtle">
+              <p className="text-xs text-muted">
                 Your device says it&apos;s here, and its clock&apos;s time zone fits
                 this place — so it isn&apos;t still set to somewhere you traveled
                 from. Worth a glance once before the ceremony starts.
@@ -218,7 +218,7 @@ export function LocationCheck() {
 
           {status === "ok" && info && mismatch && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-600">
+              <p className="text-sm font-medium text-danger-700">
                 This device&apos;s clock may be wrong
               </p>
               <p className="text-base text-ink">{info.place}</p>
@@ -226,7 +226,7 @@ export function LocationCheck() {
                 Device clock: {info.timezone} · {info.offset} — expected around{" "}
                 {info.expectedOffset} here.
               </p>
-              <p className="text-xs text-subtle">
+              <p className="text-xs text-muted">
                 That&apos;s too far off to be this place&apos;s own time zone. If you
                 just traveled here, the clock may still be set to where you came
                 from — check your phone&apos;s date &amp; time settings before the
@@ -237,10 +237,10 @@ export function LocationCheck() {
 
           {status === "denied" && info && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-600">
+              <p className="text-sm font-medium text-danger-700">
                 Location access is off
               </p>
-              <p className="text-xs text-subtle">
+              <p className="text-xs text-muted">
                 This device reports its clock as {info.timezone} ({info.offset}), but
                 without location that can&apos;t be checked against where you actually
                 are. If you just traveled here, open your phone&apos;s date &amp; time
@@ -251,10 +251,10 @@ export function LocationCheck() {
 
           {status === "unavailable" && info && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-600">
+              <p className="text-sm font-medium text-danger-700">
                 Couldn&apos;t name your location
               </p>
-              <p className="text-xs text-subtle">
+              <p className="text-xs text-muted">
                 Location itself worked, but looking up its name needs a network
                 connection this device doesn&apos;t have right now. This device reports
                 its clock as {info.timezone} ({info.offset}) — if you just traveled
@@ -266,10 +266,10 @@ export function LocationCheck() {
 
           {status === "error" && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-600">
+              <p className="text-sm font-medium text-danger-700">
                 Can&apos;t check location here
               </p>
-              <p className="text-xs text-subtle">
+              <p className="text-xs text-muted">
                 This browser or device doesn&apos;t support location lookup. Check
                 your phone&apos;s date, time, and time zone settings directly before
                 the ceremony starts.

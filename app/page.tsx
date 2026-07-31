@@ -30,7 +30,7 @@ import { PeopleSheet } from "@/components/organisms/PeopleSheet";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
-import { SOLID } from "@/lib/surfaces";
+import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 type View = "refuge" | "quicklog";
@@ -226,7 +226,7 @@ export default function Home() {
         <Surface
           as="header"
           material="glass-panel"
-          className="flex shrink-0 items-center gap-4 px-6 py-4 shadow-lg"
+          className="flex shrink-0 items-center gap-4 px-6 py-4"
         >
           <div className="flex flex-col">
             <p className="font-display text-xl font-semibold text-ink">Time to Refuge</p>
@@ -287,7 +287,7 @@ export default function Home() {
             <Surface
               material="glass-panel"
               rim
-              className="w-full max-w-md overflow-hidden rounded-3xl shadow-xl"
+              className="w-full max-w-md overflow-hidden rounded-3xl"
             >
               <QuickLogView />
             </Surface>
@@ -393,7 +393,7 @@ export default function Home() {
                 as="p"
                 material="glass-panel"
                 rim
-                className="rounded-2xl px-5 py-3 text-base text-ink shadow-lg"
+                className="rounded-2xl px-5 py-3 text-base text-ink"
               >
                 Add the people taking refuge to begin.
               </Surface>
@@ -401,8 +401,8 @@ export default function Home() {
                 type="button"
                 onClick={() => setPeopleOpen(true)}
                 className={cn(
-                  "rounded-xl px-5 py-2.5 text-base font-medium text-white shadow-lg transition-colors duration-200 active:scale-95",
-                  SOLID.primary,
+                  "rounded-xl px-5 py-2.5 text-base font-medium text-white transition-[box-shadow,background-color,transform] duration-200 active:scale-95",
+                  actionClass("primary"),
                 )}
               >
                 Add a person

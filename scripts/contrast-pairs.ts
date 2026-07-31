@@ -36,6 +36,7 @@ export const TOKENS = {
   flagblue700: "#153582",
   danger500: "#d92d20",
   danger600: "#b42318",
+  danger700: "#9c2816",
   danger50: "#fdeceb",
 };
 
@@ -90,29 +91,37 @@ export const GLASS_PAIRS = [
   // ── panel: header bars, the location popover, empty-state notes ─────────
   { name: "ink on panel glass", fg: "ink", bg: "white", surface: "panel", min: 4.5 },
   { name: "muted on panel glass", fg: "muted", bg: "white", surface: "panel", min: 4.5 },
-  { name: "subtle on panel glass", fg: "subtle", bg: "white", surface: "panel", min: 3.0 },
+  // Fine print on glass uses `muted`, not `subtle` — subtle fails under /62.
   { name: "flagblue-600 on panel glass", fg: "flagblue600", bg: "white", surface: "panel", min: 4.5 },
-  { name: "danger-600 on panel glass", fg: "danger600", bg: "white", surface: "panel", min: 4.5 },
+  { name: "danger-700 on panel glass", fg: "danger700", bg: "white", surface: "panel", min: 4.5 },
 
   // ── card shell ──────────────────────────────────────────────────────────
   { name: "name 24px on card glass", fg: "ink", bg: "white", surface: "card", min: 3.0 },
-  { name: "name 24px on card glass (current)", fg: "ink", bg: "cardCurrent", surface: "card", min: 3.0 },
+  { name: "name 24px on card glass (current)", fg: "ink", bg: "cardCurrent", surface: "cardCurrent", min: 3.0 },
   { name: "armed name 24px on card glass", fg: "danger600", bg: "white", surface: "card", min: 3.0 },
-  { name: "armed name 24px on card glass (current)", fg: "danger600", bg: "cardCurrent", surface: "card", min: 3.0 },
-  { name: "retreat caption on card glass", fg: "muted", bg: "white", surface: "card", min: 4.5 },
-  { name: "retreat caption on card glass (current)", fg: "muted", bg: "cardCurrent", surface: "card", min: 4.5 },
+  { name: "armed name 24px on card glass (current)", fg: "danger600", bg: "cardCurrent", surface: "cardCurrent", min: 3.0 },
+  { name: "retreat caption on card glass", fg: "ink", bg: "white", surface: "card", min: 4.5 },
+  { name: "retreat caption on card glass (current)", fg: "ink", bg: "cardCurrent", surface: "cardCurrent", min: 4.5 },
   { name: "share note on card glass", fg: "flagblue600", bg: "white", surface: "card", min: 4.5 },
-  { name: "share note on card glass (current)", fg: "flagblue600", bg: "cardCurrent", surface: "card", min: 4.5 },
+  { name: "share note on card glass (current)", fg: "flagblue600", bg: "cardCurrent", surface: "cardCurrent", min: 4.5 },
 
   // ── field rows stacked on the card shell ────────────────────────────────
   { name: "filled label on card row", fg: "ink", bg: "white", surface: "cardRow", min: 4.5 },
-  { name: "filled label on card row (current)", fg: "ink", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "filled label on card row (current)", fg: "ink", bg: "cardCurrent", surface: "cardRowCurrent", min: 4.5 },
   { name: "empty label on card row", fg: "muted", bg: "white", surface: "cardRow", min: 4.5 },
-  { name: "empty label on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "empty label on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRowCurrent", min: 4.5 },
   { name: "recorded time on card row", fg: "saffron700", bg: "white", surface: "cardRow", min: 4.5 },
-  { name: "recorded time on card row (current)", fg: "saffron700", bg: "cardCurrent", surface: "cardRow", min: 4.5 },
+  { name: "recorded time on card row (current)", fg: "saffron700", bg: "cardCurrent", surface: "cardRowCurrent", min: 4.5 },
   { name: "row icons on card row", fg: "muted", bg: "white", surface: "cardRow", min: 3.0 },
-  { name: "row icons on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRow", min: 3.0 },
+  { name: "row icons on card row (current)", fg: "muted", bg: "cardCurrent", surface: "cardRowCurrent", min: 3.0 },
+
+  // ── action buttons (tinted glass over the photo) ────────────────────────
+  // Clock digits are large text (36px) → 3.0; the phase label is small → 4.5.
+  { name: "clock on primary action glass", fg: "white", bg: "flagblue600", surface: "actionPrimary", min: 3.0 },
+  { name: "phase label on primary action glass", fg: "white", bg: "flagblue600", surface: "actionPrimary", min: 4.5 },
+  { name: "clock on idle action glass", fg: "muted", bg: "white", surface: "actionIdle", min: 4.5 },
+  { name: "clock on accent action glass", fg: "ink", bg: "saffron400", surface: "actionAccent", min: 3.0 },
+  { name: "label on accent action glass", fg: "ink", bg: "saffron400", surface: "actionAccent", min: 4.5 },
 ];
 
 /** Guard: fill class `/NN` must match `alpha` or the UI and the checker diverge. */

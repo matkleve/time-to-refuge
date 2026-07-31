@@ -221,7 +221,7 @@ export function PersonCard({
   const body = (
     <>
       {showRetreatCaption && (
-        <p className="truncate px-4 pt-3 text-xs tracking-wide text-muted uppercase">
+        <p className="truncate px-4 pt-3 text-xs tracking-wide text-ink uppercase">
           {retreatName}
         </p>
       )}
@@ -281,8 +281,7 @@ export function PersonCard({
     <Surface
       material={isCurrent ? "glass-card-current" : "glass-card"}
       rim
-      className="overflow-hidden rounded-3xl shadow-xl"
-    >
+      className="overflow-hidden rounded-3xl"    >
       {body}
     </Surface>
   );

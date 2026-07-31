@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
-import { SOLID } from "@/lib/surfaces";
+import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { LocationCheck } from "./LocationCheck";
 
@@ -45,11 +45,11 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
         onClick={handleClick}
         disabled={!armed}
         className={cn(
-          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg",
-          "transition-colors duration-150 ease-out active:scale-[0.98]",
-          /* Flat solid fill — no gradient (design system §4 / UC-1). */
-          armed ? SOLID.primary : SOLID.primaryIdle,
-          flash && "ring-4 ring-saffron-400",
+          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6",
+          "transition-[box-shadow,background-color,transform] duration-150 ease-out active:scale-[0.98]",
+          /* Tinted glass + specular light catch — not a solid fill, not a gradient. */
+          armed ? actionClass("primary") : actionClass("primaryIdle"),
+          flash && "ring-4 ring-saffron-400/80",
         )}
       >
         <span
@@ -59,12 +59,12 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
           )}
         >
           {time}
-          <span className={cn("text-2xl", armed ? "text-white/70" : "text-subtle")}>.{ms}</span>
+          <span className={cn("text-2xl", armed ? "text-white/75" : "text-subtle")}>.{ms}</span>
         </span>
         <span
           className={cn(
             "text-xs tracking-[0.2em] uppercase",
-            armed ? "text-white/85" : "text-muted",
+            armed ? "text-white/90" : "text-muted",
           )}
         >
           {label}

@@ -75,7 +75,7 @@ export function DesktopWorkspace({
       <Surface
         material="glass-panel"
         rim
-        className="flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl shadow-xl"
+        className="flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl"
       >
         <div className="border-b border-line px-4 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
@@ -164,7 +164,7 @@ export function DesktopWorkspace({
             as="p"
             material="glass-panel"
             rim
-            className="mt-20 rounded-2xl px-6 py-4 text-center text-base text-ink shadow-lg"
+            className="mt-20 rounded-2xl px-6 py-4 text-center text-base text-ink"
           >
             {people.length === 0
               ? "Add the first person taking refuge to begin."

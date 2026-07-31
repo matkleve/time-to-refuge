@@ -103,7 +103,7 @@ Never hand-roll `bg-white/NN backdrop-blur-…` in a component.
 | --- | --- | --- |
 | **Cloudy glass** | Surface sits over the backdrop photo | `material="glass-panel"` / `glass-card` / `glass-card-current` |
 | **Filled** | Surface sits over live UI, or must hide a swipe panel | `filled-sheet`, `filled-card`, `filled-card-current` |
-| **Solid** | Primary actions (record / quick-log) | `SOLID.primary` / `SOLID.accent` — **flat colour, no gradients** |
+| **Action glass** | Record / Quick Log over the photo | `actionClass("primary" \| "accent" \| "primaryIdle")` — tinted glass + specular, **no gradients** |
 
 Use-case link: glass is atmosphere around the ceremony record (**UC-1** lives
 on the solid record button). Sheets that cover the live Refuge view stay
@@ -125,35 +125,37 @@ that must stay hidden until swiped.
   at build time. Every surface that needs to stay solid sets its own opaque
   background explicitly.
 
-## 3a. Cloudy glass
+## 3a. Glass — light deflection
 
-A soft translucent fill plus `backdrop-blur-2xl backdrop-saturate-150` —
-defined once as `GLASS_FX` in `lib/surfaces.ts`. Saturate is *150* (not 200)
-so the photo reads as mist, not candy. Opacity differs per surface; blur and
-saturate do not.
+The glass identity is **specular light catch**, not heavy blur — the way iOS
+glass catches a highlight along the top edge and a bright rim where light
+deflects. Implemented as `--shadow-glass` / `--shadow-glass-action` in
+`globals.css` (inset top highlight + soft lift), plus a `border-white/55`
+rim. A light `backdrop-blur-xl` only softens the photo through the fill; it
+is supporting, not the effect.
 
-| Surface | Opacity | Limited by |
+| Surface | Opacity | Notes |
 | --- | --- | --- |
-| `panel` — headers, popovers, empty notes | `/68` | `danger-600` / body text on panel |
-| `card` — focused person-card shell | `/74` | retreat caption (`muted`) on saffron tint |
-| `cardRow` — field row stacked on `card` | `/38` | recorded time (`saffron-700`) |
+| `panel` | `/62` | Headers, popovers, empty notes |
+| `card` | `/50` | Focused person-card shell |
+| `cardCurrent` | `/58` | Saffron mist when marked current |
+| `cardRow` | `/50` | Field row stacked on the card |
+| `actionPrimary` / `actionAccent` | `/42` | Record / Quick Log — tinted glass |
+| `actionIdle` | `/62` | Disarmed record button |
 
-`npm run a11y:contrast` imports these alphas from `lib/surfaces.ts` and also
-asserts that each fill class's `/NN` matches its `alpha` — so the UI and the
-checker cannot drift apart.
+Primary actions use `actionClass()` — translucent tint + specular, **no
+gradients**. Fine print on glass panels uses `muted` (not `subtle`); danger
+copy on glass uses `danger-700`.
 
-Plain Tailwind utilities only. An earlier `@utility glass` that wrote both
-`backdrop-filter` and `-webkit-backdrop-filter` made the build tool drop the
-standard property; diagnosing that required reading compiled CSS. First-party
-utilities don't have that failure mode.
+`npm run a11y:contrast` imports these alphas from `lib/surfaces.ts` and
+asserts each fill class's `/NN` matches its `alpha`.
 
-**Glass only over the backdrop photo.** `HistoryPanel` and `PeopleSheet` stay
-filled — they sit on the live Refuge view. Overview cards stay filled for the
-delete-panel reason above. The **focused** card is glass: it floats on the
-photo with no panel underneath.
+Plain Tailwind utilities only — never a custom `@utility` that writes both
+`backdrop-filter` and `-webkit-backdrop-filter`.
 
-Floating cloudy panels take `rim` (`border border-white/50`). Edge-to-edge
-bars (headers, tab switchers) do not.
+**Glass only over the backdrop photo.** `HistoryPanel` and `PeopleSheet`
+stay filled. Overview cards stay filled (swipe-delete panel). The focused
+card and the record / Quick Log buttons are glass.
 
 ## 3b. Desktop, not mobile-stretched
 
@@ -180,10 +182,11 @@ had to be designed separately from the same data and handlers.
 
 ## 4. Controls
 
-**No gradients.** Primary actions use flat solid fills from `SOLID` in
-`lib/surfaces.ts` — `flagblue-600` for the record button, `saffron-400` for
-Quick Log. A light-to-dark wash fights the cloudy glass and muddies the one
-control that must read instantly under ceremony pressure (**UC-1**).
+**No gradients.** Primary actions use tinted glass from `actionClass()` in
+`lib/surfaces.ts` — translucent `flagblue-600` / `saffron-400` with the same
+specular light catch as every other glass surface. A light-to-dark wash
+fights the glass and muddies the one control that must read under ceremony
+pressure (**UC-1**).
 
 **Sizes.** Two, and nothing smaller than the `sm`:
 

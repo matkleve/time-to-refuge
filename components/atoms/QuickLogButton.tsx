@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
-import { SOLID } from "@/lib/surfaces";
+import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 interface QuickLogButtonProps {
@@ -36,18 +36,18 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
         onLog();
       }}
       className={cn(
-        "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6 shadow-lg",
-        "transition-colors duration-150 ease-out",
-        /* Flat solid saffron — no gradient. Ink on gold (contrast rule). */
-        SOLID.accent,
-        flash && "scale-[0.98] ring-4 ring-flagblue-500",
+        "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
+        "transition-[box-shadow,background-color,transform] duration-150 ease-out",
+        /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
+        actionClass("accent"),
+        flash && "scale-[0.98] ring-4 ring-flagblue-500/80",
       )}
     >
       <span className="font-mono text-4xl font-semibold tabular-nums tracking-wide text-ink">
         {time}
-        <span className="text-2xl text-ink/60">.{ms}</span>
+        <span className="text-2xl text-ink/65">.{ms}</span>
       </span>
-      <span className="text-xs tracking-[0.2em] text-ink/75 uppercase">Tap anywhere to log</span>
+      <span className="text-xs tracking-[0.2em] text-ink/80 uppercase">Tap anywhere to log</span>
     </button>
   );
 }

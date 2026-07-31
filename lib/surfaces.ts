@@ -1,18 +1,19 @@
 /**
- * Materials — the one place glass / filled / solid fills are defined.
+ * Materials — the one place glass / filled / action fills are defined.
  *
  * Use-case rule (see docs/USE-CASES.md + DESIGN-SYSTEM.md §3):
- *   - Glass only over the backdrop photo (headers, focused card, empty notes).
+ *   - Glass only over the backdrop photo (headers, focused card, actions, notes).
  *   - Filled when the surface sits over live UI (sheets, overview swipe cards).
- *   - Solid flat colour for primary actions (record / quick-log) — never a gradient.
  *
- * Cloudy glass = translucent white + soft blur + gentle saturate. Opacity floors
- * are measured against GLASS_WORST_CASE_BG (real backdrop darkest pixel, not
- * pure black). Changing an alpha means updating the fill class *and* re-running
- * `npm run a11y:contrast`.
+ * The glass identity is **light deflection**, not heavy blur — a specular
+ * highlight along the top edge and a bright refractive rim, the way iOS
+ * glass catches light. A light backdrop-filter is only there so the photo
+ * softens through the fill; it is not the effect.
  *
- * This module is imported by both the app and `scripts/a11y-contrast.ts`, so it
- * must not use path aliases (`@/…`) — Node cannot resolve them.
+ * Opacity floors are measured against GLASS_WORST_CASE_BG. Changing an alpha
+ * means updating the fill class *and* re-running `npm run a11y:contrast`.
+ *
+ * No path aliases — this module is also imported by `scripts/a11y-contrast.ts`.
  */
 
 function cx(...parts: Array<string | false | null | undefined>): string {
@@ -23,14 +24,24 @@ function cx(...parts: Array<string | false | null | undefined>): string {
 export const GLASS_WORST_CASE_BG = "#828280";
 
 /**
- * Soft saturate (150, not 200) so the photo reads as mist, not candy.
- * Plain Tailwind utilities only — never a custom `@utility glass` (that hid a
- * real `backdrop-filter` compile bug once).
+ * Supporting soften only — keep it light so the specular rim stays visible.
+ * Never a custom `@utility` that writes both `backdrop-filter` and
+ * `-webkit-backdrop-filter` (that hid a real compile bug once).
  */
-export const GLASS_FX = "backdrop-blur-2xl backdrop-saturate-150" as const;
+export const GLASS_FX = "backdrop-blur-xl backdrop-saturate-150" as const;
 
-/** Soft rim catching light on floating cloudy panels. */
-export const GLASS_RIM = "border border-white/50" as const;
+/**
+ * Refractive rim — bright edge where light deflects off the glass.
+ * Used on floating surfaces and action buttons.
+ */
+export const GLASS_RIM = "border border-white/55" as const;
+
+/**
+ * Specular light catch — inset top highlight + soft lift.
+ * Defined as `--shadow-glass` / `--shadow-glass-action` in globals.css.
+ */
+export const GLASS_SPECULAR = "shadow-glass" as const;
+export const GLASS_SPECULAR_ACTION = "shadow-glass-action" as const;
 
 /**
  * Glass materials. `fill` must be a full Tailwind class so the scanner sees it.
@@ -38,16 +49,22 @@ export const GLASS_RIM = "border border-white/50" as const;
  */
 export const GLASS = {
   /** Headers, tab bars, popovers, empty-state notes over the photo. */
-  panel: { alpha: 0.68, fill: "bg-white/68", color: "white" },
-  /** Focused person-card shell. */
-  card: { alpha: 0.74, fill: "bg-white/74", color: "white" },
+  panel: { alpha: 0.62, fill: "bg-white/62", color: "white" },
+  /** Focused person-card shell — see-through so the photo reads through. */
+  card: { alpha: 0.5, fill: "bg-white/50", color: "white" },
   /** Focused card when marked current (saffron mist). */
-  cardCurrent: { alpha: 0.74, fill: "bg-saffron-100/74", color: "cardCurrent" },
+  cardCurrent: { alpha: 0.58, fill: "bg-saffron-100/58", color: "cardCurrent" },
   /**
-   * Field row stacked on the card shell — no blur of its own; the shell
-   * already blurs the photo. This is what makes the card *read* as glass.
+   * Field row stacked on the card shell — translucent, no blur of its own.
+   * Specular is optional; the shell already carries the light catch.
    */
-  cardRow: { alpha: 0.38, fill: "bg-white/38", color: "white", over: "card" as const },
+  cardRow: { alpha: 0.5, fill: "bg-white/50", color: "white", over: "card" as const },
+  /** Record button (armed) — tinted glass over the photo. */
+  actionPrimary: { alpha: 0.42, fill: "bg-flagblue-600/42", color: "flagblue600" },
+  /** Record button (idle). */
+  actionIdle: { alpha: 0.62, fill: "bg-white/62", color: "white" },
+  /** Quick Log button. */
+  actionAccent: { alpha: 0.42, fill: "bg-saffron-400/42", color: "saffron400" },
 } as const;
 
 export type GlassKind = keyof typeof GLASS;
@@ -61,36 +78,61 @@ export const FILLED = {
 } as const;
 
 /**
- * Primary actions: flat solid fills. No gradients — the record moment (UC-1)
- * and Quick Log need a single clear colour, not a light-to-dark wash.
+ * @deprecated Use `actionClass` — primary actions are glass now, not solid.
+ * Kept as aliases so stray imports fail loudly toward the new API if grepped.
  */
 export const SOLID = {
-  primary: "bg-flagblue-600 hover:bg-flagblue-500",
-  primaryIdle: "bg-card",
-  accent: "bg-saffron-400 hover:bg-saffron-300",
+  primary: "bg-flagblue-600/42",
+  primaryIdle: "bg-white/45",
+  accent: "bg-saffron-400/42",
 } as const;
 
 /** Shape used by `scripts/a11y-contrast` — alphas + stack graph only. */
 export const GLASS_SURFACES = {
   panel: { alpha: GLASS.panel.alpha },
   card: { alpha: GLASS.card.alpha },
+  cardCurrent: { alpha: GLASS.cardCurrent.alpha },
   cardRow: {
     alpha: GLASS.cardRow.alpha,
     over: GLASS.cardRow.over,
     color: GLASS.cardRow.color,
   },
+  /** Field row stacked on a current (saffron) card shell. */
+  cardRowCurrent: {
+    alpha: GLASS.cardRow.alpha,
+    over: "cardCurrent" as const,
+    color: GLASS.cardRow.color,
+  },
+  actionPrimary: { alpha: GLASS.actionPrimary.alpha },
+  actionIdle: { alpha: GLASS.actionIdle.alpha },
+  actionAccent: { alpha: GLASS.actionAccent.alpha },
 } as const;
 
 export function glassClass(
   kind: "panel" | "card" | "cardCurrent",
   opts: { rim?: boolean } = {},
 ): string {
-  return cx(GLASS[kind].fill, GLASS_FX, opts.rim && GLASS_RIM);
+  return cx(
+    GLASS[kind].fill,
+    GLASS_FX,
+    GLASS_SPECULAR,
+    opts.rim && GLASS_RIM,
+  );
+}
+
+/**
+ * Primary / accent action buttons — tinted glass with the same light catch.
+ * No gradients: a single translucent tint + specular rim.
+ */
+export function actionClass(kind: "primary" | "primaryIdle" | "accent"): string {
+  const glassKind =
+    kind === "primary" ? "actionPrimary" : kind === "accent" ? "actionAccent" : "actionIdle";
+  return cx(GLASS[glassKind].fill, GLASS_FX, GLASS_SPECULAR_ACTION, GLASS_RIM);
 }
 
 /** Field row fill for the focused (glass) card — translucent, no blur. */
 export function glassRowClass(): string {
-  return GLASS.cardRow.fill;
+  return cx(GLASS.cardRow.fill, "shadow-glass-row");
 }
 
 export function filledCardClass(isCurrent = false): string {
