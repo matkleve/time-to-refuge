@@ -93,6 +93,7 @@ export function PersonCard({
     }
   }
 
+  /* Same ⋯ menu for overview + focused — GlassMenu parks danger below a hairline. */
   const menuItems: GlassMenuItem[] = [];
   if (onRename) {
     menuItems.push({
@@ -100,18 +101,6 @@ export function PersonCard({
       label: "Rename",
       icon: Pencil,
       onSelect: startEditing,
-    });
-  }
-  if (onResetAll) {
-    menuItems.push({
-      id: "reset",
-      label: resetAll.armed ? "Confirm reset all" : "Reset all",
-      icon: RotateCcw,
-      tone: "danger",
-      selected: resetAll.armed,
-      disabled: !anyFilled,
-      keepOpen: !resetAll.armed,
-      onSelect: () => resetAll.trigger(),
     });
   }
   if (onExport) {
@@ -132,6 +121,18 @@ export function PersonCard({
       void handleShare();
     },
   });
+  if (onResetAll) {
+    menuItems.push({
+      id: "reset",
+      label: resetAll.armed ? "Confirm reset all" : "Reset all",
+      icon: RotateCcw,
+      tone: "danger",
+      selected: resetAll.armed,
+      disabled: !anyFilled,
+      keepOpen: !resetAll.armed,
+      onSelect: () => resetAll.trigger(),
+    });
+  }
   if (onDelete) {
     menuItems.push({
       id: "delete",

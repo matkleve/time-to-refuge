@@ -17,6 +17,7 @@ interface PeopleSheetProps {
   onOpenAt: (id: string, phase: Phase | null) => void;
   onEditTime: (id: string, phase: Phase, at: number) => void;
   onClearTime: (id: string, phase: Phase) => void;
+  onResetAll: (id: string) => void;
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
   retreatName?: string;
@@ -33,6 +34,7 @@ export function PeopleSheet({
   onOpenAt,
   onEditTime,
   onClearTime,
+  onResetAll,
   onDelete,
   onRename,
   retreatName = "",
@@ -67,6 +69,7 @@ export function PeopleSheet({
                   onSelectPhase={(phase) => onOpenAt(p.id, phase)}
                   onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
                   onClear={(phase) => onClearTime(p.id, phase)}
+                  onResetAll={() => onResetAll(p.id)}
                   onDelete={() => onDelete(p.id)}
                   onExport={() => downloadPersonCsv(p, retreatName)}
                   onRename={(name) => onRename(p.id, name)}
