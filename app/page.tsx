@@ -311,7 +311,7 @@ export default function Home() {
       <Surface
         as="header"
         material="glass-panel"
-        className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-3 py-2.5"
+        className="relative z-20 flex shrink-0 items-center justify-between gap-2 border-b border-line px-3 py-2.5"
         style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
       >
         <div className="flex min-w-0 flex-col">
