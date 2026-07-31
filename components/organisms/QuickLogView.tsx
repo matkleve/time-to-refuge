@@ -197,16 +197,22 @@ export function QuickLogView() {
        keyboard-accessible equivalent is the real <button> in QuickLogButton
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
-      <Surface material="glass-panel" className="border-b border-line px-3 py-2">
-        <div className="flex items-center justify-between gap-2">
-          <span className="pl-1 text-sm text-muted">{entries.length} logged</span>
-          <span className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+      <Surface material="glass-panel" className="border-b border-white/40 px-3 py-2">
+        <div
+          className="flex items-center gap-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span className="shrink-0 pl-1 text-sm tabular-nums text-muted">
+            {entries.length} logged
+          </span>
+          <TimezoneSelect value={tz} onChange={setTz} compact />
+          <span className="flex shrink-0 items-center gap-0.5">
             <IconButton
               icon={RotateCcw}
               label={
                 clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
               }
-              showLabel={clearAll.armed ? "Confirm clear" : "Clear all"}
+              showLabel={clearAll.armed ? "Confirm" : "Clear"}
               tone="danger"
               size="sm"
               disabled={entries.length === 0}
@@ -218,9 +224,6 @@ export function QuickLogView() {
             />
             {clearAll.armed && <ArmedCancelButton onClick={clearAll.disarm} />}
           </span>
-        </div>
-        <div className="mt-1 px-1 pb-1" onClick={(e) => e.stopPropagation()}>
-          <TimezoneSelect value={tz} onChange={setTz} />
         </div>
       </Surface>
 

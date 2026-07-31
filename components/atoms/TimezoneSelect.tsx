@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 import { ChevronDown, Globe } from "lucide-react";
+import { glassClass } from "@/lib/surfaces";
+import { cn } from "@/lib/utils";
 
 const FALLBACK_ZONES = [
   "UTC",
@@ -37,34 +39,55 @@ function getTimezones(): string[] {
 interface TimezoneSelectProps {
   value: string;
   onChange: (tz: string) => void;
+  /** One-row chrome (Quick Log header) — no stacked label. */
+  compact?: boolean;
+  className?: string;
 }
 
-export function TimezoneSelect({ value, onChange }: TimezoneSelectProps) {
+export function TimezoneSelect({
+  value,
+  onChange,
+  compact = false,
+  className,
+}: TimezoneSelectProps) {
   const zones = useMemo(() => getTimezones(), []);
 
+  const field = (
+    <span className={cn("relative inline-flex min-w-0 items-center", compact && "w-full")}>
+      <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
+      <select
+        value={value}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label="Time zone"
+        className={cn(
+          "min-w-0 appearance-none py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200",
+          "rounded-xl",
+          glassClass("card", { rim: true }),
+          compact ? "w-full max-w-full truncate" : "max-w-[60vw]",
+        )}
+      >
+        {zones.map((z) => (
+          <option key={z} value={z}>
+            {z.replace(/_/g, " ")}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        className="pointer-events-none absolute right-2 size-4 text-muted"
+        aria-hidden
+      />
+    </span>
+  );
+
+  if (compact) {
+    return <div className={cn("min-w-0 flex-1", className)}>{field}</div>;
+  }
+
   return (
-    <label className="flex flex-col gap-0.5">
+    <label className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-xs font-medium text-muted">Time zone</span>
-      <span className="relative inline-flex items-center">
-        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-        <select
-          value={value}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label="Time zone"
-          className="max-w-[60vw] appearance-none rounded-xl border border-line bg-white py-1.5 pr-7 pl-8 text-sm text-ink transition-colors duration-200 hover:border-muted"
-        >
-          {zones.map((z) => (
-            <option key={z} value={z}>
-              {z.replace(/_/g, " ")}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-2 size-4 text-muted"
-          aria-hidden
-        />
-      </span>
+      {field}
     </label>
   );
 }
