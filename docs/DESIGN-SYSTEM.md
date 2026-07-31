@@ -442,12 +442,13 @@ never set at all.
 5. If naming fails but GPS worked, still run the rough check and badge it
    cautiously ("Zone OK?") — never pretend the place was named.
 
-- **The badge is a glass chip, not a solid pill** — same cloudy fill/rim as
-  row-reveal actions (`glassChipClass`). Idle reads "Check zone" (not
-  "Verify time": that overclaimed). A match shows the place (e.g.
-  "Vienna"). A problem — denied, mismatch, or failed rough check —
-  switches the label to "Check clock" and adds an inset danger ring. Idle
-  uses `Clock`, never a dimmed `Check` that would claim success early.
+- **The badge is an opaque light pill** — soft white / saffron / danger-50
+  fills so it stays readable on the glass record button (glass chips were
+  too see-through here). Idle reads "Check zone" (not "Verify time": that
+  overclaimed). A match shows the place (e.g. "Vienna"). A problem —
+  denied, mismatch, or failed rough check — switches the label to "Check
+  clock" on a light danger fill. Idle uses `Clock`, never a dimmed `Check`
+  that would claim success early.
 - **The popover shows both sides**: place zone · offset vs device zone ·
   offset, then a plain sentence for the match kind, plus an explicit
   disclaimer that this does not prove second-level sync.

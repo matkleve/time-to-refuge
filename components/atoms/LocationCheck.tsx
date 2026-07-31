@@ -3,7 +3,6 @@
 import { useCallback, useState } from "react";
 import { AlertTriangle, Check, Clock, Loader2 } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
-import { glassChipClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -280,17 +279,16 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 max-w-36 items-center gap-1.5 rounded-full pr-3 pl-2.5",
-          "transition-[color,box-shadow,transform] duration-200 ease-out active:scale-95",
-          /* Same cloudy chip recipe as row-reveal actions — not a solid white/saffron pill. */
-          glassChipClass(),
+          "no-select flex h-9 max-w-36 items-center gap-1.5 rounded-full border pr-3 pl-2.5 shadow-sm",
+          "transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-95",
+          /* Opaque light fill — glass was too see-through on the record button. */
           trouble
-            ? "text-danger-700 ring-2 ring-inset ring-danger-500"
+            ? "border-danger-200 bg-danger-50 text-danger-700"
             : softUnavailable
-              ? "text-saffron-800"
+              ? "border-saffron-200 bg-saffron-50 text-saffron-800"
               : status === "ok" && info?.matchesLocation
-                ? "text-saffron-800"
-                : "text-muted hover:text-ink",
+                ? "border-saffron-200 bg-saffron-50 text-saffron-800"
+                : "border-white/80 bg-white/95 text-muted hover:bg-white hover:text-ink",
         )}
       >
         {status === "checking" ? (
