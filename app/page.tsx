@@ -225,7 +225,7 @@ export default function Home() {
         <Surface
           as="header"
           material="glass-panel"
-          className="flex shrink-0 items-center gap-4 px-6 py-4"
+          className="relative z-20 flex shrink-0 items-center gap-4 px-6 py-4"
         >
           <div className="flex min-w-0 flex-col">
             <p className="font-display text-2xl font-semibold text-ink">Timekeeper</p>
