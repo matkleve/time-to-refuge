@@ -34,7 +34,7 @@ export function ViewMenu({ view, onChange, size = "md" }: ViewMenuProps) {
   });
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className={cn("relative", open && "z-50")} ref={menuRef}>
       <IconButton
         icon={Menu}
         label={open ? "Close menu" : "Open menu"}
@@ -48,7 +48,7 @@ export function ViewMenu({ view, onChange, size = "md" }: ViewMenuProps) {
           rim
           role="menu"
           aria-label="Pages"
-          className="absolute top-full right-0 z-40 mt-1.5 w-44 overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
+          className="absolute top-full right-0 z-50 mt-1.5 w-44 overflow-hidden rounded-2xl p-1.5 shadow-lg animate-fade-in-up"
         >
           {PAGES.map((page) => {
             const selected = view === page.id;
