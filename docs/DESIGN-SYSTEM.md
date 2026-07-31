@@ -235,7 +235,9 @@ with a hairline between them, then an icon-only strip —
 | **Actions** | Export all |
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
-Person-card ⋯ stays a flat menu (no section titles).
+Person-card ⋯ stays a flat menu (no section titles). Any item with
+`tone: "danger"` is moved to the **bottom** of its list, below a hairline
+separator — callers can push items in any order.
 
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
@@ -372,7 +374,7 @@ tap so pointer and touch share one path.
 | Surface | How actions open |
 | --- | --- |
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
-| Person card (overview / focused) | ⋯ menu → Rename / Reset all / Export / Share / Delete |
+| Person card (overview / focused) | ⋯ menu → Rename / Export / Share, then separator, then Reset all / Delete |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 
 Destructive controls still use the two-click armed pattern (§4): the first

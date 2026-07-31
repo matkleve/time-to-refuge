@@ -96,10 +96,34 @@ function MenuRows({
   );
 }
 
+/** Safe items first; any `tone: "danger"` items sit below a hairline. */
+function MenuItemList({
+  items,
+  onPick,
+}: {
+  items: GlassMenuItem[];
+  onPick: (item: GlassMenuItem) => void;
+}) {
+  const safe = items.filter((item) => item.tone !== "danger");
+  const danger = items.filter((item) => item.tone === "danger");
+  return (
+    <>
+      <MenuRows items={safe} onPick={onPick} />
+      {safe.length > 0 && danger.length > 0 && (
+        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
+      )}
+      <MenuRows items={danger} onPick={onPick} />
+    </>
+  );
+}
+
 /**
  * iOS-style cloudy menu: always icon + label; hover / selected is a light
  * glass wash — never a solid filled pill. Portaled so card overflow can't
  * clip it (navbar + person-card ⋯).
+ *
+ * Destructive items (`tone: "danger"`) always render at the bottom of their
+ * list, below a hairline separator from safe actions.
  */
 export function GlassMenu({
   label,
@@ -186,11 +210,11 @@ export function GlassMenu({
           <p className="px-3 pb-1 pt-1.5 text-xs font-medium uppercase tracking-wide text-muted">
             {section.title}
           </p>
-          <MenuRows items={section.items} onPick={pick} />
+          <MenuItemList items={section.items} onPick={pick} />
         </div>
       ))
     : items
-      ? <MenuRows items={items} onPick={pick} />
+      ? <MenuItemList items={items} onPick={pick} />
       : null;
 
   const iconStrip =
