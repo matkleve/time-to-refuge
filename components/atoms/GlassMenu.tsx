@@ -49,8 +49,6 @@ interface GlassMenuProps {
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
   size?: "sm" | "md";
-  /** Glass chip on the trigger (card chrome). */
-  glassTrigger?: boolean;
   align?: "left" | "right";
   className?: string;
 }
@@ -77,7 +75,7 @@ function MenuRows({
             disabled={item.disabled}
             onClick={() => onPick(item)}
             className={cn(
-              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium",
+              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
               "transition-[colors,transform,background-color] duration-150 ease-out",
               "disabled:pointer-events-none disabled:opacity-35",
               "active:scale-[0.98]",
@@ -88,7 +86,7 @@ function MenuRows({
                 : "hover:bg-white/40 focus-visible:bg-white/40",
             )}
           >
-            <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+            <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
             <span className="min-w-0 flex-1 truncate">{item.label}</span>
           </button>
         );
@@ -133,7 +131,6 @@ export function GlassMenu({
   iconActions,
   triggerIcon: TriggerIcon = MoreVertical,
   size = "md",
-  glassTrigger = false,
   align = "right",
   className,
 }: GlassMenuProps) {
@@ -267,9 +264,15 @@ export function GlassMenu({
         icon={TriggerIcon}
         label={open ? `Close ${label}` : label}
         size={size}
-        glass={glassTrigger}
+        /* Opaque circle + muted rim — glass chips were too faint on the header
+           (hamburger) and on cloudy cards (⋯). Border uses `muted` so the ring
+           clears 3:1 against white (WCAG 2.5.8 / non-text UI). */
         onClick={() => setOpen((v) => !v)}
-        className={open ? "text-ink ring-1 ring-white/60" : undefined}
+        className={cn(
+          "border-2 border-muted bg-white text-ink shadow-sm",
+          "hover:bg-flagblue-50 hover:border-flagblue-600 hover:text-flagblue-600",
+          open && "border-flagblue-600 bg-flagblue-50 text-flagblue-600",
+        )}
       />
       {panel}
     </div>

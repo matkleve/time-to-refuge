@@ -240,6 +240,10 @@ with a hairline between them, then an icon-only strip —
 | **Actions** | Export all |
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
+Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
+Triggers (hamburger / ⋯) use an opaque white circle with a `muted` border
+(3:1+ against white) so the control reads as a button on glass headers.
+
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
 separator — callers can push items in any order.

@@ -201,7 +201,6 @@ export function PersonCard({
               label={`Actions for ${person.name}`}
               triggerIcon={MoreVertical}
               size="sm"
-              glassTrigger
               items={menuItems}
             />
           )}
