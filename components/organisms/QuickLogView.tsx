@@ -139,6 +139,8 @@ function LogRow({
   );
 
   return (
+    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+       Stops the page-wide tap-to-log layer; the row's real controls are buttons. */
     <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
       <SwipeToAction
         onSwipe={() => {
@@ -195,6 +197,8 @@ export function QuickLogView() {
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
       <Surface material="glass-panel" className="border-b border-white/40 px-3 py-2">
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+           Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
         <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
           <span className="shrink-0 pl-1 text-sm tabular-nums text-muted">
             {entries.length} logged
