@@ -116,8 +116,8 @@ gets caught.
 
 ## 3a. Glass
 
-`bg-white/92 backdrop-blur-xl backdrop-saturate-150` (or the current-person
-tint, `bg-saffron-100/92`) — Tailwind's own utilities, written out on the
+`bg-white/85 backdrop-blur-2xl backdrop-saturate-200` (or the current-person
+tint, `bg-saffron-100/85`) — Tailwind's own utilities, written out on the
 element directly, not a custom one. That's deliberate: an earlier version
 defined a `@utility glass` shorthand in `app/globals.css`, and it hid a real
 bug for a while — writing both `backdrop-filter` and a manual
@@ -127,30 +127,47 @@ Safari. Diagnosing that meant reading generated CSS output and
 cross-checking `getComputedStyle` against a plain, undecorated test element
 to prove where the CSS itself broke — real signal, not a custom abstraction
 with its own failure mode to rule out first. Plain Tailwind utilities don't
-have that problem: they're first-party, and if `backdrop-blur-xl` isn't
+have that problem: they're first-party, and if `backdrop-blur-2xl` isn't
 visible, the cause is something else (an unsupported/GPU-less renderer, a
 stale deployment) rather than this app's own CSS layer.
 
 **To change how strong the effect looks**: edit the three classes directly
-wherever they're used — `bg-white/92` (opacity), `backdrop-blur-xl` (blur
-radius), `backdrop-saturate-150` (colour vividness). There's no single
+wherever they're used — `bg-white/85` (opacity), `backdrop-blur-2xl` (blur
+radius), `backdrop-saturate-200` (colour vividness). There's no single
 shared definition to hunt for, which costs a little repetition across
 components but means each surface's own file shows exactly what it's
 rendering, no indirection.
 
-The opacity floor took two tries to get right, and the second is the one
-worth remembering. The first pass computed it against `ink` text only and
-landed on `/70` (~0.51 is the actual floor for `ink`, computed, not
-guessed). That missed that `muted`, `subtle`, and `flagblue-600` also sit
-directly on glass surfaces in this app (a header caption, a popover's fine
-print, a share confirmation) — lighter colours, needing far more opaque
-backing to hold their own contrast floor against a worst-case pure-black
-photo pixel. Checked against every text colour actually used on a glass
-surface, not just the one that happened to be on screen when the math got
-done, the real floor is `/88` (`danger-600` on the saffron tint, the
-tightest case). `/92` keeps a small margin above that. **Recompute against
-every text colour genuinely used, not just whichever one is easiest to
-reach for** — a floor computed against one colour is not a floor.
+The opacity floor took **three** tries, and the third is the one worth
+remembering, because it's a different kind of mistake than the first two.
+Pass one checked only `ink` and landed on `/70`. Pass two checked every text
+colour that actually sits on glass (`muted`, `subtle`, `flagblue-600`,
+`danger-600` too — a header caption, a popover's fine print, a share
+confirmation) and landed on `/92` — technically correct, but checked against
+the *wrong* worst case: pure black. Pure black can never actually appear
+behind a glass surface in this app — `public/backdrop.jpg` is a fixed,
+pre-lightened photo, not arbitrary content — so `/92` was solving for a
+scenario that doesn't happen, at the cost of a surface so opaque that barely
+8% of anything behind it could ever show through. That's *why* the card
+still read as flat after getting glass classes at all: the math was right
+and the result was still invisible, because the input to the math was wrong.
+
+Pass three measured the actual asset instead of assuming: a full-resolution
+scan of `public/backdrop.jpg` (Pillow, in `scripts/`) puts its darkest pixel
+at `rgb(156,158,153)`, luminance 0.338 — nowhere near black, because the
+photo was already lightened before being committed for exactly this reason.
+`GLASS_WORST_CASE_BG` in `contrast-pairs.mjs` uses `rgb(130,130,128)`, a
+margin below that measured floor, as the worst case to design against. Real
+floor against that: `/81` (`danger-600` on the saffron tint, still the
+tightest case). `/85` keeps a small margin above that — meaningfully more
+transparent than `/92` (15% of the backdrop shows through instead of 8%),
+paired with a stronger blur and saturate so that larger visible fraction
+actually reads as frosted glass rather than a faint tint. **A worst case has
+to be the real worst case for what's actually behind the surface, not the
+theoretical worst case for any surface anywhere** — computing correctly
+against the wrong assumption still ships a surface nobody can see through.
+If `backdrop.jpg` is ever replaced, re-measure it and recompute
+`GLASS_WORST_CASE_BG` — a darker photo invalidates this floor.
 
 | Gets the glass treatment | Stays filled (never glass) |
 | --- | --- |

@@ -258,16 +258,13 @@ export function PersonCard({
     return <div className={shell}>{body}</div>;
   }
 
-  // The focused card is glass, floating directly over the backdrop photo —
-  // design system §6c. Field rows inside stay their own opaque `bg-white`
-  // regardless (design system §3a): the moment a surface's fill carries
-  // real meaning — a recorded time, not a photo showing through — it stays
-  // filled, full stop.
-  const focusedFill = isCurrent
-    ? "bg-saffron-100/92 backdrop-blur-xl backdrop-saturate-150"
-    : "bg-white/92 backdrop-blur-xl backdrop-saturate-150";
   return (
-    <div className={cn("overflow-hidden rounded-3xl border border-white/60 shadow-xl", focusedFill)}>
+    <div
+      className={cn(
+        "overflow-hidden rounded-3xl border border-white/60 shadow-xl backdrop-blur-2xl backdrop-saturate-200",
+        isCurrent ? "bg-saffron-100/85" : "bg-white/85",
+      )}
+    >
       {body}
     </div>
   );

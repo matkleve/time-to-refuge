@@ -69,18 +69,29 @@ export const PAIRS = [
 
 /**
  * Glass surfaces (design system §3a) don't have one fixed background —
- * `bg-white/92` blends over whatever the backdrop photo happens to be
- * behind it. Checked at the worst case that can *ever* occur — the base
- * colour blended over pure black — not the actual (much lighter) photo, so
- * a real margin survives even a pixel the photo will never actually show.
+ * `bg-white/85` blends over whatever the backdrop photo happens to be
+ * behind it.
  *
- * This list exists because the opacity floor was computed wrong once:
- * checked against `ink` only, missed that `muted`, `subtle`, `flagblue600`,
- * and `danger600` all sit directly on glass surfaces somewhere in this app
- * too. Add a pair here for every text colour that ever sits directly on a
- * glass surface — not just the one on screen when you're doing the math.
+ * Checked against GLASS_WORST_CASE_BG, not pure black. Pure black was tried
+ * first and produced a technically-safe but visually dead opacity (92%) —
+ * only 8% of whatever was behind it could ever show through, which is why
+ * the card read as flat instead of glassy despite `backdrop-filter` working
+ * correctly. `public/backdrop.jpg` is a fixed, pre-lightened asset, not
+ * arbitrary user content, so its actual darkest pixel is a legitimate worst
+ * case to design against, not a guess: measured directly (Pillow,
+ * full-resolution scan) at rgb(156,158,153), luminance 0.338 — nowhere near
+ * black. GLASS_WORST_CASE_BG uses rgb(130,130,128) instead, a margin below
+ * that measured floor. If `backdrop.jpg` is ever replaced, re-measure it —
+ * a much darker photo would invalidate this floor.
+ *
+ * This list exists because the opacity floor was computed wrong once already
+ * (checked against `ink` only, missed `muted`/`subtle`/`flagblue600`/
+ * `danger600`, all of which sit directly on glass somewhere in this app).
+ * Add a pair here for every text colour that ever sits directly on a glass
+ * surface — not just the one on screen when you're doing the math.
  */
-export const GLASS_OPACITY = 0.92;
+export const GLASS_WORST_CASE_BG = "#828280";
+export const GLASS_OPACITY = 0.85;
 
 export const GLASS_PAIRS = [
   { name: "ink on white glass", fg: "ink", bg: "white", min: 4.5 },
@@ -89,7 +100,7 @@ export const GLASS_PAIRS = [
   { name: "flagblue-600 on white glass", fg: "flagblue600", bg: "white", min: 4.5 },
   { name: "danger-600 on white glass", fg: "danger600", bg: "white", min: 4.5 },
 
-  // cardCurrent doubles as the current-person glass tint (bg-saffron-100/92)
+  // cardCurrent doubles as the current-person glass tint (bg-saffron-100/85)
   // — same hex, #fbe8bf, so no separate token needed.
   { name: "ink on saffron-tint glass", fg: "ink", bg: "cardCurrent", min: 4.5 },
   { name: "muted on saffron-tint glass", fg: "muted", bg: "cardCurrent", min: 4.5 },

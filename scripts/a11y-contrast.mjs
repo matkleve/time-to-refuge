@@ -6,7 +6,7 @@
  * This exists because a contrast failure is invisible in code review — you only
  * catch it by looking, and only if you happen to look at the right screen.
  */
-import { PAIRS, TOKENS, GLASS_PAIRS, GLASS_OPACITY } from "./contrast-pairs.mjs";
+import { PAIRS, TOKENS, GLASS_PAIRS, GLASS_OPACITY, GLASS_WORST_CASE_BG } from "./contrast-pairs.mjs";
 
 function srgbToLinear(c) {
   const v = c / 255;
@@ -27,13 +27,17 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-/** Worst-case blend of a translucent colour over pure black — see GLASS_PAIRS. */
-function blendOverBlack(hex, alpha) {
-  const m = /^#([0-9a-f]{6})$/i.exec(hex);
-  if (!m) throw new Error(`Not a 6-digit hex colour: ${hex}`);
-  const int = parseInt(m[1], 16);
-  const [r, g, b] = [(int >> 16) & 255, (int >> 8) & 255, int & 255];
-  const blended = [r, g, b].map((c) => Math.round(c * alpha));
+/** Worst-case blend of a translucent colour over GLASS_WORST_CASE_BG — see GLASS_PAIRS. */
+function blendOverWorstCase(hex, alpha) {
+  const fgM = /^#([0-9a-f]{6})$/i.exec(hex);
+  const bgM = /^#([0-9a-f]{6})$/i.exec(GLASS_WORST_CASE_BG);
+  if (!fgM) throw new Error(`Not a 6-digit hex colour: ${hex}`);
+  if (!bgM) throw new Error(`Not a 6-digit hex colour: ${GLASS_WORST_CASE_BG}`);
+  const fgInt = parseInt(fgM[1], 16);
+  const bgInt = parseInt(bgM[1], 16);
+  const fgRgb = [(fgInt >> 16) & 255, (fgInt >> 8) & 255, fgInt & 255];
+  const bgRgb = [(bgInt >> 16) & 255, (bgInt >> 8) & 255, bgInt & 255];
+  const blended = fgRgb.map((c, i) => Math.round(c * alpha + bgRgb[i] * (1 - alpha)));
   return `#${blended.map((c) => c.toString(16).padStart(2, "0")).join("")}`;
 }
 
@@ -57,7 +61,7 @@ const glassRows = GLASS_PAIRS.map(({ name, fg, bg, min }) => {
   const bgHex = TOKENS[bg];
   if (!fgHex) throw new Error(`Unknown token "${fg}" in pair "${name}"`);
   if (!bgHex) throw new Error(`Unknown token "${bg}" in pair "${name}"`);
-  const blendedBg = blendOverBlack(bgHex, GLASS_OPACITY);
+  const blendedBg = blendOverWorstCase(bgHex, GLASS_OPACITY);
   const ratio = contrast(fgHex, blendedBg);
   const pass = ratio >= min;
   return { name, ratio: ratio.toFixed(2), min: min.toFixed(1), pass };
