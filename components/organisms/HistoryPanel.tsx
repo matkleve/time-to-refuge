@@ -76,7 +76,7 @@ export function HistoryPanel({ log, onClose }: HistoryPanelProps) {
                     {entry.personName}
                   </p>
                   <p className="mt-0.5 text-sm text-muted">{actionLabel(entry)}</p>
-                  <p className="mt-1 font-mono text-xs tabular-nums text-subtle">
+                  <p className="mt-1 font-mono text-sm tabular-nums text-subtle">
                     {formatLogTime(entry.at)}
                   </p>
                 </li>

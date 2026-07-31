@@ -228,8 +228,8 @@ export default function Home() {
           className="flex shrink-0 items-center gap-4 px-6 py-4"
         >
           <div className="flex min-w-0 flex-col">
-            <p className="font-display text-xl font-semibold text-ink">Timekeeper</p>
-            <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
+            <p className="font-display text-2xl font-semibold text-ink">Timekeeper</p>
+            <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
           </div>
 
           <div className="ml-auto flex items-center gap-1">
@@ -254,7 +254,7 @@ export default function Home() {
                     disabled={undoStack.length === 0}
                   />
                   {undoStack.length > 0 && (
-                    <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[0.625rem] font-semibold text-white tabular-nums">
+                    <span className="pointer-events-none absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-flagblue-600 text-sm font-semibold leading-none text-white tabular-nums">
                       {undoStack.length}
                     </span>
                   )}
@@ -316,7 +316,7 @@ export default function Home() {
       >
         <div className="flex min-w-0 flex-col">
           <p className="font-display text-lg font-semibold text-ink">Timekeeper</p>
-          <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-xs" />
+          <RetreatNameField value={retreatName} onChange={setRetreatName} className="text-sm" />
         </div>
 
         <div className="flex min-w-0 items-center gap-0.5">
@@ -341,7 +341,7 @@ export default function Home() {
                   disabled={undoStack.length === 0}
                 />
                 {undoStack.length > 0 && (
-                  <span className="pointer-events-none absolute top-0.5 right-0.5 flex size-4 items-center justify-center rounded-full bg-flagblue-600 text-[0.625rem] font-semibold text-white tabular-nums">
+                  <span className="pointer-events-none absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-flagblue-600 text-sm font-semibold leading-none text-white tabular-nums">
                     {undoStack.length}
                   </span>
                 )}

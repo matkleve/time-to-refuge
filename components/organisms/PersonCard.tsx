@@ -239,7 +239,7 @@ export function PersonCard({
       {nameRow}
 
       {shareNote && (
-        <p className="no-select animate-fade-in-up px-4 pt-1 text-xs text-flagblue-600" role="status">
+        <p className="no-select animate-fade-in-up px-4 pt-1 text-sm text-flagblue-600" role="status">
           {shareNote}
         </p>
       )}

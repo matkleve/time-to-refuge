@@ -92,7 +92,7 @@ function LogRow({
         }
         className="flex min-w-0 flex-1 items-center gap-2 px-4 py-1.5 text-left transition-colors duration-200 hover:bg-ink/[0.03]"
       >
-        <span className="shrink-0 text-xs tabular-nums text-subtle">#{index}</span>
+        <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>
         <span
           className={cn(
             "min-w-0 truncate font-mono text-sm tabular-nums transition-[margin] duration-200 ease-out",

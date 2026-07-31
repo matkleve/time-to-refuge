@@ -86,7 +86,7 @@ export function TimezoneSelect({
 
   return (
     <label className={cn("flex flex-col gap-0.5", className)}>
-      <span className="pl-1 text-xs font-medium text-muted">Time zone</span>
+      <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
       {field}
     </label>
   );

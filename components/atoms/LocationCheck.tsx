@@ -298,7 +298,7 @@ export function LocationCheck() {
         ) : (
           <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
         )}
-        <span className="truncate text-xs font-medium">{badgeLabel}</span>
+        <span className="truncate text-sm font-medium">{badgeLabel}</span>
       </button>
 
       {open && (
@@ -346,14 +346,14 @@ export function LocationCheck() {
                   </dd>
                 </div>
               </dl>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 {info.matchKind === "iana"
                   ? "Same zone id as this location — the phone isn’t still set somewhere you traveled from."
                   : info.matchKind === "offset"
                     ? "Different zone name, same UTC offset — wall-clock time for this place still lines up."
                     : "Rough check from GPS longitude (no zone name from the map). Good enough to catch a travel zone many hours off."}
               </p>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 Does not prove the clock is synced to the second. If the time itself looks wrong, fix Date &amp; Time in settings before the ceremony.
               </p>
             </div>
@@ -386,7 +386,7 @@ export function LocationCheck() {
                   </dd>
                 </div>
               </dl>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 If you just traveled here, the clock may still be set to where you came from. Open Date &amp; Time settings and turn on automatic time zone (or pick the local zone) before the ceremony starts.
               </p>
             </div>
@@ -398,7 +398,7 @@ export function LocationCheck() {
               <p className="text-sm text-muted">
                 Device reports {info.deviceZone} ({info.deviceOffset}). Without location that can&apos;t be checked against where you are.
               </p>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 If you traveled here, confirm the time zone yourself in Date &amp; Time settings before starting.
               </p>
             </div>
@@ -431,7 +431,7 @@ export function LocationCheck() {
                   </dd>
                 </div>
               </dl>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 {info.matchesLocation
                   ? "Longitude suggests this offset is plausible. Confirm the zone in Date &amp; Time if you traveled recently."
                   : "Device offset is far from what longitude suggests here. Check Date &amp; Time before starting."}
@@ -442,7 +442,7 @@ export function LocationCheck() {
           {status === "error" && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-danger-700">Can&apos;t check location here</p>
-              <p className="text-xs text-muted">
+              <p className="text-sm text-muted">
                 This browser or device doesn&apos;t support location. Check date, time, and time zone in settings directly before the ceremony starts.
               </p>
             </div>

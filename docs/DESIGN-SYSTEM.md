@@ -54,13 +54,17 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 | `text-2xl` | 1.5rem (24px) | Person name on the focused card |
 | `text-lg` | 1.0625rem (17px) | Panel titles, name in the overview, field rows |
 | `text-base` | 0.9375rem (15px) | Default UI text |
-| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows |
-| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions |
+| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
+| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions **only** |
 
 > **Don't invent size names.** A custom `text-clock` is read by tailwind-merge
 > as a *colour* utility and silently dropped whenever a colour follows it in the
 > same `cn()` call — that bug shipped once, with the hero clock at 15px.
 > Re-valuing the built-in scale avoids the whole class of problem.
+
+`npm run a11y:type` scans production `app/` + `components/` for Tailwind
+`text-*` sizes and fails on anything off-scale, any arbitrary `text-[…]`,
+or a `text-xs` that is not a tracked/uppercase caption.
 
 ## 2. Colour
 

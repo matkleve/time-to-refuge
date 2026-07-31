@@ -84,7 +84,7 @@ export function IconButton({
     >
       <Icon className={iconSize[size]} strokeWidth={2} aria-hidden />
       {visible && (
-        <span className="max-w-28 truncate text-xs font-medium whitespace-nowrap">{visible}</span>
+        <span className="max-w-28 truncate text-sm font-medium whitespace-nowrap">{visible}</span>
       )}
     </button>
   );
@@ -106,7 +106,7 @@ export function ArmedCancelButton({
         onClick();
       }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium text-muted",
+        "inline-flex shrink-0 items-center justify-center rounded-full px-2.5 text-sm font-medium text-muted",
         "transition-colors duration-200 hover:bg-ink/[0.06] hover:text-ink active:scale-95",
         size === "md" ? "h-11" : "h-9",
       )}
