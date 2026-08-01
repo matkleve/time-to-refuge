@@ -245,8 +245,9 @@ Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
 Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 **App header** follows a compact toolbar (iOS ~44pt / Material ~56dp): one
-row for brand + hamburger with equal inset; retreat name is a slim subtitle
-underneath — never vertically center the menu against both lines.
+row for brand + hamburger with equal inset. The retreat name is **not** in
+the toolbar — on Refuge / People it sits below as a large left-aligned
+glass chip with a leading icon (§6c).
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
@@ -371,11 +372,9 @@ stamp is **one persistent structure** across idle and open — never two
 different outer shells swapped by a conditional — so tray width can
 transition instead of jumping:
 
-- Idle: label / index on the left, time on the right (via a **flex spacer**
-  that `grow`s — never `ml-auto`, which cannot interpolate).
-- Open: the spacer **snaps** packed (`grow-0`); only the tray animates width.
-  Animating spacer `flex-grow` and tray `0fr`↔`1fr` together made the time
-  race ahead of the container.
+- Idle / open: label on the left; **time is `flex-1 text-right`** in the
+  stamp so it rides the tray’s width animation — no spacer snap, no
+  font-size change on open (that was a second jump).
 - The tray animates `grid-template-columns` `0fr` → `1fr` with a `w-max`
   child (exact content width). Chip opacity lags the open slightly so
   buttons are never shown clipped mid-expand.
@@ -387,19 +386,17 @@ transition instead of jumping:
   the chip so nothing clips at the card edge.
 - Height never changes (§3): only grid columns and opacity move.
 
-Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
-[`RowActionTray`](../components/atoms/RowReveal.tsx),
+Shared pieces: [`RowActionTray`](../components/atoms/RowReveal.tsx),
 `IconButton glass` + [`glassChipClass`](../lib/surfaces.ts).
+(`RowPackSpacer` remains for Jump-here’s always-packed stamp.)
 
 > **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**
 > Two different elements can't be transitioned between by CSS — that's what
 > produced the original jump. One element, changing classes, transitions;
 > two elements, one replacing the other, cannot.
 
-> **Do not pack with `margin-left: auto`.** Toggling `ml-auto` jumps. Use a
-> flex spacer (`grow` ↔ `grow-0`). Do **not** transition that spacer in
-> parallel with the tray width — different interpolations desync; snap the
-> spacer and animate only the tray.
+> **Do not pack stamp times with a snapping flex spacer or `ml-auto`.**
+> Right-align the time in the shrinking stamp so it moves with the tray.
 
 ### 5b. Entrance — a panel or popover mounting
 
@@ -524,27 +521,20 @@ never set at all.
 
 ## 6c. The retreat name
 
-One name for the whole session, not a field on each person — set once
-(`RetreatNameField`, in the header of both shells) and carried everywhere a
-person's record leaves the app: printed on the shared PNG card, and added as
-its own `Retreat` column — repeated per row, not a leading metadata line —
-in every CSV export. Deliberately **not** shown on overview cards (People
-sheet, the desktop rail): the same name on every row in an already-dense
-list is pure repetition, not information. It does show on the focused card,
-right above the person's own name, in the same small tracked-caption style
-the shared PNG already used for its own "TIME TO REFUGE" brand line — so
+One name for the whole session, not a field on each person — set once via
+[`RetreatNameField`](../components/atoms/RetreatNameField.tsx): a **large
+left-aligned glass chip** with a mountain icon, shown **only on Refuge and
+People** (not Quick Log, History, or Dana). Carried into every export:
+printed on the shared PNG card, and added as its own `Retreat` column —
+repeated per row — in every CSV. Deliberately **not** repeated on overview
+cards in the list body; the chip above the page is enough. It does show on
+the focused card as a small tracked caption above the person's name — so
 the on-screen card and the exported one read as the same object.
 
-Same tap-to-edit shape as a person's name in `PersonCard` (a button that
-becomes an autofocused input, committing on blur or Enter, cancelling on
-Escape) — one interaction pattern for "this text is a name, tap to change
-it," not a second one invented for a second kind of name. Empty is a real,
-common state — most ceremonies start before anyone's typed a retreat name
-in — so the idle button reads "Add retreat name" rather than sitting blank
-or showing a placeholder that looks like unset data. Nothing downstream
-needs to specially handle "no retreat name": the CSV column is omitted
-outright when there's nothing to put in it (not an empty column on every
-row), and the PNG's second header line simply doesn't render.
+Same tap-to-edit shape as a person's name in `PersonCard` (chip →
+autofocused input; blur/Enter commits, Escape cancels). Empty idle label:
+"Add retreat name." CSV omits the column when empty; PNG skips the second
+header line.
 
 ## 7. Accessibility floor
 

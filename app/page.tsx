@@ -383,26 +383,27 @@ export default function Home() {
     </PageEnter>
   );
 
+  const showRetreatChip = view === "refuge" || view === "people";
+  const retreatChip = showRetreatChip ? (
+    <div className={cn("shrink-0", isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2")}>
+      <RetreatNameField value={retreatName} onChange={setRetreatName} />
+    </div>
+  ) : null;
+
   if (isDesktop) {
     return (
       <DesktopShell>
-        {/* Compact app bar: one toolbar row + slim retreat subtitle (Material ~64dp). */}
         <Surface
           as="header"
           material="glass-panel"
-          className="relative z-20 shrink-0 px-5 pb-2 pt-3"
+          className="relative z-20 shrink-0 px-5 py-3"
         >
           <div className="flex h-12 items-center justify-between gap-3">
             <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
             <div className="flex shrink-0 items-center">{menu}</div>
           </div>
-          <RetreatNameField
-            value={retreatName}
-            onChange={setRetreatName}
-            compact
-            className="mt-0.5 pl-[calc(2rem+0.5rem)]"
-          />
         </Surface>
+        {retreatChip}
         {page}
       </DesktopShell>
     );
@@ -410,11 +411,6 @@ export default function Home() {
 
   return (
     <AppShell>
-      {/*
-        Compact app bar (iOS ~44pt / Material ~56dp toolbar): brand + menu on
-        one row with equal inset; retreat name is a slim subtitle underneath
-        so the hamburger isn’t vertically centered against two fat lines.
-      */}
       <Surface
         as="header"
         material="glass-panel"
@@ -425,13 +421,8 @@ export default function Home() {
           <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
           <div className="flex shrink-0 items-center">{menu}</div>
         </div>
-        <RetreatNameField
-          value={retreatName}
-          onChange={setRetreatName}
-          compact
-          className="mt-0.5 pl-[calc(1.75rem+0.5rem)]"
-        />
       </Surface>
+      {retreatChip}
       {page}
     </AppShell>
   );
