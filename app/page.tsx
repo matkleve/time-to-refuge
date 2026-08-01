@@ -34,6 +34,7 @@ import { RefugeView } from "@/components/organisms/RefugeView";
 import { DesktopWorkspace } from "@/components/organisms/DesktopWorkspace";
 import { PeopleSheet } from "@/components/organisms/PeopleSheet";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
+import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { actionClass } from "@/lib/surfaces";
@@ -286,6 +287,16 @@ export default function Home() {
 
   const historyPage = <HistoryPanel log={log} />;
 
+  const danaPage = isDesktop ? (
+    <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
+      <div className="flex w-full max-w-xl min-h-0 flex-1 flex-col overflow-hidden rounded-3xl">
+        <DanaPage />
+      </div>
+    </div>
+  ) : (
+    <DanaPage />
+  );
+
   const quickLogPage = isDesktop ? (
     <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
       <Surface
@@ -366,7 +377,9 @@ export default function Home() {
           ? historyPage
           : view === "people"
             ? peoplePage
-            : refugePage}
+            : view === "dana"
+              ? danaPage
+              : refugePage}
     </PageEnter>
   );
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MoreVertical, type LucideIcon } from "lucide-react";
+import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -38,12 +39,23 @@ export type GlassMenuIconAction = {
   keepOpen?: boolean;
 };
 
+/** Full-width primary CTA in a sectioned menu (e.g. Dana). */
+export type GlassMenuPrimaryAction = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  onSelect: () => void;
+  selected?: boolean;
+};
+
 interface GlassMenuProps {
   label: string;
   /** Flat list — person-card ⋯ and other single-group menus. */
   items?: GlassMenuItem[];
   /** Titled groups with a hairline between them (app hamburger). */
   sections?: GlassMenuSection[];
+  /** Primary filled button under sections (before icon footer). */
+  primaryAction?: GlassMenuPrimaryAction;
   /** Icon-only row under sections, after a hairline. */
   iconActions?: GlassMenuIconAction[];
   /** Trigger icon — hamburger or ⋯. */
@@ -128,6 +140,7 @@ export function GlassMenu({
   label,
   items,
   sections,
+  primaryAction,
   iconActions,
   triggerIcon: TriggerIcon = MoreVertical,
   size = "md",
@@ -215,6 +228,33 @@ export function GlassMenu({
       ? <MenuItemList items={items} onPick={pick} />
       : null;
 
+  const primary =
+    primaryAction != null ? (
+      <div>
+        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
+        <div className="px-1 pb-0.5 pt-0.5">
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              primaryAction.onSelect();
+              setOpen(false);
+            }}
+            className={cn(
+              "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
+              "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
+              "active:scale-[0.98] hover:brightness-[1.06]",
+              actionClass("primary"),
+              primaryAction.selected && "ring-2 ring-flagblue-600 ring-offset-2 ring-offset-white/40",
+            )}
+          >
+            <primaryAction.icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />
+            <span>{primaryAction.label}</span>
+          </button>
+        </div>
+      </div>
+    ) : null;
+
   const iconStrip =
     iconActions && iconActions.length > 0 ? (
       <div>
@@ -252,6 +292,7 @@ export function GlassMenu({
           className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-scale-in"
         >
           {body}
+          {primary}
           {iconStrip}
         </Surface>
       </div>,

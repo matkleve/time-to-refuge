@@ -1,0 +1,31 @@
+{
+  "menuLabel": "Dana",
+  "menuCta": "Support DRCE",
+  "pageTitle": "Dana",
+  "headline": "Support the Dzogchen Retreat Center Europe",
+  "organization": "Dzogchen Shri Singha Europe",
+  "image": "/drce.jpg",
+  "imageAlt": "Dzogchen Retreat Center Europe in the mountains of Lower Austria",
+  "intro": "The DRCE is a place for practice, training, and sangha in Lower Austria. Your dana helps renovate, build, and keep this retreat center open for teachings and personal practice.",
+  "bank": {
+    "accountName": "Dzogchen Shri Singha Europe",
+    "iban": "AT19 2025 6000 0092 9133",
+    "bic": "SPSPAT21",
+    "messageHint": "Donation for DRCE — please leave your e-mail in the transfer details so they can thank you."
+  },
+  "quote": {
+    "text": "Generosity is the root of wealth and prosperity. Compassion is the root of peace and happiness.",
+    "attribution": "His Eminence Dzogchen Khenpo Choga Rinpoche"
+  },
+  "primaryCta": {
+    "label": "Copy IBAN",
+    "copiedLabel": "IBAN copied"
+  },
+  "links": [
+    {
+      "label": "Open DRCE page",
+      "href": "https://thebuddhapath.eu/drce"
+    }
+  ],
+  "credit": "Photo and donation details from Dzogchen Retreat Center Europe / Buddha Path."
+}
