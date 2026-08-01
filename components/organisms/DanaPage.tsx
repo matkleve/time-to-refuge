@@ -8,6 +8,7 @@ import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 import { IconButton } from "@/components/atoms/IconButton";
+import { DanaProgress } from "@/components/organisms/DanaProgress";
 
 async function copyText(value: string): Promise<boolean> {
   try {
@@ -56,6 +57,13 @@ export function DanaPage() {
               <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
               <p className="text-base text-muted">{dana.intro}</p>
             </div>
+
+            <DanaProgress
+              currentEuros={dana.goal.currentEuros}
+              targetEuros={dana.goal.targetEuros}
+              label={dana.goal.label}
+              caption={dana.goal.caption}
+            />
 
             <div className="space-y-3 rounded-2xl border border-white/50 bg-white/40 px-4 py-3.5">
               <p className="text-xs font-medium tracking-wide text-muted uppercase">

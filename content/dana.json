@@ -7,6 +7,12 @@
   "image": "/drce.jpg",
   "imageAlt": "Dzogchen Retreat Center Europe in the mountains of Lower Austria",
   "intro": "The DRCE is a place for practice, training, and sangha in Lower Austria. Your dana helps renovate, build, and keep this retreat center open for teachings and personal practice.",
+  "goal": {
+    "currentEuros": 12500,
+    "targetEuros": 1000000,
+    "label": "Dana gathered",
+    "caption": "Log scale — early gifts move the line more; each decade to €1.000.000 is one equal step."
+  },
   "bank": {
     "accountName": "Dzogchen Shri Singha Europe",
     "iban": "AT19 2025 6000 0092 9133",
