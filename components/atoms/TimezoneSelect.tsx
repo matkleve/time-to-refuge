@@ -36,15 +36,18 @@ function listTimezones(): string[] {
 interface TimezoneSelectProps {
   value: string;
   onChange: (tz: string) => void;
-  /** One-row chrome (Quick Log header) — no stacked label. */
-  compact?: boolean;
+  /**
+   * Full-width chip matching the retreat name control (h-12 glass shell).
+   * Default is the older compact inline select.
+   */
+  chip?: boolean;
   className?: string;
 }
 
 export function TimezoneSelect({
   value,
   onChange,
-  compact = false,
+  chip = false,
   className,
 }: TimezoneSelectProps) {
   const zones = useMemo(() => {
@@ -53,43 +56,65 @@ export function TimezoneSelect({
     return list.includes(value) ? list : [value, ...list];
   }, [value]);
 
-  const field = (
-    <span className={cn("relative inline-flex min-w-0 items-center", compact && "w-full")}>
-      <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-      <select
-        value={value}
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label="Time zone"
+  if (chip) {
+    return (
+      <div
         className={cn(
-          "min-h-9 min-w-0 appearance-none pr-7 pl-8 text-sm text-ink",
-          "transition-[colors,background-color,transform] duration-150 ease-out",
-          "rounded-xl hover:bg-white/70 active:scale-[0.99]",
+          "relative flex h-12 w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
           glassClass("card", { rim: true }),
-          compact ? "w-full max-w-full truncate" : "max-w-[60vw]",
+          className,
         )}
       >
-        {zones.map((z) => (
-          <option key={z} value={z}>
-            {z.replace(/_/g, " ")}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        className="pointer-events-none absolute right-2 size-4 text-muted"
-        aria-hidden
-      />
-    </span>
-  );
-
-  if (compact) {
-    return <div className={cn("min-w-0 flex-1", className)}>{field}</div>;
+        <Globe className="pointer-events-none size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
+        <select
+          value={value}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label="Time zone"
+          className="h-9 min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none"
+        >
+          {zones.map((z) => (
+            <option key={z} value={z}>
+              {z.replace(/_/g, " ")}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-3.5 size-4 text-muted"
+          aria-hidden
+        />
+      </div>
+    );
   }
 
   return (
     <label className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
-      {field}
+      <span className="relative inline-flex min-w-0 items-center">
+        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
+        <select
+          value={value}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label="Time zone"
+          className={cn(
+            "min-h-9 min-w-0 max-w-[60vw] appearance-none pr-7 pl-8 text-sm text-ink",
+            "transition-[colors,background-color,transform] duration-150 ease-out",
+            "rounded-xl hover:bg-white/70 active:scale-[0.99]",
+            glassClass("card", { rim: true }),
+          )}
+        >
+          {zones.map((z) => (
+            <option key={z} value={z}>
+              {z.replace(/_/g, " ")}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-2 size-4 text-muted"
+          aria-hidden
+        />
+      </span>
     </label>
   );
 }

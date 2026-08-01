@@ -183,14 +183,14 @@ export function QuickLogView() {
        keyboard-accessible equivalent is the real <button> in QuickLogButton
        below, which is focusable and fires on Enter/Space. */
     <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
-      <Surface material="glass-panel" className="border-b border-white/40 px-3 py-2">
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
-        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-          <span className="shrink-0 pl-1 text-sm tabular-nums text-muted">
-            {entries.length} logged
-          </span>
-          <TimezoneSelect value={tz} onChange={setTz} compact />
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
+      <div
+        className="flex shrink-0 flex-col gap-2 px-3 pb-1 pt-2 sm:px-5 sm:pt-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex h-10 items-center justify-between gap-3">
+          <h2 className="font-display text-2xl font-semibold text-ink">Quick Log</h2>
           <IconButton
             icon={RotateCcw}
             label={
@@ -207,9 +207,13 @@ export function QuickLogView() {
             }}
           />
         </div>
-      </Surface>
+        <p className="text-base tabular-nums text-muted">
+          {entries.length} logged
+        </p>
+        <TimezoneSelect value={tz} onChange={setTz} chip />
+      </div>
 
-      <div className="flex flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
           <Surface
             as="p"
@@ -233,7 +237,7 @@ export function QuickLogView() {
         )}
       </div>
 
-      <div className="px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+      <div className="mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
         <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>

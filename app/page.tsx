@@ -329,19 +329,7 @@ export default function Home() {
     <DanaPage />
   );
 
-  const quickLogPage = isDesktop ? (
-    <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
-      <Surface
-        material="glass-panel"
-        rim
-        className="w-full max-w-md overflow-hidden rounded-3xl"
-      >
-        <QuickLogView />
-      </Surface>
-    </div>
-  ) : (
-    <QuickLogView />
-  );
+  const quickLogPage = <QuickLogView />;
 
   const refugePage = isDesktop ? (
     <DesktopWorkspace
