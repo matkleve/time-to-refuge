@@ -509,16 +509,16 @@ never set at all.
 5. If naming fails but GPS worked, still run the rough check and badge it
    cautiously ("Zone OK?") — never pretend the place was named.
 
-- **The badge is an opaque light pill** — soft white / saffron / danger-50
-  fills so it stays readable on the glass record button (glass chips were
-  too see-through here). Idle reads "Check zone" (not "Verify time": that
-  overclaimed). A match shows the place (e.g. "Vienna"). A problem —
-  denied, mismatch, or failed rough check — switches the label to "Check
-  clock" on a light danger fill. Idle uses `Clock`, never a dimmed `Check`
-  that would claim success early.
-- **The popover shows both sides**: place zone · offset vs device zone ·
-  offset, then a plain sentence for the match kind, plus an explicit
-  disclaimer that this does not prove second-level sync.
+- **The badge is an opaque light pill** with a round status mark (icon in a
+  tinted circle) so it stays readable on the glass record button. Idle
+  reads "Check zone" (not "Verify time": that overclaimed). A match shows
+  the place (e.g. "Vienna"). A problem — denied, mismatch, or failed rough
+  check — switches the label to "Check clock" on a light danger fill. Idle
+  uses `Clock`, never a dimmed `Check` that would claim success early.
+- **The popover is a graphical probe**: large status mark + title/place,
+  **Here** vs **Device** side cards (offset + zone), and an **UTC offset
+  probe** (24h track with markers). Match kind is a short sentence; an
+  explicit disclaimer notes this does not prove second-level sync.
 - Denied, unsupported, or mismatched states still surface whatever the
   device *can* say about its own zone, framed honestly as unverified or
   wrong rather than hidden.

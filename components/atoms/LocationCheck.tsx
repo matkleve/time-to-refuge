@@ -1,8 +1,16 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { AlertTriangle, Check, Clock, Loader2 } from "lucide-react";
+import { useCallback, useState, type ReactNode } from "react";
+import {
+  AlertTriangle,
+  Check,
+  Clock,
+  Loader2,
+  MapPin,
+  Smartphone,
+} from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -33,12 +41,21 @@ type GeocodePayload = {
   };
 };
 
+type ProbeTone = "idle" | "ok" | "warn" | "danger" | "checking";
+
 function formatOffsetMinutes(offsetMin: number): string {
   const sign = offsetMin >= 0 ? "+" : "-";
   const abs = Math.abs(Math.round(offsetMin));
   const h = String(Math.floor(abs / 60)).padStart(2, "0");
   const m = String(abs % 60).padStart(2, "0");
   return `UTC${sign}${h}:${m}`;
+}
+
+function parseOffsetLabel(label: string): number | null {
+  const m = label.replace(/^~/, "").match(/UTC([+-])(\d{2}):(\d{2})/);
+  if (!m) return null;
+  const sign = m[1] === "-" ? -1 : 1;
+  return sign * (Number(m[2]) * 60 + Number(m[3]));
 }
 
 function deviceOffsetMinutes(): number {
@@ -116,6 +133,169 @@ function compareZones(deviceZone: string, placeZone: string): {
     return { matches: true, kind: "offset", placeOffsetMin };
   }
   return { matches: false, kind: "none", placeOffsetMin };
+}
+
+const toneBadge: Record<ProbeTone, string> = {
+  idle: "border-white/80 bg-white/95 text-muted hover:bg-white hover:text-ink",
+  checking: "border-white/80 bg-white/95 text-muted",
+  ok: "border-saffron-200 bg-saffron-50 text-saffron-800",
+  warn: "border-saffron-200 bg-saffron-50 text-saffron-800",
+  danger: "border-danger-200 bg-danger-50 text-danger-700",
+};
+
+const toneMark: Record<ProbeTone, string> = {
+  idle: "bg-ink/8 text-muted",
+  checking: "bg-ink/8 text-muted",
+  ok: "bg-saffron-400/25 text-saffron-800",
+  warn: "bg-saffron-400/25 text-saffron-800",
+  danger: "bg-danger-500/15 text-danger-700",
+};
+
+const toneProbe: Record<"ok" | "danger" | "neutral", string> = {
+  ok: "bg-saffron-400",
+  danger: "bg-danger-500",
+  neutral: "bg-ink/25",
+};
+
+/** Map UTC offset minutes onto a 24h track (−12h … +12h). */
+function offsetToPercent(minutes: number): number {
+  const clamped = Math.max(-12 * 60, Math.min(12 * 60, minutes));
+  return ((clamped + 12 * 60) / (24 * 60)) * 100;
+}
+
+function OffsetProbe({
+  placeOffset,
+  deviceOffset,
+  matched,
+}: {
+  placeOffset: string;
+  deviceOffset: string;
+  matched: boolean;
+}) {
+  const placeMin = parseOffsetLabel(placeOffset);
+  const deviceMin = parseOffsetLabel(deviceOffset);
+  if (placeMin === null || deviceMin === null) return null;
+
+  const placePct = offsetToPercent(placeMin);
+  const devicePct = offsetToPercent(deviceMin);
+  const aligned = matched || Math.abs(placePct - devicePct) < 1.2;
+
+  return (
+    <div className="space-y-2 rounded-2xl bg-ink/[0.04] px-3 py-3">
+      <div className="flex items-center justify-between text-xs font-medium tracking-wide text-muted uppercase">
+        <span>UTC −12</span>
+        <span>Offset probe</span>
+        <span>+12</span>
+      </div>
+      <div className="relative h-3">
+        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-ink/10" />
+        {/* Noon tick */}
+        <div
+          aria-hidden
+          className="absolute top-0 bottom-0 left-1/2 w-px -translate-x-1/2 bg-ink/20"
+        />
+        {aligned ? (
+          <span
+            className={cn(
+              "absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+              matched ? toneProbe.ok : toneProbe.danger,
+            )}
+            style={{ left: `${placePct}%` }}
+            title="Here & device"
+          />
+        ) : (
+          <>
+            <span
+              className={cn(
+                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+                toneProbe.ok,
+              )}
+              style={{ left: `${placePct}%` }}
+              title="Here"
+            />
+            <span
+              className={cn(
+                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+                toneProbe.danger,
+              )}
+              style={{ left: `${devicePct}%` }}
+              title="Device"
+            />
+          </>
+        )}
+      </div>
+      <div className="flex items-center justify-between gap-2 text-xs text-muted">
+        <span className="inline-flex items-center gap-1.5">
+          <span className={cn("size-2 rounded-full", toneProbe.ok)} aria-hidden />
+          Here {placeOffset.replace(/^~/, "≈")}
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            className={cn("size-2 rounded-full", matched ? toneProbe.ok : toneProbe.danger)}
+            aria-hidden
+          />
+          Device {deviceOffset}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function SideCard({
+  icon,
+  label,
+  zone,
+  offset,
+  tone,
+}: {
+  icon: ReactNode;
+  label: string;
+  zone: string;
+  offset: string;
+  tone: "ok" | "danger" | "neutral";
+}) {
+  return (
+    <div
+      className={cn(
+        "min-w-0 flex-1 rounded-2xl px-2.5 py-2.5",
+        tone === "ok" && "bg-saffron-400/15",
+        tone === "danger" && "bg-danger-500/10",
+        tone === "neutral" && "bg-ink/[0.04]",
+      )}
+    >
+      <div className="flex items-center gap-1.5 text-xs font-medium tracking-wide text-muted uppercase">
+        {icon}
+        {label}
+      </div>
+      <p className="mt-1 truncate font-mono text-sm font-semibold text-ink">
+        {offset || "—"}
+      </p>
+      <p className="mt-0.5 truncate text-xs text-muted">{zone || "Unknown"}</p>
+    </div>
+  );
+}
+
+function StatusMark({
+  tone,
+  children,
+  size = "sm",
+}: {
+  tone: ProbeTone;
+  children: ReactNode;
+  size?: "sm" | "lg";
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center rounded-full",
+        size === "sm" ? "size-7" : "size-12",
+        toneMark[tone],
+      )}
+      aria-hidden
+    >
+      {children}
+    </span>
+  );
 }
 
 /**
@@ -234,12 +414,25 @@ export function LocationCheck() {
     );
   }
 
-  const mismatch = (status === "ok" || status === "unavailable") && info !== null && !info.matchesLocation;
+  const mismatch =
+    (status === "ok" || status === "unavailable") && info !== null && !info.matchesLocation;
   const trouble =
-    status === "denied" || status === "error" || mismatch || (status === "unavailable" && !info?.matchesLocation);
-  // unavailable + rough match: warn soft on badge? Design: still show place/ok
-  // only when named. If unnamed but match, treat as caution not success.
+    status === "denied" ||
+    status === "error" ||
+    mismatch ||
+    (status === "unavailable" && !info?.matchesLocation);
   const softUnavailable = status === "unavailable" && info?.matchesLocation;
+
+  const tone: ProbeTone =
+    status === "checking"
+      ? "checking"
+      : trouble
+        ? "danger"
+        : softUnavailable
+          ? "warn"
+          : status === "ok" && info?.matchesLocation
+            ? "ok"
+            : "idle";
 
   const badgeLabel =
     status === "checking"
@@ -261,6 +454,79 @@ export function LocationCheck() {
           ? `Rough time-zone check passed for this place. Open to review.`
           : "Check this device's time zone before the ceremony";
 
+  const badgeIcon =
+    status === "checking" ? (
+      <Loader2 className="size-3.5 animate-spin" strokeWidth={2.5} />
+    ) : trouble ? (
+      <AlertTriangle className="size-3.5" strokeWidth={2.5} />
+    ) : status === "ok" && info?.matchesLocation ? (
+      <Check className="size-3.5" strokeWidth={2.5} />
+    ) : softUnavailable ? (
+      <MapPin className="size-3.5" strokeWidth={2.5} />
+    ) : (
+      <Clock className="size-3.5" strokeWidth={2.5} />
+    );
+
+  function headline(): { title: string; detail?: string } {
+    if (status === "checking") {
+      return { title: "Finding this place…", detail: "Comparing GPS to the device zone." };
+    }
+    if (status === "error") {
+      return {
+        title: "Can't check location here",
+        detail:
+          "This browser or device doesn't support location. Check date, time, and time zone in settings directly before the ceremony starts.",
+      };
+    }
+    if (status === "denied" && info) {
+      return {
+        title: "Location access is off",
+        detail:
+          "Without location, the device zone can't be checked against where you are. Confirm Date & Time yourself if you traveled here.",
+      };
+    }
+    if (status === "unavailable" && info) {
+      return {
+        title: info.matchesLocation
+          ? "Couldn't name the place"
+          : "Couldn't name the place — zone may be wrong",
+        detail:
+          "Location worked, but the place/zone lookup needs a network this device doesn't have right now.",
+      };
+    }
+    if (status === "ok" && info && !info.matchesLocation) {
+      return {
+        title: "Time zone doesn't match this place",
+        detail:
+          "If you just traveled here, the clock may still be set to where you came from. Turn on automatic time zone (or pick the local zone) before the ceremony starts.",
+      };
+    }
+    if (status === "ok" && info?.matchesLocation) {
+      if (info.matchKind === "iana") {
+        return {
+          title: "Time zone matches this place",
+          detail:
+            "Same zone id as this location — the phone isn’t still set somewhere you traveled from.",
+        };
+      }
+      if (info.matchKind === "offset") {
+        return {
+          title: "UTC offset matches this place",
+          detail:
+            "Different zone name, same UTC offset — wall-clock time for this place still lines up.",
+        };
+      }
+      return {
+        title: "Time zone looks plausible here",
+        detail:
+          "Rough check from GPS longitude (no zone name from the map). Good enough to catch a travel zone many hours off.",
+      };
+    }
+    return { title: "Check zone" };
+  }
+
+  const { title, detail } = headline();
+
   return (
     <div className="relative" ref={popoverRef}>
       <button
@@ -279,30 +545,13 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 min-w-9 max-w-36 items-center gap-1.5 rounded-full border pr-3 pl-2.5 shadow-sm",
-          "transition-[color,background-color,border-color,transform,filter] duration-150 ease-out",
-          "active:scale-95 hover:brightness-[0.97]",
+          "no-select flex h-9 max-w-40 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
+          userFeedbackClass({ press: "sm" }),
           /* Opaque light fill — glass was too see-through on the record button. */
-          trouble
-            ? "border-danger-200 bg-danger-50 text-danger-700"
-            : softUnavailable
-              ? "border-saffron-200 bg-saffron-50 text-saffron-800"
-              : status === "ok" && info?.matchesLocation
-                ? "border-saffron-200 bg-saffron-50 text-saffron-800"
-                : "border-white/80 bg-white/95 text-muted hover:bg-white hover:text-ink",
+          toneBadge[tone],
         )}
       >
-        {status === "checking" ? (
-          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden strokeWidth={2.5} />
-        ) : trouble ? (
-          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
-        ) : status === "ok" && info?.matchesLocation ? (
-          <Check className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
-        ) : softUnavailable ? (
-          <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
-        ) : (
-          <Clock className="h-4 w-4 shrink-0" aria-hidden strokeWidth={2.5} />
-        )}
+        <StatusMark tone={tone}>{badgeIcon}</StatusMark>
         <span className="truncate text-sm font-medium">{badgeLabel}</span>
       </button>
 
@@ -310,148 +559,93 @@ export function LocationCheck() {
         <Surface
           material="glass-panel"
           rim
-          className="animate-scale-in absolute right-0 bottom-11 z-20 w-72 rounded-2xl p-3.5 text-left"
+          className="animate-scale-in absolute right-0 bottom-11 z-20 w-[19.5rem] rounded-3xl p-4 text-left shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
-          {status === "checking" && (
-            <>
-              <p className="mb-1 text-xs tracking-wide text-saffron-700 uppercase">Checking</p>
-              <p className="text-sm text-muted">Finding where this device is…</p>
-            </>
-          )}
-
-          {status === "ok" && info && info.matchesLocation && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-ink">
-                {info.matchKind === "iana"
-                  ? "Time zone matches this place"
-                  : info.matchKind === "offset"
-                    ? "UTC offset matches this place"
-                    : "Time zone looks plausible here"}
-              </p>
-              <p className="text-base text-ink">{info.place}</p>
-              <dl className="space-y-1 text-sm text-muted">
-                {info.placeZone ? (
-                  <div className="flex justify-between gap-2">
-                    <dt className="shrink-0">This place</dt>
-                    <dd className="truncate text-right text-ink">
-                      {info.placeZone} · {info.placeOffset}
-                    </dd>
-                  </div>
-                ) : (
-                  <div className="flex justify-between gap-2">
-                    <dt className="shrink-0">Expected here</dt>
-                    <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
-                  </div>
-                )}
-                <div className="flex justify-between gap-2">
-                  <dt className="shrink-0">This device</dt>
-                  <dd className="truncate text-right text-ink">
-                    {info.deviceZone} · {info.deviceOffset}
-                  </dd>
-                </div>
-              </dl>
-              <p className="text-sm text-muted">
-                {info.matchKind === "iana"
-                  ? "Same zone id as this location — the phone isn’t still set somewhere you traveled from."
-                  : info.matchKind === "offset"
-                    ? "Different zone name, same UTC offset — wall-clock time for this place still lines up."
-                    : "Rough check from GPS longitude (no zone name from the map). Good enough to catch a travel zone many hours off."}
-              </p>
-              <p className="text-sm text-muted">
-                Does not prove the clock is synced to the second. If the time itself looks wrong, fix Date &amp; Time in settings before the ceremony.
-              </p>
-            </div>
-          )}
-
-          {status === "ok" && info && !info.matchesLocation && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">
-                Time zone doesn&apos;t match this place
-              </p>
-              <p className="text-base text-ink">{info.place}</p>
-              <dl className="space-y-1 text-sm text-muted">
-                {info.placeZone ? (
-                  <div className="flex justify-between gap-2">
-                    <dt className="shrink-0">This place</dt>
-                    <dd className="truncate text-right text-ink">
-                      {info.placeZone} · {info.placeOffset}
-                    </dd>
-                  </div>
-                ) : (
-                  <div className="flex justify-between gap-2">
-                    <dt className="shrink-0">Expected here</dt>
-                    <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
-                  </div>
-                )}
-                <div className="flex justify-between gap-2">
-                  <dt className="shrink-0">This device</dt>
-                  <dd className="truncate text-right text-ink">
-                    {info.deviceZone} · {info.deviceOffset}
-                  </dd>
-                </div>
-              </dl>
-              <p className="text-sm text-muted">
-                If you just traveled here, the clock may still be set to where you came from. Open Date &amp; Time settings and turn on automatic time zone (or pick the local zone) before the ceremony starts.
-              </p>
-            </div>
-          )}
-
-          {status === "denied" && info && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">Location access is off</p>
-              <p className="text-sm text-muted">
-                Device reports {info.deviceZone} ({info.deviceOffset}). Without location that can&apos;t be checked against where you are.
-              </p>
-              <p className="text-sm text-muted">
-                If you traveled here, confirm the time zone yourself in Date &amp; Time settings before starting.
-              </p>
-            </div>
-          )}
-
-          {status === "unavailable" && info && (
-            <div className="space-y-2">
+          <div className="flex items-start gap-3">
+            <StatusMark tone={tone} size="lg">
+              {status === "checking" ? (
+                <Loader2 className="size-6 animate-spin" strokeWidth={2.25} />
+              ) : trouble ? (
+                <AlertTriangle className="size-6" strokeWidth={2.25} />
+              ) : status === "ok" && info?.matchesLocation ? (
+                <Check className="size-6" strokeWidth={2.25} />
+              ) : (
+                <MapPin className="size-6" strokeWidth={2.25} />
+              )}
+            </StatusMark>
+            <div className="min-w-0 flex-1">
               <p
                 className={cn(
-                  "text-sm font-medium",
-                  info.matchesLocation ? "text-ink" : "text-danger-700",
+                  "font-display text-lg font-semibold leading-snug",
+                  trouble ? "text-danger-700" : "text-ink",
                 )}
               >
-                {info.matchesLocation
-                  ? "Couldn't name the place — rough check passed"
-                  : "Couldn't name the place — zone may be wrong"}
+                {title}
               </p>
-              <p className="text-sm text-muted">
-                Location worked, but the place/zone lookup needs a network this device doesn&apos;t have right now.
-              </p>
-              <dl className="space-y-1 text-sm text-muted">
-                <div className="flex justify-between gap-2">
-                  <dt className="shrink-0">Expected (rough)</dt>
-                  <dd className="truncate text-right text-ink">~{info.placeOffset}</dd>
-                </div>
-                <div className="flex justify-between gap-2">
-                  <dt className="shrink-0">This device</dt>
-                  <dd className="truncate text-right text-ink">
-                    {info.deviceZone} · {info.deviceOffset}
-                  </dd>
-                </div>
-              </dl>
-              <p className="text-sm text-muted">
-                {info.matchesLocation
-                  ? "Longitude suggests this offset is plausible. Confirm the zone in Date &amp; Time if you traveled recently."
-                  : "Device offset is far from what longitude suggests here. Check Date &amp; Time before starting."}
-              </p>
+              {info?.place ? (
+                <p className="mt-0.5 truncate text-sm text-muted">{info.place}</p>
+              ) : null}
             </div>
-          )}
+          </div>
 
-          {status === "error" && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-danger-700">Can&apos;t check location here</p>
-              <p className="text-sm text-muted">
-                This browser or device doesn&apos;t support location. Check date, time, and time zone in settings directly before the ceremony starts.
-              </p>
+          {info && (info.placeOffset || info.deviceOffset) && status !== "checking" ? (
+            <div className="mt-3 space-y-2.5">
+              <div className="flex gap-2">
+                <SideCard
+                  icon={<MapPin className="size-3.5" aria-hidden />}
+                  label="Here"
+                  zone={
+                    info.placeZone
+                      ? info.placeZone.replace(/_/g, " ")
+                      : info.placeOffset
+                        ? "Rough from GPS"
+                        : "—"
+                  }
+                  offset={
+                    info.placeOffset
+                      ? info.placeZone
+                        ? info.placeOffset
+                        : `≈ ${info.placeOffset}`
+                      : "—"
+                  }
+                  tone={
+                    info.matchesLocation ? "ok" : info.placeOffset ? "danger" : "neutral"
+                  }
+                />
+                <SideCard
+                  icon={<Smartphone className="size-3.5" aria-hidden />}
+                  label="Device"
+                  zone={info.deviceZone.replace(/_/g, " ")}
+                  offset={info.deviceOffset}
+                  tone={info.matchesLocation ? "ok" : "danger"}
+                />
+              </div>
+
+              {info.placeOffset && info.deviceOffset ? (
+                <OffsetProbe
+                  placeOffset={info.placeOffset}
+                  deviceOffset={info.deviceOffset}
+                  matched={info.matchesLocation}
+                />
+              ) : null}
             </div>
-          )}
+          ) : null}
+
+          {status === "denied" && info ? (
+            <p className="mt-3 rounded-2xl bg-ink/[0.04] px-3 py-2 font-mono text-sm text-ink">
+              {info.deviceZone.replace(/_/g, " ")} · {info.deviceOffset}
+            </p>
+          ) : null}
+
+          {detail ? <p className="mt-3 text-sm text-muted">{detail}</p> : null}
+
+          {status === "ok" || status === "unavailable" ? (
+            <p className="mt-2 text-xs text-subtle">
+              Does not prove the clock is synced to the second. If the time itself looks wrong,
+              fix Date &amp; Time in settings before the ceremony.
+            </p>
+          ) : null}
         </Surface>
       )}
     </div>
