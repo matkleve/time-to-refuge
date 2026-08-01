@@ -36,11 +36,15 @@ export function DanaPage() {
   }
 
   return (
-    <ListPageFrame>
-      <PageTitle title={dana.pageTitle} className="shrink-0" />
+    <ListPageFrame className="overflow-hidden px-0 sm:px-0">
+      <div className="shrink-0 px-3 sm:px-5">
+        <PageTitle title={dana.pageTitle} />
+      </div>
 
-      <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-3xl">
-        <div className="relative aspect-[3/2] w-full bg-ink/10">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {/* Full-bleed DRCE photo — edge to edge under the title, like the
+            original Dana sheet (not an inset rounded card). */}
+        <div className="relative mt-2 aspect-[3/2] w-full bg-ink/10">
           <Image
             src={dana.image}
             alt={dana.imageAlt}
@@ -50,9 +54,8 @@ export function DanaPage() {
             className="object-cover"
           />
         </div>
-      </div>
 
-      <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-1 py-5">
+        <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 py-5 sm:px-5">
         <div className="space-y-2">
           <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
           <p className="text-base text-muted">{dana.intro}</p>
@@ -142,7 +145,8 @@ export function DanaPage() {
           ))}
         </ul>
 
-        <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+          <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+        </div>
       </div>
     </ListPageFrame>
   );
