@@ -39,7 +39,7 @@ component zoo.
 
 ### P0
 1. **`AddRowTray`** — `AddPersonRow` ≈ Fields “Add field” tray  
-2. **`IconButton` `armed`** — identical danger ring class in PersonFields / Quick Log / Fields  
+2. **`IconButton` `armed`** — filled danger chip when armed (PersonFields / Quick Log / Fields)  
 3. **`GlassEmptyNote`** — Refuge empty, desktop empty, History empty, Quick Log hint  
 
 ### P1
