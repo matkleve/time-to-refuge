@@ -10,9 +10,19 @@ interface LiveClockButtonProps {
   onCapture: () => void;
   armed: boolean;
   label: string;
+  /**
+   * Refuge mobile: fill leftover column height and compress before the
+   * person card ever scrolls. Desktop / default keeps a fixed min height.
+   */
+  fillRemaining?: boolean;
 }
 
-export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProps) {
+export function LiveClockButton({
+  onCapture,
+  armed,
+  label,
+  fillRemaining = false,
+}: LiveClockButtonProps) {
   const [now, setNow] = useState<Date | null>(null);
   const [flash, setFlash] = useState(false);
   const rafRef = useRef<number | undefined>(undefined);
@@ -41,13 +51,16 @@ export function LiveClockButton({ onCapture, armed, label }: LiveClockButtonProp
     : { day: "—", time: "--:--:--", ms: "---" };
 
   return (
-    <div className="relative">
+    <div className={cn("relative w-full", fillRemaining && "min-h-0 flex-1")}>
       <button
         type="button"
         onClick={handleClick}
         disabled={!armed}
         className={cn(
-          "no-select flex min-h-38 w-full flex-col items-center justify-center gap-1 rounded-3xl py-6",
+          "no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl",
+          fillRemaining
+            ? "h-full min-h-28 py-3"
+            : "min-h-38 py-6",
           "transition-[box-shadow,background-color,transform,opacity,filter] duration-200 ease-out",
           "active:scale-[0.98] enabled:hover:brightness-[1.04]",
           /* Tinted glass + specular light catch — not a solid fill, not a gradient. */

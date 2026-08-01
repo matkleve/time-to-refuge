@@ -104,10 +104,14 @@ export function RefugeView({
       style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
       {/*
-        Card zone scrolls in the space above the record button — the button
-        is shrink-0 so it can never clip the card.
+        Card is content-sized and never scrolls vertically — only swipe.
+        Leftover height goes to the record button, which compresses first.
       */}
-      <div className="relative min-h-0 flex-1">
+      <div
+        className="relative shrink-0 overflow-x-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <div className="absolute top-3 right-4 z-20 flex items-center gap-1">
           <NavButton
             direction="prev"
@@ -125,42 +129,35 @@ export function RefugeView({
         </div>
 
         <div
-          className="h-full min-h-0 overflow-x-hidden overflow-y-auto"
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
+          className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          style={{ transform: `translateX(-${index * 100}%)` }}
         >
-          <div className="flex min-h-full flex-col justify-center py-3">
-            <div
-              className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-              style={{ transform: `translateX(-${index * 100}%)` }}
-            >
-              {people.map((p) => {
-                const isCurrent = p.id === current?.id;
-                return (
-                  <div key={p.id} className="w-full shrink-0 px-4 pt-12">
-                    <PersonCard
-                      person={p}
-                      fields={fields}
-                      target={isCurrent ? target : null}
-                      onSelectPhase={isCurrent ? setSelectedPhase : undefined}
-                      onClear={(phase) => onClear(p.id, phase)}
-                      onResetAll={() => onResetAll(p.id)}
-                      onDelete={() => onDelete(p.id)}
-                      onExport={() => onExport(p)}
-                      onRename={(name) => onRename(p.id, name)}
-                      onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                      retreatName={retreatName}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          {people.map((p) => {
+            const isCurrent = p.id === current?.id;
+            return (
+              <div key={p.id} className="w-full shrink-0 px-4 pt-12 pb-1">
+                <PersonCard
+                  person={p}
+                  fields={fields}
+                  target={isCurrent ? target : null}
+                  onSelectPhase={isCurrent ? setSelectedPhase : undefined}
+                  onClear={(phase) => onClear(p.id, phase)}
+                  onResetAll={() => onResetAll(p.id)}
+                  onDelete={() => onDelete(p.id)}
+                  onExport={() => onExport(p)}
+                  onRename={(name) => onRename(p.id, name)}
+                  onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                  retreatName={retreatName}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      <div className="shrink-0 px-4 pt-3">
+      <div className="flex min-h-0 flex-1 flex-col px-4 pt-3">
         <LiveClockButton
+          fillRemaining
           onCapture={handleCaptureClick}
           armed={target !== null}
           label={
