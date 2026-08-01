@@ -111,6 +111,11 @@ function FieldRow({
 
   function handleRowClick() {
     if (!filled) {
+      // Tap stamp again while Jump-here is open → cancel (same as X).
+      if (confirmSkip) {
+        setConfirmSkip(false);
+        return;
+      }
       // Skipping ahead of an earlier empty phase — a real thing that can
       // happen (the timekeeper reaching for the wrong row), so it gets a
       // question instead of either silently allowing it or blocking it
@@ -204,25 +209,50 @@ function FieldRow({
         />
       </div>
     );
-  } else if (!filled && confirmSkip) {
+  } else if (!filled) {
     /*
-     * Out-of-order arm: same reveal as filled-row actions (§5a) — fixed
-     * height, stamp packs left to "Jump here", X / OK glass chips on the right.
+     * Empty row — same stamp + tray DOM whether idle or Jump-here (§5a).
+     * Tray must toggle `open` on a mounted RowActionTray; mounting already
+     * open skips the 0fr→1fr reveal entirely.
      */
     body = (
       <div ref={confirmSkipRef} className={cn("flex w-full items-center", ROW_HEIGHT)}>
-        <div
+        <button
+          type="button"
+          onClick={handleRowClick}
+          aria-expanded={confirmSkip}
+          aria-label={
+            confirmSkip
+              ? `Cancel jump to ${phaseLabel}`
+              : `Select ${phaseLabel} to record`
+          }
           className={cn(
-            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
+            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
             ROW_HEIGHT,
             glassRowClass(),
+            "transition-[box-shadow,background-color] duration-200 ease-out",
+            !confirmSkip && "hover:bg-ink/[0.03]",
           )}
         >
-          <span className="font-display text-lg font-medium text-ink">Jump here</span>
-          <RowPackSpacer packed />
-        </div>
+          <span
+            className={cn(
+              "font-display text-lg font-medium",
+              confirmSkip || filled ? "text-ink" : "text-muted",
+            )}
+          >
+            {confirmSkip ? "Jump here" : phaseLabel}
+          </span>
+          {!confirmSkip ? (
+            /* `muted`: empty placeholder on translucent glass — see §3a. */
+            <span className="min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-lg tabular-nums text-muted">
+              {formatTimestamp(value)}
+            </span>
+          ) : (
+            <RowPackSpacer packed />
+          )}
+        </button>
         <CancelConfirmTray
-          open
+          open={confirmSkip}
           onCancel={() => setConfirmSkip(false)}
           onConfirm={() => {
             setConfirmSkip(false);
@@ -232,27 +262,6 @@ function FieldRow({
           confirmLabel={`Record ${phaseLabel} out of order`}
         />
       </div>
-    );
-  } else if (!filled) {
-    body = (
-      <button
-        type="button"
-        onClick={handleRowClick}
-        aria-label={`Select ${phaseLabel} to record`}
-        className={cn(
-          "flex w-full items-center justify-between px-4 text-left",
-          "transition-[colors,transform,background-color] duration-150 ease-out",
-          "hover:bg-ink/[0.03] active:scale-[0.99]",
-          ROW_HEIGHT,
-        )}
-      >
-        {label}
-        {/* `muted` for the same reason as the label above: a translucent row
-            leaves `subtle` no contrast headroom at this size. */}
-        <span className="font-mono text-lg tabular-nums text-muted">
-          {formatTimestamp(value)}
-        </span>
-      </button>
     );
   } else {
     /*
@@ -355,14 +364,22 @@ function FieldRow({
     );
   }
 
-  if (confirmSkip && !filled) {
-    /* Stamp + tray already carry glass; don't wrap in another glass shell. */
+  if (editing) {
+    return (
+      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
+        {body}
+      </div>
+    );
+  }
+
+  if (!filled) {
+    /* Stamp carries glass; tray is a sibling — don't clip the reveal. */
     return <div className="rounded-2xl">{body}</div>;
   }
 
-  if (!filled || editing || !onClear) {
+  if (!onClear) {
     return (
-      <div className={cn("overflow-hidden rounded-2xl", shellClassName)} ref={confirmSkipRef}>
+      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
         {body}
       </div>
     );
