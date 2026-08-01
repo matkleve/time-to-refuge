@@ -372,11 +372,9 @@ stamp is **one persistent structure** across idle and open — never two
 different outer shells swapped by a conditional — so tray width can
 transition instead of jumping:
 
-- Idle: label / index on the left, time on the right (via a **flex spacer**
-  that `grow`s — never `ml-auto`, which cannot interpolate).
-- Open: the spacer **snaps** packed (`grow-0`); only the tray animates width.
-  Animating spacer `flex-grow` and tray `0fr`↔`1fr` together made the time
-  race ahead of the container.
+- Idle / open: label on the left; **time is `flex-1 text-right`** in the
+  stamp so it rides the tray’s width animation — no spacer snap, no
+  font-size change on open (that was a second jump).
 - The tray animates `grid-template-columns` `0fr` → `1fr` with a `w-max`
   child (exact content width). Chip opacity lags the open slightly so
   buttons are never shown clipped mid-expand.
@@ -388,19 +386,17 @@ transition instead of jumping:
   the chip so nothing clips at the card edge.
 - Height never changes (§3): only grid columns and opacity move.
 
-Shared pieces: [`RowPackSpacer`](../components/atoms/RowReveal.tsx),
-[`RowActionTray`](../components/atoms/RowReveal.tsx),
+Shared pieces: [`RowActionTray`](../components/atoms/RowReveal.tsx),
 `IconButton glass` + [`glassChipClass`](../lib/surfaces.ts).
+(`RowPackSpacer` remains for Jump-here’s always-packed stamp.)
 
 > **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**
 > Two different elements can't be transitioned between by CSS — that's what
 > produced the original jump. One element, changing classes, transitions;
 > two elements, one replacing the other, cannot.
 
-> **Do not pack with `margin-left: auto`.** Toggling `ml-auto` jumps. Use a
-> flex spacer (`grow` ↔ `grow-0`). Do **not** transition that spacer in
-> parallel with the tray width — different interpolations desync; snap the
-> spacer and animate only the tray.
+> **Do not pack stamp times with a snapping flex spacer or `ml-auto`.**
+> Right-align the time in the shrinking stamp so it moves with the tray.
 
 ### 5b. Entrance — a panel or popover mounting
 

@@ -350,8 +350,8 @@ function FieldRow({
           onClick={handleRowClick}
           aria-expanded={showActions}
           className={cn(
-            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-            "transition-[box-shadow,background-color,font-size,transform] duration-200 ease-out",
+            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
+            "transition-[box-shadow,background-color,transform] duration-200 ease-out",
             "hover:bg-ink/[0.03] active:scale-[0.99]",
             rowHeight,
             glassRowClass(),
@@ -360,11 +360,12 @@ function FieldRow({
           )}
         >
           {label}
-          <RowPackSpacer packed={showActions} />
           <span
             className={cn(
-              "min-w-0 shrink whitespace-nowrap font-mono tabular-nums transition-[font-size] duration-300 ease-out",
-              showActions || overview ? "text-sm" : "text-lg",
+              /* Right-aligned in the stamp — rides the tray width animation
+                 (no spacer snap). Font size stays put so type doesn't jump. */
+              "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono tabular-nums",
+              overview ? "text-sm" : "text-lg",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >
