@@ -6,7 +6,7 @@ import { MoreVertical, type LucideIcon } from "lucide-react";
 import { actionClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 
 export type GlassMenuItem = {
@@ -61,7 +61,8 @@ interface GlassMenuProps {
   iconActions?: GlassMenuIconAction[];
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
-  size?: "sm" | "md";
+  /** Trigger chip size — default `md` (same as row actions). */
+  size?: IconButtonSize;
   align?: "left" | "right";
   className?: string;
 }
@@ -268,7 +269,7 @@ export function GlassMenu({
               key={action.id}
               icon={action.icon}
               label={action.label}
-              size="sm"
+              size="md"
               disabled={action.disabled}
               onClick={() => pickIcon(action)}
             />
@@ -309,13 +310,11 @@ export function GlassMenu({
         label={open ? `Close ${label}` : label}
         glass
         size={size}
-        /* Round glass chip — same recipe as Refuge nav arrows. Larger glyph;
-           open holds the cover + blue icon. */
+        /* Same md chip as row Copy / Edit — glyph follows IconButton size. */
         feedbackOn={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "text-ink",
-          size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
           "hover:text-flagblue-600",
           open && "text-flagblue-600",
         )}

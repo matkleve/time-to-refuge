@@ -191,17 +191,21 @@ specular light catch as every other glass surface. A light-to-dark wash
 fights the glass and muddies the one control that must read under ceremony
 pressure (**UC-1**).
 
-**Sizes.** Two, and nothing smaller than the `sm`:
+**Sizes.** Three tokens on [`IconButton`](../components/atoms/IconButton.tsx);
+default is **`md`** so hamburger, ⋯, nav, and row Copy/Edit/Reset match:
 
 | Size | Box | Used for |
 | --- | --- | --- |
-| `sm` | 2.25rem (36px) | Dense clusters inside a card header, list-row actions |
-| `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
+| `sm` | 2.25rem (36px) | Dense only — avoid for chrome |
+| `md` | 2.75rem (44px) | **Default** — row actions, hamburger, ⋯, person nav, title chips |
+| `lg` | 3rem (48px) | Rare emphasis |
 
 **Nothing smaller than `sm`.** That floor is this app’s WCAG touch target
 (above the 2.5.8 minimum of 24px). Text fields and custom buttons that are
 not `IconButton` still use `min-h-9` / `h-9` so height never drops below
-36px — retreat name, timezone select, inline editors, Check zone.
+36px — retreat name, timezone select, inline editors, Check zone. Don’t
+override glyph size with `[&_svg]:size-*` on the chip — the size token sets
+both footprint and icon.
 
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
 destructive actions, export/share on a person card, and add-flow

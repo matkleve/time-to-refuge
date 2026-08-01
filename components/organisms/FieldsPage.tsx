@@ -81,7 +81,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
               showLabel="Reset"
               glass
               tone="danger"
-              size="sm"
+              size="md"
               disabled={atDefault}
               armed={resetAll.armed}
               onClick={resetAll.trigger}

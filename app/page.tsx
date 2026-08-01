@@ -298,7 +298,7 @@ export default function Home() {
       }
       onExportAll={() => downloadCsv(people, fields, retreatName)}
       exportDisabled={people.length === 0}
-      size={isDesktop ? "md" : "sm"}
+      size="md"
     />
   );
 

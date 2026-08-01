@@ -200,7 +200,7 @@ export function QuickLogView() {
               showLabel="Clear"
               glass
               tone="danger"
-              size="sm"
+              size="md"
               disabled={entries.length === 0}
               armed={clearAll.armed}
               onClick={(e) => {
