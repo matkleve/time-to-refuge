@@ -264,14 +264,15 @@ export function GlassMenu({
         icon={TriggerIcon}
         label={open ? `Close ${label}` : label}
         size={size}
-        /* Circular hit target (IconButton default). Idle: no outline —
-           larger glyph. Light wash + blue icon on hover/open only. */
+        /* Circular hit target; wash from userFeedback (ForJu). Larger glyph;
+           open holds the cover + blue icon. */
+        feedbackOn={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "bg-transparent text-ink shadow-none",
+          "bg-transparent text-ink",
           size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
-          "hover:bg-ink/[0.04] hover:text-flagblue-600",
-          open && "bg-ink/[0.06] text-flagblue-600",
+          "hover:text-flagblue-600",
+          open && "text-flagblue-600",
         )}
       />
       {panel}

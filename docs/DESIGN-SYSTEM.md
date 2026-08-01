@@ -241,9 +241,7 @@ with a hairline between them, then an icon-only strip —
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
 Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
-Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
-idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open uses a
-light ink wash (`bg-ink/[0.04]`–`[0.06]`) and blue icon.
+Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
@@ -269,6 +267,36 @@ which matters in a ceremony, where a dialog is the wrong thing to be reading.
 
 **Focus.** One ring for the whole app — 2px `flagblue-600` at 2px offset, on
 `:focus-visible`, declared once in the base layer. Never remove it locally.
+(`:focus-visible` — not `:focus` — so a mouse click does not leave a stuck
+ring; keyboard / AT still get one. Same idea as ForJu’s `clickFocus` guard.)
+
+### 4 — User feedback (interaction states)
+
+Industry name: **interaction states**. ForJu’s API name:
+**`userFeedbackMode`** on every `FocusAble` / `FormUi` control — one shared
+hover cover, active cover, focus ring, and disabled treatment, not per-button
+one-offs.
+
+Here that lives in [`.user-feedback`](../app/globals.css) +
+[`userFeedbackClass()`](../lib/user-feedback.ts):
+
+| State | How |
+| --- | --- |
+| **Idle** | Control’s own fill (glass / transparent / solid) |
+| **Hover** | `::after` cover at ink **4%** (ForJu `hover-cover`); only when `(hover: hover)` |
+| **Active / pressed** | Cover at ink **6%** + press scale (`sm` 0.95 · `md` 0.98 · `lg` 0.99) |
+| **Focus** | Global `:focus-visible` ring (§4 above) |
+| **Open / selected** | `.is-feedback-on` holds the hover cover |
+| **Disabled** | Opacity 35%, no pointer |
+
+The wash is an overlay, so it never replaces a glass chip’s fill. On accent
+fills use `.user-feedback--on-accent` (white wash). Chrome controls
+(`IconButton`, hamburger / ⋯) opt in via `userFeedbackClass()`; don’t invent
+a second hover recipe locally.
+
+Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
+idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
+shared feedback cover + blue icon.
 
 ## 4a. Units
 
@@ -303,10 +331,10 @@ for the same reason the type scale re-values Tailwind's steps (§4a):
 | `duration-300` | Travel across the screen — carousel, row-action tray |
 
 **Press feedback.** Every tappable control acknowledges the finger within
-`duration-150` via `active:scale-95` / `active:scale-[0.98]` /
-`active:scale-[0.99]` (larger surfaces scale less). Hover washes or
-`brightness` nudges apply where a pointer can linger. Icon-only chrome goes
-through `IconButton` so this stays consistent.
+`duration-150` via the shared **user feedback** press scale (§4 —
+`user-feedback--press-*`). Hover washes come from that same cover, not
+ad-hoc `hover:bg-*` on each control. Icon-only chrome goes through
+`IconButton` so this stays consistent.
 
 **Easing.** Default `ease-out`. The person carousel uses
 `cubic-bezier(0.32, 0.72, 0, 1)` so the card settles like a native sheet.
