@@ -520,10 +520,11 @@ never set at all.
   the place (e.g. "Vienna"). A problem — denied, mismatch, or failed rough
   check — switches the label to "Check clock" on a light danger fill. Idle
   uses `Clock`, never a dimmed `Check` that would claim success early.
-- **The popover is a graphical probe**: large status mark + title/place,
-  **Here** vs **Device** side cards (offset + zone), and an **UTC offset
-  probe** (24h track with markers). Match kind is a short sentence; an
-  explicit disclaimer notes this does not prove second-level sync.
+- **The popover** (portaled, so shell overflow can’t clip it): large status
+  mark + title/place, **Here** vs **Device** side cards (offset + zone), and
+  one plain line for the gap (“Same UTC offset…” / “Device is N hours
+  off…”). Match kind is a short sentence; an explicit disclaimer notes this
+  does not prove second-level sync.
 - Denied, unsupported, or mismatched states still surface whatever the
   device *can* say about its own zone, framed honestly as unverified or
   wrong rather than hidden.
