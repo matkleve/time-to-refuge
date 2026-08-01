@@ -7,7 +7,7 @@ import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
-import { glassRowClass } from "@/lib/surfaces";
+import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
@@ -88,7 +88,9 @@ function LogRow({
           "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
           "transition-[box-shadow,background-color,transform] duration-200 ease-out",
           "hover:bg-ink/[0.03] active:scale-[0.99]",
-          glassRowClass(),
+          /* Card glass (fill + blur) — rows sit on the photo like Refuge, not
+             nested on a parent card where glassRowClass omits the blur. */
+          glassClass("card", { rim: true }),
         )}
       >
         <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>

@@ -32,49 +32,55 @@ function actionLabel(entry: LogEntry, fields: FieldDef[]): string {
 }
 
 /**
- * History page — same shell slot as Refuge / Quick Log / People, not a
- * modal or full-screen overlay.
+ * History — open backdrop like Refuge / People / Quick Log.
+ * Milky glass lives on the rows (and empty note), not a full-page sheet.
  */
 export function HistoryPanel({ log, fields }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 items-center border-b border-white/40 px-5 py-3">
-          <h2 className="font-display text-lg font-semibold text-ink">History</h2>
-        </div>
-        <div className="flex-1 overflow-y-auto px-5 py-4">
-          {sorted.length === 0 ? (
-            <div className="mt-16 flex flex-col items-center gap-2 px-6 text-center">
+    <div
+      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2 sm:px-5 sm:pt-3"
+      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+    >
+      <h2 className="shrink-0 font-display text-2xl font-semibold text-ink">History</h2>
+
+      <div className="mt-3 flex-1">
+        {sorted.length === 0 ? (
+          <div className="mt-16 flex flex-col items-center gap-2 px-6 text-center">
+            <Surface
+              material="glass-panel"
+              rim
+              className="rounded-2xl px-5 py-4"
+            >
               <p className="font-display text-lg font-medium text-ink">No moments yet</p>
-              <p className="text-sm text-muted">
+              <p className="mt-1 text-sm text-muted">
                 Recorded, reset, and undone times will gather here as the ceremony goes.
               </p>
-            </div>
-          ) : (
-            <ul className="mx-auto w-full max-w-md space-y-2">
-              {sorted.map((entry) => (
-                <li
-                  key={entry.id}
-                  className={cn(
-                    "rounded-2xl px-4 py-3 animate-fade-in-up",
-                    glassClass("card", { rim: true }),
-                  )}
-                >
-                  <p className="font-display text-base font-semibold text-ink">
-                    {entry.personName}
-                  </p>
-                  <p className="mt-0.5 text-sm text-muted">{actionLabel(entry, fields)}</p>
-                  <p className="mt-1 font-mono text-sm tabular-nums text-subtle">
-                    {formatLogTime(entry.at)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </Surface>
+            </Surface>
+          </div>
+        ) : (
+          <ul className="mx-auto w-full max-w-md space-y-2">
+            {sorted.map((entry) => (
+              <li
+                key={entry.id}
+                className={cn(
+                  "rounded-2xl px-4 py-3 animate-fade-in-up",
+                  glassClass("card", { rim: true }),
+                )}
+              >
+                <p className="font-display text-base font-semibold text-ink">
+                  {entry.personName}
+                </p>
+                <p className="mt-0.5 text-sm text-muted">{actionLabel(entry, fields)}</p>
+                <p className="mt-1 font-mono text-sm tabular-nums text-subtle">
+                  {formatLogTime(entry.at)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
