@@ -194,7 +194,7 @@ function FieldEditorRow({
   return (
     <div
       className={cn(
-        "flex min-h-12 items-center gap-2 rounded-2xl px-3 py-2",
+        "flex h-12 items-center gap-2 rounded-2xl px-3",
         glassRowClass(),
         remove.armed && "ring-2 ring-inset ring-danger-500",
       )}
@@ -214,7 +214,7 @@ function FieldEditorRow({
             }
           }}
           aria-label="Field name"
-          className="min-h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold text-ink"
+          className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink"
         />
       ) : (
         <button
@@ -224,7 +224,7 @@ function FieldEditorRow({
             setEditing(true);
           }}
           className={cn(
-            "min-h-9 min-w-0 flex-1 truncate rounded-xl px-2 text-left font-display text-lg font-semibold",
+            "box-border h-9 min-w-0 flex-1 truncate rounded-xl border border-transparent px-2 text-left font-display text-lg font-semibold leading-none",
             remove.armed ? "text-danger-600" : "text-ink",
             "transition-[colors,background-color] duration-150 hover:bg-ink/[0.04]",
           )}

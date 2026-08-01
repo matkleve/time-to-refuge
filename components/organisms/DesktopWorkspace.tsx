@@ -79,9 +79,8 @@ export function DesktopWorkspace({
               <PersonCard
                 person={p}
                 fields={fields}
-                variant="overview"
                 isCurrent={p.id === current?.id}
-                onSelect={() => onOpenAt(p.id, null)}
+                onOpenPerson={() => onOpenAt(p.id, null)}
                 onSelectPhase={(phase) => onOpenAt(p.id, phase)}
                 onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
                 onClear={(phase) => onClear(p.id, phase)}
@@ -108,7 +107,6 @@ export function DesktopWorkspace({
             <PersonCard
               person={current}
               fields={fields}
-              variant="focused"
               target={target}
               onSelectPhase={setSelectedPhase}
               onClear={(phase) => onClear(current.id, phase)}

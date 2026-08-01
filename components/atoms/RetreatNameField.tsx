@@ -14,6 +14,7 @@ interface RetreatNameFieldProps {
 /**
  * Session retreat name — large left-aligned glass chip under the app bar on
  * Refuge / People only. Leading mountain icon; tap to edit.
+ * Idle and editing share one fixed-height shell so the chip never jumps.
  * See design system §6c.
  */
 export function RetreatNameField({ value, onChange, className }: RetreatNameFieldProps) {
@@ -26,16 +27,24 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     setEditing(false);
   }
 
-  if (editing) {
-    return (
-      <div
+  return (
+    <div
+      className={cn(
+        "flex h-12 w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
+        glassClass("card", { rim: true }),
+        className,
+      )}
+    >
+      <Mountain
         className={cn(
-          "flex w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5 py-2.5",
-          glassClass("card", { rim: true }),
-          className,
+          "size-5 shrink-0",
+          value || editing ? "text-flagblue-600" : "text-muted",
         )}
-      >
-        <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
+        strokeWidth={2}
+        aria-hidden
+      />
+
+      {editing ? (
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
              appears on an explicit user action, so focusing it is expected. */
@@ -49,42 +58,33 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           }}
           placeholder="Retreat name"
           aria-label="Retreat name"
-          className="min-h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold text-ink focus:outline-none"
+          className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none"
         />
-      </div>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        setDraft(value);
-        setEditing(true);
-      }}
-      aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
-      className={cn(
-        "inline-flex max-w-full items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-left",
-        "transition-[colors,transform,background-color,filter] duration-150 ease-out",
-        "hover:brightness-[1.03] active:scale-[0.99]",
-        glassClass("card", { rim: true }),
-        className,
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setDraft(value);
+            setEditing(true);
+          }}
+          aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
+          className={cn(
+            "flex h-9 min-w-0 flex-1 items-center gap-2.5 rounded-xl text-left",
+            "transition-[colors,transform,background-color] duration-150 ease-out",
+            "hover:bg-ink/[0.04] active:scale-[0.99]",
+          )}
+        >
+          <span
+            className={cn(
+              "min-w-0 flex-1 truncate font-display text-base font-semibold",
+              value ? "text-ink" : "text-muted",
+            )}
+          >
+            {value || "Add retreat name"}
+          </span>
+          {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}
+        </button>
       )}
-    >
-      <Mountain
-        className={cn("size-5 shrink-0", value ? "text-flagblue-600" : "text-muted")}
-        strokeWidth={2}
-        aria-hidden
-      />
-      <span
-        className={cn(
-          "min-w-0 truncate font-display text-base font-semibold",
-          value ? "text-ink" : "text-muted",
-        )}
-      >
-        {value || "Add retreat name"}
-      </span>
-      {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}
-    </button>
+    </div>
   );
 }

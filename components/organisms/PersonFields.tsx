@@ -20,15 +20,13 @@ import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
 interface PersonFieldsProps {
   person: Person;
   fields: FieldDef[];
-  /** "focused" is the big card; "overview" is the compact one in the people list. */
-  variant?: "focused" | "overview";
   target?: Phase | null;
-  /** Empty row tapped: arm it here, or (from the overview) open the person there. */
+  /** Empty row tapped: arm it here (Refuge), or open that field on Refuge (list). */
   onSelectPhase?: (phase: Phase) => void;
   onClear?: (phase: Phase) => void;
   /** Correct an already-recorded time. */
   onEditTime?: (phase: Phase, at: number) => void;
-  /** The eye action — only meaningful from the overview. */
+  /** Eye action — list contexts only; opens this person on Refuge. */
   onOpenPerson?: () => void;
   /** Reset-all is armed on the card: show every recorded time as about to go. */
   armedAll?: boolean;
@@ -39,7 +37,6 @@ interface FieldRowProps {
   fields: FieldDef[];
   phase: Phase;
   phaseLabel: string;
-  variant: "focused" | "overview";
   isTarget: boolean;
   onSelectPhase?: (phase: Phase) => void;
   onClear?: (phase: Phase) => void;
@@ -48,13 +45,14 @@ interface FieldRowProps {
   armedAll?: boolean;
 }
 
+const ROW_HEIGHT = "min-h-13";
+
 /** One field row. Its own component so each row keeps its own armed/open state. */
 function FieldRow({
   person,
   fields,
   phase,
   phaseLabel,
-  variant,
   isTarget,
   onSelectPhase,
   onClear,
@@ -64,7 +62,6 @@ function FieldRow({
 }: FieldRowProps) {
   const value = getTime(person, phase);
   const filled = value !== null;
-  const overview = variant === "overview";
 
   const [showActions, setShowActions] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -152,10 +149,6 @@ function FieldRow({
     setShowActions(false);
   }
 
-  /* Every state renders at the same height, so revealing a row's actions
-     never resizes it or nudges the rows below (design system §3). */
-  const rowHeight = overview ? "min-h-11" : "min-h-13";
-
   /*
    * Empty / editing / skip shells keep glass on the outer wrap. Filled rows
    * put glass only on the stamp button — the action tray is a sibling (§5a).
@@ -165,15 +158,12 @@ function FieldRow({
     glassRowClass(),
     filled && "shadow-sm",
     isTarget && "ring-2 ring-flagblue-500",
-    /* Armed reset: only the time turns red + the reset chip rings — never a
-       danger ring on the stamp (it reads as a clipped right-edge border). */
   );
 
   const label = (
     <span
       className={cn(
-        "font-display font-medium",
-        overview ? "text-sm" : "text-lg",
+        "font-display text-lg font-medium",
         /* `muted`, not `subtle`: at 17px this needs 4.5:1, and `subtle` only
            cleared that against solid white (4.59). Once the row went
            translucent there was no headroom left — see design system §3a. */
@@ -188,7 +178,7 @@ function FieldRow({
 
   if (editing) {
     body = (
-      <div className={cn("flex w-full items-center gap-2 px-4 animate-fade-in-up", rowHeight)}>
+      <div className={cn("flex w-full items-center gap-2 px-4 animate-fade-in-up", ROW_HEIGHT)}>
         {label}
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
@@ -207,8 +197,7 @@ function FieldRow({
           aria-label={`${phaseLabel} time`}
           aria-invalid={invalid}
           className={cn(
-            "ml-auto h-9 w-40 rounded-xl border bg-white px-2 text-right font-mono tabular-nums",
-            overview ? "text-sm" : "text-lg",
+            "ml-auto box-border h-9 w-40 rounded-xl border bg-white px-2 text-right font-mono text-lg tabular-nums leading-none",
             invalid ? "border-danger-500 text-danger-600" : "border-flagblue-500 text-ink",
           )}
         />
@@ -220,22 +209,15 @@ function FieldRow({
      * height, stamp packs left to "Jump here", X / OK glass chips on the right.
      */
     body = (
-      <div ref={confirmSkipRef} className={cn("flex w-full items-center", rowHeight)}>
+      <div ref={confirmSkipRef} className={cn("flex w-full items-center", ROW_HEIGHT)}>
         <div
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
-            rowHeight,
+            ROW_HEIGHT,
             glassRowClass(),
           )}
         >
-          <span
-            className={cn(
-              "font-display font-medium text-ink",
-              overview ? "text-sm" : "text-lg",
-            )}
-          >
-            Jump here
-          </span>
+          <span className="font-display text-lg font-medium text-ink">Jump here</span>
           <RowPackSpacer packed />
         </div>
         <RowActionTray open>
@@ -267,22 +249,18 @@ function FieldRow({
       <button
         type="button"
         onClick={handleRowClick}
-        aria-label={
-          overview && onOpenPerson
-            ? `Open ${person.name} and select ${phaseLabel}`
-            : `Select ${phaseLabel} to record`
-        }
+        aria-label={`Select ${phaseLabel} to record`}
         className={cn(
           "flex w-full items-center justify-between px-4 text-left",
           "transition-[colors,transform,background-color] duration-150 ease-out",
           "hover:bg-ink/[0.03] active:scale-[0.99]",
-          rowHeight,
+          ROW_HEIGHT,
         )}
       >
         {label}
         {/* `muted` for the same reason as the label above: a translucent row
             leaves `subtle` no contrast headroom at this size. */}
-        <span className={cn("font-mono tabular-nums text-muted", overview ? "text-sm" : "text-lg")}>
+        <span className="font-mono text-lg tabular-nums text-muted">
           {formatTimestamp(value)}
         </span>
       </button>
@@ -295,7 +273,7 @@ function FieldRow({
      */
     const lookActions = (
       <div className="flex shrink-0 items-center gap-2">
-        {overview && onOpenPerson && (
+        {onOpenPerson && (
           <IconButton
             icon={Eye}
             label={`Open ${person.name}`}
@@ -356,7 +334,7 @@ function FieldRow({
     );
 
     body = (
-      <div ref={dismissRef} className={cn("flex w-full items-center", rowHeight)}>
+      <div ref={dismissRef} className={cn("flex w-full items-center", ROW_HEIGHT)}>
         <button
           type="button"
           onClick={handleRowClick}
@@ -365,7 +343,7 @@ function FieldRow({
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
             "transition-[box-shadow,background-color,transform] duration-200 ease-out",
             "hover:bg-ink/[0.03] active:scale-[0.99]",
-            rowHeight,
+            ROW_HEIGHT,
             glassRowClass(),
             filled && "shadow-sm",
             isTarget && "ring-2 ring-flagblue-500",
@@ -376,8 +354,7 @@ function FieldRow({
             className={cn(
               /* Right-aligned in the stamp — rides the tray width animation
                  (no spacer snap). Font size stays put so type doesn't jump. */
-              "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono tabular-nums",
-              overview ? "text-sm" : "text-lg",
+              "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-lg tabular-nums",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >
@@ -413,7 +390,6 @@ function FieldRow({
 export function PersonFields({
   person,
   fields,
-  variant = "focused",
   target = null,
   onSelectPhase,
   onClear,
@@ -430,7 +406,6 @@ export function PersonFields({
           fields={fields}
           phase={field.id}
           phaseLabel={field.label}
-          variant={variant}
           isTarget={target === field.id}
           onSelectPhase={onSelectPhase}
           onClear={onClear}

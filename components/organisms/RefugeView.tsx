@@ -132,7 +132,6 @@ export function RefugeView({
                   <PersonCard
                     person={p}
                     fields={fields}
-                    variant="focused"
                     target={isCurrent ? target : null}
                     onSelectPhase={isCurrent ? setSelectedPhase : undefined}
                     onClear={(phase) => onClear(p.id, phase)}

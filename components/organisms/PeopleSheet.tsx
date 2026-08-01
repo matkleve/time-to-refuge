@@ -51,9 +51,8 @@ export function PeopleSheet({
                 <PersonCard
                   person={p}
                   fields={fields}
-                  variant="overview"
                   isCurrent={p.id === currentId}
-                  onSelect={() => onOpenAt(p.id, null)}
+                  onOpenPerson={() => onOpenAt(p.id, null)}
                   onSelectPhase={(phase) => onOpenAt(p.id, phase)}
                   onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
                   onClear={(phase) => onClearTime(p.id, phase)}

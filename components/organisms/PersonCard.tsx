@@ -13,8 +13,6 @@ import { PersonFields } from "./PersonFields";
 interface PersonCardProps {
   person: Person;
   fields: FieldDef[];
-  /** "focused" is the big card; "overview" is the compact one in the people list. */
-  variant: "focused" | "overview";
   target?: Phase | null;
   onSelectPhase?: (phase: Phase) => void;
   onClear?: (phase: Phase) => void;
@@ -25,24 +23,25 @@ interface PersonCardProps {
   onDelete?: () => void;
   /** Downloads just this person's times as CSV. */
   onExport?: () => void;
-  /** When provided, tapping the name focuses this person. */
-  onSelect?: () => void;
+  /**
+   * Opens this person on Refuge. When set, field rows get an Eye action —
+   * the only list→Refuge affordance (name is not a nav control).
+   */
+  onOpenPerson?: () => void;
   /** When provided, Rename appears in the ⋯ menu. */
   onRename?: (name: string) => void;
   isCurrent?: boolean;
-  /** Stamped into the shared PNG; shown as a caption on the focused card only. */
+  /** Stamped into the shared PNG; shown as a caption when set. */
   retreatName?: string;
 }
 
 /**
- * Both focused and overview cards are cloudy glass (lib/surfaces.ts via
- * <Surface>). Destructive actions live in the ⋯ menu — tap to open, no
- * swipe. See design system §3 / §5a / §6.
+ * One person card for Refuge and the People list — same size, same actions.
+ * List contexts pass `onOpenPerson` for the Eye chip. See design system §3 / §5a / §6.
  */
 export function PersonCard({
   person,
   fields,
-  variant,
   target = null,
   onSelectPhase,
   onClear,
@@ -50,7 +49,7 @@ export function PersonCard({
   onResetAll,
   onDelete,
   onExport,
-  onSelect,
+  onOpenPerson,
   onRename,
   isCurrent = false,
   retreatName = "",
@@ -59,9 +58,8 @@ export function PersonCard({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(person.name);
 
-  const overview = variant === "overview";
   const anyFilled = fields.some((field) => getTime(person, field.id) !== null);
-  const showRetreatCaption = !overview && retreatName.trim().length > 0;
+  const showRetreatCaption = retreatName.trim().length > 0;
 
   // Two-click: the first press turns the values red, the second carries it out.
   const resetAll = useArmedAction(() => onResetAll?.());
@@ -95,7 +93,6 @@ export function PersonCard({
     }
   }
 
-  /* Same ⋯ menu for overview + focused — GlassMenu parks danger below a hairline. */
   const menuItems: GlassMenuItem[] = [];
   if (onRename) {
     menuItems.push({
@@ -162,42 +159,21 @@ export function PersonCard({
             if (e.key === "Escape") setEditing(false);
           }}
           aria-label="Person's name"
-          className={cn(
-            "min-h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display font-semibold text-ink",
-            overview ? "text-lg" : "text-2xl",
-          )}
+          className="box-border h-10 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-2xl font-semibold leading-none text-ink"
         />
       ) : (
         <>
-          {onSelect ? (
-            <button
-              type="button"
-              onClick={onSelect}
-              aria-label={`Open ${person.name}`}
-              className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-xl px-2 text-left transition-[colors,transform,background-color] duration-150 ease-out hover:bg-ink/[0.05] active:scale-[0.99]"
-            >
-              {isComplete(person, fields) && (
-                <Check className="size-4 shrink-0 text-saffron-700" aria-label="All fields recorded" />
-              )}
-              <span
-                className={cn(
-                  "truncate font-display text-lg font-semibold",
-                  remove.armed ? "text-danger-600" : "text-ink",
-                )}
-              >
-                {person.name}
-              </span>
-            </button>
-          ) : (
-            <h2
-              className={cn(
-                "no-select flex min-h-9 min-w-0 flex-1 items-center truncate px-2 font-display text-2xl font-semibold",
-                remove.armed ? "text-danger-600" : "text-ink",
-              )}
-            >
-              {person.name}
-            </h2>
-          )}
+          <h2
+            className={cn(
+              "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate px-2 font-display text-2xl font-semibold",
+              remove.armed ? "text-danger-600" : "text-ink",
+            )}
+          >
+            {isComplete(person, fields) && (
+              <Check className="size-4 shrink-0 text-saffron-700" aria-label="All fields recorded" />
+            )}
+            <span className="truncate">{person.name}</span>
+          </h2>
 
           {menuItems.length > 0 && (
             <GlassMenu
@@ -212,8 +188,12 @@ export function PersonCard({
     </div>
   );
 
-  const body = (
-    <>
+  return (
+    <Surface
+      material={isCurrent ? "glass-card-current" : "glass-card"}
+      rim
+      className="overflow-hidden rounded-3xl"
+    >
       {showRetreatCaption && (
         <p className="truncate px-4 pt-3 text-xs tracking-wide text-ink uppercase">
           {retreatName}
@@ -227,42 +207,18 @@ export function PersonCard({
         </p>
       )}
 
-      <div className={overview ? "p-2" : "p-3"}>
+      <div className="p-3">
         <PersonFields
           person={person}
           fields={fields}
-          variant={variant}
           target={target}
           onSelectPhase={onSelectPhase}
           onClear={onClear}
           onEditTime={onEditTime}
-          onOpenPerson={onSelect}
+          onOpenPerson={onOpenPerson}
           armedAll={resetAll.armed}
         />
       </div>
-    </>
-  );
-
-  // ── Overview: glass (same recipe as focused). ────────────────────────────
-  if (overview) {
-    const material = isCurrent ? "glass-card-current" : "glass-card";
-    return (
-      <Surface material={material} rim className="overflow-hidden rounded-3xl">
-        {body}
-      </Surface>
-    );
-  }
-
-  // ── Focused: glass over the backdrop photo. ──────────────────────────────
-  // Material lives in lib/surfaces.ts — shell AND field rows (PersonFields)
-  // must both be translucent or the card still reads as a solid block.
-  return (
-    <Surface
-      material={isCurrent ? "glass-card-current" : "glass-card"}
-      rim
-      className="overflow-hidden rounded-3xl"
-    >
-      {body}
     </Surface>
   );
 }
