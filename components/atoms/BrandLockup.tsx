@@ -28,25 +28,25 @@ function LogoMark({ size }: { size: number }) {
 
 /**
  * Header brand: triple-jewel mark + Timekeeper name.
- * Title is one step above the prior header size on the type scale.
+ * Sized to sit in a single ~44–56px toolbar row (iOS / Material app bar).
  */
 export function BrandLockup({
-  titleSize = "2xl",
+  titleSize = "lg",
   className,
 }: {
-  /** Mobile 2xl (was lg); desktop 4xl (was 2xl). */
-  titleSize?: "2xl" | "4xl";
+  /** `lg` mobile toolbar · `2xl` desktop toolbar. */
+  titleSize?: "lg" | "2xl";
   className?: string;
 }) {
-  const mark = titleSize === "4xl" ? 40 : 32;
+  const mark = titleSize === "2xl" ? 32 : 28;
 
   return (
-    <div className={cn("flex min-w-0 items-center gap-2.5", className)}>
+    <div className={cn("flex min-w-0 items-center gap-2", className)}>
       <LogoMark size={mark} />
       <p
         className={cn(
-          "truncate font-display font-semibold text-ink",
-          titleSize === "4xl" ? "text-4xl" : "text-2xl",
+          "truncate font-display font-semibold leading-none text-ink",
+          titleSize === "2xl" ? "text-2xl" : "text-lg",
         )}
       >
         Timekeeper

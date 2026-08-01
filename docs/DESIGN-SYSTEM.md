@@ -50,9 +50,9 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.25rem (36px) | Hero clock · desktop header “Timekeeper” |
-| `text-2xl` | 1.5rem (24px) | Person name on the focused card · mobile header “Timekeeper” |
-| `text-lg` | 1.0625rem (17px) | Panel titles, name in the overview, field rows |
+| `text-4xl` | 2.25rem (36px) | Hero clock |
+| `text-2xl` | 1.5rem (24px) | Person name on the focused card · desktop header “Timekeeper” |
+| `text-lg` | 1.0625rem (17px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
 | `text-base` | 0.9375rem (15px) | Default UI text |
 | `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
 | `text-xs` | 0.6875rem (11px) | Tracked uppercase captions **only** |
@@ -243,6 +243,10 @@ with a hairline between them, then an icon-only strip —
 
 Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
 Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
+
+**App header** follows a compact toolbar (iOS ~44pt / Material ~56dp): one
+row for brand + hamburger with equal inset; retreat name is a slim subtitle
+underneath — never vertically center the menu against both lines.
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
