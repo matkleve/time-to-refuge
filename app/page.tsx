@@ -393,7 +393,7 @@ export default function Home() {
           className="relative z-20 shrink-0 px-5 pb-2 pt-3"
         >
           <div className="flex h-12 items-center justify-between gap-3">
-            <BrandLockup titleSize="2xl" />
+            <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
             <div className="flex shrink-0 items-center">{menu}</div>
           </div>
           <RetreatNameField
@@ -422,7 +422,7 @@ export default function Home() {
         style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top))" }}
       >
         <div className="flex h-11 items-center justify-between gap-3">
-          <BrandLockup titleSize="lg" />
+          <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
           <div className="flex shrink-0 items-center">{menu}</div>
         </div>
         <RetreatNameField
