@@ -1,4 +1,4 @@
-import { Person, PHASES, PHASE_LABELS } from "./types";
+import { Person, FieldDef, getTime } from "./types";
 import { formatTimestamp } from "./format";
 
 const WIDTH = 1080;
@@ -54,7 +54,11 @@ async function readyFonts(): Promise<{ display: string; mono: string; sans: stri
 }
 
 /** Draws the person's card as a shareable PNG. */
-export async function renderPersonCardPng(person: Person, retreatName = ""): Promise<Blob | null> {
+export async function renderPersonCardPng(
+  person: Person,
+  fields: FieldDef[],
+  retreatName = "",
+): Promise<Blob | null> {
   const fonts = await readyFonts();
 
   const canvas = document.createElement("canvas");
@@ -81,11 +85,16 @@ export async function renderPersonCardPng(person: Person, retreatName = ""): Pro
     ctx.fillText(retreatName.trim(), WIDTH / 2, 160);
   }
 
-  // Card
+  // Card — height grows with field count (capped by the canvas).
   const cardX = 80;
   const cardY = 200;
   const cardW = WIDTH - cardX * 2;
-  const cardH = 780;
+  const count = Math.max(1, fields.length);
+  const gap = 24;
+  const rowH = Math.min(150, Math.floor((720 - (count - 1) * gap) / count));
+  const rowsBlock = count * rowH + (count - 1) * gap;
+  const cardH = Math.min(980, 190 + rowsBlock + 60);
+
   ctx.fillStyle = CARD;
   roundedRect(ctx, cardX, cardY, cardW, cardH, 56);
   ctx.fill();
@@ -103,12 +112,12 @@ export async function renderPersonCardPng(person: Person, retreatName = ""): Pro
   // Rows
   const rowX = cardX + 44;
   const rowW = cardW - 88;
-  const rowH = 150;
-  const gap = 28;
   let rowY = cardY + 190;
+  const labelSize = Math.min(42, Math.floor(rowH * 0.28));
+  const timeSize = Math.min(40, Math.floor(rowH * 0.27));
 
-  for (const phase of PHASES) {
-    const value = person[phase];
+  for (const field of fields) {
+    const value = getTime(person, field.id);
 
     ctx.fillStyle = "#ffffff";
     roundedRect(ctx, rowX, rowY, rowW, rowH, 36);
@@ -116,19 +125,19 @@ export async function renderPersonCardPng(person: Person, retreatName = ""): Pro
 
     ctx.textAlign = "left";
     ctx.fillStyle = value === null ? FAINT : INK;
-    ctx.font = `500 42px ${fonts.display}`;
-    ctx.fillText(PHASE_LABELS[phase], rowX + 44, rowY + rowH / 2 + 15);
+    ctx.font = `500 ${labelSize}px ${fonts.display}`;
+    ctx.fillText(field.label, rowX + 44, rowY + rowH / 2 + labelSize * 0.35);
 
     ctx.textAlign = "right";
     ctx.fillStyle = value === null ? FAINT : SAFFRON;
-    ctx.font = `500 40px ${fonts.mono}`;
-    ctx.fillText(formatTimestamp(value), rowX + rowW - 44, rowY + rowH / 2 + 14);
+    ctx.font = `500 ${timeSize}px ${fonts.mono}`;
+    ctx.fillText(formatTimestamp(value), rowX + rowW - 44, rowY + rowH / 2 + timeSize * 0.35);
 
     rowY += rowH + gap;
   }
 
   // Footer: which day and where, so the times mean something later.
-  const anchor = PHASES.map((p) => person[p]).find((v) => v !== null) ?? null;
+  const anchor = fields.map((f) => getTime(person, f.id)).find((v) => v !== null) ?? null;
   const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const day = anchor
     ? new Date(anchor).toLocaleDateString(undefined, {

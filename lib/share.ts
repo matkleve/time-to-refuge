@@ -1,4 +1,4 @@
-import { Person } from "./types";
+import { Person, FieldDef } from "./types";
 import { renderPersonCardPng } from "./card-image";
 
 export type ShareResult = "shared" | "downloaded" | "cancelled" | "unavailable";
@@ -17,8 +17,12 @@ function slugify(value: string): string {
  * downloading the image where the Web Share API can't take files (desktop
  * browsers, and iOS Safari over plain HTTP).
  */
-export async function sharePerson(person: Person, retreatName = ""): Promise<ShareResult> {
-  const blob = await renderPersonCardPng(person, retreatName);
+export async function sharePerson(
+  person: Person,
+  fields: FieldDef[],
+  retreatName = "",
+): Promise<ShareResult> {
+  const blob = await renderPersonCardPng(person, fields, retreatName);
   if (!blob) return "unavailable";
 
   const filename = `refuge-${slugify(person.name)}.png`;

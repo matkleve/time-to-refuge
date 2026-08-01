@@ -1,6 +1,17 @@
 "use client";
 
-import { Clock, Contact, Download, HeartHandshake, History, Menu, Redo2, Undo2, Users } from "lucide-react";
+import {
+  Clock,
+  Contact,
+  Download,
+  HeartHandshake,
+  History,
+  ListTree,
+  Menu,
+  Redo2,
+  Undo2,
+  Users,
+} from "lucide-react";
 import {
   GlassMenu,
   type GlassMenuIconAction,
@@ -9,7 +20,7 @@ import {
 } from "@/components/atoms/GlassMenu";
 import dana from "@/content/dana.json";
 
-export type AppView = "refuge" | "quicklog" | "history" | "people" | "dana";
+export type AppView = "refuge" | "quicklog" | "history" | "people" | "fields" | "dana";
 
 interface ViewMenuProps {
   view: AppView;
@@ -71,6 +82,13 @@ export function ViewMenu({
         icon: Contact,
         selected: view === "people",
         onSelect: () => onChange("people"),
+      },
+      {
+        id: "fields",
+        label: "Fields",
+        icon: ListTree,
+        selected: view === "fields",
+        onSelect: () => onChange("fields"),
       },
     ],
   };

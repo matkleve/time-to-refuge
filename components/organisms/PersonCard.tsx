@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, Download, MoreVertical, Pencil, RotateCcw, Share2, Trash2 } from "lucide-react";
-import { Person, PHASES, Phase, isComplete } from "@/lib/types";
+import { Person, Phase, FieldDef, getTime, isComplete } from "@/lib/types";
 import { sharePerson } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { GlassMenu, type GlassMenuItem } from "@/components/atoms/GlassMenu";
@@ -12,6 +12,7 @@ import { PersonFields } from "./PersonFields";
 
 interface PersonCardProps {
   person: Person;
+  fields: FieldDef[];
   /** "focused" is the big card; "overview" is the compact one in the people list. */
   variant: "focused" | "overview";
   target?: Phase | null;
@@ -40,6 +41,7 @@ interface PersonCardProps {
  */
 export function PersonCard({
   person,
+  fields,
   variant,
   target = null,
   onSelectPhase,
@@ -58,7 +60,7 @@ export function PersonCard({
   const [draft, setDraft] = useState(person.name);
 
   const overview = variant === "overview";
-  const anyFilled = PHASES.some((phase) => person[phase] !== null);
+  const anyFilled = fields.some((field) => getTime(person, field.id) !== null);
   const showRetreatCaption = !overview && retreatName.trim().length > 0;
 
   // Two-click: the first press turns the values red, the second carries it out.
@@ -86,7 +88,7 @@ export function PersonCard({
   }
 
   async function handleShare() {
-    const result = await sharePerson(person, retreatName);
+    const result = await sharePerson(person, fields, retreatName);
     if (result === "downloaded" || result === "unavailable") {
       setShareNote(result === "downloaded" ? "Card image saved" : "Sharing unavailable");
       setTimeout(() => setShareNote(null), 1800);
@@ -174,8 +176,8 @@ export function PersonCard({
               aria-label={`Open ${person.name}`}
               className="flex min-h-9 min-w-0 flex-1 items-center gap-2 rounded-xl px-2 text-left transition-[colors,transform,background-color] duration-150 ease-out hover:bg-ink/[0.05] active:scale-[0.99]"
             >
-              {isComplete(person) && (
-                <Check className="size-4 shrink-0 text-saffron-700" aria-label="All three recorded" />
+              {isComplete(person, fields) && (
+                <Check className="size-4 shrink-0 text-saffron-700" aria-label="All fields recorded" />
               )}
               <span
                 className={cn(
@@ -228,6 +230,7 @@ export function PersonCard({
       <div className={overview ? "p-2" : "p-3"}>
         <PersonFields
           person={person}
+          fields={fields}
           variant={variant}
           target={target}
           onSelectPhase={onSelectPhase}

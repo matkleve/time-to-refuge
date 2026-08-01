@@ -1,42 +1,84 @@
-export type Phase = "buddha" | "dharma" | "sangha";
+/** Stable id for a recordable field (was fixed buddha/dharma/sangha). */
+export type FieldId = string;
 
-export const PHASES: Phase[] = ["buddha", "dharma", "sangha"];
+/** @deprecated Use FieldId — kept as alias for call-site readability. */
+export type Phase = FieldId;
 
-export const PHASE_LABELS: Record<Phase, string> = {
-  buddha: "Buddha",
-  dharma: "Dharma",
-  sangha: "Sangha",
-};
+export interface FieldDef {
+  id: FieldId;
+  label: string;
+}
+
+/** Ceremony default — also the migration target for legacy people rows. */
+export const DEFAULT_FIELDS: FieldDef[] = [
+  { id: "buddha", label: "Buddha" },
+  { id: "dharma", label: "Dharma" },
+  { id: "sangha", label: "Sangha" },
+];
+
+export const MAX_FIELDS = 8;
 
 export interface Person {
   id: string;
   name: string;
   createdAt: number;
-  buddha: number | null;
-  dharma: number | null;
-  sangha: number | null;
+  /** Timestamp per field id, or null if empty. */
+  times: Record<FieldId, number | null>;
 }
 
-export function createPerson(name: string): Person {
+export function emptyTimes(fields: FieldDef[]): Record<FieldId, number | null> {
+  const times: Record<FieldId, number | null> = {};
+  for (const field of fields) times[field.id] = null;
+  return times;
+}
+
+export function createPerson(name: string, fields: FieldDef[]): Person {
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     name,
     createdAt: Date.now(),
-    buddha: null,
-    dharma: null,
-    sangha: null,
+    times: emptyTimes(fields),
   };
 }
 
-export function nextEmptyPhase(person: Person): Phase | null {
-  for (const phase of PHASES) {
-    if (person[phase] === null) return phase;
+export function fieldLabel(fields: FieldDef[], id: FieldId): string {
+  return fields.find((f) => f.id === id)?.label ?? id;
+}
+
+export function getTime(person: Person, fieldId: FieldId): number | null {
+  return person.times[fieldId] ?? null;
+}
+
+export function withTime(
+  person: Person,
+  fieldId: FieldId,
+  value: number | null,
+): Person {
+  return { ...person, times: { ...person.times, [fieldId]: value } };
+}
+
+/** Align a person's times map to the current field list (add nulls, drop orphans). */
+export function syncPersonTimes(person: Person, fields: FieldDef[]): Person {
+  const times: Record<FieldId, number | null> = {};
+  for (const field of fields) {
+    times[field.id] = person.times[field.id] ?? null;
+  }
+  return { ...person, times };
+}
+
+export function nextEmptyPhase(person: Person, fields: FieldDef[]): Phase | null {
+  for (const field of fields) {
+    if (getTime(person, field.id) === null) return field.id;
   }
   return null;
 }
 
-export function isComplete(person: Person): boolean {
-  return nextEmptyPhase(person) === null;
+export function isComplete(person: Person, fields: FieldDef[]): boolean {
+  return nextEmptyPhase(person, fields) === null;
+}
+
+export function createFieldId(): FieldId {
+  return `field-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 export type LogAction =
@@ -74,7 +116,7 @@ export function createLogEntry(
   personName: string,
   phase: Phase,
   action: LogAction,
-  value: number | null
+  value: number | null,
 ): LogEntry {
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,

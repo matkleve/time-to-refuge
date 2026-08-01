@@ -4,16 +4,22 @@ import { useEffect, useState } from "react";
 import {
   Person,
   Phase,
-  PHASES,
+  FieldDef,
   LogEntry,
   createPerson,
   createLogEntry,
+  getTime,
+  withTime,
+  syncPersonTimes,
+  fieldLabel,
 } from "@/lib/types";
 import {
   loadPeople,
   savePeople,
   loadLog,
   saveLog,
+  loadFields,
+  saveFields,
   loadRetreatName,
   saveRetreatName,
   loadUndoStack,
@@ -34,6 +40,7 @@ import { RefugeView } from "@/components/organisms/RefugeView";
 import { DesktopWorkspace } from "@/components/organisms/DesktopWorkspace";
 import { PeopleSheet } from "@/components/organisms/PeopleSheet";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
+import { FieldsPage } from "@/components/organisms/FieldsPage";
 import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -43,6 +50,7 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   const [ready, setReady] = useState(false);
   const [view, setView] = useState<AppView>("refuge");
+  const [fields, setFields] = useState<FieldDef[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [index, setIndex] = useState(0);
@@ -53,13 +61,19 @@ export default function Home() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
-    setPeople(loadPeople());
+    const loadedFields = loadFields();
+    setFields(loadedFields);
+    setPeople(loadPeople(loadedFields));
     setLog(loadLog());
     setRetreatName(loadRetreatName());
     setUndoStack(loadUndoStack());
     setRedoStack(loadRedoStack());
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    if (ready) saveFields(fields);
+  }, [fields, ready]);
 
   useEffect(() => {
     if (ready) savePeople(people);
@@ -101,15 +115,22 @@ export default function Home() {
     setRedoStack([]);
   }
 
+  function handleFieldsChange(next: FieldDef[]) {
+    setFields(next);
+    setPeople((prev) => prev.map((p) => syncPersonTimes(p, next)));
+    setRequestedPhase(null);
+  }
+
   function handleCapture(personId: string, phase: Phase) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
     const value = Date.now();
     const entry = createLogEntry(personId, person.name, phase, "recorded", value);
     setPeople((prev) =>
-      prev.map((p) => (p.id === personId ? { ...p, [phase]: value } : p))
+      prev.map((p) => (p.id === personId ? withTime(p, phase, value) : p)),
     );
     setLog((prev) => [...prev, entry]);
+    const label = fieldLabel(fields, phase);
     pushUndo({
       logId: entry.id,
       personId,
@@ -117,19 +138,20 @@ export default function Home() {
       prevValue: null,
       nextValue: value,
       kind: "recorded",
-      message: `Recorded ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      message: `Recorded ${label} for ${person.name}`,
     });
   }
 
   function handleClear(personId: string, phase: Phase) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
-    const prevValue = person[phase];
+    const prevValue = getTime(person, phase);
     const entry = createLogEntry(personId, person.name, phase, "reset", prevValue);
     setPeople((prev) =>
-      prev.map((p) => (p.id === personId ? { ...p, [phase]: null } : p))
+      prev.map((p) => (p.id === personId ? withTime(p, phase, null) : p)),
     );
     setLog((prev) => [...prev, entry]);
+    const label = fieldLabel(fields, phase);
     pushUndo({
       logId: entry.id,
       personId,
@@ -137,15 +159,15 @@ export default function Home() {
       prevValue,
       nextValue: null,
       kind: "reset",
-      message: `Reset ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      message: `Reset ${label} for ${person.name}`,
     });
   }
 
   function handleResetAll(personId: string) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
-    PHASES.forEach((phase) => {
-      if (person[phase] !== null) handleClear(personId, phase);
+    fields.forEach((field) => {
+      if (getTime(person, field.id) !== null) handleClear(personId, field.id);
     });
   }
 
@@ -155,14 +177,16 @@ export default function Home() {
     const person = people.find((p) => p.id === last.personId);
     if (person) {
       setPeople((prev) =>
-        prev.map((p) => (p.id === last.personId ? { ...p, [last.phase]: last.prevValue } : p))
+        prev.map((p) =>
+          p.id === last.personId ? withTime(p, last.phase, last.prevValue) : p,
+        ),
       );
       const entry = createLogEntry(
         last.personId,
         person.name,
         last.phase,
         last.kind === "recorded" ? "undo-recorded" : "undo-reset",
-        last.prevValue
+        last.prevValue,
       );
       setLog((prev) => [...prev, entry]);
     }
@@ -176,14 +200,16 @@ export default function Home() {
     const person = people.find((p) => p.id === last.personId);
     if (person) {
       setPeople((prev) =>
-        prev.map((p) => (p.id === last.personId ? { ...p, [last.phase]: last.nextValue } : p))
+        prev.map((p) =>
+          p.id === last.personId ? withTime(p, last.phase, last.nextValue) : p,
+        ),
       );
       const entry = createLogEntry(
         last.personId,
         person.name,
         last.phase,
         last.kind === "recorded" ? "redo-recorded" : "redo-reset",
-        last.nextValue
+        last.nextValue,
       );
       setLog((prev) => [...prev, entry]);
     }
@@ -192,7 +218,7 @@ export default function Home() {
   }
 
   function handleAddPerson(name: string) {
-    const p = createPerson(name);
+    const p = createPerson(name, fields);
     setPeople((prev) => {
       const next = [...prev, p];
       setIndex(next.length - 1);
@@ -207,10 +233,13 @@ export default function Home() {
   function handleEditTime(personId: string, phase: Phase, at: number) {
     const person = people.find((p) => p.id === personId);
     if (!person) return;
-    const prevValue = person[phase];
+    const prevValue = getTime(person, phase);
     const entry = createLogEntry(personId, person.name, phase, "recorded", at);
-    setPeople((prev) => prev.map((p) => (p.id === personId ? { ...p, [phase]: at } : p)));
+    setPeople((prev) =>
+      prev.map((p) => (p.id === personId ? withTime(p, phase, at) : p)),
+    );
     setLog((prev) => [...prev, entry]);
+    const label = fieldLabel(fields, phase);
     pushUndo({
       logId: entry.id,
       personId,
@@ -218,7 +247,7 @@ export default function Home() {
       prevValue,
       nextValue: at,
       kind: "recorded",
-      message: `Edited ${phase[0].toUpperCase()}${phase.slice(1)} for ${person.name}`,
+      message: `Edited ${label} for ${person.name}`,
     });
   }
 
@@ -264,7 +293,7 @@ export default function Home() {
           ? `Redo: ${redoStack[redoStack.length - 1].message}`
           : "Redo"
       }
-      onExportAll={() => downloadCsv(people, retreatName)}
+      onExportAll={() => downloadCsv(people, fields, retreatName)}
       exportDisabled={people.length === 0}
       size={isDesktop ? "md" : "sm"}
     />
@@ -273,6 +302,7 @@ export default function Home() {
   const peoplePage = (
     <PeopleSheet
       people={people}
+      fields={fields}
       currentId={people[index]?.id ?? null}
       onAdd={handleAddPerson}
       onOpenAt={handleOpenPersonAt}
@@ -285,7 +315,9 @@ export default function Home() {
     />
   );
 
-  const historyPage = <HistoryPanel log={log} />;
+  const historyPage = <HistoryPanel log={log} fields={fields} />;
+
+  const fieldsPage = <FieldsPage fields={fields} onChange={handleFieldsChange} />;
 
   const danaPage = isDesktop ? (
     <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
@@ -314,6 +346,7 @@ export default function Home() {
   const refugePage = isDesktop ? (
     <DesktopWorkspace
       people={people}
+      fields={fields}
       index={index}
       onOpenAt={handleOpenPersonAt}
       onAdd={handleAddPerson}
@@ -321,7 +354,7 @@ export default function Home() {
       onClear={handleClear}
       onResetAll={handleResetAll}
       onDelete={handleDeletePerson}
-      onExport={(p) => downloadPersonCsv(p, retreatName)}
+      onExport={(p) => downloadPersonCsv(p, fields, retreatName)}
       onRename={handleRenamePerson}
       onEditTime={handleEditTime}
       requestedPhase={requestedPhase}
@@ -354,13 +387,14 @@ export default function Home() {
   ) : (
     <RefugeView
       people={people}
+      fields={fields}
       index={index}
       onIndexChange={goTo}
       onCapture={handleCapture}
       onClear={handleClear}
       onResetAll={handleResetAll}
       onDelete={handleDeletePerson}
-      onExport={(p) => downloadPersonCsv(p, retreatName)}
+      onExport={(p) => downloadPersonCsv(p, fields, retreatName)}
       onRename={handleRenamePerson}
       onEditTime={handleEditTime}
       requestedPhase={requestedPhase}
@@ -377,9 +411,11 @@ export default function Home() {
           ? historyPage
           : view === "people"
             ? peoplePage
-            : view === "dana"
-              ? danaPage
-              : refugePage}
+            : view === "fields"
+              ? fieldsPage
+              : view === "dana"
+                ? danaPage
+                : refugePage}
     </PageEnter>
   );
 

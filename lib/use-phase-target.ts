@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Person, Phase, nextEmptyPhase } from "@/lib/types";
+import { Person, Phase, FieldDef, getTime, nextEmptyPhase } from "@/lib/types";
 
 /**
  * Which phase the record button is armed for: whatever was explicitly
@@ -11,14 +11,17 @@ import { Person, Phase, nextEmptyPhase } from "@/lib/types";
  */
 export function usePhaseTarget(
   current: Person | undefined,
+  fields: FieldDef[],
   requestedPhase: Phase | null = null,
-  onRequestedPhaseConsumed?: () => void
+  onRequestedPhaseConsumed?: () => void,
 ) {
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
 
-  const autoNext = current ? nextEmptyPhase(current) : null;
+  const autoNext = current ? nextEmptyPhase(current, fields) : null;
   const target =
-    current && selectedPhase !== null && current[selectedPhase] === null ? selectedPhase : autoNext;
+    current && selectedPhase !== null && getTime(current, selectedPhase) === null
+      ? selectedPhase
+      : autoNext;
 
   // A phase picked on one person shouldn't stay armed when the current person changes.
   useEffect(() => {

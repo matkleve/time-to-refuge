@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Check, Copy, Eye, Pencil, RotateCcw, X } from "lucide-react";
-import { Person, PHASES, PHASE_LABELS, Phase, nextEmptyPhase } from "@/lib/types";
+import {
+  Person,
+  Phase,
+  FieldDef,
+  getTime,
+  nextEmptyPhase,
+} from "@/lib/types";
 import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
@@ -13,6 +19,7 @@ import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
 
 interface PersonFieldsProps {
   person: Person;
+  fields: FieldDef[];
   /** "focused" is the big card; "overview" is the compact one in the people list. */
   variant?: "focused" | "overview";
   target?: Phase | null;
@@ -29,7 +36,9 @@ interface PersonFieldsProps {
 
 interface FieldRowProps {
   person: Person;
+  fields: FieldDef[];
   phase: Phase;
+  phaseLabel: string;
   variant: "focused" | "overview";
   isTarget: boolean;
   onSelectPhase?: (phase: Phase) => void;
@@ -42,7 +51,9 @@ interface FieldRowProps {
 /** One field row. Its own component so each row keeps its own armed/open state. */
 function FieldRow({
   person,
+  fields,
   phase,
+  phaseLabel,
   variant,
   isTarget,
   onSelectPhase,
@@ -51,7 +62,7 @@ function FieldRow({
   onOpenPerson,
   armedAll = false,
 }: FieldRowProps) {
-  const value = person[phase];
+  const value = getTime(person, phase);
   const filled = value !== null;
   const overview = variant === "overview";
 
@@ -63,7 +74,7 @@ function FieldRow({
   const [confirmSkip, setConfirmSkip] = useState(false);
 
   /* The phase that's actually next in order — null once nothing's skipped. */
-  const expected = nextEmptyPhase(person);
+  const expected = nextEmptyPhase(person, fields);
   const skipsAhead = !filled && expected !== null && expected !== phase;
 
   const armedReset = useArmedAction(() => {
@@ -130,7 +141,8 @@ function FieldRow({
   }
 
   function commitEdit() {
-    const next = fromTimeInput(draft, value ?? Date.now());
+    if (value === null) return;
+    const next = fromTimeInput(draft, value);
     if (next === null) {
       setInvalid(true);
       return;
@@ -168,7 +180,7 @@ function FieldRow({
         filled ? "text-ink" : "text-muted",
       )}
     >
-      {PHASE_LABELS[phase]}
+      {phaseLabel}
     </span>
   );
 
@@ -192,7 +204,7 @@ function FieldRow({
             if (e.key === "Escape") setEditing(false);
           }}
           onBlur={commitEdit}
-          aria-label={`${PHASE_LABELS[phase]} time`}
+          aria-label={`${phaseLabel} time`}
           aria-invalid={invalid}
           className={cn(
             "ml-auto h-9 w-40 rounded-xl border bg-white px-2 text-right font-mono tabular-nums",
@@ -237,7 +249,7 @@ function FieldRow({
             />
             <IconButton
               icon={Check}
-              label={`Record ${PHASE_LABELS[phase]} out of order`}
+              label={`Record ${phaseLabel} out of order`}
               glass
               onClick={() => {
                 setConfirmSkip(false);
@@ -257,8 +269,8 @@ function FieldRow({
         onClick={handleRowClick}
         aria-label={
           overview && onOpenPerson
-            ? `Open ${person.name} and select ${PHASE_LABELS[phase]}`
-            : `Select ${PHASE_LABELS[phase]} to record`
+            ? `Open ${person.name} and select ${phaseLabel}`
+            : `Select ${phaseLabel} to record`
         }
         className={cn(
           "flex w-full items-center justify-between px-4 text-left",
@@ -295,7 +307,7 @@ function FieldRow({
         )}
         <IconButton
           icon={copied ? Check : Copy}
-          label={copied ? `${PHASE_LABELS[phase]} time copied` : `Copy ${PHASE_LABELS[phase]} time`}
+          label={copied ? `${phaseLabel} time copied` : `Copy ${phaseLabel} time`}
           glass
           onClick={copyTime}
           tone="accent"
@@ -310,7 +322,7 @@ function FieldRow({
         {onEditTime && (
           <IconButton
             icon={Pencil}
-            label={`Edit ${PHASE_LABELS[phase]} time`}
+            label={`Edit ${phaseLabel} time`}
             glass
             onClick={() => {
               setDraft(toTimeInput(value as number));
@@ -326,8 +338,8 @@ function FieldRow({
             icon={RotateCcw}
             label={
               armedReset.armed
-                ? `Confirm reset ${PHASE_LABELS[phase]}`
-                : `Reset ${PHASE_LABELS[phase]}`
+                ? `Confirm reset ${phaseLabel}`
+                : `Reset ${phaseLabel}`
             }
             glass
             onClick={armedReset.trigger}
@@ -400,6 +412,7 @@ function FieldRow({
 
 export function PersonFields({
   person,
+  fields,
   variant = "focused",
   target = null,
   onSelectPhase,
@@ -410,13 +423,15 @@ export function PersonFields({
 }: PersonFieldsProps) {
   return (
     <div className="flex flex-col gap-3">
-      {PHASES.map((phase) => (
+      {fields.map((field) => (
         <FieldRow
-          key={phase}
+          key={field.id}
           person={person}
-          phase={phase}
+          fields={fields}
+          phase={field.id}
+          phaseLabel={field.label}
           variant={variant}
-          isTarget={target === phase}
+          isTarget={target === field.id}
           onSelectPhase={onSelectPhase}
           onClear={onClear}
           onEditTime={onEditTime}

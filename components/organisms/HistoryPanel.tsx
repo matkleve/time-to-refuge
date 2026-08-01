@@ -1,6 +1,6 @@
 "use client";
 
-import { LogEntry, PHASE_LABELS } from "@/lib/types";
+import { LogEntry, FieldDef, fieldLabel } from "@/lib/types";
 import { formatLogTime } from "@/lib/format";
 import { glassClass } from "@/lib/surfaces";
 import { Surface } from "@/components/atoms/Surface";
@@ -8,10 +8,11 @@ import { cn } from "@/lib/utils";
 
 interface HistoryPanelProps {
   log: LogEntry[];
+  fields: FieldDef[];
 }
 
-function actionLabel(entry: LogEntry): string {
-  const phase = PHASE_LABELS[entry.phase];
+function actionLabel(entry: LogEntry, fields: FieldDef[]): string {
+  const phase = fieldLabel(fields, entry.phase);
   switch (entry.action) {
     case "recorded":
       return `Recorded ${phase}`;
@@ -34,7 +35,7 @@ function actionLabel(entry: LogEntry): string {
  * History page — same shell slot as Refuge / Quick Log / People, not a
  * modal or full-screen overlay.
  */
-export function HistoryPanel({ log }: HistoryPanelProps) {
+export function HistoryPanel({ log, fields }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
@@ -64,7 +65,7 @@ export function HistoryPanel({ log }: HistoryPanelProps) {
                   <p className="font-display text-base font-semibold text-ink">
                     {entry.personName}
                   </p>
-                  <p className="mt-0.5 text-sm text-muted">{actionLabel(entry)}</p>
+                  <p className="mt-0.5 text-sm text-muted">{actionLabel(entry, fields)}</p>
                   <p className="mt-1 font-mono text-sm tabular-nums text-subtle">
                     {formatLogTime(entry.at)}
                   </p>

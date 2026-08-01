@@ -1,6 +1,6 @@
 "use client";
 
-import { Person, Phase } from "@/lib/types";
+import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
 import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
@@ -8,6 +8,7 @@ import { PersonCard } from "./PersonCard";
 
 interface PeopleSheetProps {
   people: Person[];
+  fields: FieldDef[];
   currentId: string | null;
   onAdd: (name: string) => void;
   onOpenAt: (id: string, phase: Phase | null) => void;
@@ -25,6 +26,7 @@ interface PeopleSheetProps {
  */
 export function PeopleSheet({
   people,
+  fields,
   currentId,
   onAdd,
   onOpenAt,
@@ -48,6 +50,7 @@ export function PeopleSheet({
               <li key={p.id} className="animate-fade-in-up">
                 <PersonCard
                   person={p}
+                  fields={fields}
                   variant="overview"
                   isCurrent={p.id === currentId}
                   onSelect={() => onOpenAt(p.id, null)}
@@ -56,7 +59,7 @@ export function PeopleSheet({
                   onClear={(phase) => onClearTime(p.id, phase)}
                   onResetAll={() => onResetAll(p.id)}
                   onDelete={() => onDelete(p.id)}
-                  onExport={() => downloadPersonCsv(p, retreatName)}
+                  onExport={() => downloadPersonCsv(p, fields, retreatName)}
                   onRename={(name) => onRename(p.id, name)}
                   retreatName={retreatName}
                 />

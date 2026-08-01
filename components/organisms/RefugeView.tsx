@@ -3,13 +3,14 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
-import { Person, PHASE_LABELS, Phase } from "@/lib/types";
+import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { PersonCard } from "./PersonCard";
 
 interface RefugeViewProps {
   people: Person[];
+  fields: FieldDef[];
   index: number;
   onIndexChange: (index: number) => void;
   onCapture: (personId: string, phase: Phase) => void;
@@ -53,6 +54,7 @@ function NavButton({
 
 export function RefugeView({
   people,
+  fields,
   index,
   onIndexChange,
   onCapture,
@@ -69,7 +71,12 @@ export function RefugeView({
   const touchStartX = useRef<number | null>(null);
 
   const current = people[index];
-  const { target, setSelectedPhase } = usePhaseTarget(current, requestedPhase, onRequestedPhaseConsumed);
+  const { target, setSelectedPhase } = usePhaseTarget(
+    current,
+    fields,
+    requestedPhase,
+    onRequestedPhaseConsumed,
+  );
 
   function handleCaptureClick() {
     if (!current || !target) return;
@@ -124,6 +131,7 @@ export function RefugeView({
                 <div key={p.id} className="w-full shrink-0 px-4">
                   <PersonCard
                     person={p}
+                    fields={fields}
                     variant="focused"
                     target={isCurrent ? target : null}
                     onSelectPhase={isCurrent ? setSelectedPhase : undefined}
@@ -147,7 +155,11 @@ export function RefugeView({
         <LiveClockButton
           onCapture={handleCaptureClick}
           armed={target !== null}
-          label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
+          label={
+            target
+              ? `Tap to record ${fieldLabel(fields, target)}`
+              : "All fields recorded"
+          }
         />
       </div>
     </div>

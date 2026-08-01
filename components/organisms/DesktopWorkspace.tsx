@@ -1,6 +1,6 @@
 "use client";
 
-import { Person, PHASE_LABELS, Phase } from "@/lib/types";
+import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -9,6 +9,7 @@ import { PersonCard } from "./PersonCard";
 
 interface DesktopWorkspaceProps {
   people: Person[];
+  fields: FieldDef[];
   index: number;
   onOpenAt: (id: string, phase: Phase | null) => void;
   onAdd: (name: string) => void;
@@ -32,6 +33,7 @@ interface DesktopWorkspaceProps {
  */
 export function DesktopWorkspace({
   people,
+  fields,
   index,
   onOpenAt,
   onAdd,
@@ -47,7 +49,12 @@ export function DesktopWorkspace({
   retreatName = "",
 }: DesktopWorkspaceProps) {
   const current = people[index];
-  const { target, setSelectedPhase } = usePhaseTarget(current, requestedPhase, onRequestedPhaseConsumed);
+  const { target, setSelectedPhase } = usePhaseTarget(
+    current,
+    fields,
+    requestedPhase,
+    onRequestedPhaseConsumed,
+  );
 
   function handleCaptureClick() {
     if (!current || !target) return;
@@ -71,6 +78,7 @@ export function DesktopWorkspace({
             <li key={p.id}>
               <PersonCard
                 person={p}
+                fields={fields}
                 variant="overview"
                 isCurrent={p.id === current?.id}
                 onSelect={() => onOpenAt(p.id, null)}
@@ -99,6 +107,7 @@ export function DesktopWorkspace({
           <div className="flex w-full max-w-xl flex-col gap-5">
             <PersonCard
               person={current}
+              fields={fields}
               variant="focused"
               target={target}
               onSelectPhase={setSelectedPhase}
@@ -113,7 +122,11 @@ export function DesktopWorkspace({
             <LiveClockButton
               onCapture={handleCaptureClick}
               armed={target !== null}
-              label={target ? `Tap to record ${PHASE_LABELS[target]}` : "All three recorded"}
+              label={
+                target
+                  ? `Tap to record ${fieldLabel(fields, target)}`
+                  : "All fields recorded"
+              }
             />
           </div>
         ) : (
