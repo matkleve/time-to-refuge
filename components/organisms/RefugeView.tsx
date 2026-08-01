@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
+import { glassClass } from "@/lib/surfaces";
+import { cn } from "@/lib/utils";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { PersonCard } from "./PersonCard";
 
@@ -48,6 +50,7 @@ function NavButton({
       disabled={!available}
       hideWhenDisabled
       tone="neutral"
+      size="sm"
     />
   );
 }
@@ -98,19 +101,27 @@ export function RefugeView({
 
   return (
     <div
-      className="flex flex-1 flex-col overflow-hidden pt-4"
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+      className="flex min-h-0 flex-1 flex-col overflow-hidden"
+      style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
-      <div className="flex flex-1 flex-col justify-center overflow-hidden">
-        {/* Position + navigation, directly above the card. */}
-        <div className="flex shrink-0 items-center justify-center gap-1 pb-3">
+      {/*
+        Card zone scrolls in the space above the record button — the button
+        is shrink-0 so it can never clip the card.
+      */}
+      <div className="relative min-h-0 flex-1">
+        <div
+          className={cn(
+            "absolute top-3 right-4 z-20 flex items-center gap-0.5 rounded-full py-0.5 pr-0.5 pl-0.5",
+            glassClass("card", { rim: true }),
+          )}
+        >
           <NavButton
             direction="prev"
             available={index > 0}
             onClick={() => onIndexChange(index - 1)}
           />
-          <span className="min-w-14 text-center text-sm tabular-nums text-muted">
-            {index + 1} / {people.length}
+          <span className="min-w-10 px-0.5 text-center text-sm tabular-nums text-muted">
+            {index + 1}/{people.length}
           </span>
           <NavButton
             direction="next"
@@ -119,38 +130,42 @@ export function RefugeView({
           />
         </div>
 
-        {/* Only this track moves when swiping between people. */}
-        <div className="overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-          <div
-            className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            style={{ transform: `translateX(-${index * 100}%)` }}
-          >
-            {people.map((p) => {
-              const isCurrent = p.id === current?.id;
-              return (
-                <div key={p.id} className="w-full shrink-0 px-4">
-                  <PersonCard
-                    person={p}
-                    fields={fields}
-                    target={isCurrent ? target : null}
-                    onSelectPhase={isCurrent ? setSelectedPhase : undefined}
-                    onClear={(phase) => onClear(p.id, phase)}
-                    onResetAll={() => onResetAll(p.id)}
-                    onDelete={() => onDelete(p.id)}
-                    onExport={() => onExport(p)}
-                    onRename={(name) => onRename(p.id, name)}
-                    onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                    retreatName={retreatName}
-                  />
-                </div>
-              );
-            })}
+        <div
+          className="h-full min-h-0 overflow-x-hidden overflow-y-auto"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className="flex min-h-full flex-col justify-center py-3">
+            <div
+              className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              style={{ transform: `translateX(-${index * 100}%)` }}
+            >
+              {people.map((p) => {
+                const isCurrent = p.id === current?.id;
+                return (
+                  <div key={p.id} className="w-full shrink-0 px-4 pt-12">
+                    <PersonCard
+                      person={p}
+                      fields={fields}
+                      target={isCurrent ? target : null}
+                      onSelectPhase={isCurrent ? setSelectedPhase : undefined}
+                      onClear={(phase) => onClear(p.id, phase)}
+                      onResetAll={() => onResetAll(p.id)}
+                      onDelete={() => onDelete(p.id)}
+                      onExport={() => onExport(p)}
+                      onRename={(name) => onRename(p.id, name)}
+                      onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                      retreatName={retreatName}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Stays put while the cards swipe past. */}
-      <div className="shrink-0 px-4 pt-4">
+      <div className="shrink-0 px-4 pt-3">
         <LiveClockButton
           onCapture={handleCaptureClick}
           armed={target !== null}
