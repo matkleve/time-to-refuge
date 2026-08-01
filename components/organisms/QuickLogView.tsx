@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check, Copy, RotateCcw, Trash2 } from "lucide-react";
+import { Check, Clock, Copy, RotateCcw, Trash2 } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
@@ -11,6 +11,7 @@ import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
+import { PageTitle } from "@/components/atoms/PageTitle";
 import { Surface } from "@/components/atoms/Surface";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
@@ -191,24 +192,27 @@ export function QuickLogView() {
         className="flex shrink-0 flex-col gap-2 px-3 pb-1 pt-2 sm:px-5 sm:pt-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex h-10 items-center justify-between gap-3">
-          <h2 className="font-display text-2xl font-semibold text-ink">Quick Log</h2>
-          <IconButton
-            icon={RotateCcw}
-            label={
-              clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
-            }
-            showLabel="Clear"
-            tone="danger"
-            size="sm"
-            disabled={entries.length === 0}
-            className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
-            onClick={(e) => {
-              e.stopPropagation();
-              clearAll.trigger();
-            }}
-          />
-        </div>
+        <PageTitle
+          icon={Clock}
+          title="Quick Log"
+          trailing={
+            <IconButton
+              icon={RotateCcw}
+              label={
+                clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
+              }
+              showLabel="Clear"
+              tone="danger"
+              size="sm"
+              disabled={entries.length === 0}
+              className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              onClick={(e) => {
+                e.stopPropagation();
+                clearAll.trigger();
+              }}
+            />
+          }
+        />
         <p className="text-base tabular-nums text-muted">
           {entries.length} logged
         </p>

@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Check, Copy, ExternalLink } from "lucide-react";
+import { Check, Copy, ExternalLink, HeartHandshake } from "lucide-react";
 import dana from "@/content/dana.json";
-import { actionClass } from "@/lib/surfaces";
+import { actionClass, glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
-import { Surface } from "@/components/atoms/Surface";
+import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
 
@@ -20,8 +20,8 @@ async function copyText(value: string): Promise<boolean> {
 }
 
 /**
- * Dana page — content from `content/dana.json`. Same AppView shell slot as
- * History / People; hamburger opens it via the primary Dana button.
+ * Dana page — content from `content/dana.json`. Same open-backdrop chrome as
+ * History / Fields; hamburger opens it via the primary Dana button.
  */
 export function DanaPage() {
   const [copied, setCopied] = useState<"iban" | "bic" | null>(null);
@@ -34,113 +34,117 @@ export function DanaPage() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <div className="flex shrink-0 items-center border-b border-white/40 px-5 py-3">
-          <h2 className="font-display text-lg font-semibold text-ink">{dana.pageTitle}</h2>
+    <div
+      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2 sm:px-5 sm:pt-3"
+      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+    >
+      <PageTitle icon={HeartHandshake} title={dana.pageTitle} className="shrink-0" />
+
+      <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-3xl">
+        <div className="relative aspect-[3/2] w-full bg-ink/10">
+          <Image
+            src={dana.image}
+            alt={dana.imageAlt}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 42rem"
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-1 py-5">
+        <div className="space-y-2">
+          <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
+          <p className="text-base text-muted">{dana.intro}</p>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="relative aspect-[3/2] w-full bg-ink/10">
-            <Image
-              src={dana.image}
-              alt={dana.imageAlt}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 42rem"
-              className="object-cover"
-            />
-          </div>
+        <DanaProgress
+          currentEuros={dana.goal.currentEuros}
+          targetEuros={dana.goal.targetEuros}
+          label={dana.goal.label}
+          caption={dana.goal.caption}
+        />
 
-          <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-5 py-5">
-            <div className="space-y-2">
-              <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
-              <p className="text-base text-muted">{dana.intro}</p>
-            </div>
+        <div
+          className={cn(
+            "space-y-3 rounded-2xl px-4 py-3.5",
+            glassClass("card", { rim: true }),
+          )}
+        >
+          <p className="text-xs font-medium tracking-wide text-muted uppercase">
+            Bank transfer
+          </p>
+          <p className="font-display text-lg font-semibold text-ink">
+            {dana.bank.accountName}
+          </p>
 
-            <DanaProgress
-              currentEuros={dana.goal.currentEuros}
-              targetEuros={dana.goal.targetEuros}
-              label={dana.goal.label}
-              caption={dana.goal.caption}
-            />
+          <CopyRow
+            label="IBAN"
+            value={dana.bank.iban}
+            copied={copied === "iban"}
+            onCopy={() => handleCopy("iban", dana.bank.iban)}
+          />
+          <CopyRow
+            label="BIC"
+            value={dana.bank.bic}
+            copied={copied === "bic"}
+            onCopy={() => handleCopy("bic", dana.bank.bic)}
+          />
 
-            <div className="space-y-3 rounded-2xl border border-white/50 bg-white/40 px-4 py-3.5">
-              <p className="text-xs font-medium tracking-wide text-muted uppercase">
-                Bank transfer
-              </p>
-              <p className="font-display text-lg font-semibold text-ink">
-                {dana.bank.accountName}
-              </p>
-
-              <CopyRow
-                label="IBAN"
-                value={dana.bank.iban}
-                copied={copied === "iban"}
-                onCopy={() => handleCopy("iban", dana.bank.iban)}
-              />
-              <CopyRow
-                label="BIC"
-                value={dana.bank.bic}
-                copied={copied === "bic"}
-                onCopy={() => handleCopy("bic", dana.bank.bic)}
-              />
-
-              <p className="text-sm text-muted">{dana.bank.messageHint}</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => handleCopy("iban", dana.bank.iban)}
-              className={cn(
-                "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
-                "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-                "active:scale-95 hover:brightness-[1.06]",
-                actionClass("primary"),
-              )}
-            >
-              {copied === "iban" ? (
-                <>
-                  <Check className="size-4" aria-hidden />
-                  {dana.primaryCta.copiedLabel}
-                </>
-              ) : (
-                <>
-                  <Copy className="size-4" aria-hidden />
-                  {dana.primaryCta.label}
-                </>
-              )}
-            </button>
-
-            <blockquote className="space-y-1 border-l-2 border-saffron-400 pl-3">
-              <p className="font-display text-base text-ink">{dana.quote.text}</p>
-              <footer className="text-sm text-muted">— {dana.quote.attribution}</footer>
-            </blockquote>
-
-            <ul className="space-y-2">
-              {dana.links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
-                      "transition-[colors,transform,background-color] duration-150 ease-out",
-                      "hover:bg-flagblue-50 active:scale-[0.99]",
-                    )}
-                  >
-                    {link.label}
-                    <ExternalLink className="size-4" aria-hidden />
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
-          </div>
+          <p className="text-sm text-muted">{dana.bank.messageHint}</p>
         </div>
-      </Surface>
+
+        <button
+          type="button"
+          onClick={() => handleCopy("iban", dana.bank.iban)}
+          className={cn(
+            "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
+            "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
+            "active:scale-95 hover:brightness-[1.06]",
+            actionClass("primary"),
+          )}
+        >
+          {copied === "iban" ? (
+            <>
+              <Check className="size-4" aria-hidden />
+              {dana.primaryCta.copiedLabel}
+            </>
+          ) : (
+            <>
+              <Copy className="size-4" aria-hidden />
+              {dana.primaryCta.label}
+            </>
+          )}
+        </button>
+
+        <blockquote className="space-y-1 border-l-2 border-saffron-400 pl-3">
+          <p className="font-display text-base text-ink">{dana.quote.text}</p>
+          <footer className="text-sm text-muted">— {dana.quote.attribution}</footer>
+        </blockquote>
+
+        <ul className="space-y-2">
+          {dana.links.map((link) => (
+            <li key={link.href}>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                  "transition-[colors,transform,background-color] duration-150 ease-out",
+                  "hover:bg-flagblue-50 active:scale-[0.99]",
+                )}
+              >
+                {link.label}
+                <ExternalLink className="size-4" aria-hidden />
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+      </div>
     </div>
   );
 }

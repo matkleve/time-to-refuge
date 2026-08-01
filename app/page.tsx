@@ -29,9 +29,11 @@ import {
   type UndoEntry,
 } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
+import { Contact, Users } from "lucide-react";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { PageEnter } from "@/components/atoms/PageEnter";
+import { PageTitle } from "@/components/atoms/PageTitle";
 import { Surface } from "@/components/atoms/Surface";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
 import { AppShell } from "@/components/AppShell";
@@ -322,15 +324,7 @@ export default function Home() {
 
   const fieldsPage = <FieldsPage fields={fields} onChange={handleFieldsChange} />;
 
-  const danaPage = isDesktop ? (
-    <div className="flex flex-1 items-start justify-center overflow-y-auto p-5">
-      <div className="flex w-full max-w-xl min-h-0 flex-1 flex-col overflow-hidden rounded-3xl">
-        <DanaPage />
-      </div>
-    </div>
-  ) : (
-    <DanaPage />
-  );
+  const danaPage = <DanaPage />;
 
   const quickLogPage = <QuickLogView />;
 
@@ -418,8 +412,10 @@ export default function Home() {
         isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2",
       )}
     >
-      {view === "people" && (
-        <h2 className="font-display text-2xl font-semibold text-ink">People</h2>
+      {view === "refuge" ? (
+        <PageTitle icon={Users} title="Refuge" />
+      ) : (
+        <PageTitle icon={Contact} title="People" />
       )}
       <RetreatNameField value={retreatName} onChange={setRetreatName} />
     </div>
