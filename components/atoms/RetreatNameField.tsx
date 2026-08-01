@@ -1,28 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Mountain, Pencil } from "lucide-react";
+import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 interface RetreatNameFieldProps {
   value: string;
   onChange: (value: string) => void;
-  /** Slimmer control for under a compact toolbar (not a second fat row). */
-  compact?: boolean;
   className?: string;
 }
 
 /**
- * One name for the whole session, set once and carried into every export —
- * see design system §6c. Same tap-to-edit shape as a person's name in
- * PersonCard, at header scale instead of card scale.
+ * Session retreat name — large left-aligned glass chip under the app bar on
+ * Refuge / People only. Leading mountain icon; tap to edit.
+ * See design system §6c.
  */
-export function RetreatNameField({
-  value,
-  onChange,
-  compact = false,
-  className,
-}: RetreatNameFieldProps) {
+export function RetreatNameField({ value, onChange, className }: RetreatNameFieldProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value);
 
@@ -34,25 +28,30 @@ export function RetreatNameField({
 
   if (editing) {
     return (
-      <input
-        /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
-           appears on an explicit user action, so focusing it is expected. */
-        autoFocus
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") commit();
-          if (e.key === "Escape") setEditing(false);
-        }}
-        placeholder="Retreat name"
-        aria-label="Retreat name"
+      <div
         className={cn(
-          "min-w-0 rounded-lg border border-flagblue-500 bg-white px-2 text-ink focus:outline-none",
-          compact ? "h-7 text-sm" : "min-h-9",
+          "flex w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5 py-2.5",
+          glassClass("card", { rim: true }),
           className,
         )}
-      />
+      >
+        <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
+        <input
+          /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
+             appears on an explicit user action, so focusing it is expected. */
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commit();
+            if (e.key === "Escape") setEditing(false);
+          }}
+          placeholder="Retreat name"
+          aria-label="Retreat name"
+          className="min-h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold text-ink focus:outline-none"
+        />
+      </div>
     );
   }
 
@@ -65,16 +64,27 @@ export function RetreatNameField({
       }}
       aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
       className={cn(
-        "inline-flex max-w-full items-center gap-1.5 truncate rounded-lg px-2",
-        "transition-[colors,transform,background-color] duration-150 ease-out",
-        "hover:bg-ink/[0.05] active:scale-[0.98]",
-        compact ? "h-7 text-sm" : "min-h-9",
-        value ? "text-muted" : "text-subtle",
+        "inline-flex max-w-full items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-left",
+        "transition-[colors,transform,background-color,filter] duration-150 ease-out",
+        "hover:brightness-[1.03] active:scale-[0.99]",
+        glassClass("card", { rim: true }),
         className,
       )}
     >
-      <span className="truncate">{value || "Add retreat name"}</span>
-      {value ? <Pencil className="size-3.5 shrink-0 opacity-70" aria-hidden /> : null}
+      <Mountain
+        className={cn("size-5 shrink-0", value ? "text-flagblue-600" : "text-muted")}
+        strokeWidth={2}
+        aria-hidden
+      />
+      <span
+        className={cn(
+          "min-w-0 truncate font-display text-base font-semibold",
+          value ? "text-ink" : "text-muted",
+        )}
+      >
+        {value || "Add retreat name"}
+      </span>
+      {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}
     </button>
   );
 }
