@@ -28,29 +28,53 @@ function LogoMark({ size }: { size: number }) {
 
 /**
  * Header brand: triple-jewel mark + Timekeeper name.
- * Title is one step above the prior header size on the type scale.
+ * Sized to sit in a single ~44–56px toolbar row (iOS / Material app bar).
+ * Optional `onHome` — tap logo/title returns to the Refuge page.
  */
 export function BrandLockup({
-  titleSize = "2xl",
+  titleSize = "lg",
+  onHome,
   className,
 }: {
-  /** Mobile 2xl (was lg); desktop 4xl (was 2xl). */
-  titleSize?: "2xl" | "4xl";
+  /** `lg` mobile toolbar · `2xl` desktop toolbar. */
+  titleSize?: "lg" | "2xl";
+  /** Opens Refuge (home). */
+  onHome?: () => void;
   className?: string;
 }) {
-  const mark = titleSize === "4xl" ? 40 : 32;
+  const mark = titleSize === "2xl" ? 32 : 28;
 
-  return (
-    <div className={cn("flex min-w-0 items-center gap-2.5", className)}>
+  const label = (
+    <>
       <LogoMark size={mark} />
-      <p
+      <span
         className={cn(
-          "truncate font-display font-semibold text-ink",
-          titleSize === "4xl" ? "text-4xl" : "text-2xl",
+          "truncate font-display font-semibold leading-none text-ink",
+          titleSize === "2xl" ? "text-2xl" : "text-lg",
         )}
       >
         Timekeeper
-      </p>
-    </div>
+      </span>
+    </>
   );
+
+  if (onHome) {
+    return (
+      <button
+        type="button"
+        onClick={onHome}
+        aria-label="Timekeeper — open Refuge"
+        className={cn(
+          "flex min-w-0 items-center gap-2 rounded-lg text-left",
+          "transition-[colors,transform,background-color] duration-150 ease-out",
+          "hover:bg-ink/[0.04] active:scale-[0.99]",
+          className,
+        )}
+      >
+        {label}
+      </button>
+    );
+  }
+
+  return <div className={cn("flex min-w-0 items-center gap-2", className)}>{label}</div>;
 }

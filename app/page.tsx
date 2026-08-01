@@ -386,20 +386,22 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
+        {/* Compact app bar: one toolbar row + slim retreat subtitle (Material ~64dp). */}
         <Surface
           as="header"
           material="glass-panel"
-          className="relative z-20 flex shrink-0 items-center gap-4 px-6 py-4"
+          className="relative z-20 shrink-0 px-5 pb-2 pt-3"
         >
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <BrandLockup titleSize="4xl" />
-            <RetreatNameField
-              value={retreatName}
-              onChange={setRetreatName}
-              className="pl-[calc(2.5rem+0.625rem)] text-sm"
-            />
+          <div className="flex h-12 items-center justify-between gap-3">
+            <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
+            <div className="flex shrink-0 items-center">{menu}</div>
           </div>
-          <div className="ml-auto flex items-center gap-1">{menu}</div>
+          <RetreatNameField
+            value={retreatName}
+            onChange={setRetreatName}
+            compact
+            className="mt-0.5 pl-[calc(2rem+0.5rem)]"
+          />
         </Surface>
         {page}
       </DesktopShell>
@@ -408,21 +410,27 @@ export default function Home() {
 
   return (
     <AppShell>
+      {/*
+        Compact app bar (iOS ~44pt / Material ~56dp toolbar): brand + menu on
+        one row with equal inset; retreat name is a slim subtitle underneath
+        so the hamburger isn’t vertically centered against two fat lines.
+      */}
       <Surface
         as="header"
         material="glass-panel"
-        className="relative z-20 flex shrink-0 items-center justify-between gap-2 border-b border-line px-3 py-2.5"
-        style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}
+        className="relative z-20 shrink-0 border-b border-line px-3 pb-1.5"
+        style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top))" }}
       >
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <BrandLockup titleSize="2xl" />
-          <RetreatNameField
-            value={retreatName}
-            onChange={setRetreatName}
-            className="pl-[calc(2rem+0.625rem)] text-sm"
-          />
+        <div className="flex h-11 items-center justify-between gap-3">
+          <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
+          <div className="flex shrink-0 items-center">{menu}</div>
         </div>
-        <div className="flex min-w-0 items-center gap-0.5">{menu}</div>
+        <RetreatNameField
+          value={retreatName}
+          onChange={setRetreatName}
+          compact
+          className="mt-0.5 pl-[calc(1.75rem+0.5rem)]"
+        />
       </Surface>
       {page}
     </AppShell>
