@@ -8,12 +8,14 @@ import {
   MAX_FIELDS,
   createFieldId,
 } from "@/lib/types";
-import { glassRowClass } from "@/lib/surfaces";
+import { glassClass } from "@/lib/surfaces";
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
+import { RowActionTray } from "@/components/atoms/RowReveal";
 import { useArmedAction } from "@/lib/use-armed-action";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 interface FieldsPageProps {
@@ -64,7 +66,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
   }
 
   return (
-    <ListPageFrame>
+    <ListPageFrame className="overflow-hidden">
       <div className="shrink-0 space-y-1">
         <PageTitle
           title="Fields"
@@ -91,7 +93,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
         </p>
       </div>
 
-      <ul className="mx-auto mt-3 w-full max-w-md space-y-3">
+      <ul className="mx-auto mt-3 min-h-0 w-full max-w-md flex-1 space-y-3 overflow-y-auto">
         {fields.map((field, index) => (
           <li key={field.id} className="animate-fade-in-up">
             <FieldEditorRow
@@ -159,76 +161,82 @@ function FieldEditorRow({
   }
 
   return (
-    <div
-      className={cn(
-        "flex h-12 items-center gap-2 rounded-2xl px-3",
-        glassRowClass(),
-        remove.armed && "bg-danger-50",
-      )}
-    >
-      {editing ? (
-        <input
-          /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
-          autoFocus
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") commit();
-            if (e.key === "Escape") {
-              setDraft(field.label);
-              setEditing(false);
-            }
-          }}
-          aria-label="Field name"
-          className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink"
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setDraft(field.label);
-            setEditing(true);
-          }}
-          className={cn(
-            "box-border h-9 min-w-0 flex-1 truncate rounded-xl border border-transparent px-2 text-left font-display text-lg font-semibold leading-none",
-            remove.armed ? "text-danger-600" : "text-ink",
-            "transition-[colors,background-color] duration-150 hover:bg-ink/[0.04]",
-          )}
-        >
-          {field.label}
-        </button>
-      )}
-
-      <div className="flex shrink-0 items-center gap-1">
-        <IconButton
-          icon={ArrowUp}
-          label={`Move ${field.label} up`}
-          glass
-          size="sm"
-          onClick={onUp}
-          disabled={!canUp}
-        />
-        <IconButton
-          icon={ArrowDown}
-          label={`Move ${field.label} down`}
-          glass
-          size="sm"
-          onClick={onDown}
-          disabled={!canDown}
-        />
-        {canDelete && (
-          <IconButton
-            icon={Trash2}
-            label={remove.armed ? `Confirm delete ${field.label}` : `Delete ${field.label}`}
-            glass
-            size="sm"
-            tone="danger"
-            onClick={remove.trigger}
-            armed={remove.armed}
+    <div className="flex h-12 w-full items-center">
+      {/* Glass stamp — name only; actions live in the always-open tray (§5a). */}
+      <div
+        className={cn(
+          "flex h-12 min-w-0 flex-1 items-center overflow-hidden rounded-2xl px-4",
+          glassClass("card", { rim: true }),
+        )}
+      >
+        {editing ? (
+          <input
+            /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commit();
+              if (e.key === "Escape") {
+                setDraft(field.label);
+                setEditing(false);
+              }
+            }}
+            aria-label="Field name"
+            className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink"
           />
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              setDraft(field.label);
+              setEditing(true);
+            }}
+            className={cn(
+              "box-border h-9 min-w-0 flex-1 truncate rounded-xl px-0 text-left font-display text-lg font-semibold leading-none",
+              remove.armed ? "text-danger-600" : "text-ink",
+              userFeedbackClass({ press: "md" }),
+            )}
+          >
+            {field.label}
+          </button>
         )}
       </div>
+
+      <RowActionTray open>
+        <div className="flex shrink-0 items-center gap-2">
+          <IconButton
+            icon={ArrowUp}
+            label={`Move ${field.label} up`}
+            glass
+            size="md"
+            onClick={onUp}
+            disabled={!canUp}
+          />
+          <IconButton
+            icon={ArrowDown}
+            label={`Move ${field.label} down`}
+            glass
+            size="md"
+            onClick={onDown}
+            disabled={!canDown}
+          />
+          {canDelete && (
+            <IconButton
+              icon={Trash2}
+              label={
+                remove.armed ? `Confirm delete ${field.label}` : `Delete ${field.label}`
+              }
+              glass
+              size="md"
+              tone="danger"
+              onClick={remove.trigger}
+              armed={remove.armed}
+            />
+          )}
+        </div>
+      </RowActionTray>
     </div>
   );
 }
