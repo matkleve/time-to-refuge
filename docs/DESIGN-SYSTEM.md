@@ -191,21 +191,21 @@ specular light catch as every other glass surface. A light-to-dark wash
 fights the glass and muddies the one control that must read under ceremony
 pressure (**UC-1**).
 
-**Sizes.** Three tokens on [`IconButton`](../components/atoms/IconButton.tsx);
-default is **`md`** so hamburger, ⋯, nav, and row Copy/Edit/Reset match:
+**Sizes.** One scale for **every** interactive surface — IconButton, glass
+chips, field stamps, selects, CTAs — via [`lib/control-size.ts`](../lib/control-size.ts)
+and [`IconButton`](../components/atoms/IconButton.tsx). Default is **`md`**:
 
 | Size | Box | Used for |
 | --- | --- | --- |
-| `sm` | 2.25rem (36px) | Dense only — avoid for chrome |
-| `md` | 2.75rem (44px) | **Default** — row actions, hamburger, ⋯, person nav, title chips |
+| `sm` | 2.25rem (36px) | Nested editors / inners only |
+| `md` | 2.75rem (44px) | **Default** — hamburger, ⋯, nav, row Copy/Edit/Reset, field stamps, retreat + timezone chips, Add row, Check zone, menu rows, Clear/Reset, Dana CTAs |
 | `lg` | 3rem (48px) | Rare emphasis |
+| *special* | ≥7rem | Record / Quick Log hero clocks only |
 
 **Nothing smaller than `sm`.** That floor is this app’s WCAG touch target
-(above the 2.5.8 minimum of 24px). Text fields and custom buttons that are
-not `IconButton` still use `min-h-9` / `h-9` so height never drops below
-36px — retreat name, timezone select, inline editors, Check zone. Don’t
-override glyph size with `[&_svg]:size-*` on the chip — the size token sets
-both footprint and icon.
+(above the 2.5.8 minimum of 24px). Don’t invent one-off `h-10` / `min-h-13`
+on new controls — pick a token. Don’t override glyph size with
+`[&_svg]:size-*` on IconButton chips — the size token sets footprint and icon.
 
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
 destructive actions, export/share on a person card, and add-flow
@@ -531,8 +531,9 @@ never set at all.
 
 One name for the whole session, not a field on each person — set once via
 [`RetreatNameField`](../components/atoms/RetreatNameField.tsx): a **large
-left-aligned glass chip** with a mountain icon, shown **only on Refuge and
-People** (not Quick Log, History, or Dana). Carried into every export:
+left-aligned glass chip** (control **md** / 44px) with a mountain icon,
+shown **only on Refuge and People** (not Quick Log, History, or Dana).
+Carried into every export:
 printed on the shared PNG card, and added as its own `Retreat` column —
 repeated per row — in every CSV. Deliberately **not** repeated on overview
 cards in the list body; the chip above the page is enough. It does show on

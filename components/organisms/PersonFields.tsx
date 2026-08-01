@@ -12,6 +12,7 @@ import {
 import { formatTimestamp, fromTimeInput, toTimeInput } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
+import { controlMinH } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
@@ -47,7 +48,8 @@ interface FieldRowProps {
   armedAll?: boolean;
 }
 
-const ROW_HEIGHT = "min-h-13";
+/** Field stamps — same md (44px) as row action chips. */
+const ROW_HEIGHT = controlMinH.md;
 
 /** One field row. Its own component so each row keeps its own armed/open state. */
 function FieldRow({

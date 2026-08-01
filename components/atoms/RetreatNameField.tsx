@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
+import { controlH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -13,10 +14,9 @@ interface RetreatNameFieldProps {
 }
 
 /**
- * Session retreat name — large left-aligned glass chip under the app bar on
+ * Session retreat name — left-aligned glass chip under the app bar on
  * Refuge / People only. Leading mountain icon; tap to edit.
- * Idle and editing share one fixed-height shell so the chip never jumps.
- * See design system §6c.
+ * Shell is control md (44px) — same as row chips. See design system §6c.
  */
 export function RetreatNameField({ value, onChange, className }: RetreatNameFieldProps) {
   const [editing, setEditing] = useState(false);
@@ -31,7 +31,8 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
   return (
     <div
       className={cn(
-        "flex h-12 w-fit max-w-full items-center gap-2.5 rounded-2xl px-3.5",
+        "flex w-fit max-w-full items-center gap-2.5 rounded-2xl px-3.5",
+        controlH.md,
         glassClass("card", { rim: true }),
         className,
       )}
@@ -60,7 +61,10 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border h-9 max-w-full min-w-[8rem] rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none"
+          className={cn(
+            "box-border max-w-full min-w-[8rem] rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none",
+            controlH.sm,
+          )}
         />
       ) : (
         <button
@@ -71,7 +75,8 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           }}
           aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
           className={cn(
-            "flex h-9 max-w-full items-center gap-2.5 rounded-xl text-left",
+            "flex max-w-full items-center gap-2.5 rounded-xl text-left",
+            controlH.sm,
             userFeedbackClass({ press: "md" }),
           )}
         >

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MoreVertical, type LucideIcon } from "lucide-react";
+import { controlMinH } from "@/lib/control-size";
 import { actionClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -89,8 +90,8 @@ function MenuRows({
             disabled={item.disabled}
             onClick={() => onPick(item)}
             className={cn(
-              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
-              "transition-[colors,background-color] duration-150 ease-out",
+              "flex w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
+              controlMinH.md,
               "disabled:pointer-events-none disabled:opacity-35",
               userFeedbackClass({ press: "md", on: item.selected }),
               danger ? "text-danger-700" : "text-ink",
@@ -243,8 +244,8 @@ export function GlassMenu({
               setOpen(false);
             }}
             className={cn(
-              "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-              "transition-[box-shadow,background-color,filter] duration-150 ease-out",
+              "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
+              controlMinH.md,
               "hover:brightness-[1.06]",
               userFeedbackClass({ press: "md" }),
               "user-feedback--on-accent",

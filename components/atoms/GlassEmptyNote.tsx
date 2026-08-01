@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { controlMinH } from "@/lib/control-size";
 import { actionClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -44,8 +45,8 @@ export function GlassEmptyNote({
           type="button"
           onClick={action.onClick}
           className={cn(
-            "rounded-xl px-5 py-2.5 text-base font-medium text-white",
-            "transition-[box-shadow,background-color,filter] duration-150 ease-out",
+            "rounded-xl px-5 text-base font-medium text-white",
+            controlMinH.md,
             "hover:brightness-[1.06]",
             userFeedbackClass({ press: "md" }),
             "user-feedback--on-accent",

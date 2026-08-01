@@ -8,6 +8,7 @@ import {
   MAX_FIELDS,
   createFieldId,
 } from "@/lib/types";
+import { controlH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
@@ -161,11 +162,12 @@ function FieldEditorRow({
   }
 
   return (
-    <div className="flex h-12 w-full items-center">
+    <div className={cn("flex w-full items-center", controlH.md)}>
       {/* Glass stamp — name only; actions live in the always-open tray (§5a). */}
       <div
         className={cn(
-          "flex h-12 min-w-0 flex-1 items-center overflow-hidden rounded-2xl px-4",
+          "flex min-w-0 flex-1 items-center overflow-hidden rounded-2xl px-4",
+          controlH.md,
           glassClass("card", { rim: true }),
         )}
       >
@@ -184,7 +186,10 @@ function FieldEditorRow({
               }
             }}
             aria-label="Field name"
-            className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink"
+            className={cn(
+              "box-border min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink",
+              controlH.sm,
+            )}
           />
         ) : (
           <button
@@ -194,7 +199,8 @@ function FieldEditorRow({
               setEditing(true);
             }}
             className={cn(
-              "box-border h-9 min-w-0 flex-1 truncate rounded-xl px-0 text-left font-display text-lg font-semibold leading-none",
+              "box-border min-w-0 flex-1 truncate rounded-xl px-0 text-left font-display text-lg font-semibold leading-none",
+              controlH.sm,
               remove.armed ? "text-danger-600" : "text-ink",
               userFeedbackClass({ press: "md" }),
             )}

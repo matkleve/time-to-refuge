@@ -10,6 +10,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
+import { controlH } from "@/lib/control-size";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
@@ -545,7 +546,8 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex h-9 max-w-40 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
+          "no-select flex max-w-44 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
+          controlH.md,
           userFeedbackClass({ press: "sm" }),
           /* Opaque light fill — glass was too see-through on the record button. */
           toneBadge[tone],

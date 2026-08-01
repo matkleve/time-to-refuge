@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import { Person, FieldDef, isComplete } from "@/lib/types";
+import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -36,7 +37,8 @@ export function PersonRailRow({
           : `Select ${person.name}`
       }
       className={cn(
-        "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3.5 text-left",
+        "flex w-full items-center gap-2 rounded-2xl px-3.5 text-left",
+        controlMinH.md,
         userFeedbackClass({ press: "md", on: isCurrent }),
         glassClass(isCurrent ? "cardCurrent" : "card", { rim: true }),
       )}

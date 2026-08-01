@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
+import { controlMinH } from "@/lib/control-size";
 import { actionClass, glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -101,7 +102,8 @@ export function DanaPage() {
           type="button"
           onClick={() => handleCopy("iban", dana.bank.iban)}
           className={cn(
-            "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
+            "flex w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
+            controlMinH.md,
             "hover:brightness-[1.06]",
             userFeedbackClass({ press: "lg" }),
             "user-feedback--on-accent",
@@ -134,7 +136,8 @@ export function DanaPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                  "flex items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                  controlMinH.md,
                   userFeedbackClass({ press: "md" }),
                 )}
               >
