@@ -334,21 +334,22 @@ function FieldRow({
           onClick={handleRowClick}
           aria-expanded={showActions}
           className={cn(
-            "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
-            "transition-[box-shadow,background-color,transform] duration-200 ease-out",
-            "hover:bg-ink/[0.03] active:scale-[0.99]",
+            /* justify-between keeps the time on the stamp’s right edge —
+               flex-1 text-right still let it pack beside the label as the
+               tray opened, which read as a jump left. */
+            "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+            "transition-[box-shadow,background-color] duration-200 ease-out",
+            "hover:bg-ink/[0.03]",
             ROW_HEIGHT,
             glassRowClass(),
             filled && "shadow-sm",
             isTarget && "ring-2 ring-flagblue-500",
           )}
         >
-          {label}
+          <span className="min-w-0 shrink truncate">{label}</span>
           <span
             className={cn(
-              /* Right-aligned in the stamp — rides the tray width animation
-                 (no spacer snap). Font size stays put so type doesn't jump. */
-              "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-lg tabular-nums",
+              "shrink-0 whitespace-nowrap font-mono text-lg tabular-nums",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >

@@ -86,9 +86,9 @@ function LogRow({
           showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
         }
         className={cn(
-          "flex min-h-11 min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
-          "transition-[box-shadow,background-color,transform] duration-200 ease-out",
-          "hover:bg-ink/[0.03] active:scale-[0.99]",
+          "flex min-h-11 min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+          "transition-[box-shadow,background-color] duration-200 ease-out",
+          "hover:bg-ink/[0.03]",
           /* Card glass (fill + blur) — rows sit on the photo like Refuge, not
              nested on a parent card where glassRowClass omits the blur. */
           glassClass("card", { rim: true }),
@@ -97,8 +97,7 @@ function LogRow({
         <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>
         <span
           className={cn(
-            /* Right-aligned in the stamp — moves with the tray width animation. */
-            "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-sm tabular-nums",
+            "shrink-0 whitespace-nowrap font-mono text-sm tabular-nums",
             red ? "text-danger-600" : "text-ink",
           )}
         >
