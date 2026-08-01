@@ -272,6 +272,7 @@ export default function Home() {
       currentId={people[index]?.id ?? null}
       onAdd={handleAddPerson}
       onOpenAt={handleOpenPersonAt}
+      onResetAll={handleResetAll}
       onDelete={handleDeletePerson}
       onRename={handleRenamePerson}
       onEditTime={handleEditTime}
