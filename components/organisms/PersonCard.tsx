@@ -59,7 +59,8 @@ export function PersonCard({
   const [draft, setDraft] = useState(person.name);
 
   const anyFilled = fields.some((field) => getTime(person, field.id) !== null);
-  const showRetreatCaption = retreatName.trim().length > 0;
+  /* §6c: caption on the focused recording card only — not list / rail rows. */
+  const showRetreatCaption = !onOpenPerson && retreatName.trim().length > 0;
 
   // Two-click: the first press turns the values red, the second carries it out.
   const resetAll = useArmedAction(() => onResetAll?.());

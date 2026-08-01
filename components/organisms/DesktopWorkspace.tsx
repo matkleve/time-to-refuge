@@ -6,6 +6,7 @@ import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
+import { PersonRailRow } from "./PersonRailRow";
 
 interface DesktopWorkspaceProps {
   people: Person[];
@@ -26,10 +27,8 @@ interface DesktopWorkspaceProps {
 }
 
 /**
- * The desktop-native layout for the Refuge page: a persistent list on the
- * left for quick switching while recording, and the current person's card
- * with the record button beneath it on the right. The dedicated People page
- * (hamburger) is the full roster with add/delete; this rail is Refuge-only.
+ * Desktop Refuge: compact people switcher on the left; focused card + record
+ * on the right. Full roster editing is the People page (hamburger).
  */
 export function DesktopWorkspace({
   people,
@@ -64,11 +63,10 @@ export function DesktopWorkspace({
 
   return (
     <div className="flex flex-1 gap-5 overflow-hidden p-5">
-      {/* People rail — cloudy glass over the backdrop photo. */}
       <Surface
         material="glass-panel"
         rim
-        className="flex w-80 shrink-0 flex-col overflow-hidden rounded-3xl"
+        className="flex w-72 shrink-0 flex-col overflow-hidden rounded-3xl"
       >
         <div className="border-b border-line px-4 py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
@@ -76,19 +74,11 @@ export function DesktopWorkspace({
         <ul className="flex-1 space-y-2 overflow-y-auto p-3">
           {people.map((p) => (
             <li key={p.id}>
-              <PersonCard
+              <PersonRailRow
                 person={p}
                 fields={fields}
                 isCurrent={p.id === current?.id}
-                onOpenPerson={() => onOpenAt(p.id, null)}
-                onSelectPhase={(phase) => onOpenAt(p.id, phase)}
-                onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                onClear={(phase) => onClear(p.id, phase)}
-                onResetAll={() => onResetAll(p.id)}
-                onDelete={() => onDelete(p.id)}
-                onExport={() => onExport(p)}
-                onRename={(name) => onRename(p.id, name)}
-                retreatName={retreatName}
+                onSelect={() => onOpenAt(p.id, null)}
               />
             </li>
           ))}
@@ -99,8 +89,6 @@ export function DesktopWorkspace({
         </ul>
       </Surface>
 
-      {/* Main pane: the card, and beneath it the button — floating straight over
-          the backdrop, not boxed in another opaque panel behind it. */}
       <div className="flex flex-1 flex-col items-center overflow-y-auto py-2">
         {current ? (
           <div className="flex w-full max-w-xl flex-col gap-5">

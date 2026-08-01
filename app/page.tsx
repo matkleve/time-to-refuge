@@ -103,12 +103,15 @@ export default function Home() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (view !== "refuge") return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (e.key === "ArrowRight") setIndex((i) => Math.min(people.length - 1, i + 1));
       if (e.key === "ArrowLeft") setIndex((i) => Math.max(0, i - 1));
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [people.length]);
+  }, [people.length, view]);
 
   function pushUndo(entry: UndoEntry) {
     setUndoStack((prev) => [...prev, entry]);
