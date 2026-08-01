@@ -3,8 +3,9 @@
 Records the exact moment each person takes refuge in the Buddha, the Dharma and
 the Sangha — to the millisecond, in the order they are taken.
 
-Everything is client-side: times live in `localStorage`, there is no backend,
-and the app deploys to Vercel as a static page.
+Everything is client-side: times (and undo/redo) live in `localStorage`,
+there is no backend, and the app deploys to Vercel. After one online visit it
+can reopen offline via a service worker (PWA) — useful on retreat wifi.
 
 ## Getting started
 

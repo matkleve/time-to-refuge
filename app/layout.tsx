@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Literata, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 /* Quiet book — Literata · Source Sans 3 · Source Code Pro (dev/fonts option B). */
@@ -26,6 +27,12 @@ export const metadata: Metadata = {
   title: "Time to Refuge",
   description:
     "Record the exact moment each person takes refuge in the Buddha, the Dharma and the Sangha.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Timekeeper",
+    statusBarStyle: "default",
+  },
   icons: {
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
     apple: "/logo.png",
@@ -54,7 +61,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${literata.variable} ${sourceSans.variable} ${sourceCode.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

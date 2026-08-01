@@ -130,14 +130,11 @@ caught late, or a preceptor who restarted a phase.
   the bottom of the hamburger menu. No way to jump to an arbitrary earlier
   state except by walking one step at a time.
 
-**Status: Partial.** The undo stack lives in React state only — it is
-**not** persisted to `localStorage` the way people, the log, and Quick Log
-entries all are (`app/page.tsx`; compare `lib/storage.ts`, which has no
-undo key at all). A reload — the phone locking and Safari discarding the
-backgrounded tab, an accidental refresh, a crash — loses the undo history
-even though the underlying recorded times survive it fine. Mid-ceremony,
-undo is exactly the safety net a mistap needs; it's also exactly the thing
-silently gone the moment something interrupts the session.
+**Status: Supported** for capture/reset undo across reload. Undo and redo
+stacks persist in `localStorage` (`lib/storage.ts`, capped) alongside people
+and the log, so a mistap can still be undone after the phone locks or the
+tab is killed. Still no jump-to-arbitrary-earlier-state — walk one step at
+a time.
 
 ## UC-4 — Move between aspirants
 
@@ -263,31 +260,21 @@ export) carries no zone with it.
 **Actor:** Timekeeper. **Trigger:** the phone locks, the browser tab gets
 backgrounded and killed, the app is reloaded, the device loses power.
 
-**Status: Gap, and the most consequential one in this document.** There is
-**no PWA manifest and no service worker** (confirmed: nothing under
-`public/` but `backdrop.jpg`, no `manifest.json`, no offline caching
-anywhere in the build). Practically:
+**Status: Partial.** Offline shell is in place: `public/manifest.webmanifest`
++ `public/sw.js` (registered from `ServiceWorkerRegister`) precache the app
+shell and runtime-cache same-origin assets, so a **second** cold open can
+work without network after one successful online visit. Limits that remain:
 
-- The app **will not load without a network connection** on a cold start,
-  the exact condition the retreat-center-with-bad-wifi scenario in
-  `DESIGN-SYSTEM.md` §6b was written around for `LocationCheck` specifically
-  — but the app underneath that feature has no offline story of its own at
-  all. If the page hasn't already been loaded once and cached by the
-  browser's ordinary HTTP cache, no connectivity means no app, full stop.
-- Once loaded, `localStorage` is durable across a reload — people, the
-  Refuge log, and Quick Log entries all survive it (`lib/storage.ts`). The
-  undo stack does not (**UC-3**).
+- **First** visit still needs network (nothing to cache yet). Open the app
+  on site wifi before the ceremony when you can.
 - There is **no export/backup step separate from the manual CSV/PNG export**
-  in **UC-9** — no automatic snapshot, no "recover my last session" if
-  `localStorage` itself is cleared (private browsing, a full Safari
-  storage-pressure eviction, the browser's own settings).
-- Everything is **single-device**. There's no sync, no merge, no shared
-  session — if the primary timekeeper's phone dies mid-ceremony and a
-  second phone has to take over, the new device starts from zero. Whatever
-  was recorded on the first phone is not recoverable *into the app* on the
-  second one; only whatever the first device already exported (**UC-9**)
-  survives the handoff, and only if that export happened before the device
-  died.
+  in **UC-9** — no automatic snapshot if `localStorage` itself is cleared
+  (private browsing, Safari storage-pressure eviction).
+- Everything is **single-device** by design (no cloud). A dead phone mid-
+  ceremony cannot hand off into another device; only what was already
+  exported (**UC-9**) survives. Deliberately not pursued without a backend.
+- People, Refuge log, Quick Log, retreat name, and undo/redo stacks all
+  survive reload via `localStorage` (**UC-3**).
 
 ---
 
@@ -298,9 +285,9 @@ ceremony, not by how easy each is to fix.
 
 | # | Gap | Where |
 | --- | --- | --- |
-| 1 | No offline support at all (no manifest, no service worker) — a cold load with no network doesn't work, in exactly the setting this app is built for | UC-10 |
-| 2 | Single-device, no sync/handoff — a dead phone mid-ceremony loses everything not already exported | UC-10 |
-| 3 | Undo stack isn't persisted — survives a mistap, doesn't survive a reload | UC-3 |
+| 1 | ~~No offline support~~ — **partial**: PWA manifest + service worker cache the shell after first visit; first cold open still needs network | UC-10 |
+| 2 | Single-device by design (no cloud handoff) — a dead phone mid-ceremony loses everything not already exported | UC-10 |
+| 3 | ~~Undo stack isn't persisted~~ — **addressed**: undo/redo survive reload in `localStorage` | UC-3 |
 | 4 | Nothing enforces or even prompts the clock/location check before a ceremony starts — fully opt-in, easy to skip | UC-2, UC-6 |
 | 5 | ~~No phase-order enforcement~~ — **addressed**: an out-of-order tap packs the row to "Jump here" with X / OK rather than proceeding silently. Deliberately still not *enforced* — confirming still allows it | UC-1 |
 | 6 | Unconfirmed architectural assumption: one-aspirant-at-a-time vs. round-robin-across-aspirants ceremony format | UC-1, actors note |

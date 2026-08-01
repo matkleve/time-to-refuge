@@ -16,6 +16,11 @@ import {
   saveLog,
   loadRetreatName,
   saveRetreatName,
+  loadUndoStack,
+  saveUndoStack,
+  loadRedoStack,
+  saveRedoStack,
+  type UndoEntry,
 } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
@@ -34,18 +39,6 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
-interface UndoEntry {
-  logId: string;
-  personId: string;
-  phase: Phase;
-  /** Field value before the action (what undo restores). */
-  prevValue: number | null;
-  /** Field value after the action (what redo restores). */
-  nextValue: number | null;
-  kind: "recorded" | "reset";
-  message: string;
-}
-
 export default function Home() {
   const [ready, setReady] = useState(false);
   const [view, setView] = useState<AppView>("refuge");
@@ -62,6 +55,8 @@ export default function Home() {
     setPeople(loadPeople());
     setLog(loadLog());
     setRetreatName(loadRetreatName());
+    setUndoStack(loadUndoStack());
+    setRedoStack(loadRedoStack());
     setReady(true);
   }, []);
 
@@ -76,6 +71,14 @@ export default function Home() {
   useEffect(() => {
     if (ready) saveRetreatName(retreatName);
   }, [retreatName, ready]);
+
+  useEffect(() => {
+    if (ready) saveUndoStack(undoStack);
+  }, [undoStack, ready]);
+
+  useEffect(() => {
+    if (ready) saveRedoStack(redoStack);
+  }, [redoStack, ready]);
 
   useEffect(() => {
     if (index > people.length - 1) {
