@@ -333,10 +333,10 @@ revealing controls in place, and mounting a panel / page.
 
 ### 5a. Reveal — controls appearing in place
 
-Used by a field row and a Quick Log stamp opening their actions. The stamp is
-**one persistent structure** across idle and open — never two different
-elements swapped by a conditional — so its properties can transition instead
-of jumping:
+Used by a field row, Quick Log stamp, Jump-here confirm, and Add person. The
+stamp is **one persistent structure** across idle and open — never two
+different outer shells swapped by a conditional — so tray width can
+transition instead of jumping:
 
 - Idle: label / index on the left, time on the right (via a **flex spacer**
   that `grow`s — never `ml-auto`, which cannot interpolate).
@@ -412,6 +412,7 @@ tap so pointer and touch share one path.
 | Surface | How actions open |
 | --- | --- |
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
+| Add person (People / desktop rail) | Tap → name field in the stamp, Add / Cancel in the tray |
 | Person card (overview / focused) | ⋯ menu → Rename / Export / Share, then separator, then Reset all / Delete |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 

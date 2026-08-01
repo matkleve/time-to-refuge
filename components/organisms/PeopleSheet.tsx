@@ -1,14 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Plus, X } from "lucide-react";
 import { Person, Phase } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
-import { glassClass } from "@/lib/surfaces";
-import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
+import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
-import { cn } from "@/lib/utils";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -37,17 +33,6 @@ export function PeopleSheet({
   onRename,
   retreatName = "",
 }: PeopleSheetProps) {
-  const [adding, setAdding] = useState(false);
-  const [name, setName] = useState("");
-
-  function submit() {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    onAdd(trimmed);
-    setName("");
-    setAdding(false);
-  }
-
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col">
@@ -76,59 +61,7 @@ export function PeopleSheet({
             ))}
 
             <li>
-              {adding ? (
-                <div
-                  className={cn(
-                    "flex items-center gap-1 rounded-3xl p-2",
-                    glassClass("card", { rim: true }),
-                  )}
-                >
-                  <input
-                    /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
-                       appears on an explicit user action, so focusing it is expected. */
-                    autoFocus
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") submit();
-                      if (e.key === "Escape") setAdding(false);
-                    }}
-                    placeholder="Person's name"
-                    aria-label="Person's name"
-                    className="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
-                  />
-                  <IconButton
-                    icon={Check}
-                    label="Add person"
-                    showLabel="Add"
-                    onClick={submit}
-                    tone="accent"
-                    disabled={!name.trim()}
-                  />
-                  <IconButton
-                    icon={X}
-                    label="Cancel adding person"
-                    showLabel="Cancel"
-                    onClick={() => {
-                      setAdding(false);
-                      setName("");
-                    }}
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setAdding(true)}
-                  className={cn(
-                    "flex w-full items-center justify-center gap-2 rounded-3xl px-4 py-3.5 text-base text-muted",
-                    "transition-[colors,transform,background-color] duration-150 ease-out",
-                    "hover:bg-white/55 hover:text-flagblue-600 active:scale-95",
-                    glassClass("card", { rim: true }),
-                  )}
-                >
-                  <Plus className="size-4" aria-hidden /> Add person
-                </button>
-              )}
+              <AddPersonRow onAdd={onAdd} />
             </li>
           </ul>
         </div>
