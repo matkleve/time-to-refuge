@@ -245,9 +245,11 @@ Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
 Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 **App header** follows a compact toolbar (iOS ~44pt / Material ~56dp): one
-row for brand + hamburger with equal inset. The retreat name is **not** in
-the toolbar — on Refuge / People it sits below as a large left-aligned
-glass chip with a leading icon (§6c).
+row for brand + hamburger with equal inset. No glass bar fill — a top-edge
+blur fades out via `.header-top-blur`; Timekeeper is plain text; the
+hamburger is a round glass chip (same as Refuge nav arrows). The retreat
+name is **not** in the toolbar — on Refuge / People it sits below as a
+large left-aligned glass chip with a leading icon (§6c).
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline

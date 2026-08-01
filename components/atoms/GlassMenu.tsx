@@ -304,13 +304,14 @@ export function GlassMenu({
       <IconButton
         icon={TriggerIcon}
         label={open ? `Close ${label}` : label}
+        glass
         size={size}
-        /* Circular hit target; wash from userFeedback (ForJu). Larger glyph;
+        /* Round glass chip — same recipe as Refuge nav arrows. Larger glyph;
            open holds the cover + blue icon. */
         feedbackOn={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "bg-transparent text-ink",
+          "text-ink",
           size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
           "hover:text-flagblue-600",
           open && "text-flagblue-600",

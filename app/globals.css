@@ -251,6 +251,32 @@
     --feedback-hover: rgb(255 255 255 / 0.12);
     --feedback-active: rgb(255 255 255 / 0.18);
   }
+
+  /*
+   * App header — no glass bar fill. Soften the photo from the top edge and
+   * fade the blur out so brand + hamburger sit on plain text / round chips.
+   */
+  .header-top-blur {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 5.5rem;
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 28%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 28%,
+      transparent 100%
+    );
+  }
 }
 
 @utility no-select {

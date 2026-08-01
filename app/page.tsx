@@ -35,7 +35,6 @@ import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { PageEnter } from "@/components/atoms/PageEnter";
 import { PageTitle } from "@/components/atoms/PageTitle";
-import { Surface } from "@/components/atoms/Surface";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
 import { AppShell } from "@/components/AppShell";
 import { DesktopShell } from "@/components/DesktopShell";
@@ -409,16 +408,13 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
-        <Surface
-          as="header"
-          material="glass-panel"
-          className="relative z-20 shrink-0 px-5 py-3"
-        >
-          <div className="flex h-12 items-center justify-between gap-3">
+        <header className="relative z-20 shrink-0 px-5 py-3">
+          <div aria-hidden className="header-top-blur" />
+          <div className="relative flex h-12 items-center justify-between gap-3">
             <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
             <div className="flex shrink-0 items-center">{menu}</div>
           </div>
-        </Surface>
+        </header>
         {subheader}
         {page}
       </DesktopShell>
@@ -427,17 +423,16 @@ export default function Home() {
 
   return (
     <AppShell>
-      <Surface
-        as="header"
-        material="glass-panel"
-        className="relative z-20 shrink-0 border-b border-line px-3 pb-1.5"
+      <header
+        className="relative z-20 shrink-0 px-3 pb-1.5"
         style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top))" }}
       >
-        <div className="flex h-11 items-center justify-between gap-3">
+        <div aria-hidden className="header-top-blur" />
+        <div className="relative flex h-11 items-center justify-between gap-3">
           <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
           <div className="flex shrink-0 items-center">{menu}</div>
         </div>
-      </Surface>
+      </header>
       {subheader}
       {page}
     </AppShell>
