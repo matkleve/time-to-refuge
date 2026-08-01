@@ -5,8 +5,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
-import { glassClass } from "@/lib/surfaces";
-import { cn } from "@/lib/utils";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { PersonCard } from "./PersonCard";
 
@@ -46,6 +44,7 @@ function NavButton({
     <IconButton
       icon={prev ? ChevronLeft : ChevronRight}
       label={prev ? "Previous person" : "Next person"}
+      glass
       onClick={onClick}
       disabled={!available}
       hideWhenDisabled
@@ -109,18 +108,13 @@ export function RefugeView({
         is shrink-0 so it can never clip the card.
       */}
       <div className="relative min-h-0 flex-1">
-        <div
-          className={cn(
-            "absolute top-3 right-4 z-20 flex items-center gap-0.5 rounded-full py-0.5 pr-0.5 pl-0.5",
-            glassClass("card", { rim: true }),
-          )}
-        >
+        <div className="absolute top-3 right-4 z-20 flex items-center gap-1">
           <NavButton
             direction="prev"
             available={index > 0}
             onClick={() => onIndexChange(index - 1)}
           />
-          <span className="min-w-10 px-0.5 text-center text-sm tabular-nums text-muted">
+          <span className="min-w-8 px-0.5 text-center text-sm tabular-nums text-muted">
             {index + 1}/{people.length}
           </span>
           <NavButton
