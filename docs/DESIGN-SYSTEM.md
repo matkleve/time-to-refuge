@@ -290,7 +290,7 @@ Here that lives in [`.user-feedback`](../app/globals.css) +
 | --- | --- |
 | **Idle** | Control’s own fill (glass / transparent / solid) |
 | **Hover** | `::after` cover at ink **4%** (ForJu `hover-cover`); only when `(hover: hover)` |
-| **Active / pressed** | Cover at ink **6%** + press scale (`sm` 0.95 · `md` 0.98 · `lg` 0.99) |
+| **Active / pressed** | Cover at ink **6%** + one-shot bounce (`sm` / `md` / `lg` dip→overshoot→settle via `PressBounceRegister`) |
 | **Focus** | Global `:focus-visible` ring (§4 above) |
 | **Open / selected** | `.is-feedback-on` holds the hover cover |
 | **Disabled** | Opacity 35%, no pointer |
@@ -332,13 +332,13 @@ for the same reason the type scale re-values Tailwind's steps (§4a):
 
 | Duration | Used for |
 | --- | --- |
-| `duration-150` | Press feedback only (`active:scale-95`) |
+| `duration-150` | Legacy short transitions; press bounce is 280ms keyframes |
 | `duration-200` | Colour, opacity, arming a control; menu scale-in |
 | `duration-300` | Travel across the screen — carousel, row-action tray |
 
-**Press feedback.** Every tappable control acknowledges the finger within
-`duration-150` via the shared **user feedback** press scale (§4 —
-`user-feedback--press-*`). Hover washes come from that same cover, not
+**Press feedback.** Every tappable control opts into `.user-feedback` and
+gets a dip → overshoot → settle bounce on pointerdown (`PressBounceRegister`,
+§4 — `user-feedback--press-*`). Hover washes come from that same cover, not
 ad-hoc `hover:bg-*` on each control. Icon-only chrome goes through
 `IconButton` so this stays consistent.
 

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Literata, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
+import { PressBounceRegister } from "@/components/PressBounceRegister";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         {children}
+        <PressBounceRegister />
         <ServiceWorkerRegister />
       </body>
     </html>

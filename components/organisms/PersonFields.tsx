@@ -14,6 +14,7 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
@@ -241,8 +242,7 @@ function FieldRow({
         aria-label={`Select ${phaseLabel} to record`}
         className={cn(
           "flex w-full items-center justify-between px-4 text-left",
-          "transition-[colors,transform,background-color] duration-150 ease-out",
-          "hover:bg-ink/[0.03] active:scale-[0.99]",
+          userFeedbackClass({ press: "md" }),
           ROW_HEIGHT,
         )}
       >
@@ -326,8 +326,7 @@ function FieldRow({
           aria-expanded={showActions}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4",
-            "transition-[box-shadow,background-color,transform] duration-200 ease-out",
-            "hover:bg-ink/[0.03] active:scale-[0.99]",
+            userFeedbackClass({ press: "md" }),
             ROW_HEIGHT,
             glassRowClass(),
             filled && "shadow-sm",

@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { AlertTriangle, Check, Clock, Loader2 } from "lucide-react";
 import { useDismissible } from "@/lib/use-dismissible";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -280,8 +281,7 @@ export function LocationCheck() {
         }
         className={cn(
           "no-select flex h-9 min-w-9 max-w-36 items-center gap-1.5 rounded-full border pr-3 pl-2.5 shadow-sm",
-          "transition-[color,background-color,border-color,transform,filter] duration-150 ease-out",
-          "active:scale-95 hover:brightness-[0.97]",
+          userFeedbackClass({ press: "sm" }),
           /* Opaque light fill — glass was too see-through on the record button. */
           trouble
             ? "border-danger-200 bg-danger-50 text-danger-700"

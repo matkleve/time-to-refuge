@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
 import { actionClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { LocationCheck } from "./LocationCheck";
 
@@ -41,8 +42,9 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
         }}
         className={cn(
           "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
-          "transition-[box-shadow,background-color,transform,filter] duration-200 ease-out",
-          "active:scale-[0.98] hover:brightness-[1.04]",
+          "transition-[box-shadow,background-color,filter] duration-200 ease-out",
+          "hover:brightness-[1.04]",
+          userFeedbackClass({ press: "lg" }),
           /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
           actionClass("accent"),
           flash && "animate-flash-blue",

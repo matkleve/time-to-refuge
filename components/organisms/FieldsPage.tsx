@@ -14,6 +14,7 @@ import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
 import { useArmedAction } from "@/lib/use-armed-action";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 interface FieldsPageProps {
@@ -194,7 +195,7 @@ function FieldEditorRow({
           className={cn(
             "box-border h-9 min-w-0 flex-1 truncate rounded-xl border border-transparent px-2 text-left font-display text-lg font-semibold leading-none",
             remove.armed ? "text-danger-600" : "text-ink",
-            "transition-[colors,background-color] duration-150 hover:bg-ink/[0.04]",
+            userFeedbackClass({ press: "md" }),
           )}
         >
           {field.label}

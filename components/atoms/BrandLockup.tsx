@@ -1,3 +1,4 @@
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 /** Triple-jewel mark — Buddha (saffron) · Dharma / Sangha (flag blue). */
@@ -66,8 +67,7 @@ export function BrandLockup({
         aria-label="Timekeeper — open Refuge"
         className={cn(
           "flex min-w-0 items-center gap-2 rounded-lg text-left",
-          "transition-[colors,transform,background-color] duration-150 ease-out",
-          "hover:bg-ink/[0.04] active:scale-[0.99]",
+          userFeedbackClass({ press: "sm" }),
           className,
         )}
       >

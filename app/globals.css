@@ -180,12 +180,13 @@
   .user-feedback {
     --feedback-hover: color-mix(in srgb, var(--color-ink) 4%, transparent);
     --feedback-active: color-mix(in srgb, var(--color-ink) 6%, transparent);
-    --feedback-press-scale: 0.95;
+    /* Dip then overshoot — Cursor-style organic press on the control itself. */
+    --feedback-press-down: 0.94;
+    --feedback-press-up: 1.08;
     position: relative;
     isolation: isolate;
     transition:
       color 200ms ease-out,
-      transform 150ms ease-out,
       opacity 200ms ease-out,
       filter 200ms ease-out;
   }
@@ -215,13 +216,14 @@
     }
   }
 
-  .user-feedback:active:not(:disabled):not([aria-disabled="true"]) {
-    transform: scale(var(--feedback-press-scale));
-  }
-
   .user-feedback:active:not(:disabled):not([aria-disabled="true"])::after {
     background: var(--feedback-active);
     opacity: 1;
+  }
+
+  /* One-shot bounce — class toggled by PressBounceRegister on pointerdown. */
+  .user-feedback.is-press-bounce {
+    animation: feedback-press-bounce 280ms ease-out;
   }
 
   /* Open / selected — same cover as hover, held on. */
@@ -237,19 +239,28 @@
   }
 
   .user-feedback--press-sm {
-    --feedback-press-scale: 0.95;
+    --feedback-press-down: 0.94;
+    --feedback-press-up: 1.08;
   }
   .user-feedback--press-md {
-    --feedback-press-scale: 0.98;
+    --feedback-press-down: 0.96;
+    --feedback-press-up: 1.05;
   }
   .user-feedback--press-lg {
-    --feedback-press-scale: 0.99;
+    --feedback-press-down: 0.98;
+    --feedback-press-up: 1.03;
   }
 
   /* On dark / accent fills — wash with white instead of ink. */
   .user-feedback--on-accent {
     --feedback-hover: rgb(255 255 255 / 0.12);
     --feedback-active: rgb(255 255 255 / 0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .user-feedback.is-press-bounce {
+      animation: none;
+    }
   }
 }
 
@@ -281,6 +292,22 @@
   }
   to {
     opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Shared press: dip → grow past idle → settle (see .user-feedback.is-press-bounce). */
+@keyframes feedback-press-bounce {
+  0% {
+    transform: scale(1);
+  }
+  32% {
+    transform: scale(var(--feedback-press-down, 0.94));
+  }
+  68% {
+    transform: scale(var(--feedback-press-up, 1.08));
+  }
+  100% {
     transform: scale(1);
   }
 }

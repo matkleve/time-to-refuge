@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { glassClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 
@@ -72,11 +73,12 @@ export function AddRowTray({
             onClick={() => setOpen(true)}
             className={cn(
               "flex min-h-12 w-full items-center justify-center gap-2 px-4 py-2.5 text-base text-muted",
-              "transition-[colors,transform,background-color] duration-150 ease-out",
-              "hover:bg-white/40 hover:text-flagblue-600 active:scale-[0.99]",
+              "hover:text-flagblue-600",
+              userFeedbackClass({ press: "md" }),
             )}
           >
-            <Plus className="size-4" aria-hidden /> {idleLabel}
+            <Plus className="size-4" aria-hidden />
+            <span>{idleLabel}</span>
           </button>
         )}
       </div>

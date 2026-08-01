@@ -10,20 +10,23 @@ import { cn } from "@/lib/utils";
  * The wash is an `::after` overlay (see `.user-feedback` in globals.css) so
  * it sits on top of glass/solid fills the way ForJu's `hover-cover` does —
  * never replacing the control's own background.
+ *
+ * Press motion is a one-shot bounce (dip → overshoot → settle), triggered by
+ * `PressBounceRegister` for every `.user-feedback` control.
  */
 export type FeedbackPress = "sm" | "md" | "lg";
 
 const pressClass: Record<FeedbackPress, string> = {
-  /** Icon buttons, chips */
+  /** Icon buttons, chips — strongest overshoot */
   sm: "user-feedback--press-sm",
   /** Compact rows / menu items */
   md: "user-feedback--press-md",
-  /** Large CTAs (record / Quick Log) */
+  /** Large CTAs (record / Quick Log) — subtle */
   lg: "user-feedback--press-lg",
 };
 
 export function userFeedbackClass(options?: {
-  /** Press scale tier — larger surfaces scale less. Default `sm`. */
+  /** Press bounce tier. Default `sm`. */
   press?: FeedbackPress;
   /** Force the hover wash on (open menu, selected). */
   on?: boolean;

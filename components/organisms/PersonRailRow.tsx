@@ -3,6 +3,7 @@
 import { Check } from "lucide-react";
 import { Person, FieldDef, isComplete } from "@/lib/types";
 import { glassClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 interface PersonRailRowProps {
@@ -36,8 +37,7 @@ export function PersonRailRow({
       }
       className={cn(
         "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3.5 text-left",
-        "transition-[colors,transform,background-color,box-shadow] duration-150 ease-out",
-        "hover:brightness-[1.03] active:scale-[0.99]",
+        userFeedbackClass({ press: "md", on: isCurrent }),
         glassClass(isCurrent ? "cardCurrent" : "card", { rim: true }),
       )}
     >
