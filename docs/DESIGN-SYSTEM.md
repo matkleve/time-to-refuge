@@ -241,8 +241,7 @@ with a hairline between them, then an icon-only strip —
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
 Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
-Triggers (hamburger / ⋯) use an opaque white circle with a `muted` border
-(3:1+ against white) so the control reads as a button on glass headers.
+Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
@@ -268,6 +267,36 @@ which matters in a ceremony, where a dialog is the wrong thing to be reading.
 
 **Focus.** One ring for the whole app — 2px `flagblue-600` at 2px offset, on
 `:focus-visible`, declared once in the base layer. Never remove it locally.
+(`:focus-visible` — not `:focus` — so a mouse click does not leave a stuck
+ring; keyboard / AT still get one. Same idea as ForJu’s `clickFocus` guard.)
+
+### 4 — User feedback (interaction states)
+
+Industry name: **interaction states**. ForJu’s API name:
+**`userFeedbackMode`** on every `FocusAble` / `FormUi` control — one shared
+hover cover, active cover, focus ring, and disabled treatment, not per-button
+one-offs.
+
+Here that lives in [`.user-feedback`](../app/globals.css) +
+[`userFeedbackClass()`](../lib/user-feedback.ts):
+
+| State | How |
+| --- | --- |
+| **Idle** | Control’s own fill (glass / transparent / solid) |
+| **Hover** | `::after` cover at ink **4%** (ForJu `hover-cover`); only when `(hover: hover)` |
+| **Active / pressed** | Cover at ink **6%** + press scale (`sm` 0.95 · `md` 0.98 · `lg` 0.99) |
+| **Focus** | Global `:focus-visible` ring (§4 above) |
+| **Open / selected** | `.is-feedback-on` holds the hover cover |
+| **Disabled** | Opacity 35%, no pointer |
+
+The wash is an overlay, so it never replaces a glass chip’s fill. On accent
+fills use `.user-feedback--on-accent` (white wash). Chrome controls
+(`IconButton`, hamburger / ⋯) opt in via `userFeedbackClass()`; don’t invent
+a second hover recipe locally.
+
+Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
+idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
+shared feedback cover + blue icon.
 
 ## 4a. Units
 
@@ -302,10 +331,10 @@ for the same reason the type scale re-values Tailwind's steps (§4a):
 | `duration-300` | Travel across the screen — carousel, row-action tray |
 
 **Press feedback.** Every tappable control acknowledges the finger within
-`duration-150` via `active:scale-95` / `active:scale-[0.98]` /
-`active:scale-[0.99]` (larger surfaces scale less). Hover washes or
-`brightness` nudges apply where a pointer can linger. Icon-only chrome goes
-through `IconButton` so this stays consistent.
+`duration-150` via the shared **user feedback** press scale (§4 —
+`user-feedback--press-*`). Hover washes come from that same cover, not
+ad-hoc `hover:bg-*` on each control. Icon-only chrome goes through
+`IconButton` so this stays consistent.
 
 **Easing.** Default `ease-out`. The person carousel uses
 `cubic-bezier(0.32, 0.72, 0, 1)` so the card settles like a native sheet.
@@ -332,10 +361,10 @@ revealing controls in place, and mounting a panel / page.
 
 ### 5a. Reveal — controls appearing in place
 
-Used by a field row and a Quick Log stamp opening their actions. The stamp is
-**one persistent structure** across idle and open — never two different
-elements swapped by a conditional — so its properties can transition instead
-of jumping:
+Used by a field row, Quick Log stamp, Jump-here confirm, and Add person. The
+stamp is **one persistent structure** across idle and open — never two
+different outer shells swapped by a conditional — so tray width can
+transition instead of jumping:
 
 - Idle: label / index on the left, time on the right (via a **flex spacer**
   that `grow`s — never `ml-auto`, which cannot interpolate).
@@ -411,6 +440,7 @@ tap so pointer and touch share one path.
 | Surface | How actions open |
 | --- | --- |
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
+| Add person (People / desktop rail) | Tap → name field in the stamp, Add / Cancel in the tray |
 | Person card (overview / focused) | ⋯ menu → Rename / Export / Share, then separator, then Reset all / Delete |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 

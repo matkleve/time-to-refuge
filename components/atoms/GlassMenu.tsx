@@ -264,14 +264,15 @@ export function GlassMenu({
         icon={TriggerIcon}
         label={open ? `Close ${label}` : label}
         size={size}
-        /* Opaque circle + muted rim — glass chips were too faint on the header
-           (hamburger) and on cloudy cards (⋯). Border uses `muted` so the ring
-           clears 3:1 against white (WCAG 2.5.8 / non-text UI). */
+        /* Circular hit target; wash from userFeedback (ForJu). Larger glyph;
+           open holds the cover + blue icon. */
+        feedbackOn={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "border-2 border-muted bg-white text-ink shadow-sm",
-          "hover:bg-flagblue-50 hover:border-flagblue-600 hover:text-flagblue-600",
-          open && "border-flagblue-600 bg-flagblue-50 text-flagblue-600",
+          "bg-transparent text-ink",
+          size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
+          "hover:text-flagblue-600",
+          open && "text-flagblue-600",
         )}
       />
       {panel}

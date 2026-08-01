@@ -155,6 +155,9 @@
    * One focus ring for the whole app. There was none before, so keyboard
    * focus fell back to the browser default and vanished against the filled
    * cards and the coloured record button (WCAG 2.4.7).
+   *
+   * `:focus-visible` (not `:focus`) matches ForJu's clickFocus suppression —
+   * mouse click does not leave a stuck ring; keyboard / AT still get one.
    */
   :where(a, button, input, select, textarea, [tabindex]):focus-visible {
     outline: 2px solid var(--color-flagblue-600);
@@ -163,6 +166,90 @@
 
   * {
     -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/*
+ * User feedback — unified interaction states (ForJu: `userFeedbackMode`).
+ *
+ * Hover / active are opacity fades on an ::after cover (ForJu hover-cover /
+ * active-cover), so glass fills stay intact. Focus is the global ring above.
+ * Opt in via `userFeedbackClass()` / `.user-feedback` — see design system §4.
+ */
+@layer components {
+  .user-feedback {
+    --feedback-hover: color-mix(in srgb, var(--color-ink) 4%, transparent);
+    --feedback-active: color-mix(in srgb, var(--color-ink) 6%, transparent);
+    --feedback-press-scale: 0.95;
+    position: relative;
+    isolation: isolate;
+    transition:
+      color 200ms ease-out,
+      transform 150ms ease-out,
+      opacity 200ms ease-out,
+      filter 200ms ease-out;
+  }
+
+  .user-feedback::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: var(--feedback-hover);
+    opacity: 0;
+    transition:
+      opacity 200ms ease-out,
+      background-color 200ms ease-out;
+  }
+
+  .user-feedback > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (hover: hover) {
+    .user-feedback:hover:not(:disabled):not([aria-disabled="true"])::after {
+      opacity: 1;
+    }
+  }
+
+  .user-feedback:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: scale(var(--feedback-press-scale));
+  }
+
+  .user-feedback:active:not(:disabled):not([aria-disabled="true"])::after {
+    background: var(--feedback-active);
+    opacity: 1;
+  }
+
+  /* Open / selected — same cover as hover, held on. */
+  .user-feedback.is-feedback-on::after,
+  .user-feedback[aria-expanded="true"]::after {
+    opacity: 1;
+  }
+
+  .user-feedback:disabled,
+  .user-feedback[aria-disabled="true"] {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .user-feedback--press-sm {
+    --feedback-press-scale: 0.95;
+  }
+  .user-feedback--press-md {
+    --feedback-press-scale: 0.98;
+  }
+  .user-feedback--press-lg {
+    --feedback-press-scale: 0.99;
+  }
+
+  /* On dark / accent fills — wash with white instead of ink. */
+  .user-feedback--on-accent {
+    --feedback-hover: rgb(255 255 255 / 0.12);
+    --feedback-active: rgb(255 255 255 / 0.18);
   }
 }
 

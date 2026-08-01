@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { glassChipClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 type Tone = "neutral" | "accent" | "danger" | "onAccent";
@@ -9,20 +10,22 @@ type Tone = "neutral" | "accent" | "danger" | "onAccent";
 /**
  * Icons at rest use `muted`, never `line` — `line` is a hairline colour and
  * renders at ~1.1:1 on a card, which is what made these buttons invisible.
+ * Hover / press / disabled washes come from `userFeedbackClass` (ForJu
+ * `userFeedbackMode`) — tones only shift the glyph colour.
  */
 const toneClass: Record<Tone, string> = {
-  neutral: "text-muted hover:bg-ink/[0.06] hover:text-ink",
-  accent: "text-muted hover:bg-flagblue-50 hover:text-flagblue-600",
-  danger: "text-muted hover:bg-danger-50 hover:text-danger-600",
-  onAccent: "text-white/80 hover:bg-white/15 hover:text-white",
+  neutral: "text-muted hover:text-ink",
+  accent: "text-muted hover:text-flagblue-600",
+  danger: "text-muted hover:text-danger-600",
+  onAccent: "user-feedback--on-accent text-white/80 hover:text-white",
 };
 
-/** Glass chip tones — keep the cloudy fill; hover only nudges the icon. */
+/** Glass chip tones — cloudy fill stays; feedback cover + glyph nudge. */
 const glassToneClass: Record<Tone, string> = {
   neutral: "text-muted hover:text-ink",
   accent: "text-muted hover:text-flagblue-600",
   danger: "text-muted hover:text-danger-600",
-  onAccent: "text-white/80 hover:text-white",
+  onAccent: "user-feedback--on-accent text-white/80 hover:text-white",
 };
 
 /** Icon-only footprint. Labeled buttons size from content instead. */
@@ -62,6 +65,8 @@ interface IconButtonProps {
   disabled?: boolean;
   /** Keeps the button's footprint when disabled, so nothing reflows. */
   hideWhenDisabled?: boolean;
+  /** Hold the hover wash (open menu). */
+  feedbackOn?: boolean;
   className?: string;
 }
 
@@ -75,6 +80,7 @@ export function IconButton({
   size = "md",
   disabled = false,
   hideWhenDisabled = false,
+  feedbackOn = false,
   className,
 }: IconButtonProps) {
   const visible =
@@ -89,12 +95,11 @@ export function IconButton({
       title={label}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
-        "transition-[color,background-color,box-shadow,transform] duration-200 ease-out",
-        "active:scale-95 disabled:pointer-events-none",
+        userFeedbackClass({ press: "sm", on: feedbackOn }),
         visible ? labeledSizeClass[size] : sizeClass[size],
         glass ? glassChipClass() : null,
         glass ? glassToneClass[tone] : toneClass[tone],
-        hideWhenDisabled ? "disabled:opacity-0" : "disabled:opacity-35",
+        hideWhenDisabled && "disabled:opacity-0",
         className,
       )}
     >

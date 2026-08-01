@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Plus, X } from "lucide-react";
 import { Person, PHASE_LABELS, Phase } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
-import { IconButton } from "@/components/atoms/IconButton";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { Surface } from "@/components/atoms/Surface";
+import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
 
 interface DesktopWorkspaceProps {
@@ -48,19 +46,8 @@ export function DesktopWorkspace({
   onRequestedPhaseConsumed,
   retreatName = "",
 }: DesktopWorkspaceProps) {
-  const [adding, setAdding] = useState(false);
-  const [name, setName] = useState("");
-
   const current = people[index];
   const { target, setSelectedPhase } = usePhaseTarget(current, requestedPhase, onRequestedPhaseConsumed);
-
-  function submitAdd() {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    onAdd(trimmed);
-    setName("");
-    setAdding(false);
-  }
 
   function handleCaptureClick() {
     if (!current || !target) return;
@@ -100,49 +87,7 @@ export function DesktopWorkspace({
           ))}
 
           <li>
-            {adding ? (
-              <div className="flex items-center gap-1 rounded-3xl bg-white/70 p-2">
-                <input
-                  /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
-                     appears on an explicit user action, so focusing it is expected. */
-                  autoFocus
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") submitAdd();
-                    if (e.key === "Escape") setAdding(false);
-                  }}
-                  placeholder="Person's name"
-                  aria-label="Person's name"
-                  className="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
-                />
-                <IconButton
-                  icon={Check}
-                  label="Add person"
-                  showLabel="Add"
-                  onClick={submitAdd}
-                  tone="accent"
-                  disabled={!name.trim()}
-                />
-                <IconButton
-                  icon={X}
-                  label="Cancel adding person"
-                  showLabel="Cancel"
-                  onClick={() => {
-                    setAdding(false);
-                    setName("");
-                  }}
-                />
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setAdding(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-3xl bg-white/50 px-4 py-3.5 text-base text-muted transition-[colors,transform,background-color] duration-150 ease-out hover:bg-white/80 hover:text-flagblue-600 active:scale-95"
-              >
-                <Plus className="size-4" aria-hidden /> Add person
-              </button>
-            )}
+            <AddPersonRow onAdd={onAdd} />
           </li>
         </ul>
       </Surface>
