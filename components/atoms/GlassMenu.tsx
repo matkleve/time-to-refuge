@@ -264,11 +264,11 @@ export function GlassMenu({
         icon={TriggerIcon}
         label={open ? `Close ${label}` : label}
         size={size}
-        /* No circle: override IconButton's rounded-full fill. Larger glyph;
-           light wash + ink→blue on hover/open only. */
+        /* Circular hit target (IconButton default). Idle: no outline —
+           larger glyph. Light wash + blue icon on hover/open only. */
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "rounded-lg bg-transparent text-ink shadow-none",
+          "bg-transparent text-ink shadow-none",
           size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
           "hover:bg-ink/[0.04] hover:text-flagblue-600",
           open && "bg-ink/[0.06] text-flagblue-600",
