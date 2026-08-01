@@ -2,7 +2,6 @@
 
 import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
-import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
 
@@ -21,8 +20,8 @@ interface PeopleSheetProps {
 }
 
 /**
- * People page — same shell slot as Refuge / Quick Log / History, not an
- * overlay. Opening a person switches to the Refuge page.
+ * People page — same open backdrop as Refuge (no full-page glass panel).
+ * Title + retreat chip live in the shell chrome above this list.
  */
 export function PeopleSheet({
   people,
@@ -38,39 +37,34 @@ export function PeopleSheet({
   retreatName = "",
 }: PeopleSheetProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Surface material="glass-panel" className="flex min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 items-center border-b border-white/40 px-5 py-3">
-          <h2 className="font-display text-lg font-semibold text-ink">People</h2>
-        </div>
+    <div
+      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4"
+      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+    >
+      <ul className="mx-auto w-full max-w-xl space-y-3">
+        {people.map((p) => (
+          <li key={p.id} className="animate-fade-in-up">
+            <PersonCard
+              person={p}
+              fields={fields}
+              isCurrent={p.id === currentId}
+              onOpenPerson={() => onOpenAt(p.id, null)}
+              onSelectPhase={(phase) => onOpenAt(p.id, phase)}
+              onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+              onClear={(phase) => onClearTime(p.id, phase)}
+              onResetAll={() => onResetAll(p.id)}
+              onDelete={() => onDelete(p.id)}
+              onExport={() => downloadPersonCsv(p, fields, retreatName)}
+              onRename={(name) => onRename(p.id, name)}
+              retreatName={retreatName}
+            />
+          </li>
+        ))}
 
-        <div className="flex-1 overflow-y-auto px-4 py-4">
-          <ul className="space-y-3">
-            {people.map((p) => (
-              <li key={p.id} className="animate-fade-in-up">
-                <PersonCard
-                  person={p}
-                  fields={fields}
-                  isCurrent={p.id === currentId}
-                  onOpenPerson={() => onOpenAt(p.id, null)}
-                  onSelectPhase={(phase) => onOpenAt(p.id, phase)}
-                  onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                  onClear={(phase) => onClearTime(p.id, phase)}
-                  onResetAll={() => onResetAll(p.id)}
-                  onDelete={() => onDelete(p.id)}
-                  onExport={() => downloadPersonCsv(p, fields, retreatName)}
-                  onRename={(name) => onRename(p.id, name)}
-                  retreatName={retreatName}
-                />
-              </li>
-            ))}
-
-            <li>
-              <AddPersonRow onAdd={onAdd} />
-            </li>
-          </ul>
-        </div>
-      </Surface>
+        <li>
+          <AddPersonRow onAdd={onAdd} />
+        </li>
+      </ul>
     </div>
   );
 }

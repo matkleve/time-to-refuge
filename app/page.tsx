@@ -419,9 +419,17 @@ export default function Home() {
     </PageEnter>
   );
 
-  const showRetreatChip = view === "refuge" || view === "people";
-  const retreatChip = showRetreatChip ? (
-    <div className={cn("shrink-0", isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2")}>
+  const showSubheader = view === "refuge" || view === "people";
+  const subheader = showSubheader ? (
+    <div
+      className={cn(
+        "flex shrink-0 flex-col gap-2",
+        isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2",
+      )}
+    >
+      {view === "people" && (
+        <h2 className="font-display text-2xl font-semibold text-ink">People</h2>
+      )}
       <RetreatNameField value={retreatName} onChange={setRetreatName} />
     </div>
   ) : null;
@@ -439,7 +447,7 @@ export default function Home() {
             <div className="flex shrink-0 items-center">{menu}</div>
           </div>
         </Surface>
-        {retreatChip}
+        {subheader}
         {page}
       </DesktopShell>
     );
@@ -458,7 +466,7 @@ export default function Home() {
           <div className="flex shrink-0 items-center">{menu}</div>
         </div>
       </Surface>
-      {retreatChip}
+      {subheader}
       {page}
     </AppShell>
   );
