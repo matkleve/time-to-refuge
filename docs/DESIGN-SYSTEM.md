@@ -238,6 +238,7 @@ with a hairline between them, then an icon-only strip —
 | --- | --- |
 | **Pages** | Refuge · Quick Log · History · People — each is an `AppView`, not an overlay |
 | **Actions** | Export all |
+| **Primary** | **Dana** — filled primary button → Dana page (`content/dana.json`) |
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |
 
 Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.

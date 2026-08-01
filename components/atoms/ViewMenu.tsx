@@ -1,13 +1,15 @@
 "use client";
 
-import { Clock, Contact, Download, History, Menu, Redo2, Undo2, Users } from "lucide-react";
+import { Clock, Contact, Download, HeartHandshake, History, Menu, Redo2, Undo2, Users } from "lucide-react";
 import {
   GlassMenu,
   type GlassMenuIconAction,
+  type GlassMenuPrimaryAction,
   type GlassMenuSection,
 } from "@/components/atoms/GlassMenu";
+import dana from "@/content/dana.json";
 
-export type AppView = "refuge" | "quicklog" | "history" | "people";
+export type AppView = "refuge" | "quicklog" | "history" | "people" | "dana";
 
 interface ViewMenuProps {
   view: AppView;
@@ -24,8 +26,7 @@ interface ViewMenuProps {
 }
 
 /**
- * Hamburger → Pages (Refuge, Quick Log, History, People), Actions (Export),
- * then icon-only Undo / Redo. Shared cloudy menu chrome with person-card ⋯.
+ * Hamburger → Pages, Actions, primary Dana CTA, then icon-only Undo / Redo.
  */
 export function ViewMenu({
   view,
@@ -87,6 +88,14 @@ export function ViewMenu({
     ],
   };
 
+  const primaryAction: GlassMenuPrimaryAction = {
+    id: "dana",
+    label: dana.menuLabel,
+    icon: HeartHandshake,
+    selected: view === "dana",
+    onSelect: () => onChange("dana"),
+  };
+
   const iconActions: GlassMenuIconAction[] = [
     {
       id: "undo",
@@ -112,6 +121,7 @@ export function ViewMenu({
       triggerIcon={Menu}
       size={size}
       sections={[pages, actions]}
+      primaryAction={primaryAction}
       iconActions={iconActions}
     />
   );
