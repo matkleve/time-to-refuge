@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
 import { actionClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { LocationCheck } from "./LocationCheck";
 
@@ -58,11 +59,10 @@ export function LiveClockButton({
         disabled={!armed}
         className={cn(
           "no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl",
-          fillRemaining
-            ? "h-full min-h-28 py-3"
-            : "min-h-38 py-6",
-          "transition-[box-shadow,background-color,transform,opacity,filter] duration-200 ease-out",
-          "active:scale-[0.98] enabled:hover:brightness-[1.04]",
+          fillRemaining ? "h-full min-h-28 py-3" : "min-h-38 py-6",
+          "enabled:hover:brightness-[1.04]",
+          userFeedbackClass({ press: "lg" }),
+          armed && "user-feedback--on-accent",
           /* Tinted glass + specular light catch — not a solid fill, not a gradient. */
           armed ? actionClass("primary") : actionClass("primaryIdle"),
           flash && "animate-flash-saffron",

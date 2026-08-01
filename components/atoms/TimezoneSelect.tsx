@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import { glassClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 /**
@@ -71,7 +72,10 @@ export function TimezoneSelect({
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => onChange(e.target.value)}
           aria-label="Time zone"
-          className="h-9 min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none"
+          className={cn(
+            "h-9 min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none",
+            userFeedbackClass({ press: "md" }),
+          )}
         >
           {zones.map((z) => (
             <option key={z} value={z}>
@@ -98,9 +102,8 @@ export function TimezoneSelect({
           onChange={(e) => onChange(e.target.value)}
           aria-label="Time zone"
           className={cn(
-            "min-h-9 min-w-0 max-w-[60vw] appearance-none pr-7 pl-8 text-sm text-ink",
-            "transition-[colors,background-color,transform] duration-150 ease-out",
-            "rounded-xl hover:bg-white/70 active:scale-[0.99]",
+            "min-h-9 min-w-0 max-w-[60vw] appearance-none rounded-xl pr-7 pl-8 text-sm text-ink",
+            userFeedbackClass({ press: "md" }),
             glassClass("card", { rim: true }),
           )}
         >

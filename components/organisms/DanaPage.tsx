@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
 import { actionClass, glassClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
@@ -98,8 +99,9 @@ export function DanaPage() {
           onClick={() => handleCopy("iban", dana.bank.iban)}
           className={cn(
             "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
-            "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-            "active:scale-95 hover:brightness-[1.06]",
+            "hover:brightness-[1.06]",
+            userFeedbackClass({ press: "lg" }),
+            "user-feedback--on-accent",
             actionClass("primary"),
           )}
         >
@@ -130,8 +132,7 @@ export function DanaPage() {
                 rel="noopener noreferrer"
                 className={cn(
                   "flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
-                  "transition-[colors,transform,background-color] duration-150 ease-out",
-                  "hover:bg-flagblue-50 active:scale-[0.99]",
+                  userFeedbackClass({ press: "md" }),
                 )}
               >
                 {link.label}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
 import { glassClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 interface RetreatNameFieldProps {
@@ -71,8 +72,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
           className={cn(
             "flex h-9 max-w-full items-center gap-2.5 rounded-xl text-left",
-            "transition-[colors,background-color] duration-150 ease-out",
-            "hover:bg-ink/[0.04]",
+            userFeedbackClass({ press: "md" }),
           )}
         >
           <span

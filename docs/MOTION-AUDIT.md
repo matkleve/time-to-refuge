@@ -40,14 +40,14 @@ Interactive controls that looked tappable but didn’t acknowledge the finger:
 
 | Control | Fix |
 | --- | --- |
-| Empty / filled field stamps, Quick Log stamps | `active:scale-[0.99]` + transform in transition |
-| GlassMenu rows | `active:scale-[0.98]` |
-| Record / Quick Log clocks | `hover:brightness` + existing press scale |
-| Empty-state Add CTA, People Add, timezone select | hover wash + press |
-| Overview name, retreat name, Check zone | press (+ hover on all Check-zone states) |
+| Empty / filled field stamps, Quick Log stamps | `userFeedbackClass` + press bounce |
+| GlassMenu rows | `userFeedbackClass({ press: "md" })` |
+| Record / Quick Log clocks | `userFeedbackClass({ press: "lg" })` + bounce |
+| Empty-state Add CTA, People Add, timezone select | shared feedback + bounce |
+| Overview name, retreat name, Check zone | shared feedback + bounce |
 
-Rule added to design system §5: **every tappable control has press feedback
-(`active:scale-*`) within 150ms**; hover where a pointer exists.
+Rule in design system §5: **every tappable control uses `.user-feedback`
+and gets the press bounce**; hover wash where a pointer exists.
 
 | Gap | Note |
 | --- | --- |

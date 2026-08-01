@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { MoreVertical, type LucideIcon } from "lucide-react";
 import { actionClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -88,9 +89,9 @@ function MenuRows({
             onClick={() => onPick(item)}
             className={cn(
               "flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
-              "transition-[colors,transform,background-color] duration-150 ease-out",
+              "transition-[colors,background-color] duration-150 ease-out",
               "disabled:pointer-events-none disabled:opacity-35",
-              "active:scale-[0.98]",
+              userFeedbackClass({ press: "md", on: item.selected }),
               danger ? "text-danger-700" : "text-ink",
               /* iOS: soft wash, not a solid fill */
               item.selected
@@ -242,8 +243,10 @@ export function GlassMenu({
             }}
             className={cn(
               "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-              "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-              "active:scale-[0.98] hover:brightness-[1.06]",
+              "transition-[box-shadow,background-color,filter] duration-150 ease-out",
+              "hover:brightness-[1.06]",
+              userFeedbackClass({ press: "md" }),
+              "user-feedback--on-accent",
               actionClass("primary"),
               primaryAction.selected && "ring-2 ring-flagblue-600 ring-offset-2 ring-offset-white/40",
             )}

@@ -14,6 +14,7 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
@@ -230,8 +231,7 @@ function FieldRow({
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
             ROW_HEIGHT,
             glassRowClass(),
-            "transition-[box-shadow,background-color] duration-200 ease-out",
-            !confirmSkip && "hover:bg-ink/[0.03]",
+            userFeedbackClass({ press: "md" }),
           )}
         >
           <span
@@ -338,8 +338,7 @@ function FieldRow({
                flex-1 text-right still let it pack beside the label as the
                tray opened, which read as a jump left. */
             "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
-            "transition-[box-shadow,background-color] duration-200 ease-out",
-            "hover:bg-ink/[0.03]",
+            userFeedbackClass({ press: "md" }),
             ROW_HEIGHT,
             glassRowClass(),
             filled && "shadow-sm",

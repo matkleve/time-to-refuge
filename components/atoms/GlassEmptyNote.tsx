@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { actionClass } from "@/lib/surfaces";
+import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -44,8 +45,10 @@ export function GlassEmptyNote({
           onClick={action.onClick}
           className={cn(
             "rounded-xl px-5 py-2.5 text-base font-medium text-white",
-            "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-            "active:scale-95 hover:brightness-[1.06]",
+            "transition-[box-shadow,background-color,filter] duration-150 ease-out",
+            "hover:brightness-[1.06]",
+            userFeedbackClass({ press: "md" }),
+            "user-feedback--on-accent",
             actionClass("primary"),
           )}
         >
