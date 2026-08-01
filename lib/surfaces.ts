@@ -135,9 +135,9 @@ export function glassRowClass(): string {
   return cx(GLASS.cardRow.fill, "shadow-glass-row");
 }
 
-/** Round action chip on a revealed row — same fill/rim recipe as the row. */
+/** Round action chip — cloudy glass with blur so it reads over the photo too. */
 export function glassChipClass(): string {
-  return cx(GLASS.cardRow.fill, GLASS_RIM, "shadow-glass-row");
+  return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM, GLASS_SPECULAR);
 }
 
 export function filledCardClass(isCurrent = false): string {

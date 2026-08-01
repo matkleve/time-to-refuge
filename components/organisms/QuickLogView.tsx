@@ -200,10 +200,11 @@ export function QuickLogView() {
                 clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
               }
               showLabel="Clear"
+              glass
               tone="danger"
               size="sm"
               disabled={entries.length === 0}
-              className={clearAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              armed={clearAll.armed}
               onClick={(e) => {
                 e.stopPropagation();
                 clearAll.trigger();

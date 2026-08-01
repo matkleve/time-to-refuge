@@ -78,10 +78,11 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
                   : "Reset fields to defaults"
               }
               showLabel="Reset"
+              glass
               tone="danger"
               size="sm"
               disabled={atDefault}
-              className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              armed={resetAll.armed}
               onClick={resetAll.trigger}
             />
           }
