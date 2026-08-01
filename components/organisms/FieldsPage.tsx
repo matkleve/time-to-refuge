@@ -164,7 +164,7 @@ function FieldEditorRow({
       className={cn(
         "flex h-12 items-center gap-2 rounded-2xl px-3",
         glassRowClass(),
-        remove.armed && "ring-2 ring-inset ring-danger-500",
+        remove.armed && "bg-danger-50",
       )}
     >
       {editing ? (

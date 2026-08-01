@@ -68,7 +68,7 @@ interface IconButtonProps {
   /** Hold the hover wash (open menu). */
   feedbackOn?: boolean;
   /**
-   * Two-tap destroy arm — danger text + inset ring (field / Quick Log / Fields).
+   * Two-tap destroy arm — filled danger chip (field / Quick Log / Fields).
    */
   armed?: boolean;
   className?: string;
@@ -102,10 +102,15 @@ export function IconButton({
         "inline-flex shrink-0 items-center justify-center rounded-full",
         userFeedbackClass({ press: "sm", on: feedbackOn }),
         visible ? labeledSizeClass[size] : sizeClass[size],
-        glass ? glassChipClass() : null,
-        glass ? glassToneClass[tone] : toneClass[tone],
+        /* Armed = filled danger chip (wash), not an inset ring — WCAG via
+           fill change + glyph contrast; aria-label already says Confirm. */
+        glass && !armed ? glassChipClass() : null,
+        armed
+          ? "user-feedback--on-accent bg-danger-600 text-white hover:text-white"
+          : glass
+            ? glassToneClass[tone]
+            : toneClass[tone],
         hideWhenDisabled && "disabled:opacity-0",
-        armed && "text-danger-600 ring-2 ring-inset ring-danger-500",
         className,
       )}
     >

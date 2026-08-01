@@ -258,16 +258,18 @@ separator — callers can push items in any order.
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
 action happens. The first press *arms* it: **the value about to be destroyed
-turns red**, and **the same control** gains a red wash (it does not sprout a
-second Confirm/Cancel pair). The second press on that same control carries it
-out. It disarms itself after a few seconds if you walk away.
+turns red**, and **the same control** becomes a filled danger chip
+(`bg-danger-600` / white glyph — contrast-checked; no inset ring). It does
+not sprout a second Confirm/Cancel pair. The second press on that same
+control carries it out. It disarms itself after a few seconds if you walk
+away.
 
-| Action | What turns red |
+| Action | What turns red / fills |
 | --- | --- |
-| Reset one time | That time (text) + inset ring on the reset chip — never a ring on the stamp |
+| Reset one time | That time (text) + filled danger reset chip — never a ring on the stamp |
 | Reset all times | All three times |
 | Delete a person | Their name |
-| Delete a logged time | That time (text) + inset ring on the delete chip |
+| Delete a logged time | That time (text) + filled danger delete chip |
 | Clear the whole log | Every logged time |
 
 Nothing is destroyed by a single tap, and nothing interrupts with a modal —
@@ -384,8 +386,8 @@ transition instead of jumping:
   `truncate`) so excess clips smoothly instead of ellipsis jumping.
 - Actions are two groups with a wide gap: **eye · copy** (look) then
   **edit · reset** (change) — never inside the glass stamp. Chips are `md`
-  (44px) with comfortable gaps; armed destructive uses an **inset** ring on
-  the chip so nothing clips at the card edge.
+  (44px) with comfortable gaps; armed destructive fills the chip solid
+  danger (no inset ring — rings clipped awkwardly on glass).
 - Height never changes (§3): only grid columns and opacity move.
 
 Shared pieces: [`RowActionTray`](../components/atoms/RowReveal.tsx),
