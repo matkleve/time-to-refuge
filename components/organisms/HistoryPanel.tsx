@@ -1,6 +1,5 @@
 "use client";
 
-import { History } from "lucide-react";
 import { LogEntry, FieldDef, fieldLabel } from "@/lib/types";
 import { formatLogTime } from "@/lib/format";
 import { glassClass } from "@/lib/surfaces";
@@ -43,7 +42,7 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
 
   return (
     <ListPageFrame>
-      <PageTitle icon={History} title="History" className="shrink-0" />
+      <PageTitle title="History" className="shrink-0" />
 
       <div className="mt-3 flex-1">
         {sorted.length === 0 ? (

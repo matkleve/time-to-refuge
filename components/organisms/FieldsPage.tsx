@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ListTree, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, RotateCcw, Trash2 } from "lucide-react";
 import {
   FieldDef,
   DEFAULT_FIELDS,
@@ -67,7 +67,6 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
     <ListPageFrame>
       <div className="shrink-0 space-y-1">
         <PageTitle
-          icon={ListTree}
           title="Fields"
           trailing={
             <IconButton

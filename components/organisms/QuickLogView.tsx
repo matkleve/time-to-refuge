@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check, Clock, Copy, RotateCcw, Trash2 } from "lucide-react";
+import { Check, Copy, RotateCcw, Trash2 } from "lucide-react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
@@ -191,7 +191,6 @@ export function QuickLogView() {
         onClick={(e) => e.stopPropagation()}
       >
         <PageTitle
-          icon={Clock}
           title="Quick Log"
           trailing={
             <IconButton

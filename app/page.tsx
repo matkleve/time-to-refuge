@@ -29,7 +29,6 @@ import {
   type UndoEntry,
 } from "@/lib/storage";
 import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
-import { Contact, Users } from "lucide-react";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
@@ -397,9 +396,9 @@ export default function Home() {
       )}
     >
       {view === "refuge" ? (
-        <PageTitle icon={Users} title="Refuge" />
+        <PageTitle title="Refuge" />
       ) : (
-        <PageTitle icon={Contact} title="People" />
+        <PageTitle title="People" />
       )}
       <RetreatNameField value={retreatName} onChange={setRetreatName} />
     </div>

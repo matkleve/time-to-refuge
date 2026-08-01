@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Check, Copy, ExternalLink, HeartHandshake } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
 import { actionClass, glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ export function DanaPage() {
 
   return (
     <ListPageFrame>
-      <PageTitle icon={HeartHandshake} title={dana.pageTitle} className="shrink-0" />
+      <PageTitle title={dana.pageTitle} className="shrink-0" />
 
       <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-3xl">
         <div className="relative aspect-[3/2] w-full bg-ink/10">
