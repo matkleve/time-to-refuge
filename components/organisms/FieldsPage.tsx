@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ListTree, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ListTree, RotateCcw, Trash2 } from "lucide-react";
 import {
   FieldDef,
+  DEFAULT_FIELDS,
   MAX_FIELDS,
   createFieldId,
 } from "@/lib/types";
@@ -20,11 +21,23 @@ interface FieldsPageProps {
   onChange: (fields: FieldDef[]) => void;
 }
 
+function isDefaultFields(fields: FieldDef[]): boolean {
+  if (fields.length !== DEFAULT_FIELDS.length) return false;
+  return fields.every(
+    (f, i) => f.id === DEFAULT_FIELDS[i].id && f.label === DEFAULT_FIELDS[i].label,
+  );
+}
+
 /**
  * Fields page — rename, reorder, add, and remove the recordable ceremony
  * fields (Buddha / Dharma / Sangha by default).
  */
 export function FieldsPage({ fields, onChange }: FieldsPageProps) {
+  const atDefault = isDefaultFields(fields);
+  const resetAll = useArmedAction(() =>
+    onChange(DEFAULT_FIELDS.map((f) => ({ ...f }))),
+  );
+
   function rename(id: string, label: string) {
     const trimmed = label.trim();
     if (!trimmed) return;
@@ -53,7 +66,26 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
   return (
     <ListPageFrame>
       <div className="shrink-0 space-y-1">
-        <PageTitle icon={ListTree} title="Fields" />
+        <PageTitle
+          icon={ListTree}
+          title="Fields"
+          trailing={
+            <IconButton
+              icon={RotateCcw}
+              label={
+                resetAll.armed
+                  ? "Confirm reset fields to Buddha, Dharma, Sangha"
+                  : "Reset fields to defaults"
+              }
+              showLabel="Reset"
+              tone="danger"
+              size="sm"
+              disabled={atDefault}
+              className={resetAll.armed ? "bg-danger-50 text-danger-600" : undefined}
+              onClick={resetAll.trigger}
+            />
+          }
+        />
         <p className="text-sm text-muted">
           Choose what you record — rename, reorder, or add your own.
         </p>
