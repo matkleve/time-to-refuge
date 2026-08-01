@@ -345,10 +345,11 @@ function FieldRow({
             isTarget && "ring-2 ring-flagblue-500",
           )}
         >
-          <span className="min-w-0 shrink truncate">{label}</span>
+          {/* Label never shrinks away — clip the time instead when the tray opens. */}
+          <span className="shrink-0">{label}</span>
           <span
             className={cn(
-              "shrink-0 whitespace-nowrap font-mono text-lg tabular-nums",
+              "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-lg tabular-nums",
               reset.armed ? "text-danger-600" : "text-saffron-700",
             )}
           >
