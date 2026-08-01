@@ -30,7 +30,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
   return (
     <div
       className={cn(
-        "flex h-12 w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
+        "flex h-12 w-fit max-w-full items-center gap-2.5 rounded-2xl px-3.5",
         glassClass("card", { rim: true }),
         className,
       )}
@@ -58,7 +58,8 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           }}
           placeholder="Retreat name"
           aria-label="Retreat name"
-          className="box-border h-9 min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none"
+          size={Math.max(draft.length, 12)}
+          className="box-border h-9 max-w-full min-w-[8rem] rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none"
         />
       ) : (
         <button
@@ -69,14 +70,14 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           }}
           aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
           className={cn(
-            "flex h-9 min-w-0 flex-1 items-center gap-2.5 rounded-xl text-left",
-            "transition-[colors,transform,background-color] duration-150 ease-out",
-            "hover:bg-ink/[0.04] active:scale-[0.99]",
+            "flex h-9 max-w-full items-center gap-2.5 rounded-xl text-left",
+            "transition-[colors,background-color] duration-150 ease-out",
+            "hover:bg-ink/[0.04]",
           )}
         >
           <span
             className={cn(
-              "min-w-0 flex-1 truncate font-display text-base font-semibold",
+              "max-w-[16rem] truncate font-display text-base font-semibold sm:max-w-md",
               value ? "text-ink" : "text-muted",
             )}
           >
