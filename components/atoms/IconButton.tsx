@@ -67,6 +67,10 @@ interface IconButtonProps {
   hideWhenDisabled?: boolean;
   /** Hold the hover wash (open menu). */
   feedbackOn?: boolean;
+  /**
+   * Two-tap destroy arm — danger text + inset ring (field / Quick Log / Fields).
+   */
+  armed?: boolean;
   className?: string;
 }
 
@@ -81,6 +85,7 @@ export function IconButton({
   disabled = false,
   hideWhenDisabled = false,
   feedbackOn = false,
+  armed = false,
   className,
 }: IconButtonProps) {
   const visible =
@@ -100,6 +105,7 @@ export function IconButton({
         glass ? glassChipClass() : null,
         glass ? glassToneClass[tone] : toneClass[tone],
         hideWhenDisabled && "disabled:opacity-0",
+        armed && "text-danger-600 ring-2 ring-inset ring-danger-500",
         className,
       )}
     >

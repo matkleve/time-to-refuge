@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, Check, ListTree, Plus, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ListTree, Trash2 } from "lucide-react";
 import {
   FieldDef,
   MAX_FIELDS,
   createFieldId,
 } from "@/lib/types";
-import { glassClass, glassRowClass } from "@/lib/surfaces";
+import { glassRowClass } from "@/lib/surfaces";
+import { AddRowTray } from "@/components/atoms/AddRowTray";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
-import { RowActionTray } from "@/components/atoms/RowReveal";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { cn } from "@/lib/utils";
 
@@ -24,9 +25,6 @@ interface FieldsPageProps {
  * fields (Buddha / Dharma / Sangha by default).
  */
 export function FieldsPage({ fields, onChange }: FieldsPageProps) {
-  const [adding, setAdding] = useState(false);
-  const [draft, setDraft] = useState("");
-
   function rename(id: string, label: string) {
     const trimmed = label.trim();
     if (!trimmed) return;
@@ -47,19 +45,13 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
     onChange(fields.filter((f) => f.id !== id));
   }
 
-  function submitAdd() {
-    const trimmed = draft.trim();
-    if (!trimmed || fields.length >= MAX_FIELDS) return;
-    onChange([...fields, { id: createFieldId(), label: trimmed }]);
-    setDraft("");
-    setAdding(false);
+  function addField(label: string) {
+    if (fields.length >= MAX_FIELDS) return;
+    onChange([...fields, { id: createFieldId(), label }]);
   }
 
   return (
-    <div
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2 sm:px-5 sm:pt-3"
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
-    >
+    <ListPageFrame>
       <div className="shrink-0 space-y-1">
         <PageTitle icon={ListTree} title="Fields" />
         <p className="text-sm text-muted">
@@ -89,74 +81,18 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
               Up to {MAX_FIELDS} fields.
             </p>
           ) : (
-            <div className="flex w-full items-center">
-              <div
-                className={cn(
-                  "flex min-h-12 min-w-0 flex-1 items-center overflow-hidden rounded-3xl",
-                  glassClass("card", { rim: true }),
-                )}
-              >
-                {adding ? (
-                  <input
-                    /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by
-                       an explicit user action; focusing the field is expected. */
-                    autoFocus
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") submitAdd();
-                      if (e.key === "Escape") {
-                        setAdding(false);
-                        setDraft("");
-                      }
-                    }}
-                    placeholder="Field name"
-                    aria-label="New field name"
-                    className="min-h-12 min-w-0 flex-1 bg-transparent px-4 py-2.5 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setAdding(true)}
-                    className={cn(
-                      "flex min-h-12 w-full items-center justify-center gap-2 px-4 py-2.5 text-base text-muted",
-                      "transition-[colors,transform,background-color] duration-150 ease-out",
-                      "hover:bg-white/40 hover:text-flagblue-600 active:scale-[0.99]",
-                    )}
-                  >
-                    <Plus className="size-4" aria-hidden /> Add field
-                  </button>
-                )}
-              </div>
-
-              <RowActionTray open={adding}>
-                <div className="flex shrink-0 items-center gap-2">
-                  <IconButton
-                    icon={X}
-                    label="Cancel adding field"
-                    glass
-                    onClick={() => {
-                      setAdding(false);
-                      setDraft("");
-                    }}
-                    size="md"
-                  />
-                  <IconButton
-                    icon={Check}
-                    label="Add field"
-                    glass
-                    onClick={submitAdd}
-                    tone="accent"
-                    size="md"
-                    disabled={!draft.trim()}
-                  />
-                </div>
-              </RowActionTray>
-            </div>
+            <AddRowTray
+              idleLabel="Add field"
+              placeholder="Field name"
+              inputLabel="New field name"
+              cancelLabel="Cancel adding field"
+              confirmLabel="Add field"
+              onAdd={addField}
+            />
           )}
         </li>
       </ul>
-    </div>
+    </ListPageFrame>
   );
 }
 
@@ -257,9 +193,7 @@ function FieldEditorRow({
             size="sm"
             tone="danger"
             onClick={remove.trigger}
-            className={
-              remove.armed ? "text-danger-600 ring-2 ring-inset ring-danger-500" : undefined
-            }
+            armed={remove.armed}
           />
         )}
       </div>

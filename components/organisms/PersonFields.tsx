@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check, Copy, Eye, Pencil, RotateCcw, X } from "lucide-react";
+import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
 import {
   Person,
   Phase,
@@ -14,6 +14,7 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
 import { cn } from "@/lib/utils";
 import { glassRowClass } from "@/lib/surfaces";
+import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray, RowPackSpacer } from "@/components/atoms/RowReveal";
 
@@ -220,28 +221,16 @@ function FieldRow({
           <span className="font-display text-lg font-medium text-ink">Jump here</span>
           <RowPackSpacer packed />
         </div>
-        <RowActionTray open>
-          <div className="flex shrink-0 items-center gap-2">
-            <IconButton
-              icon={X}
-              label="Cancel"
-              glass
-              onClick={() => setConfirmSkip(false)}
-              size="md"
-            />
-            <IconButton
-              icon={Check}
-              label={`Record ${phaseLabel} out of order`}
-              glass
-              onClick={() => {
-                setConfirmSkip(false);
-                onSelectPhase?.(phase);
-              }}
-              tone="accent"
-              size="md"
-            />
-          </div>
-        </RowActionTray>
+        <CancelConfirmTray
+          open
+          onCancel={() => setConfirmSkip(false)}
+          onConfirm={() => {
+            setConfirmSkip(false);
+            onSelectPhase?.(phase);
+          }}
+          cancelLabel="Cancel"
+          confirmLabel={`Record ${phaseLabel} out of order`}
+        />
       </div>
     );
   } else if (!filled) {
@@ -323,11 +312,7 @@ function FieldRow({
             onClick={armedReset.trigger}
             tone="danger"
             size="md"
-            className={
-              armedReset.armed
-                ? "text-danger-600 ring-2 ring-inset ring-danger-500"
-                : undefined
-            }
+            armed={armedReset.armed}
           />
         )}
       </div>

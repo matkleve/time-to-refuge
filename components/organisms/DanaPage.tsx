@@ -6,6 +6,7 @@ import { Check, Copy, ExternalLink, HeartHandshake } from "lucide-react";
 import dana from "@/content/dana.json";
 import { actionClass, glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
@@ -34,10 +35,7 @@ export function DanaPage() {
   }
 
   return (
-    <div
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2 sm:px-5 sm:pt-3"
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
-    >
+    <ListPageFrame>
       <PageTitle icon={HeartHandshake} title={dana.pageTitle} className="shrink-0" />
 
       <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-3xl">
@@ -145,7 +143,7 @@ export function DanaPage() {
 
         <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
       </div>
-    </div>
+    </ListPageFrame>
   );
 }
 

@@ -2,6 +2,7 @@
 
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
+import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
@@ -116,16 +117,11 @@ export function DesktopWorkspace({
             />
           </div>
         ) : (
-          <Surface
-            as="p"
-            material="glass-panel"
-            rim
-            className="mt-20 rounded-2xl px-6 py-4 text-center text-base text-ink"
-          >
+          <GlassEmptyNote className="mt-20 px-6">
             {people.length === 0
               ? "Add the first person taking refuge to begin."
               : "Select someone from the list to begin."}
-          </Surface>
+          </GlassEmptyNote>
         )}
       </div>
     </div>

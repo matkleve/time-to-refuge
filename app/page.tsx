@@ -32,6 +32,7 @@ import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { Contact, Users } from "lucide-react";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
+import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { PageEnter } from "@/components/atoms/PageEnter";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { Surface } from "@/components/atoms/Surface";
@@ -46,7 +47,6 @@ import { FieldsPage } from "@/components/organisms/FieldsPage";
 import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
-import { actionClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
@@ -347,27 +347,12 @@ export default function Home() {
       retreatName={retreatName}
     />
   ) : people.length === 0 ? (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-      <Surface
-        as="p"
-        material="glass-panel"
-        rim
-        className="rounded-2xl px-5 py-3 text-base text-ink"
+    <div className="flex flex-1 flex-col items-center justify-center px-8">
+      <GlassEmptyNote
+        action={{ label: "Add a person", onClick: () => setView("people") }}
       >
         Add the people taking refuge to begin.
-      </Surface>
-      <button
-        type="button"
-        onClick={() => setView("people")}
-        className={cn(
-          "rounded-xl px-5 py-2.5 text-base font-medium text-white",
-          "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-          "active:scale-95 hover:brightness-[1.06]",
-          actionClass("primary"),
-        )}
-      >
-        Add a person
-      </button>
+      </GlassEmptyNote>
     </div>
   ) : (
     <RefugeView

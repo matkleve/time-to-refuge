@@ -11,8 +11,8 @@ import { glassClass } from "@/lib/surfaces";
 import { cn } from "@/lib/utils";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
+import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { PageTitle } from "@/components/atoms/PageTitle";
-import { Surface } from "@/components/atoms/Surface";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
 
@@ -128,9 +128,7 @@ function LogRow({
             }}
             tone="danger"
             size="md"
-            className={
-              remove.armed ? "text-danger-600 ring-2 ring-inset ring-danger-500" : undefined
-            }
+            armed={remove.armed}
           />
         </div>
       </RowActionTray>
@@ -221,14 +219,9 @@ export function QuickLogView() {
 
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
         {sorted.length === 0 ? (
-          <Surface
-            as="p"
-            material="glass-panel"
-            rim
-            className="mx-auto rounded-2xl px-4 py-2 text-center text-sm text-muted"
-          >
+          <GlassEmptyNote className="mx-auto">
             Tap anywhere to log a time.
-          </Surface>
+          </GlassEmptyNote>
         ) : (
           sorted.map((entry, i) => (
             <LogRow
