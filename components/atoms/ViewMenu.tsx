@@ -90,7 +90,7 @@ export function ViewMenu({
 
   const primaryAction: GlassMenuPrimaryAction = {
     id: "dana",
-    label: dana.menuLabel,
+    label: dana.menuCta,
     icon: HeartHandshake,
     selected: view === "dana",
     onSelect: () => onChange("dana"),

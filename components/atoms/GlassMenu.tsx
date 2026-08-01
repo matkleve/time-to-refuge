@@ -230,25 +230,28 @@ export function GlassMenu({
 
   const primary =
     primaryAction != null ? (
-      <div className="px-1 pb-0.5 pt-1.5">
-        <button
-          type="button"
-          role="menuitem"
-          onClick={() => {
-            primaryAction.onSelect();
-            setOpen(false);
-          }}
-          className={cn(
-            "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-medium text-white",
-            "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
-            "active:scale-[0.98] hover:brightness-[1.06]",
-            actionClass("primary"),
-            primaryAction.selected && "ring-2 ring-white/70 ring-offset-1 ring-offset-transparent",
-          )}
-        >
-          <primaryAction.icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
-          <span>{primaryAction.label}</span>
-        </button>
+      <div>
+        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
+        <div className="px-1 pb-0.5 pt-0.5">
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              primaryAction.onSelect();
+              setOpen(false);
+            }}
+            className={cn(
+              "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
+              "transition-[box-shadow,background-color,transform,filter] duration-150 ease-out",
+              "active:scale-[0.98] hover:brightness-[1.06]",
+              actionClass("primary"),
+              primaryAction.selected && "ring-2 ring-flagblue-600 ring-offset-2 ring-offset-white/40",
+            )}
+          >
+            <primaryAction.icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />
+            <span>{primaryAction.label}</span>
+          </button>
+        </div>
       </div>
     ) : null;
 
