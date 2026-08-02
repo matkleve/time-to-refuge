@@ -8,13 +8,13 @@ import {
   syncPersonTimes,
 } from "./types";
 
-const STORAGE_KEY = "time-to-refuge:people";
-const LOG_KEY = "time-to-refuge:log";
-const QUICKLOG_KEY = "time-to-refuge:quicklog";
-const RETREAT_NAME_KEY = "time-to-refuge:retreat-name";
-const FIELDS_KEY = "time-to-refuge:fields";
-const UNDO_KEY = "time-to-refuge:undo";
-const REDO_KEY = "time-to-refuge:redo";
+const STORAGE_KEY = "timekeeper:people";
+const LOG_KEY = "timekeeper:log";
+const QUICKLOG_KEY = "timekeeper:quicklog";
+const RETREAT_NAME_KEY = "timekeeper:retreat-name";
+const FIELDS_KEY = "timekeeper:fields";
+const UNDO_KEY = "timekeeper:undo";
+const REDO_KEY = "timekeeper:redo";
 
 /** Cap so a long ceremony can't blow past private-mode quotas. */
 const UNDO_STACK_MAX = 80;
