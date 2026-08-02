@@ -350,7 +350,7 @@ export default function Home() {
       <GlassEmptyNote
         action={{ label: "Add a person", onClick: () => setView("people") }}
       >
-        Add the people taking refuge to begin.
+        Add people to begin this session.
       </GlassEmptyNote>
     </div>
   ) : (
@@ -397,7 +397,7 @@ export default function Home() {
       )}
     >
       {view === "refuge" ? (
-        <PageTitle title="Refuge" />
+        <PageTitle title="Session" />
       ) : (
         <PageTitle title="People" />
       )}

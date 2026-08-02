@@ -25,12 +25,12 @@ export async function sharePerson(
   const blob = await renderPersonCardPng(person, fields, retreatName);
   if (!blob) return "unavailable";
 
-  const filename = `refuge-${slugify(person.name)}.png`;
+  const filename = `timekeeper-${slugify(person.name)}.png`;
   const file = new File([blob], filename, { type: "image/png" });
 
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: `${person.name} — Time to Refuge` });
+      await navigator.share({ files: [file], title: `${person.name} — Timekeeper` });
       return "shared";
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return "cancelled";

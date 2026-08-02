@@ -25,9 +25,9 @@ const sourceCode = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Time to Refuge",
+  title: "Timekeeper",
   description:
-    "Record the exact moment each person takes refuge in the Buddha, the Dharma and the Sangha.",
+    "Record exact wall-clock moments for each person in a session — to the millisecond.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

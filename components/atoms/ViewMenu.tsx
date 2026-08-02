@@ -58,8 +58,22 @@ export function ViewMenu({
     title: "Pages",
     items: [
       {
+        id: "fields",
+        label: "Fields",
+        icon: ListTree,
+        selected: view === "fields",
+        onSelect: () => onChange("fields"),
+      },
+      {
+        id: "people",
+        label: "People",
+        icon: Contact,
+        selected: view === "people",
+        onSelect: () => onChange("people"),
+      },
+      {
         id: "refuge",
-        label: "Refuge",
+        label: "Session",
         icon: Users,
         selected: view === "refuge",
         onSelect: () => onChange("refuge"),
@@ -77,20 +91,6 @@ export function ViewMenu({
         icon: History,
         selected: view === "history",
         onSelect: () => onChange("history"),
-      },
-      {
-        id: "people",
-        label: "People",
-        icon: Contact,
-        selected: view === "people",
-        onSelect: () => onChange("people"),
-      },
-      {
-        id: "fields",
-        label: "Fields",
-        icon: ListTree,
-        selected: view === "fields",
-        onSelect: () => onChange("fields"),
       },
     ],
   };

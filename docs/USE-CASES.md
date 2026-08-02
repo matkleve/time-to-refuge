@@ -4,7 +4,7 @@ What this app actually has to be true for, written down once so "does it
 support X" has an answer instead of a guess. Companion to
 [`UX-AUDIT.md`](./UX-AUDIT.md) (what was wrong with the screens) and
 [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) (the rules that came out of it) —
-this one is about the *ceremony*, not the interface.
+this one is about the *session* (any timed WoW / ceremony), not the interface.
 
 Each use case has a status:
 
@@ -20,8 +20,8 @@ are what the gaps are gaps *in*.
 - **Timekeeper** — operates the app. The only actor who ever touches it.
 - **Preceptor / teacher** — conducts the ceremony, asks the threefold
   question, snaps on the third repetition. Never touches the app.
-- **Aspirant** — the person taking refuge. Never touches the app during the
-  ceremony (may, afterward, receive their own exported record).
+- **Participant** — the person being timed. Never touches the app during the
+  session (may, afterward, receive their own exported record).
 
 One assumption sits under everything below, stated here because it's load-
 bearing and wasn't independently confirmed: **the ceremony is run one

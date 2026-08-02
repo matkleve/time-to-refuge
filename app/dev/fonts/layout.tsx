@@ -17,7 +17,7 @@ import {
 } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Font picker · Time to Refuge",
+  title: "Font picker · Timekeeper",
   robots: { index: false, follow: false },
 };
 

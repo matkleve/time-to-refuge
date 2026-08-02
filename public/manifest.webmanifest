@@ -1,7 +1,7 @@
 {
-  "name": "Time to Refuge",
+  "name": "Timekeeper",
   "short_name": "Timekeeper",
-  "description": "Record the exact moment each person takes refuge in the Buddha, the Dharma and the Sangha.",
+  "description": "Record exact wall-clock moments for each person in a session — to the millisecond.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
