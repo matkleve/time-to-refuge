@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MoreVertical, type LucideIcon } from "lucide-react";
+import { controlMinH } from "@/lib/control-size";
 import { actionClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
 
 export type GlassMenuItem = {
@@ -61,7 +62,8 @@ interface GlassMenuProps {
   iconActions?: GlassMenuIconAction[];
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
-  size?: "sm" | "md";
+  /** Trigger chip size — default `md` (same as row actions). */
+  size?: IconButtonSize;
   align?: "left" | "right";
   className?: string;
 }
@@ -88,8 +90,8 @@ function MenuRows({
             disabled={item.disabled}
             onClick={() => onPick(item)}
             className={cn(
-              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
-              "transition-[colors,background-color] duration-150 ease-out",
+              "flex w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
+              controlMinH.md,
               "disabled:pointer-events-none disabled:opacity-35",
               userFeedbackClass({ press: "md", on: item.selected }),
               danger ? "text-danger-700" : "text-ink",
@@ -242,8 +244,8 @@ export function GlassMenu({
               setOpen(false);
             }}
             className={cn(
-              "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-              "transition-[box-shadow,background-color,filter] duration-150 ease-out",
+              "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
+              controlMinH.md,
               "hover:brightness-[1.06]",
               userFeedbackClass({ press: "md" }),
               "user-feedback--on-accent",
@@ -268,7 +270,7 @@ export function GlassMenu({
               key={action.id}
               icon={action.icon}
               label={action.label}
-              size="sm"
+              size="md"
               disabled={action.disabled}
               onClick={() => pickIcon(action)}
             />
@@ -309,13 +311,11 @@ export function GlassMenu({
         label={open ? `Close ${label}` : label}
         glass
         size={size}
-        /* Round glass chip — same recipe as Refuge nav arrows. Larger glyph;
-           open holds the cover + blue icon. */
+        /* Same md chip as row Copy / Edit — glyph follows IconButton size. */
         feedbackOn={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "text-ink",
-          size === "sm" ? "[&_svg]:size-6" : "[&_svg]:size-7",
           "hover:text-flagblue-600",
           open && "text-flagblue-600",
         )}

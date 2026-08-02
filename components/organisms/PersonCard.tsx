@@ -180,7 +180,7 @@ export function PersonCard({
             <GlassMenu
               label={`Actions for ${person.name}`}
               triggerIcon={MoreVertical}
-              size="sm"
+              size="md"
               items={menuItems}
             />
           )}

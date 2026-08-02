@@ -18,6 +18,7 @@ import {
   type GlassMenuPrimaryAction,
   type GlassMenuSection,
 } from "@/components/atoms/GlassMenu";
+import type { IconButtonSize } from "@/components/atoms/IconButton";
 import dana from "@/content/dana.json";
 
 export type AppView = "refuge" | "quicklog" | "history" | "people" | "fields" | "dana";
@@ -33,7 +34,8 @@ interface ViewMenuProps {
   redoLabel?: string;
   onExportAll: () => void;
   exportDisabled?: boolean;
-  size?: "sm" | "md";
+  /** Hamburger chip — default `md` (same as row actions). */
+  size?: IconButtonSize;
 }
 
 /**

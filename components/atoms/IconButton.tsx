@@ -28,21 +28,32 @@ const glassToneClass: Record<Tone, string> = {
   onAccent: "user-feedback--on-accent text-white/80 hover:text-white",
 };
 
-/** Icon-only footprint. Labeled buttons size from content instead. */
+/**
+ * Round / labeled footprints — one scale for the whole app.
+ * Default is `md` (44px): row actions, hamburger, ⋯, nav, title chips.
+ */
 const sizeClass = {
+  /** 36px — dense only (e.g. menu footer undo/redo if space is tight). */
   sm: "size-9",
+  /** 44px — the standard round chip. */
   md: "size-11",
+  /** 48px — rare emphasis (large chrome). */
+  lg: "size-12",
 } as const;
 
 const labeledSizeClass = {
   sm: "h-9 gap-1 px-2.5",
   md: "h-11 gap-1.5 px-3",
+  lg: "h-12 gap-1.5 px-3.5",
 } as const;
 
 const iconSize = {
   sm: "size-[1.125rem]",
   md: "size-5",
+  lg: "size-6",
 } as const;
+
+export type IconButtonSize = keyof typeof sizeClass;
 
 interface IconButtonProps {
   icon: LucideIcon;
@@ -61,7 +72,8 @@ interface IconButtonProps {
   glass?: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   tone?: Tone;
-  size?: keyof typeof sizeClass;
+  /** Default `md` (44px) — match row actions / hamburger. */
+  size?: IconButtonSize;
   disabled?: boolean;
   /** Keeps the button's footprint when disabled, so nothing reflows. */
   hideWhenDisabled?: boolean;

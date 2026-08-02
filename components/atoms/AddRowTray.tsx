@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -48,7 +49,8 @@ export function AddRowTray({
     <div className="flex w-full items-center">
       <div
         className={cn(
-          "flex min-h-12 min-w-0 flex-1 items-center overflow-hidden rounded-3xl",
+          "flex min-w-0 flex-1 items-center overflow-hidden rounded-3xl",
+          controlMinH.md,
           glassClass("card", { rim: true }),
         )}
       >
@@ -65,14 +67,18 @@ export function AddRowTray({
             }}
             placeholder={placeholder}
             aria-label={inputLabel}
-            className="min-h-12 min-w-0 flex-1 bg-transparent px-4 py-2.5 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
+            className={cn(
+              "min-w-0 flex-1 bg-transparent px-4 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
+              controlMinH.md,
+            )}
           />
         ) : (
           <button
             type="button"
             onClick={() => setOpen(true)}
             className={cn(
-              "flex min-h-12 w-full items-center justify-center gap-2 px-4 py-2.5 text-base text-muted",
+              "flex w-full items-center justify-center gap-2 px-4 text-base text-muted",
+              controlMinH.md,
               "hover:text-flagblue-600",
               userFeedbackClass({ press: "md" }),
             )}

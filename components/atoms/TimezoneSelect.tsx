@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { ChevronDown, Globe } from "lucide-react";
+import { controlH, controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ interface TimezoneSelectProps {
   value: string;
   onChange: (tz: string) => void;
   /**
-   * Full-width chip matching the retreat name control (h-12 glass shell).
+   * Full-width chip matching the retreat name control (md / 44px shell).
    * Default is the older compact inline select.
    */
   chip?: boolean;
@@ -61,7 +62,8 @@ export function TimezoneSelect({
     return (
       <div
         className={cn(
-          "relative flex h-12 w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
+          "relative flex w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
+          controlH.md,
           glassClass("card", { rim: true }),
           className,
         )}
@@ -73,7 +75,8 @@ export function TimezoneSelect({
           onChange={(e) => onChange(e.target.value)}
           aria-label="Time zone"
           className={cn(
-            "h-9 min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none",
+            "min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none",
+            controlH.sm,
             userFeedbackClass({ press: "md" }),
           )}
         >
@@ -102,7 +105,8 @@ export function TimezoneSelect({
           onChange={(e) => onChange(e.target.value)}
           aria-label="Time zone"
           className={cn(
-            "min-h-9 min-w-0 max-w-[60vw] appearance-none rounded-xl pr-7 pl-8 text-sm text-ink",
+            "min-w-0 max-w-[60vw] appearance-none rounded-xl pr-7 pl-8 text-sm text-ink",
+            controlMinH.md,
             userFeedbackClass({ press: "md" }),
             glassClass("card", { rim: true }),
           )}

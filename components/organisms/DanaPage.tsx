@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
+import { controlMinH } from "@/lib/control-size";
 import { actionClass, glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -36,11 +37,15 @@ export function DanaPage() {
   }
 
   return (
-    <ListPageFrame>
-      <PageTitle title={dana.pageTitle} className="shrink-0" />
+    <ListPageFrame className="overflow-hidden px-0 sm:px-0">
+      <div className="shrink-0 px-3 sm:px-5">
+        <PageTitle title={dana.pageTitle} />
+      </div>
 
-      <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-3xl">
-        <div className="relative aspect-[3/2] w-full bg-ink/10">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {/* Full-bleed DRCE photo — edge to edge under the title, like the
+            original Dana sheet (not an inset rounded card). */}
+        <div className="relative mt-2 aspect-[3/2] w-full bg-ink/10">
           <Image
             src={dana.image}
             alt={dana.imageAlt}
@@ -50,9 +55,8 @@ export function DanaPage() {
             className="object-cover"
           />
         </div>
-      </div>
 
-      <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-1 py-5">
+        <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 py-5 sm:px-5">
         <div className="space-y-2">
           <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
           <p className="text-base text-muted">{dana.intro}</p>
@@ -98,7 +102,8 @@ export function DanaPage() {
           type="button"
           onClick={() => handleCopy("iban", dana.bank.iban)}
           className={cn(
-            "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
+            "flex w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
+            controlMinH.md,
             "hover:brightness-[1.06]",
             userFeedbackClass({ press: "lg" }),
             "user-feedback--on-accent",
@@ -131,7 +136,8 @@ export function DanaPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                  "flex items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                  controlMinH.md,
                   userFeedbackClass({ press: "md" }),
                 )}
               >
@@ -142,7 +148,8 @@ export function DanaPage() {
           ))}
         </ul>
 
-        <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+          <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+        </div>
       </div>
     </ListPageFrame>
   );

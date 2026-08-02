@@ -191,17 +191,21 @@ specular light catch as every other glass surface. A light-to-dark wash
 fights the glass and muddies the one control that must read under ceremony
 pressure (**UC-1**).
 
-**Sizes.** Two, and nothing smaller than the `sm`:
+**Sizes.** One scale for **every** interactive surface — IconButton, glass
+chips, field stamps, selects, CTAs — via [`lib/control-size.ts`](../lib/control-size.ts)
+and [`IconButton`](../components/atoms/IconButton.tsx). Default is **`md`**:
 
 | Size | Box | Used for |
 | --- | --- | --- |
-| `sm` | 2.25rem (36px) | Dense clusters inside a card header, list-row actions |
-| `md` | 2.75rem (44px) | Standalone controls: header actions, person navigation |
+| `sm` | 2.25rem (36px) | Nested editors / inners only |
+| `md` | 2.75rem (44px) | **Default** — hamburger, ⋯, nav, row Copy/Edit/Reset, field stamps, retreat + timezone chips, Add row, Check zone, menu rows, Clear/Reset, Dana CTAs |
+| `lg` | 3rem (48px) | Rare emphasis |
+| *special* | ≥7rem | Record / Quick Log hero clocks only |
 
 **Nothing smaller than `sm`.** That floor is this app’s WCAG touch target
-(above the 2.5.8 minimum of 24px). Text fields and custom buttons that are
-not `IconButton` still use `min-h-9` / `h-9` so height never drops below
-36px — retreat name, timezone select, inline editors, Check zone.
+(above the 2.5.8 minimum of 24px). Don’t invent one-off `h-10` / `min-h-13`
+on new controls — pick a token. Don’t override glyph size with
+`[&_svg]:size-*` on IconButton chips — the size token sets footprint and icon.
 
 **Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
 destructive actions, export/share on a person card, and add-flow
@@ -245,11 +249,12 @@ Menu rows are `min-h-11` (44px) with `text-base` — the `md` touch floor.
 Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 **App header** follows a compact toolbar (iOS ~44pt / Material ~56dp): one
-row for brand + hamburger with equal inset. No glass bar fill — a top-edge
-blur fades out via `.header-top-blur`; Timekeeper is plain text; the
-hamburger is a round glass chip (same as Refuge nav arrows). The retreat
+row for brand + hamburger with equal inset. It **floats** over the shell —
+no solid bar. A Cursor-style progressive blur (`.header-scrim`) fades from
+the top edge so content can scroll underneath; Timekeeper is plain text;
+the hamburger is a round glass chip (same as Refuge nav arrows). The retreat
 name is **not** in the toolbar — on Refuge / People it sits below as a
-large left-aligned glass chip with a leading icon (§6c).
+left-aligned glass chip with a leading icon (§6c).
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
@@ -515,10 +520,11 @@ never set at all.
   the place (e.g. "Vienna"). A problem — denied, mismatch, or failed rough
   check — switches the label to "Check clock" on a light danger fill. Idle
   uses `Clock`, never a dimmed `Check` that would claim success early.
-- **The popover is a graphical probe**: large status mark + title/place,
-  **Here** vs **Device** side cards (offset + zone), and an **UTC offset
-  probe** (24h track with markers). Match kind is a short sentence; an
-  explicit disclaimer notes this does not prove second-level sync.
+- **The popover** (portaled, so shell overflow can’t clip it): large status
+  mark + title/place, **Here** vs **Device** side cards (offset + zone), and
+  one plain line for the gap (“Same UTC offset…” / “Device is N hours
+  off…”). Match kind is a short sentence; an explicit disclaimer notes this
+  does not prove second-level sync.
 - Denied, unsupported, or mismatched states still surface whatever the
   device *can* say about its own zone, framed honestly as unverified or
   wrong rather than hidden.
@@ -527,8 +533,9 @@ never set at all.
 
 One name for the whole session, not a field on each person — set once via
 [`RetreatNameField`](../components/atoms/RetreatNameField.tsx): a **large
-left-aligned glass chip** with a mountain icon, shown **only on Refuge and
-People** (not Quick Log, History, or Dana). Carried into every export:
+left-aligned glass chip** (control **md** / 44px) with a mountain icon,
+shown **only on Refuge and People** (not Quick Log, History, or Dana).
+Carried into every export:
 printed on the shared PNG card, and added as its own `Retreat` column —
 repeated per row — in every CSV. Deliberately **not** repeated on overview
 cards in the list body; the chip above the page is enough. It does show on

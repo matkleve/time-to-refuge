@@ -49,7 +49,7 @@ function NavButton({
       disabled={!available}
       hideWhenDisabled
       tone="neutral"
-      size="sm"
+      size="md"
     />
   );
 }

@@ -32,6 +32,7 @@ import { downloadCsv, downloadPersonCsv } from "@/lib/csv";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
+import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import { PageEnter } from "@/components/atoms/PageEnter";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
@@ -298,7 +299,7 @@ export default function Home() {
       }
       onExportAll={() => downloadCsv(people, fields, retreatName)}
       exportDisabled={people.length === 0}
-      size={isDesktop ? "md" : "sm"}
+      size="md"
     />
   );
 
@@ -407,33 +408,55 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
-        <header className="relative z-20 shrink-0 px-5 py-3">
-          <div aria-hidden className="header-top-blur" />
-          <div className="relative flex h-12 items-center justify-between gap-3">
-            <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
-            <div className="flex shrink-0 items-center">{menu}</div>
+        <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
+          <HeaderScrim className="h-32" />
+          <div className="relative z-10 px-5 py-3">
+            <div className="flex h-12 items-center justify-between gap-3">
+              <div className="pointer-events-auto">
+                <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
+              </div>
+              <div className="pointer-events-auto flex shrink-0 items-center">
+                {menu}
+              </div>
+            </div>
           </div>
         </header>
-        {subheader}
-        {page}
+        <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden pt-[4.5rem]">
+          {subheader}
+          {page}
+        </div>
       </DesktopShell>
     );
   }
 
   return (
     <AppShell>
-      <header
-        className="relative z-20 shrink-0 px-3 pb-1.5"
-        style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top))" }}
-      >
-        <div aria-hidden className="header-top-blur" />
-        <div className="relative flex h-11 items-center justify-between gap-3">
-          <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
-          <div className="flex shrink-0 items-center">{menu}</div>
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
+        <HeaderScrim />
+        <div
+          className="relative z-10 px-3 pb-1.5"
+          style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top))" }}
+        >
+          <div className="flex h-11 items-center justify-between gap-3">
+            <div className="pointer-events-auto">
+              <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
+            </div>
+            <div className="pointer-events-auto flex shrink-0 items-center">
+              {menu}
+            </div>
+          </div>
         </div>
       </header>
-      {subheader}
-      {page}
+      <div
+        className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden"
+        style={{
+          paddingTop:
+            "calc(max(0.375rem, env(safe-area-inset-top, 0px)) + 2.75rem + 0.375rem)",
+        }}
+      >
+        {subheader}
+        {page}
+      </div>
     </AppShell>
   );
 }

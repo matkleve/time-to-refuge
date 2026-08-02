@@ -7,6 +7,7 @@ import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { formatInZone } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
+import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -77,7 +78,7 @@ function LogRow({
   }
 
   const body = (
-    <div ref={dismissRef} className="flex min-h-11 w-full items-center">
+    <div ref={dismissRef} className={cn("flex w-full items-center", controlMinH.md)}>
       {/* Glass stamp only — actions are not part of this element. */}
       <button
         type="button"
@@ -87,7 +88,8 @@ function LogRow({
           showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
         }
         className={cn(
-          "flex min-h-11 min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+          "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+          controlMinH.md,
           userFeedbackClass({ press: "md" }),
           /* Card glass (fill + blur) — rows sit on the photo like Refuge, not
              nested on a parent card where glassRowClass omits the blur. */
@@ -200,7 +202,7 @@ export function QuickLogView() {
               showLabel="Clear"
               glass
               tone="danger"
-              size="sm"
+              size="md"
               disabled={entries.length === 0}
               armed={clearAll.armed}
               onClick={(e) => {

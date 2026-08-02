@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import {
   AlertTriangle,
   Check,
@@ -9,7 +17,7 @@ import {
   MapPin,
   Smartphone,
 } from "lucide-react";
-import { useDismissible } from "@/lib/use-dismissible";
+import { controlH } from "@/lib/control-size";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
@@ -151,95 +159,33 @@ const toneMark: Record<ProbeTone, string> = {
   danger: "bg-danger-500/15 text-danger-700",
 };
 
-const toneProbe: Record<"ok" | "danger" | "neutral", string> = {
-  ok: "bg-saffron-400",
-  danger: "bg-danger-500",
-  neutral: "bg-ink/25",
-};
+const PANEL_WIDTH = 312; // 19.5rem
 
-/** Map UTC offset minutes onto a 24h track (−12h … +12h). */
-function offsetToPercent(minutes: number): number {
-  const clamped = Math.max(-12 * 60, Math.min(12 * 60, minutes));
-  return ((clamped + 12 * 60) / (24 * 60)) * 100;
-}
-
-function OffsetProbe({
-  placeOffset,
-  deviceOffset,
-  matched,
-}: {
-  placeOffset: string;
-  deviceOffset: string;
-  matched: boolean;
-}) {
+/** Plain-language gap between place and device UTC offsets. */
+function offsetGapCopy(
+  placeOffset: string,
+  deviceOffset: string,
+  matched: boolean,
+): string | null {
   const placeMin = parseOffsetLabel(placeOffset);
   const deviceMin = parseOffsetLabel(deviceOffset);
   if (placeMin === null || deviceMin === null) return null;
-
-  const placePct = offsetToPercent(placeMin);
-  const devicePct = offsetToPercent(deviceMin);
-  const aligned = matched || Math.abs(placePct - devicePct) < 1.2;
-
-  return (
-    <div className="space-y-2 rounded-2xl bg-ink/[0.04] px-3 py-3">
-      <div className="flex items-center justify-between text-xs font-medium tracking-wide text-muted uppercase">
-        <span>UTC −12</span>
-        <span>Offset probe</span>
-        <span>+12</span>
-      </div>
-      <div className="relative h-3">
-        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-ink/10" />
-        {/* Noon tick */}
-        <div
-          aria-hidden
-          className="absolute top-0 bottom-0 left-1/2 w-px -translate-x-1/2 bg-ink/20"
-        />
-        {aligned ? (
-          <span
-            className={cn(
-              "absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
-              matched ? toneProbe.ok : toneProbe.danger,
-            )}
-            style={{ left: `${placePct}%` }}
-            title="Here & device"
-          />
-        ) : (
-          <>
-            <span
-              className={cn(
-                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
-                toneProbe.ok,
-              )}
-              style={{ left: `${placePct}%` }}
-              title="Here"
-            />
-            <span
-              className={cn(
-                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
-                toneProbe.danger,
-              )}
-              style={{ left: `${devicePct}%` }}
-              title="Device"
-            />
-          </>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-2 text-xs text-muted">
-        <span className="inline-flex items-center gap-1.5">
-          <span className={cn("size-2 rounded-full", toneProbe.ok)} aria-hidden />
-          Here {placeOffset.replace(/^~/, "≈")}
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span
-            className={cn("size-2 rounded-full", matched ? toneProbe.ok : toneProbe.danger)}
-            aria-hidden
-          />
-          Device {deviceOffset}
-        </span>
-      </div>
-    </div>
-  );
+  const diffMin = Math.abs(deviceMin - placeMin);
+  if (matched || diffMin < 1) {
+    return "Same UTC offset — this phone’s wall clock matches this place.";
+  }
+  const hours = Math.floor(diffMin / 60);
+  const mins = diffMin % 60;
+  if (hours === 0) {
+    return `Device is ${mins} minutes off from this place.`;
+  }
+  if (mins === 0) {
+    return `Device is ${hours} hour${hours === 1 ? "" : "s"} off from this place.`;
+  }
+  return `Device is about ${hours}h ${mins}m off from this place.`;
 }
+
+type PanelBox = { bottom: number; left: number };
 
 function SideCard({
   icon,
@@ -309,19 +255,68 @@ function StatusMark({
  */
 export function LocationCheck() {
   const [open, setOpen] = useState(false);
+  const [box, setBox] = useState<PanelBox | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [info, setInfo] = useState<LocationInfo | null>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Same disclosure pattern as a field row's actions (design system §5c),
-  // longer pause — several lines to read. onDismiss must stay stable: this
-  // button sits beside the live clock (rAF re-renders), so an inline arrow
-  // would reset the idle timer every frame.
+  // Portaled panel (shell overflow clips in-flow popovers). Longer idle —
+  // several lines to read. onDismiss must stay stable: this sits beside the
+  // live clock (rAF re-renders), so an inline arrow would reset the timer.
   const dismiss = useCallback(() => setOpen(false), []);
-  const popoverRef = useDismissible<HTMLDivElement>({
-    active: open,
-    onDismiss: dismiss,
-    timeoutMs: 12000,
-  });
+
+  const place = useCallback(() => {
+    const el = triggerRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const left = Math.min(
+      Math.max(8, r.right - PANEL_WIDTH),
+      window.innerWidth - PANEL_WIDTH - 8,
+    );
+    setBox({
+      bottom: Math.max(8, window.innerHeight - r.top + 8),
+      left,
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open, place]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    let timer: ReturnType<typeof setTimeout>;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(dismiss, 12000);
+    };
+
+    function onPointerDown(e: PointerEvent) {
+      const t = e.target as Node;
+      if (triggerRef.current?.contains(t)) return;
+      if (panelRef.current?.contains(t)) {
+        arm();
+        return;
+      }
+      dismiss();
+    }
+
+    arm();
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open, dismiss]);
 
   function handleOpen() {
     setOpen(true);
@@ -526,40 +521,25 @@ export function LocationCheck() {
   }
 
   const { title, detail } = headline();
+  const gapCopy =
+    info?.placeOffset && info.deviceOffset && status !== "checking"
+      ? offsetGapCopy(info.placeOffset, info.deviceOffset, info.matchesLocation)
+      : null;
 
-  return (
-    <div className="relative" ref={popoverRef}>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleOpen();
-        }}
-        aria-label={
-          status === "ok" && info?.matchesLocation
-            ? successAria
-            : mismatch
-              ? `Warning: this device's time zone may not match ${info?.place || "your location"}. Open to review.`
-              : softUnavailable
-                ? `Place name unavailable; rough time-zone check passed. Open to review.`
-                : "Check this device's time zone against its location before the ceremony"
-        }
-        className={cn(
-          "no-select flex h-9 max-w-40 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
-          userFeedbackClass({ press: "sm" }),
-          /* Opaque light fill — glass was too see-through on the record button. */
-          toneBadge[tone],
-        )}
+  const panel =
+    open &&
+    box &&
+    typeof document !== "undefined" &&
+    createPortal(
+      <div
+        ref={panelRef}
+        className="fixed z-50"
+        style={{ bottom: box.bottom, left: box.left, width: PANEL_WIDTH }}
       >
-        <StatusMark tone={tone}>{badgeIcon}</StatusMark>
-        <span className="truncate text-sm font-medium">{badgeLabel}</span>
-      </button>
-
-      {open && (
         <Surface
           material="glass-panel"
           rim
-          className="animate-scale-in absolute right-0 bottom-11 z-20 w-[19.5rem] rounded-3xl p-4 text-left shadow-lg"
+          className="animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto rounded-3xl p-4 text-left shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start gap-3">
@@ -622,12 +602,17 @@ export function LocationCheck() {
                 />
               </div>
 
-              {info.placeOffset && info.deviceOffset ? (
-                <OffsetProbe
-                  placeOffset={info.placeOffset}
-                  deviceOffset={info.deviceOffset}
-                  matched={info.matchesLocation}
-                />
+              {gapCopy ? (
+                <p
+                  className={cn(
+                    "rounded-2xl px-3 py-2 text-sm",
+                    info.matchesLocation
+                      ? "bg-saffron-400/15 text-saffron-800"
+                      : "bg-danger-500/10 text-danger-700",
+                  )}
+                >
+                  {gapCopy}
+                </p>
               ) : null}
             </div>
           ) : null}
@@ -647,7 +632,39 @@ export function LocationCheck() {
             </p>
           ) : null}
         </Surface>
-      )}
+      </div>,
+      document.body,
+    );
+
+  return (
+    <div className={cn("relative", open && "z-50")} ref={triggerRef}>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleOpen();
+        }}
+        aria-label={
+          status === "ok" && info?.matchesLocation
+            ? successAria
+            : mismatch
+              ? `Warning: this device's time zone may not match ${info?.place || "your location"}. Open to review.`
+              : softUnavailable
+                ? `Place name unavailable; rough time-zone check passed. Open to review.`
+                : "Check this device's time zone against its location before the ceremony"
+        }
+        className={cn(
+          "no-select flex max-w-44 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
+          controlH.md,
+          userFeedbackClass({ press: "sm" }),
+          /* Opaque light fill — glass was too see-through on the record button. */
+          toneBadge[tone],
+        )}
+      >
+        <StatusMark tone={tone}>{badgeIcon}</StatusMark>
+        <span className="truncate text-sm font-medium">{badgeLabel}</span>
+      </button>
+      {panel}
     </div>
   );
 }
