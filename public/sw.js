@@ -1,7 +1,7 @@
-/* Time to Refuge — offline shell for retreat wifi.
+/* Timekeeper — offline shell for retreat wifi.
  * Precache the app shell; runtime-cache same-origin GETs so a cold open
  * still works after the first successful visit. */
-const CACHE = "time-to-refuge-v1";
+const CACHE = "timekeeper-v1";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
