@@ -654,7 +654,8 @@ export function LocationCheck() {
                 : "Check this device's time zone against its location before the ceremony"
         }
         className={cn(
-          "no-select flex max-w-44 items-center gap-1.5 rounded-full border py-0.5 pr-3 pl-0.5 shadow-sm",
+          /* pl matches vertical inset around the size-7 mark in h-11 ((44-28)/2). */
+          "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2 shadow-sm",
           controlH.md,
           userFeedbackClass({ press: "sm" }),
           /* Opaque light fill — glass was too see-through on the record button. */
