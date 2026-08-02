@@ -119,7 +119,7 @@ export function DesktopWorkspace({
         ) : (
           <GlassEmptyNote className="mt-20 px-6">
             {people.length === 0
-              ? "Add the first person taking refuge to begin."
+              ? "Add the first person to begin this session."
               : "Select someone from the list to begin."}
           </GlassEmptyNote>
         )}

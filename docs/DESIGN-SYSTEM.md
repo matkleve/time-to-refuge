@@ -1,4 +1,4 @@
-# Time to Refuge — design system
+# Timekeeper — design system
 
 Everything here is defined once in [`app/globals.css`](../app/globals.css) and
 verified by `npm run a11y:contrast`. The audit that produced it is
@@ -8,9 +8,9 @@ verified by `npm run a11y:contrast`. The audit that produced it is
 
 ## 0. The one idea: a record, not a stopwatch
 
-The app captures **the exact wall-clock moment** a person takes refuge in the
-Buddha, the Dharma and the Sangha. Nothing counts up or down. Every decision
-follows from that:
+The app captures **the exact wall-clock moment** a person completes a timed
+step in a session (fields you define — e.g. a WoW ceremony). Nothing counts
+up or down. Every decision follows from that:
 
 - Times are captured to the millisecond and never recomputed afterwards.
 - The clock on the record button is the live current time, not elapsed time.
@@ -240,7 +240,7 @@ with a hairline between them, then an icon-only strip —
 
 | Group | Items |
 | --- | --- |
-| **Pages** | Refuge · Quick Log · History · People — each is an `AppView`, not an overlay |
+| **Pages** | Fields · People · Session · Quick Log · History — each is an `AppView`, not an overlay |
 | **Actions** | Export all |
 | **Primary** | **Dana** — filled primary button → Dana page (`content/dana.json`) |
 | *(footer)* | Icon-only **Undo** · **Redo** (menu stays open so you can step) |

@@ -45,7 +45,7 @@ export function downloadCsv(
   people: Person[],
   fields: FieldDef[],
   retreatName = "",
-  nameBase = "time-to-refuge",
+  nameBase = "timekeeper",
 ): void {
   const csv = peopleToCsv(people, fields, retreatName);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -65,5 +65,5 @@ export function downloadPersonCsv(
   fields: FieldDef[],
   retreatName = "",
 ): void {
-  downloadCsv([person], fields, retreatName, `refuge-${slugify(person.name)}`);
+  downloadCsv([person], fields, retreatName, `timekeeper-${slugify(person.name)}`);
 }

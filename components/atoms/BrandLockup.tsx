@@ -30,7 +30,7 @@ function LogoMark({ size }: { size: number }) {
 /**
  * Header brand: triple-jewel mark + Timekeeper name.
  * Sized to sit in a single ~44–56px toolbar row (iOS / Material app bar).
- * Optional `onHome` — tap logo/title returns to the Refuge page.
+ * Optional `onHome` — tap logo/title returns to the Session page.
  */
 export function BrandLockup({
   titleSize = "lg",
@@ -39,7 +39,7 @@ export function BrandLockup({
 }: {
   /** `lg` mobile toolbar · `2xl` desktop toolbar. */
   titleSize?: "lg" | "2xl";
-  /** Opens Refuge (home). */
+  /** Opens Session (home). */
   onHome?: () => void;
   className?: string;
 }) {
@@ -64,7 +64,7 @@ export function BrandLockup({
       <button
         type="button"
         onClick={onHome}
-        aria-label="Timekeeper — open Refuge"
+        aria-label="Timekeeper — open Session"
         className={cn(
           "flex min-w-0 items-center gap-2 rounded-lg text-left",
           userFeedbackClass({ press: "sm" }),
