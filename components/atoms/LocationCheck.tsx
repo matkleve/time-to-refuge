@@ -18,6 +18,13 @@ import {
   Smartphone,
 } from "lucide-react";
 import { controlH } from "@/lib/control-size";
+import {
+  clockSkewTone,
+  formatSkewMs,
+  probeNetworkTime,
+  type ClockSkewTone,
+  type NetworkTimeSample,
+} from "@/lib/network-time";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
@@ -187,6 +194,124 @@ function offsetGapCopy(
 
 type PanelBox = { bottom: number; left: number };
 
+type ClockProbeState =
+  | { status: "idle" }
+  | { status: "probing" }
+  | { status: "offline" }
+  | { status: "ready"; sample: NetworkTimeSample };
+
+const skewDot: Record<ClockSkewTone | "network", string> = {
+  ok: "bg-saffron-400",
+  warn: "bg-saffron-500",
+  danger: "bg-danger-500",
+  network: "bg-flagblue-600",
+};
+
+/**
+ * Horizontal rail: network UTC at center (0), phone mark at measured skew.
+ * Uncertainty band = ±RTT/2 from the probe.
+ */
+function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
+  const tone = clockSkewTone(sample);
+  const halfRange = Math.max(
+    sample.uncertaintyMs * 3,
+    Math.abs(sample.skewMs) * 1.35,
+    500,
+  );
+  const toPct = (ms: number) =>
+    Math.min(100, Math.max(0, ((ms + halfRange) / (2 * halfRange)) * 100));
+  const netPct = toPct(0);
+  const phonePct = toPct(sample.skewMs);
+  const bandLeft = toPct(-sample.uncertaintyMs);
+  const bandRight = toPct(sample.uncertaintyMs);
+  const aligned = Math.abs(phonePct - netPct) < 2.5;
+  const rangeLabel =
+    halfRange >= 1000
+      ? `±${(halfRange / 1000).toFixed(halfRange >= 10_000 ? 0 : 1)} s`
+      : `±${Math.round(halfRange)} ms`;
+
+  return (
+    <div className="space-y-2 rounded-2xl bg-ink/[0.04] px-3 py-3">
+      <div className="flex items-center justify-between gap-2 text-xs font-medium tracking-wide text-muted uppercase">
+        <span>Phone slow</span>
+        <span>Clock probe</span>
+        <span>Phone fast</span>
+      </div>
+
+      <div className="relative h-4">
+        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-ink/10" />
+        <div
+          aria-hidden
+          className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-flagblue-600/20"
+          style={{
+            left: `${bandLeft}%`,
+            width: `${Math.max(2, bandRight - bandLeft)}%`,
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute top-0 bottom-0 w-px -translate-x-1/2 bg-ink/25"
+          style={{ left: `${netPct}%` }}
+        />
+        {aligned ? (
+          <span
+            className={cn(
+              "absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+              skewDot[tone],
+            )}
+            style={{ left: `${netPct}%` }}
+            title="Network & phone"
+          />
+        ) : (
+          <>
+            <span
+              className={cn(
+                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+                skewDot.network,
+              )}
+              style={{ left: `${netPct}%` }}
+              title="Network UTC"
+            />
+            <span
+              className={cn(
+                "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
+                skewDot[tone],
+              )}
+              style={{ left: `${phonePct}%` }}
+              title="Phone"
+            />
+          </>
+        )}
+      </div>
+
+      <div className="flex items-start justify-between gap-2 text-xs text-muted">
+        <span className="inline-flex items-center gap-1.5">
+          <span className={cn("size-2 rounded-full", skewDot.network)} aria-hidden />
+          Network UTC
+        </span>
+        <span className="text-center tabular-nums text-subtle">{rangeLabel}</span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className={cn("size-2 rounded-full", skewDot[tone])} aria-hidden />
+          Phone
+        </span>
+      </div>
+
+      <p
+        className={cn(
+          "text-sm",
+          tone === "ok" && "text-saffron-800",
+          tone === "warn" && "text-saffron-800",
+          tone === "danger" && "text-danger-700",
+        )}
+      >
+        Phone is <span className="font-semibold tabular-nums">{formatSkewMs(sample.skewMs)}</span>
+        {" · "}
+        round-trip {sample.rttMs} ms · uncertainty ±{sample.uncertaintyMs} ms
+      </p>
+    </div>
+  );
+}
+
 function SideCard({
   icon,
   label,
@@ -245,19 +370,17 @@ function StatusMark({
 }
 
 /**
- * Settles "is this device's *time zone* plausible for where we are?" before
- * the ceremony — the usual way recorded times go wrong (phone still on a
- * travel zone). It does **not** prove the clock is accurate to the second;
- * that needs a trusted time server, and retreat centers are often offline.
- *
- * Prefer IANA zone from reverse-geocode over a longitude estimate. See
- * design system §6b.
+ * Settles "is this device's *time zone* plausible for where we are?" and,
+ * when online, probes network UTC (Cristian / RTT) so a right-zone / wrong-
+ * minute clock can still be caught. Offline skips the probe honestly.
+ * Prefer IANA zone from reverse-geocode over a longitude estimate. See §6b.
  */
 export function LocationCheck() {
   const [open, setOpen] = useState(false);
   const [box, setBox] = useState<PanelBox | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [info, setInfo] = useState<LocationInfo | null>(null);
+  const [clock, setClock] = useState<ClockProbeState>({ status: "idle" });
   const triggerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -297,7 +420,7 @@ export function LocationCheck() {
     let timer: ReturnType<typeof setTimeout>;
     const arm = () => {
       clearTimeout(timer);
-      timer = setTimeout(dismiss, 12000);
+      timer = setTimeout(dismiss, 16000);
     };
 
     function onPointerDown(e: PointerEvent) {
@@ -318,8 +441,15 @@ export function LocationCheck() {
     };
   }, [open, dismiss]);
 
+  async function runClockProbe() {
+    setClock({ status: "probing" });
+    const sample = await probeNetworkTime();
+    setClock(sample ? { status: "ready", sample } : { status: "offline" });
+  }
+
   function handleOpen() {
     setOpen(true);
+    void runClockProbe();
     if (info || status === "checking") return;
     if (!("geolocation" in navigator)) {
       setStatus("error");
@@ -411,34 +541,43 @@ export function LocationCheck() {
 
   const mismatch =
     (status === "ok" || status === "unavailable") && info !== null && !info.matchesLocation;
+  const clockTone =
+    clock.status === "ready" ? clockSkewTone(clock.sample) : null;
+  const clockDanger = clockTone === "danger";
+  const clockWarn = clockTone === "warn";
   const trouble =
     status === "denied" ||
     status === "error" ||
     mismatch ||
-    (status === "unavailable" && !info?.matchesLocation);
+    (status === "unavailable" && !info?.matchesLocation) ||
+    clockDanger;
   const softUnavailable = status === "unavailable" && info?.matchesLocation;
 
   const tone: ProbeTone =
-    status === "checking"
+    status === "checking" || clock.status === "probing"
       ? "checking"
       : trouble
         ? "danger"
-        : softUnavailable
+        : softUnavailable || clockWarn
           ? "warn"
           : status === "ok" && info?.matchesLocation
             ? "ok"
             : "idle";
 
   const badgeLabel =
-    status === "checking"
+    status === "checking" || clock.status === "probing"
       ? "Checking…"
-      : status === "ok" && info?.matchesLocation
-        ? info.city || "Zone OK"
-        : softUnavailable
-          ? "Zone OK?"
-          : trouble
-            ? "Check clock"
-            : "Check zone";
+      : clockDanger
+        ? "Check clock"
+        : status === "ok" && info?.matchesLocation
+          ? info.city || "Zone OK"
+          : softUnavailable
+            ? "Zone OK?"
+            : clockWarn
+              ? "Clock?"
+              : trouble
+                ? "Check clock"
+                : "Check zone";
 
   const successAria =
     info?.matchKind === "iana"
@@ -450,7 +589,7 @@ export function LocationCheck() {
           : "Check this device's time zone before the ceremony";
 
   const badgeIcon =
-    status === "checking" ? (
+    status === "checking" || clock.status === "probing" ? (
       <Loader2 className="size-3.5 animate-spin" strokeWidth={2.5} />
     ) : trouble ? (
       <AlertTriangle className="size-3.5" strokeWidth={2.5} />
@@ -544,7 +683,7 @@ export function LocationCheck() {
         >
           <div className="flex items-start gap-3">
             <StatusMark tone={tone} size="lg">
-              {status === "checking" ? (
+              {status === "checking" || clock.status === "probing" ? (
                 <Loader2 className="size-6 animate-spin" strokeWidth={2.25} />
               ) : trouble ? (
                 <AlertTriangle className="size-6" strokeWidth={2.25} />
@@ -617,6 +756,26 @@ export function LocationCheck() {
             </div>
           ) : null}
 
+          {clock.status === "probing" ? (
+            <p className="mt-3 flex items-center gap-2 text-sm text-muted">
+              <Loader2 className="size-4 animate-spin" strokeWidth={2.25} aria-hidden />
+              Comparing phone time to network UTC…
+            </p>
+          ) : null}
+
+          {clock.status === "ready" ? (
+            <div className="mt-3">
+              <ClockSkewRail sample={clock.sample} />
+            </div>
+          ) : null}
+
+          {clock.status === "offline" ? (
+            <p className="mt-3 rounded-2xl bg-ink/[0.04] px-3 py-2 text-sm text-muted">
+              No network time — skipped the atomic/UTC probe. Zone check above still
+              stands; confirm Date &amp; Time manually if the clock looks wrong.
+            </p>
+          ) : null}
+
           {status === "denied" && info ? (
             <p className="mt-3 rounded-2xl bg-ink/[0.04] px-3 py-2 font-mono text-sm text-ink">
               {info.deviceZone.replace(/_/g, " ")} · {info.deviceOffset}
@@ -625,10 +784,16 @@ export function LocationCheck() {
 
           {detail ? <p className="mt-3 text-sm text-muted">{detail}</p> : null}
 
-          {status === "ok" || status === "unavailable" ? (
+          {clock.status === "ready" ? (
             <p className="mt-2 text-xs text-subtle">
-              Does not prove the clock is synced to the second. If the time itself looks wrong,
-              fix Date &amp; Time in settings before the ceremony.
+              Network probe uses a public UTC edge clock and round-trip delay (±
+              {clock.sample.uncertaintyMs} ms). It is not a lab atomic lock — if the
+              phone looks wrong, fix Date &amp; Time in settings before the ceremony.
+            </p>
+          ) : status === "ok" || status === "unavailable" ? (
+            <p className="mt-2 text-xs text-subtle">
+              Zone check does not prove the clock is synced to the second. If the time
+              itself looks wrong, fix Date &amp; Time in settings before the ceremony.
             </p>
           ) : null}
         </Surface>
