@@ -8,7 +8,7 @@ import {
   MAX_FIELDS,
   createFieldId,
 } from "@/lib/types";
-import { controlH } from "@/lib/control-size";
+import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
@@ -94,9 +94,10 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
         </p>
       </div>
 
-      <ul className="mx-auto mt-3 min-h-0 w-full max-w-md flex-1 space-y-3 overflow-y-auto pt-0.5">
+      {/* Frame scrolls — don’t nest another overflow or the first glass pill gets clipped. */}
+      <ul className="mx-auto mt-4 w-full max-w-md space-y-3 pb-1">
         {fields.map((field, index) => (
-          <li key={field.id} className="animate-fade-in-up">
+          <li key={field.id}>
             <FieldEditorRow
               field={field}
               canDelete={fields.length > 1}
@@ -161,17 +162,18 @@ function FieldEditorRow({
     setEditing(false);
   }
 
+  const pill = cn(
+    "flex min-w-0 flex-1 items-center rounded-full px-4 py-2.5",
+    controlMinH.md,
+    glassClass("card", { rim: true }),
+  );
+
   return (
-    <div className={cn("flex w-full items-center", controlH.md)}>
+    <div className={cn("flex w-full items-center gap-0", controlMinH.md)}>
       {/* Whole pill is the hit target / edit highlight — not an inner input box. */}
       {editing ? (
         <div
-          className={cn(
-            "flex min-w-0 flex-1 items-center rounded-full px-4",
-            controlH.md,
-            glassClass("card", { rim: true }),
-            "bg-white/90 ring-2 ring-flagblue-500 ring-offset-0",
-          )}
+          className={cn(pill, "bg-white/90 ring-2 ring-flagblue-500 ring-offset-0")}
         >
           <input
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
@@ -187,7 +189,7 @@ function FieldEditorRow({
               }
             }}
             aria-label="Field name"
-            className="box-border min-w-0 flex-1 bg-transparent font-display text-lg font-semibold leading-none text-ink focus:outline-none"
+            className="box-border min-w-0 flex-1 bg-transparent font-display text-lg font-semibold leading-snug text-ink focus:outline-none"
           />
         </div>
       ) : (
@@ -198,9 +200,8 @@ function FieldEditorRow({
             setEditing(true);
           }}
           className={cn(
-            "flex min-w-0 flex-1 items-center overflow-hidden rounded-full px-4 text-left font-display text-lg font-semibold leading-none",
-            controlH.md,
-            glassClass("card", { rim: true }),
+            pill,
+            "text-left font-display text-lg font-semibold leading-snug",
             remove.armed ? "text-danger-600" : "text-ink",
             userFeedbackClass({ press: "md" }),
           )}

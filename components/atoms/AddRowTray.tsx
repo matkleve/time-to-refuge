@@ -49,7 +49,7 @@ export function AddRowTray({
     <div className="flex w-full items-center">
       <div
         className={cn(
-          "flex min-w-0 flex-1 items-center overflow-hidden rounded-full",
+          "flex min-w-0 flex-1 items-center rounded-full",
           controlMinH.md,
           glassClass("card", { rim: true }),
         )}
@@ -68,7 +68,7 @@ export function AddRowTray({
             placeholder={placeholder}
             aria-label={inputLabel}
             className={cn(
-              "min-w-0 flex-1 bg-transparent px-4 py-2 font-display text-lg font-semibold text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
+              "min-w-0 flex-1 bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
               controlMinH.md,
             )}
           />
@@ -77,7 +77,7 @@ export function AddRowTray({
             type="button"
             onClick={() => setOpen(true)}
             className={cn(
-              "flex w-full items-center justify-center gap-2 px-4 text-base text-muted",
+              "flex w-full items-center justify-center gap-2 px-4 py-2.5 text-base leading-snug text-muted",
               controlMinH.md,
               "hover:text-flagblue-600",
               userFeedbackClass({ press: "md" }),

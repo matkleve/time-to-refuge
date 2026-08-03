@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
-import { controlH } from "@/lib/control-size";
+import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -29,8 +29,8 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
   }
 
   const shell = cn(
-    "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5",
-    controlH.md,
+    "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
+    controlMinH.md,
     glassClass("card", { rim: true }),
     className,
   );
@@ -57,7 +57,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-none text-ink focus:outline-none"
+          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-snug text-ink focus:outline-none"
         />
       </div>
     );
@@ -80,7 +80,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       />
       <span
         className={cn(
-          "max-w-[16rem] truncate font-display text-base font-semibold sm:max-w-md",
+          "max-w-[16rem] truncate font-display text-base font-semibold leading-snug sm:max-w-md",
           value ? "text-ink" : "text-muted",
         )}
       >
