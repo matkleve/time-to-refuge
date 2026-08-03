@@ -1,7 +1,7 @@
 /* Timekeeper — offline shell for retreat wifi.
  * Precache the app shell; runtime-cache same-origin GETs so a cold open
  * still works after the first successful visit. */
-const CACHE = "timekeeper-v1";
+const CACHE = "timekeeper-v2";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
