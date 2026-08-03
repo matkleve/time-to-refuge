@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  */
 export function HeaderScrim({ className }: { className?: string }) {
   return (
-    <div aria-hidden className={cn("header-scrim h-[7.5rem]", className)}>
+    <div aria-hidden className={cn("header-scrim h-[4.75rem]", className)}>
       <div className="header-scrim__layer" data-strength="1" />
       <div className="header-scrim__layer" data-strength="2" />
       <div className="header-scrim__layer" data-strength="3" />

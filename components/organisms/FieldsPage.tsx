@@ -67,7 +67,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
   }
 
   return (
-    <ListPageFrame className="overflow-hidden">
+    <ListPageFrame>
       <div className="shrink-0 space-y-1">
         <PageTitle
           title="Fields"
@@ -94,7 +94,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
         </p>
       </div>
 
-      <ul className="mx-auto mt-3 min-h-0 w-full max-w-md flex-1 space-y-3 overflow-y-auto">
+      <ul className="mx-auto mt-3 min-h-0 w-full max-w-md flex-1 space-y-3 overflow-y-auto pt-0.5">
         {fields.map((field, index) => (
           <li key={field.id} className="animate-fade-in-up">
             <FieldEditorRow
@@ -163,15 +163,16 @@ function FieldEditorRow({
 
   return (
     <div className={cn("flex w-full items-center", controlH.md)}>
-      {/* Glass stamp — name only; actions live in the always-open tray (§5a). */}
-      <div
-        className={cn(
-          "flex min-w-0 flex-1 items-center overflow-hidden rounded-2xl px-4",
-          controlH.md,
-          glassClass("card", { rim: true }),
-        )}
-      >
-        {editing ? (
+      {/* Whole pill is the hit target / edit highlight — not an inner input box. */}
+      {editing ? (
+        <div
+          className={cn(
+            "flex min-w-0 flex-1 items-center rounded-full px-4",
+            controlH.md,
+            glassClass("card", { rim: true }),
+            "bg-white/90 ring-2 ring-flagblue-500 ring-offset-0",
+          )}
+        >
           <input
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
             autoFocus
@@ -186,29 +187,27 @@ function FieldEditorRow({
               }
             }}
             aria-label="Field name"
-            className={cn(
-              "box-border min-w-0 flex-1 rounded-xl border border-flagblue-500 bg-white px-2 font-display text-lg font-semibold leading-none text-ink",
-              controlH.sm,
-            )}
+            className="box-border min-w-0 flex-1 bg-transparent font-display text-lg font-semibold leading-none text-ink focus:outline-none"
           />
-        ) : (
-          <button
-            type="button"
-            onClick={() => {
-              setDraft(field.label);
-              setEditing(true);
-            }}
-            className={cn(
-              "box-border min-w-0 flex-1 truncate rounded-xl px-0 text-left font-display text-lg font-semibold leading-none",
-              controlH.sm,
-              remove.armed ? "text-danger-600" : "text-ink",
-              userFeedbackClass({ press: "md" }),
-            )}
-          >
-            {field.label}
-          </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setDraft(field.label);
+            setEditing(true);
+          }}
+          className={cn(
+            "flex min-w-0 flex-1 items-center overflow-hidden rounded-full px-4 text-left font-display text-lg font-semibold leading-none",
+            controlH.md,
+            glassClass("card", { rim: true }),
+            remove.armed ? "text-danger-600" : "text-ink",
+            userFeedbackClass({ press: "md" }),
+          )}
+        >
+          <span className="min-w-0 flex-1 truncate">{field.label}</span>
+        </button>
+      )}
 
       <RowActionTray open>
         <div className="flex shrink-0 items-center gap-2">

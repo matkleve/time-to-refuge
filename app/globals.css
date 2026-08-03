@@ -264,8 +264,8 @@
   }
 
   /*
-   * App header scrim — progressive blur (Cursor-style), not a fixed glass bar.
-   * Strongest at the top edge, fades to nothing so content scrolls under.
+   * App header scrim — soft progressive fade under the toolbar only.
+   * Keep it short/light so page titles below stay sharp (not frosted).
    */
   .header-scrim {
     pointer-events: none;
@@ -278,56 +278,56 @@
   .header-scrim__layer {
     position: absolute;
     inset: 0;
-    -webkit-backdrop-filter: saturate(1.35);
-    backdrop-filter: saturate(1.35);
+    -webkit-backdrop-filter: saturate(1.2);
+    backdrop-filter: saturate(1.2);
   }
 
   .header-scrim__layer[data-strength="1"] {
-    -webkit-backdrop-filter: blur(1px) saturate(1.2);
-    backdrop-filter: blur(1px) saturate(1.2);
+    -webkit-backdrop-filter: blur(0.5px) saturate(1.15);
+    backdrop-filter: blur(0.5px) saturate(1.15);
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 55%,
-      transparent 100%
+      #000 35%,
+      transparent 75%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 75%);
   }
 
   .header-scrim__layer[data-strength="2"] {
-    -webkit-backdrop-filter: blur(4px) saturate(1.3);
-    backdrop-filter: blur(4px) saturate(1.3);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 40%,
-      transparent 78%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
-  }
-
-  .header-scrim__layer[data-strength="3"] {
-    -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(2px) saturate(1.2);
+    backdrop-filter: blur(2px) saturate(1.2);
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
       #000 28%,
-      transparent 58%
+      transparent 62%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 58%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 62%);
   }
 
-  .header-scrim__layer[data-strength="4"] {
-    -webkit-backdrop-filter: blur(24px) saturate(1.45);
-    backdrop-filter: blur(24px) saturate(1.45);
+  .header-scrim__layer[data-strength="3"] {
+    -webkit-backdrop-filter: blur(6px) saturate(1.25);
+    backdrop-filter: blur(6px) saturate(1.25);
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 16%,
-      transparent 42%
+      #000 18%,
+      transparent 48%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 42%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 48%);
+  }
+
+  .header-scrim__layer[data-strength="4"] {
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+    backdrop-filter: blur(10px) saturate(1.3);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 10%,
+      transparent 36%
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 10%, transparent 36%);
   }
 
   .header-scrim__tint {
@@ -335,9 +335,9 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgb(255 255 255 / 0.42) 0%,
-      rgb(255 255 255 / 0.16) 38%,
-      transparent 100%
+      rgb(255 255 255 / 0.28) 0%,
+      rgb(255 255 255 / 0.1) 40%,
+      transparent 78%
     );
   }
 
