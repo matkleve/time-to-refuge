@@ -49,7 +49,7 @@ export function AddRowTray({
     <div className="flex w-full items-center">
       <div
         className={cn(
-          "flex min-w-0 flex-1 items-center overflow-hidden rounded-3xl",
+          "flex min-w-0 flex-1 items-center overflow-hidden rounded-full",
           controlMinH.md,
           glassClass("card", { rim: true }),
         )}

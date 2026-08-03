@@ -14,9 +14,9 @@ interface RetreatNameFieldProps {
 }
 
 /**
- * Session retreat name — left-aligned glass chip under the app bar on
- * Refuge / People only. Leading mountain icon; tap to edit.
- * Shell is control md (44px) — same as row chips. See design system §6c.
+ * Session retreat name — left-aligned glass pill under the app bar on
+ * Session / People only. Leading mountain icon; tap anywhere on the chip
+ * to edit (whole pill highlights — not just an inner input). See §6c.
  */
 export function RetreatNameField({ value, onChange, className }: RetreatNameFieldProps) {
   const [editing, setEditing] = useState(false);
@@ -28,28 +28,24 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     setEditing(false);
   }
 
-  return (
-    <div
-      className={cn(
-        "flex w-fit max-w-full items-center gap-2.5 rounded-2xl px-3.5",
-        controlH.md,
-        glassClass("card", { rim: true }),
-        className,
-      )}
-    >
-      <Mountain
-        className={cn(
-          "size-5 shrink-0",
-          value || editing ? "text-flagblue-600" : "text-muted",
-        )}
-        strokeWidth={2}
-        aria-hidden
-      />
+  const shell = cn(
+    "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5",
+    controlH.md,
+    glassClass("card", { rim: true }),
+    className,
+  );
 
-      {editing ? (
+  if (editing) {
+    return (
+      <div
+        className={cn(
+          shell,
+          "ring-2 ring-flagblue-500 ring-offset-0 bg-white/90",
+        )}
+      >
+        <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
         <input
-          /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
-             appears on an explicit user action, so focusing it is expected. */
+          /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an explicit tap. */
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -61,36 +57,36 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className={cn(
-            "box-border max-w-full min-w-[8rem] rounded-xl border border-flagblue-500 bg-white px-2.5 font-display text-base font-semibold leading-none text-ink focus:outline-none",
-            controlH.sm,
-          )}
+          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-none text-ink focus:outline-none"
         />
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setDraft(value);
-            setEditing(true);
-          }}
-          aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
-          className={cn(
-            "flex max-w-full items-center gap-2.5 rounded-xl text-left",
-            controlH.sm,
-            userFeedbackClass({ press: "md" }),
-          )}
-        >
-          <span
-            className={cn(
-              "max-w-[16rem] truncate font-display text-base font-semibold sm:max-w-md",
-              value ? "text-ink" : "text-muted",
-            )}
-          >
-            {value || "Add retreat name"}
-          </span>
-          {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}
-        </button>
-      )}
-    </div>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        setDraft(value);
+        setEditing(true);
+      }}
+      aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
+      className={cn(shell, userFeedbackClass({ press: "md" }))}
+    >
+      <Mountain
+        className={cn("size-5 shrink-0", value ? "text-flagblue-600" : "text-muted")}
+        strokeWidth={2}
+        aria-hidden
+      />
+      <span
+        className={cn(
+          "max-w-[16rem] truncate font-display text-base font-semibold sm:max-w-md",
+          value ? "text-ink" : "text-muted",
+        )}
+      >
+        {value || "Add retreat name"}
+      </span>
+      {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}
+    </button>
   );
 }
