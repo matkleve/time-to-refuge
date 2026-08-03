@@ -437,6 +437,25 @@
   animation: flash-ring-blue 280ms ease-out;
 }
 
+/* Fields reorder — bump the name chip (stays inside the row; first item safe). */
+@keyframes chip-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.035);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@utility animate-chip-bump {
+  animation:
+    chip-bump 280ms ease-out,
+    flash-ring 280ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
