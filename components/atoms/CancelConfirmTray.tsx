@@ -1,8 +1,9 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
+import type { FeedbackPress } from "@/lib/user-feedback";
 
 interface CancelConfirmTrayProps {
   open: boolean;
@@ -11,6 +12,9 @@ interface CancelConfirmTrayProps {
   cancelLabel: string;
   confirmLabel: string;
   confirmDisabled?: boolean;
+  /** Match sibling stamps — Fields / People use `md`. */
+  press?: FeedbackPress;
+  size?: IconButtonSize;
 }
 
 /**
@@ -23,6 +27,8 @@ export function CancelConfirmTray({
   cancelLabel,
   confirmLabel,
   confirmDisabled = false,
+  press = "sm",
+  size = "md",
 }: CancelConfirmTrayProps) {
   return (
     <RowActionTray open={open}>
@@ -32,7 +38,8 @@ export function CancelConfirmTray({
           label={cancelLabel}
           glass
           onClick={onCancel}
-          size="md"
+          size={size}
+          press={press}
         />
         <IconButton
           icon={Check}
@@ -40,7 +47,8 @@ export function CancelConfirmTray({
           glass
           onClick={onConfirm}
           tone="accent"
-          size="md"
+          size={size}
+          press={press}
           disabled={confirmDisabled}
         />
       </div>

@@ -59,6 +59,9 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
     onChange(next);
     setBumpedId(id);
     setBumpNonce((n) => n + 1);
+    window.setTimeout(() => {
+      setBumpedId((cur) => (cur === id ? null : cur));
+    }, 300);
   }
 
   function remove(id: string) {
@@ -88,6 +91,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
               glass
               tone="danger"
               size="md"
+              press="md"
               disabled={atDefault}
               armed={resetAll.armed}
               onClick={resetAll.trigger}
@@ -219,6 +223,8 @@ function FieldEditorRow({
             pill,
             "text-left font-display text-lg font-semibold leading-snug",
             remove.armed ? "text-danger-600" : "text-ink",
+            /* Same md bounce as Add field — don’t leave animate-chip-bump stuck
+               (it overrides is-press-bounce via the animation property). */
             userFeedbackClass({ press: "md" }),
             bumpNonce > 0 && "animate-chip-bump",
           )}
@@ -234,6 +240,7 @@ function FieldEditorRow({
             label={`Move ${field.label} up`}
             glass
             size="md"
+            press="md"
             onClick={onUp}
             disabled={!canUp}
           />
@@ -242,6 +249,7 @@ function FieldEditorRow({
             label={`Move ${field.label} down`}
             glass
             size="md"
+            press="md"
             onClick={onDown}
             disabled={!canDown}
           />
@@ -253,6 +261,7 @@ function FieldEditorRow({
               }
               glass
               size="md"
+              press="md"
               tone="danger"
               onClick={remove.trigger}
               armed={remove.armed}
