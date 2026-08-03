@@ -37,12 +37,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
 
   if (editing) {
     return (
-      <div
-        className={cn(
-          shell,
-          "ring-2 ring-flagblue-500 ring-offset-0 bg-white/90",
-        )}
-      >
+      <div className={shell}>
         <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an explicit tap. */
@@ -52,12 +47,15 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           onBlur={commit}
           onKeyDown={(e) => {
             if (e.key === "Enter") commit();
-            if (e.key === "Escape") setEditing(false);
+            if (e.key === "Escape") {
+              setDraft(value);
+              setEditing(false);
+            }
           }}
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-snug text-ink focus:outline-none"
+          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
         />
       </div>
     );
