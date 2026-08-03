@@ -185,9 +185,7 @@ function FieldEditorRow({
     <div className={cn("flex w-full items-center gap-0", controlMinH.md)}>
       {/* Whole pill is the hit target / edit highlight — not an inner input box. */}
       {editing ? (
-        <div
-          className={cn(pill, "bg-white/90 ring-2 ring-flagblue-500 ring-offset-0")}
-        >
+        <div className={pill}>
           <input
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
             autoFocus
