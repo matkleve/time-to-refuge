@@ -267,7 +267,8 @@ turns red**, and **the same control** becomes a filled danger chip
 (`bg-danger-600` / white glyph — contrast-checked; no inset ring). It does
 not sprout a second Confirm/Cancel pair. The second press on that same
 control carries it out. It disarms itself after a few seconds if you walk
-away.
+away. **At most one** armed control is live app-wide — arming another
+disarms the previous.
 
 | Action | What turns red / fills |
 | --- | --- |
