@@ -19,11 +19,14 @@ const ARMED_EVENT = "timekeeper:armed-action";
 export function useArmedAction(action: () => void, timeoutMs = 3000) {
   const [armed, setArmed] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  /** Stable per mount — do not rewrite during render (react-hooks/refs). */
   const id = useId();
   const idRef = useRef(id);
-  idRef.current = id;
   const actionRef = useRef(action);
-  actionRef.current = action;
+
+  useEffect(() => {
+    actionRef.current = action;
+  }, [action]);
 
   const clear = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
