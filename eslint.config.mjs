@@ -16,6 +16,9 @@ const eslintConfig = [
       // the visible card changes are legitimate effect-driven syncs, so keep
       // this as a warning rather than a build-breaking error.
       "react-hooks/set-state-in-effect": "warn",
+      // Latest action/id are mirrored into refs in effects or via stable useId —
+      // never assign ref.current during render.
+      "react-hooks/refs": "error",
     },
   },
 ];
