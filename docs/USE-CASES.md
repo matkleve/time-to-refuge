@@ -180,16 +180,16 @@ opening someone from the People page switches to Refuge.
 **Actor:** Timekeeper, during **UC-2**, before there's time pressure.
 
 Covered in full in `DESIGN-SYSTEM.md` §6b — GPS location cross-checked
-against the device's own reported time zone, a generously-toleranced
-estimate rather than a hard proof, deliberately not dependent on a trusted
-time server (offline-friendly, at the cost of not catching a right-time-
-zone-wrong-minute error).
+against the device's own reported time zone, plus an optional online
+network-UTC probe (Cristian / RTT, with an honest uncertainty band and a
+skew rail in the popover). Offline skips the probe rather than faking a
+pass; the zone check still runs from GPS.
 
-**Status: Supported** for the specific failure mode it targets (a clock
-stuck on a different time zone). **Gap:** nothing in the rest of the app
-*requires* or even reminds the timekeeper to run this check before the
-ceremony starts — it's fully opt-in, tucked in a small badge, easy to never
-open. See gap summary.
+**Status: Supported** for the failure modes it targets (wrong time zone;
+large wall-clock skew when network is available). **Gap:** nothing in the
+rest of the app *requires* or even reminds the timekeeper to run this check
+before the ceremony starts — it's fully opt-in, tucked in a small badge,
+easy to never open. See gap summary.
 
 ## UC-7 — Record without attributing a name yet (Quick Log)
 

@@ -489,19 +489,18 @@ itself needs to be — the question only ever interrupts the *uncommon* path.
 
 [`LocationCheck`](../components/atoms/LocationCheck.tsx) sits beside the
 record button. Every tap it captures is a moment that happened once — the
-teacher's fingers snapped, or they didn't — so the one thing worth checking
-*before* the ceremony, when there's no time pressure, is whether this
-device's **time zone** fits where it actually is.
+teacher's fingers snapped, or they didn't — so before the ceremony, when
+there's no time pressure, it checks two things:
 
-It cannot prove the clock is accurate to the second: that would need a
-trusted time server, and retreat centers are often offline or on bad wifi —
-a check that silently fails exactly when it matters would be worse than no
-check. Copy must never say the time is "accurate" or "verified" in that
-stronger sense. What it checks is the failure mode that actually happens:
-a phone still set to a *different* time zone, left over from traveling, or
-never set at all.
+1. Whether this device's **time zone** fits where it actually is (GPS).
+2. When online, whether the phone's **wall clock** is close to network UTC
+   (public edge / time API, Cristian's algorithm with ±RTT/2 uncertainty).
 
-**How the cross-check works** (strongest first):
+Copy must never claim a lab-grade atomic lock. Offline, the network probe
+is skipped honestly — a silent fake pass would be worse than no probe.
+The zone check still works from GPS alone.
+
+**How the zone cross-check works** (strongest first):
 
 1. GPS → free reverse-geocode → IANA zone for the place (from
    `localityInfo.informative` where `description === "time zone"`).
@@ -515,17 +514,28 @@ never set at all.
 5. If naming fails but GPS worked, still run the rough check and badge it
    cautiously ("Zone OK?") — never pretend the place was named.
 
+**How the clock probe works** ([`lib/network-time.ts`](../lib/network-time.ts)):
+
+1. Stamp local `Date.now()` before/after a UTC fetch — prefer same-origin
+   [`/api/utc`](../app/api/utc/route.ts) (millisecond, server NTP), then
+   Cloudflare `cdn-cgi/trace` (second stamp → uncertainty floored at ±500 ms).
+2. Skew = client midpoint − server stamp; uncertainty = max(floor, RTT/2).
+3. UI: a **clock probe rail** — network UTC at center, phone mark at skew,
+   shaded ±uncertainty band. Badge warns / “Check clock” when skew exceeds
+   the band by a clear margin.
+
 - **The badge is an opaque light pill** with a round status mark (icon in a
   tinted circle) so it stays readable on the glass record button. Idle
   reads "Check zone" (not "Verify time": that overclaimed). A match shows
-  the place (e.g. "Vienna"). A problem — denied, mismatch, or failed rough
-  check — switches the label to "Check clock" on a light danger fill. Idle
-  uses `Clock`, never a dimmed `Check` that would claim success early.
+  the place (e.g. "Vienna"). A problem — denied, mismatch, failed rough
+  check, or large clock skew — switches the label to "Check clock" on a
+  light danger fill. Idle uses `Clock`, never a dimmed `Check` that would
+  claim success early.
 - **The popover** (portaled, so shell overflow can’t clip it): large status
-  mark + title/place, **Here** vs **Device** side cards (offset + zone), and
-  one plain line for the gap (“Same UTC offset…” / “Device is N hours
-  off…”). Match kind is a short sentence; an explicit disclaimer notes this
-  does not prove second-level sync.
+  mark + title/place, **Here** vs **Device** side cards (offset + zone), a
+  plain zone-gap line, and the **clock probe rail** when network UTC is
+  reachable. Match kind is a short sentence; disclaimers stay honest about
+  uncertainty and offline skips.
 - Denied, unsupported, or mismatched states still surface whatever the
   device *can* say about its own zone, framed honestly as unverified or
   wrong rather than hidden.
