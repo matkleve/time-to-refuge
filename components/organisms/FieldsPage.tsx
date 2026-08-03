@@ -40,6 +40,9 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
   const resetAll = useArmedAction(() =>
     onChange(DEFAULT_FIELDS.map((f) => ({ ...f }))),
   );
+  /** Field id that just moved — drives the name-chip bump. */
+  const [bumpedId, setBumpedId] = useState<string | null>(null);
+  const [bumpNonce, setBumpNonce] = useState(0);
 
   function rename(id: string, label: string) {
     const trimmed = label.trim();
@@ -54,6 +57,8 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
     const next = [...fields];
     [next[i], next[j]] = [next[j], next[i]];
     onChange(next);
+    setBumpedId(id);
+    setBumpNonce((n) => n + 1);
   }
 
   function remove(id: string) {
@@ -94,8 +99,8 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
         </p>
       </div>
 
-      {/* Frame scrolls — don’t nest another overflow or the first glass pill gets clipped. */}
-      <ul className="mx-auto mt-4 w-full max-w-md space-y-3 pb-1">
+      {/* pt so the first chip’s flash ring isn’t clipped by the frame scroller. */}
+      <ul className="mx-auto mt-4 w-full max-w-md space-y-3 px-0.5 pt-1.5 pb-1">
         {fields.map((field, index) => (
           <li key={field.id}>
             <FieldEditorRow
@@ -103,6 +108,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
               canDelete={fields.length > 1}
               canUp={index > 0}
               canDown={index < fields.length - 1}
+              bumpNonce={bumpedId === field.id ? bumpNonce : 0}
               onRename={(label) => rename(field.id, label)}
               onUp={() => move(field.id, -1)}
               onDown={() => move(field.id, 1)}
@@ -137,6 +143,7 @@ function FieldEditorRow({
   canDelete,
   canUp,
   canDown,
+  bumpNonce,
   onRename,
   onUp,
   onDown,
@@ -146,6 +153,8 @@ function FieldEditorRow({
   canDelete: boolean;
   canUp: boolean;
   canDown: boolean;
+  /** Non-zero when this row just moved — remounts the bump animation. */
+  bumpNonce: number;
   onRename: (label: string) => void;
   onUp: () => void;
   onDown: () => void;
@@ -195,15 +204,23 @@ function FieldEditorRow({
       ) : (
         <button
           type="button"
+          key={bumpNonce > 0 ? `bump-${bumpNonce}` : "idle"}
           onClick={() => {
             setDraft(field.label);
             setEditing(true);
+          }}
+          onAnimationEnd={(e) => {
+            /* Keep glass shadow after flash-ring replaces box-shadow mid-animation. */
+            if (e.animationName.includes("flash-ring")) {
+              e.currentTarget.style.boxShadow = "";
+            }
           }}
           className={cn(
             pill,
             "text-left font-display text-lg font-semibold leading-snug",
             remove.armed ? "text-danger-600" : "text-ink",
             userFeedbackClass({ press: "md" }),
+            bumpNonce > 0 && "animate-chip-bump",
           )}
         >
           <span className="min-w-0 flex-1 truncate">{field.label}</span>
