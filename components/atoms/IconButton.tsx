@@ -2,7 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { glassChipClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { userFeedbackClass, type FeedbackPress } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 type Tone = "neutral" | "accent" | "danger" | "onAccent";
@@ -80,6 +80,11 @@ interface IconButtonProps {
   /** Hold the hover wash (open menu). */
   feedbackOn?: boolean;
   /**
+   * Press-bounce tier — default `sm` (icon chips). Use `md` to match wide
+   * glass stamps (Add field, field name pills).
+   */
+  press?: FeedbackPress;
+  /**
    * Two-tap destroy arm — filled danger chip (field / Quick Log / Fields).
    */
   armed?: boolean;
@@ -97,6 +102,7 @@ export function IconButton({
   disabled = false,
   hideWhenDisabled = false,
   feedbackOn = false,
+  press = "sm",
   armed = false,
   className,
 }: IconButtonProps) {
@@ -112,7 +118,7 @@ export function IconButton({
       title={label}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full",
-        userFeedbackClass({ press: "sm", on: feedbackOn }),
+        userFeedbackClass({ press, on: feedbackOn }),
         visible ? labeledSizeClass[size] : sizeClass[size],
         /* Armed = filled danger chip (wash), not an inset ring — WCAG via
            fill change + glyph contrast; aria-label already says Confirm. */

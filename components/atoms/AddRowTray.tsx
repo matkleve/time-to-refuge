@@ -20,6 +20,7 @@ interface AddRowTrayProps {
 /**
  * Idle glass stamp → name field + Cancel/Confirm tray (§5a).
  * Shared by People (add person) and Fields (add field).
+ * Whole glass pill is the press-bounce target (same as field name chips).
  */
 export function AddRowTray({
   idleLabel,
@@ -47,14 +48,14 @@ export function AddRowTray({
 
   return (
     <div className="flex w-full items-center">
-      <div
-        className={cn(
-          "flex min-w-0 flex-1 items-center rounded-full",
-          controlMinH.md,
-          glassClass("card", { rim: true }),
-        )}
-      >
-        {open ? (
+      {open ? (
+        <div
+          className={cn(
+            "flex min-w-0 flex-1 items-center rounded-full",
+            controlMinH.md,
+            glassClass("card", { rim: true }),
+          )}
+        >
           <input
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
                explicit user action; focusing the field is expected. */
@@ -72,22 +73,23 @@ export function AddRowTray({
               controlMinH.md,
             )}
           />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 px-4 py-2.5 text-base leading-snug text-muted",
-              controlMinH.md,
-              "hover:text-flagblue-600",
-              userFeedbackClass({ press: "md" }),
-            )}
-          >
-            <Plus className="size-4" aria-hidden />
-            <span>{idleLabel}</span>
-          </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={cn(
+            "flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-base leading-snug text-muted",
+            controlMinH.md,
+            glassClass("card", { rim: true }),
+            "hover:text-flagblue-600",
+            userFeedbackClass({ press: "md" }),
+          )}
+        >
+          <Plus className="size-4" aria-hidden />
+          <span>{idleLabel}</span>
+        </button>
+      )}
 
       <CancelConfirmTray
         open={open}
@@ -96,6 +98,7 @@ export function AddRowTray({
         cancelLabel={cancelLabel}
         confirmLabel={confirmLabel}
         confirmDisabled={!draft.trim()}
+        press="md"
       />
     </div>
   );
