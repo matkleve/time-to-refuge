@@ -296,8 +296,9 @@
   }
 
   /*
-   * App header scrim — progressive fade under the brand toolbar only.
-   * Soft out before the page title band so titles stay sharp (not frosted).
+   * App header scrim — progressive fade under brand + page-title band so
+   * scrolling content softens as it disappears under the chrome. Strong blur
+   * stays in the toolbar; the title band only gets a light wash.
    */
   .header-scrim {
     pointer-events: none;
@@ -320,10 +321,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 40%,
-      transparent 78%
+      #000 45%,
+      transparent 88%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 88%);
   }
 
   .header-scrim__layer[data-strength="2"] {
@@ -332,10 +333,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 30%,
-      transparent 65%
+      #000 32%,
+      transparent 70%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 65%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 70%);
   }
 
   .header-scrim__layer[data-strength="3"] {
@@ -367,9 +368,10 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgb(255 255 255 / 0.22) 0%,
-      rgb(255 255 255 / 0.08) 45%,
-      transparent 78%
+      rgb(255 255 255 / 0.26) 0%,
+      rgb(255 255 255 / 0.1) 40%,
+      rgb(255 255 255 / 0.03) 68%,
+      transparent 90%
     );
   }
 
