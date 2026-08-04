@@ -266,19 +266,25 @@ separator — callers can push items in any order.
 
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
-action happens. The first press *arms* it: **the value about to be destroyed
-turns red**, and **the same control** becomes a filled danger chip
-(`bg-danger-600` / white glyph — contrast-checked; no inset ring). It does
-not sprout a second Confirm/Cancel pair. The second press on that same
-control carries it out. It disarms itself after a few seconds if you walk
-away. **At most one** armed control is live app-wide — arming another
-disarms the previous.
+action happens. The first press *arms* it: **every subject about to be
+destroyed turns `text-danger-600`**, and **the same control** becomes a
+filled danger chip (`bg-danger-600` / white glyph — contrast-checked; no
+inset ring). It does not sprout a second Confirm/Cancel pair. The second
+press on that same control carries it out. It disarms itself after a few
+seconds if you walk away. **At most one** armed control is live app-wide —
+arming another disarms the previous.
+
+**Armed-subject gate (ship).** When anything is armed to destroy, the
+*subject copy* goes danger red — not only the chip. Same rule on Person
+card, Fields rows, and Quick Log; no surface may arm silently with only a
+red chip.
 
 | Action | What turns red / fills |
 | --- | --- |
-| Reset one time | That time (text) + filled danger reset chip — never a ring on the stamp |
-| Reset all times | All three times |
-| Delete a person | Their name |
+| Reset one time | That field’s **label + time** + filled danger reset chip — never a ring on the stamp |
+| Reset all times | Person **name** + every field **label + time** |
+| Delete a person | Their **name** |
+| Delete a field | That field’s **label** + filled danger delete chip |
 | Delete a logged time | That time (text) + filled danger delete chip |
 | Clear the whole log | Every logged time |
 
@@ -329,12 +335,13 @@ verify these are *visibly distinct* — not only wired in props:
 | Selected / armed / current | Held wash and/or inset ring + ink — **must match the caption that says what will happen** (e.g. field target ↔ “Tap to record X”) |
 | Disabled | Opacity, no pointer |
 | Focus-visible | Global ring |
-| Error / armed-destroy | Danger fill or red type |
+| Error / armed-destroy | Danger fill **and** subject text `text-danger-600` (see Confirming gate) |
 
 If a parent uses `overflow-hidden`, prefer **`ring-inset`** (or border) over
 outset rings — otherwise the “selected” cue clips away and looks like no
 state at all. Before merge: walk the primary path (UC-1) and confirm every
-armed/selected thing the copy refers to is marked on screen.
+armed/selected thing the copy refers to is marked on screen — including
+armed-destroy **subject text**, not only the chip.
 
 ## 4a. Units
 
