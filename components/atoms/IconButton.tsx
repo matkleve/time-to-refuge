@@ -71,6 +71,12 @@ interface IconButtonProps {
    * Same fill/rim recipe as a field row.
    */
   glass?: boolean;
+  /**
+   * No fill / rim — glyph only over the open backdrop. Use for chrome that
+   * must not read as a chip on top of a card (Session person prev/next).
+   * Wins over `glass` when both are set.
+   */
+  quiet?: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   tone?: Tone;
   /** Default `md` (44px) — match row actions / hamburger. */
@@ -97,6 +103,7 @@ export function IconButton({
   label,
   showLabel,
   glass = false,
+  quiet = false,
   onClick,
   tone = "neutral",
   size = "md",
@@ -109,6 +116,7 @@ export function IconButton({
 }: IconButtonProps) {
   const visible =
     showLabel === true ? label : typeof showLabel === "string" ? showLabel : null;
+  const useGlass = glass && !quiet && !armed;
 
   return (
     <button
@@ -123,10 +131,10 @@ export function IconButton({
         visible ? labeledSizeClass[size] : sizeClass[size],
         /* Armed = filled danger chip (wash), not an inset ring — WCAG via
            fill change + glyph contrast; aria-label already says Confirm. */
-        glass && !armed ? glassChipClass() : null,
+        useGlass ? glassChipClass() : null,
         armed
           ? "user-feedback--on-accent bg-danger-600 text-white hover:text-white"
-          : glass
+          : useGlass
             ? glassToneClass[tone]
             : toneClass[tone],
         hideWhenDisabled && "disabled:opacity-0",
