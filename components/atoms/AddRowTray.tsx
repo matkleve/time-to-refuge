@@ -60,6 +60,13 @@ export function AddRowTray({
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
                explicit user action; focusing the field is expected. */
             autoFocus
+            /* Keep Safari from treating this as a contact “name” field and
+               painting yellow autofill over the glass pill (iOS People add). */
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="words"
+            spellCheck={false}
+            name="tk-entry-label"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
@@ -69,7 +76,7 @@ export function AddRowTray({
             placeholder={placeholder}
             aria-label={inputLabel}
             className={cn(
-              "min-w-0 flex-1 bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
+              "min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
               controlMinH.md,
             )}
           />

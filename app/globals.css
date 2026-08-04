@@ -179,6 +179,25 @@
   :where(button, [role="button"], [role="menuitem"])[aria-disabled="true"] {
     cursor: not-allowed;
   }
+
+  /*
+   * Safari / Chrome paint autofill with a solid yellow (or blue) fill that
+   * punches through glass pills. Neutralize to transparent + ink text so the
+   * parent glass rim stays the surface. Long transition is the usual trick
+   * to keep the UA from re-applying its fill on focus.
+   */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-ink);
+    caret-color: var(--color-ink);
+    border-radius: inherit;
+    transition:
+      background-color 99999s ease-out,
+      color 99999s ease-out;
+    box-shadow: 0 0 0 1000px transparent inset;
+  }
 }
 
 /*
