@@ -481,6 +481,12 @@ pair is never adjacent to the destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 
+**Armed / selected empty field (UC-1 target).** The phase the record button
+will stamp must be glanceable on the card — not only in the button caption.
+Empty target stamps use: inset `flagblue-600` ring + held feedback wash +
+ink label (`aria-current`). Use `ring-inset` so overflow-hidden glass rows
+don’t clip the ring away. Idle empty fields stay muted with no ring.
+
 **Arming an empty field out of order** (Sangha while Buddha's still empty)
 asks first instead of either silently allowing it or blocking it outright —
 see [`USE-CASES.md`](./USE-CASES.md) gap #5. Same reveal as filled-row

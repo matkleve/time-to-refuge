@@ -162,11 +162,12 @@ function FieldRow({
    * Empty / editing / skip shells keep glass on the outer wrap. Filled rows
    * put glass only on the stamp button — the action tray is a sibling (§5a).
    */
+  const targetClass = isTarget && "ring-2 ring-inset ring-flagblue-500";
   const shellClassName = cn(
     "no-select transition-shadow duration-200",
     glassRowClass(),
     filled && "shadow-sm",
-    isTarget && "ring-2 ring-flagblue-500",
+    targetClass,
   );
 
   const label = (
@@ -176,7 +177,7 @@ function FieldRow({
         /* `muted`, not `subtle`: at 17px this needs 4.5:1, and `subtle` only
            cleared that against solid white (4.59). Once the row went
            translucent there was no headroom left — see design system §3a. */
-        filled ? "text-ink" : "text-muted",
+        filled || isTarget ? "text-ink" : "text-muted",
       )}
     >
       {phaseLabel}
@@ -224,22 +225,26 @@ function FieldRow({
           type="button"
           onClick={handleRowClick}
           aria-expanded={confirmSkip}
+          aria-current={isTarget ? "true" : undefined}
           aria-label={
             confirmSkip
               ? `Cancel jump to ${phaseLabel}`
-              : `Select ${phaseLabel} to record`
+              : isTarget
+                ? `${phaseLabel} armed to record`
+                : `Select ${phaseLabel} to record`
           }
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
             ROW_HEIGHT,
             glassRowClass(),
-            userFeedbackClass({ press: "md" }),
+            userFeedbackClass({ press: "md", on: isTarget }),
+            targetClass,
           )}
         >
           <span
             className={cn(
               "font-display text-lg font-medium",
-              confirmSkip || filled ? "text-ink" : "text-muted",
+              confirmSkip || filled || isTarget ? "text-ink" : "text-muted",
             )}
           >
             {confirmSkip ? "Jump here" : phaseLabel}
@@ -335,16 +340,17 @@ function FieldRow({
           type="button"
           onClick={handleRowClick}
           aria-expanded={showActions}
+          aria-current={isTarget ? "true" : undefined}
           className={cn(
             /* justify-between keeps the time on the stamp’s right edge —
                flex-1 text-right still let it pack beside the label as the
                tray opened, which read as a jump left. */
             "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
-            userFeedbackClass({ press: "md" }),
+            userFeedbackClass({ press: "md", on: isTarget }),
             ROW_HEIGHT,
             glassRowClass(),
             filled && "shadow-sm",
-            isTarget && "ring-2 ring-flagblue-500",
+            targetClass,
           )}
         >
           {/* Label never shrinks away — clip the time instead when the tray opens. */}
