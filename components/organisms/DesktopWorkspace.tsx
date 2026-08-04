@@ -28,8 +28,8 @@ interface DesktopWorkspaceProps {
 }
 
 /**
- * Desktop Refuge: compact people switcher on the left; focused card + record
- * on the right. Full roster editing is the People page (hamburger).
+ * Desktop / tablet Refuge: compact people switcher on the left; focused
+ * card + record on the right. Full roster editing is the People page.
  */
 export function DesktopWorkspace({
   people,
@@ -63,16 +63,16 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex flex-1 gap-5 overflow-hidden p-5">
+    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
       <Surface
         material="glass-panel"
         rim
-        className="flex w-72 shrink-0 flex-col overflow-hidden rounded-3xl"
+        className="flex w-56 shrink-0 flex-col overflow-hidden rounded-3xl lg:w-72"
       >
-        <div className="border-b border-line px-4 py-3">
+        <div className="border-b border-line px-3 py-2.5 lg:px-4 lg:py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>
         </div>
-        <ul className="flex-1 space-y-2 overflow-y-auto p-3">
+        <ul className="flex-1 space-y-2 overflow-y-auto p-2.5 lg:p-3">
           {people.map((p) => (
             <li key={p.id}>
               <PersonRailRow
@@ -90,9 +90,9 @@ export function DesktopWorkspace({
         </ul>
       </Surface>
 
-      <div className="flex flex-1 flex-col items-center overflow-y-auto py-2">
+      <div className="flex min-w-0 flex-1 flex-col items-center overflow-y-auto py-1 sm:py-2">
         {current ? (
-          <div className="flex w-full max-w-xl flex-col gap-5">
+          <div className="flex w-full max-w-xl flex-col gap-4 sm:gap-5">
             <PersonCard
               person={current}
               fields={fields}

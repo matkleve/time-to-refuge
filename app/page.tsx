@@ -60,7 +60,7 @@ export default function Home() {
   const [redoStack, setRedoStack] = useState<UndoEntry[]>([]);
   const [requestedPhase, setRequestedPhase] = useState<Phase | null>(null);
   const [retreatName, setRetreatName] = useState("");
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     const loadedFields = loadFields();
@@ -394,7 +394,7 @@ export default function Home() {
     <div
       className={cn(
         "flex shrink-0 flex-col gap-2",
-        isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2",
+        isDesktop ? "px-1 pb-1 pt-2 sm:px-2 sm:pt-3" : "px-3 pb-1 pt-2",
       )}
     >
       {/* Desktop nav already names the page — keep the title on mobile only. */}
@@ -432,8 +432,10 @@ export default function Home() {
           exportDisabled={people.length === 0}
         />
         <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden pt-[4.5rem]">
-          {subheader}
-          {page}
+          <div className="app-content flex min-h-0 flex-1 flex-col px-4 sm:px-5">
+            {subheader}
+            {page}
+          </div>
         </div>
       </DesktopShell>
     );

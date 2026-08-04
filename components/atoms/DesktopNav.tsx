@@ -48,18 +48,11 @@ interface DesktopNavProps {
 }
 
 /**
- * Desktop chrome — classic top bar:
+ * Desktop / tablet chrome — classic top bar inside `app-content`:
  * brand left · page links centered · undo/redo/export + Dana right.
  *
- * Link states (each page control):
- * - idle: muted text, no fill
- * - hover: feedback wash (pointer devices)
- * - pressed: bounce + active wash
- * - selected: ink + light wash (`is-feedback-on`) — current AppView
- * - focus-visible: global ring
- *
- * Switching pages uses the existing `PageEnter` on the main slot (fade-up).
- * Brand home → Session. Dana is a filled primary (same role as in the menu).
+ * Below `lg`, page labels hide (icon-only) so the bar fits tablets.
+ * Link states: idle → hover → press → selected (`aria-current`) → focus ring.
  */
 export function DesktopNav({
   view,
@@ -76,15 +69,19 @@ export function DesktopNav({
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
       <HeaderScrim className="h-[10rem]" />
-      <div className="relative z-10 px-5 py-3">
-        <div className="relative flex h-12 items-center justify-center">
-          <div className="pointer-events-auto absolute inset-y-0 left-0 flex items-center">
-            <BrandLockup titleSize="2xl" onHome={() => onChange("refuge")} />
+      <div className="app-content relative z-10 px-4 py-3 sm:px-5">
+        <div className="relative flex h-12 items-center justify-center gap-2">
+          <div className="pointer-events-auto absolute inset-y-0 left-0 flex max-w-[30%] items-center">
+            <BrandLockup
+              titleSize="2xl"
+              onHome={() => onChange("refuge")}
+              className="[&_span]:hidden [&_span]:lg:inline"
+            />
           </div>
 
           <nav
             aria-label="Primary"
-            className="pointer-events-auto flex items-center gap-0.5"
+            className="pointer-events-auto flex max-w-[min(100%,36rem)] items-center gap-0.5 overflow-x-auto"
           >
             {DESKTOP_NAV_PAGES.map(({ id, label, icon: Icon }) => {
               const selected = view === id;
@@ -93,21 +90,23 @@ export function DesktopNav({
                   key={id}
                   type="button"
                   aria-current={selected ? "page" : undefined}
+                  aria-label={label}
+                  title={label}
                   onClick={() => onChange(id)}
                   className={cn(
-                    "inline-flex h-11 items-center gap-2 rounded-full px-3.5 text-base font-medium",
+                    "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-2.5 text-base font-medium lg:px-3.5",
                     userFeedbackClass({ press: "md", on: selected }),
                     selected ? "text-ink" : "text-muted hover:text-ink",
                   )}
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
-                  {label}
+                  <span className="hidden lg:inline">{label}</span>
                 </button>
               );
             })}
           </nav>
 
-          <div className="pointer-events-auto absolute inset-y-0 right-0 flex items-center gap-1">
+          <div className="pointer-events-auto absolute inset-y-0 right-0 flex items-center gap-0.5 sm:gap-1">
             <IconButton
               icon={Undo2}
               label={undoLabel}
@@ -131,19 +130,23 @@ export function DesktopNav({
               size="md"
               onClick={onExportAll}
               disabled={exportDisabled}
+              className="hidden sm:inline-flex"
             />
             <button
               type="button"
               aria-current={view === "dana" ? "page" : undefined}
+              aria-label={dana.menuCta}
+              title={dana.menuCta}
               onClick={() => onChange("dana")}
               className={cn(
-                "ml-1 inline-flex h-11 items-center gap-2 rounded-full px-3.5 text-base font-medium text-white",
+                "ml-0.5 inline-flex h-11 items-center gap-2 rounded-full px-2.5 text-base font-medium text-white lg:ml-1 lg:px-3.5",
                 actionClass("primary"),
                 userFeedbackClass({ press: "md", on: view === "dana" }),
               )}
             >
               <HeartHandshake className="size-4 shrink-0" strokeWidth={2} aria-hidden />
-              {dana.menuCta}
+              <span className="hidden xl:inline">{dana.menuCta}</span>
+              <span className="hidden lg:inline xl:hidden">{dana.menuLabel}</span>
             </button>
           </div>
         </div>

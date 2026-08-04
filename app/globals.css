@@ -357,6 +357,16 @@
 }
 
 /*
+ * Desktop / tablet content column — keeps chrome + pages from stretching
+ * across ultrawide viewports. Phone shell stays `max-w-md` in AppShell.
+ */
+@utility app-content {
+  width: 100%;
+  max-width: clamp(22rem, 94vw, 68rem);
+  margin-inline: auto;
+}
+
+/*
  * Entrance for anything that mounts conditionally and covers new space: a
  * panel, a popover, a status note. See design system §5b — deliberately no
  * matching exit animation; these close by unmounting instantly.
