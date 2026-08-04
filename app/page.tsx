@@ -409,7 +409,7 @@ export default function Home() {
     return (
       <DesktopShell>
         <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
-          <HeaderScrim className="h-24" />
+          <HeaderScrim className="h-[10rem]" />
           <div className="relative z-10 px-5 py-3">
             <div className="flex h-12 items-center justify-between gap-3">
               <div className="pointer-events-auto">

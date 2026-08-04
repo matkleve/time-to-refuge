@@ -264,8 +264,9 @@
   }
 
   /*
-   * App header scrim — soft progressive fade under the toolbar only.
-   * Keep it short/light so page titles below stay sharp (not frosted).
+   * App header scrim — progressive fade under brand + page title.
+   * Strong blur stays in the toolbar band; softer wash continues behind
+   * the title, then clears above the first content row (retreat chip / list).
    */
   .header-scrim {
     pointer-events: none;
@@ -288,10 +289,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 35%,
-      transparent 75%
+      #000 48%,
+      transparent 88%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 75%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 88%);
   }
 
   .header-scrim__layer[data-strength="2"] {
@@ -300,10 +301,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 28%,
-      transparent 62%
+      #000 36%,
+      transparent 72%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 62%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 72%);
   }
 
   .header-scrim__layer[data-strength="3"] {
@@ -312,10 +313,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 18%,
-      transparent 48%
+      #000 20%,
+      transparent 52%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 48%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 20%, transparent 52%);
   }
 
   .header-scrim__layer[data-strength="4"] {
@@ -324,10 +325,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 10%,
-      transparent 36%
+      #000 12%,
+      transparent 38%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 10%, transparent 36%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, transparent 38%);
   }
 
   .header-scrim__tint {
@@ -336,8 +337,9 @@
     background: linear-gradient(
       to bottom,
       rgb(255 255 255 / 0.28) 0%,
-      rgb(255 255 255 / 0.1) 40%,
-      transparent 78%
+      rgb(255 255 255 / 0.12) 42%,
+      rgb(255 255 255 / 0.04) 68%,
+      transparent 90%
     );
   }
 
