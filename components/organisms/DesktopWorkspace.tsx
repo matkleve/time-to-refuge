@@ -67,7 +67,7 @@ export function DesktopWorkspace({
       <Surface
         material="glass-panel"
         rim
-        className="flex w-56 shrink-0 flex-col overflow-hidden rounded-3xl lg:w-72"
+        className="flex w-48 shrink-0 flex-col overflow-hidden rounded-3xl lg:w-72"
       >
         <div className="border-b border-line px-3 py-2.5 lg:px-4 lg:py-3">
           <h2 className="font-display text-lg font-semibold text-ink">People</h2>

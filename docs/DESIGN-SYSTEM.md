@@ -159,26 +159,30 @@ People) sit in that shell — glass over the photo, not a second full-screen
 backdrop layer. Overview cards, the focused card, and the record / Quick Log
 buttons are glass over that photo.
 
-## 3b. Desktop, not mobile-stretched
+## 3b. Desktop & tablet, not mobile-stretched
 
-Below `lg` (1024px) the app is the phone-first flow in `AppShell` — full
-bleed, one column, exactly what §0–§3 describe. At `lg` and up, `page.tsx`
+Below `md` (768px) the app is the phone-first flow in `AppShell` — full
+bleed, one column, exactly what §0–§3 describe. At `md` and up, `page.tsx`
 switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
-`DesktopWorkspace` — on the **Refuge** page, a persistent list of everyone
-on the left (quick switch while recording) and the current person's card
-with the record button directly beneath it on the right. **People** and
-**History** are their own pages via the hamburger (same `AppView` switch as
-Quick Log), not overlays. Only one shell tree is ever mounted
-(`useMediaQuery`, not a CSS breakpoint toggling visibility) — mounting both
-would run two copies of `LiveClockButton`'s animation-frame loop at once.
+shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
+page, `DesktopWorkspace` — a persistent list of everyone on the left (quick
+switch while recording) and the current person's card with the record button
+directly beneath it on the right. **Tablet (`768–1023`)** is the stressed
+band for nav density; page links stay labeled (short “Log” below `lg`), and
+Export / Dana sit in a quiet actions cluster so they don’t fight UC-1.
+**People**, **History**, and the other destinations are their own pages via
+the top nav (same `AppView` switch as Quick Log), not overlays. Only one
+shell tree is ever mounted (`useMediaQuery`, not a CSS breakpoint toggling
+visibility) — mounting both would run two copies of `LiveClockButton`'s
+animation-frame loop at once.
 
-`RefugeView` (mobile) and `DesktopWorkspace` (desktop) share their targeting
-logic through one hook, [`usePhaseTarget`](../lib/use-phase-target.ts),
+`RefugeView` (mobile) and `DesktopWorkspace` (desktop / tablet) share their
+targeting logic through one hook, [`usePhaseTarget`](../lib/use-phase-target.ts),
 precisely so "which phase is armed" can't quietly diverge between the two
 layouts. What's deliberately *not* shared is the interaction model: mobile
 swipes between people in a carousel because that's what a touch screen
-affords; desktop has no carousel at all — clicking someone in the list
+affords; desktop/tablet has no carousel at all — clicking someone in the list
 *is* the navigation, because a persistent list is what a pointer and a wide
 screen afford. Resizing the mobile card up doesn't produce this; the two
 had to be designed separately from the same data and handlers.

@@ -10,30 +10,33 @@ interface PageTitleProps {
 }
 
 /**
- * Shared page heading — centered `font-display text-2xl` title.
- * Brand stays in the header above; this row is the page name only.
- * With `trailing`, a 3-col grid keeps the title centered.
+ * Shared page heading. On phone: centered title (+ trailing).
+ * From `md` up, DesktopNav owns the page name — hide the heading; keep
+ * trailing actions right-aligned when present.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (
     <div
       className={cn(
-        "grid items-center gap-3",
         controlH.md,
-        trailing ? "grid-cols-[1fr_auto_1fr]" : "grid-cols-1",
+        trailing
+          ? "grid grid-cols-[1fr_auto_1fr] items-center gap-3 md:flex md:justify-end"
+          : "grid grid-cols-1 items-center md:hidden",
         className,
       )}
     >
-      {trailing ? <span aria-hidden className="min-w-0" /> : null}
+      {trailing ? <span aria-hidden className="min-w-0 md:hidden" /> : null}
       <h2
         className={cn(
           "min-w-0 truncate text-center font-display text-2xl font-semibold text-ink",
-          trailing && "justify-self-center",
+          trailing && "md:hidden",
         )}
       >
         {title}
       </h2>
-      {trailing ? <div className="justify-self-end">{trailing}</div> : null}
+      {trailing ? (
+        <div className="justify-self-end md:justify-self-auto">{trailing}</div>
+      ) : null}
     </div>
   );
 }

@@ -104,7 +104,7 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
       </div>
 
       {/* Side pad so glass chip shadows aren’t clipped by the scroller. */}
-      <ul className="mx-auto mt-4 w-full max-w-md space-y-3 px-2 pt-1.5 pb-2">
+      <ul className="mx-auto mt-4 w-full max-w-xl space-y-3 px-2 pt-1.5 pb-2">
         {fields.map((field, index) => (
           <li key={field.id}>
             <FieldEditorRow
