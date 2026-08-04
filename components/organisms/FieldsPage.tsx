@@ -189,6 +189,10 @@ function FieldEditorRow({
           <input
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
             autoFocus
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            name="tk-field-label"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onBlur={commit}
@@ -200,7 +204,7 @@ function FieldEditorRow({
               }
             }}
             aria-label="Field name"
-            className="box-border min-w-0 flex-1 bg-transparent font-display text-lg font-semibold leading-snug text-ink focus:outline-none"
+            className="box-border min-w-0 flex-1 rounded-full bg-transparent font-display text-lg font-semibold leading-snug text-ink focus:outline-none"
           />
         </div>
       ) : (

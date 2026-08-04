@@ -158,6 +158,10 @@ export function PersonCard({
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
              appears on an explicit user action, so focusing it is expected. */
           autoFocus
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          name="tk-person-name"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commitName}
