@@ -3,7 +3,7 @@
  * Keep in sync with `IconButton` sizeClass (sm / md / lg).
  *
  * | Token | Box   | Role |
- * | sm    | 36px  | Dense only — nested editors, rare compact badges |
+ * | sm    | 36px  | Dense chrome — Session person nav, nested editors |
  * | md    | 44px  | **Default** — glass chips, field stamps, chrome |
  * | lg    | 48px  | Rare emphasis |
  */

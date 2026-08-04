@@ -30,10 +30,11 @@ const glassToneClass: Record<Tone, string> = {
 
 /**
  * Round / labeled footprints — one scale for the whole app.
- * Default is `md` (44px): row actions, hamburger, ⋯, nav, title chips.
+ * Default is `md` (44px): row actions, hamburger, ⋯, title chips.
+ * `sm` is the dense chip (Session person prev/next beside 1/n).
  */
 const sizeClass = {
-  /** 36px — dense only (e.g. menu footer undo/redo if space is tight). */
+  /** 36px — Session person nav; other dense chrome. */
   sm: "size-9",
   /** 44px — the standard round chip. */
   md: "size-11",
