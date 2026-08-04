@@ -68,7 +68,7 @@ export function DesktopNav({
 }: DesktopNavProps) {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
-      <HeaderScrim className="h-[10rem]" />
+      <HeaderScrim />
       <div className="app-content relative z-10 px-4 py-3 sm:px-5">
         <div className="relative flex h-12 items-center justify-center gap-2">
           <div className="pointer-events-auto absolute inset-y-0 left-0 flex max-w-[40%] items-center">

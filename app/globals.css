@@ -277,9 +277,8 @@
   }
 
   /*
-   * App header scrim — progressive fade under brand + page title.
-   * Strong blur stays in the toolbar band; softer wash continues behind
-   * the title, then clears above the first content row (retreat chip / list).
+   * App header scrim — progressive fade under the brand toolbar only.
+   * Soft out before the page title band so titles stay sharp (not frosted).
    */
   .header-scrim {
     pointer-events: none;
@@ -302,10 +301,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 48%,
-      transparent 88%
+      #000 40%,
+      transparent 78%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 88%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
   }
 
   .header-scrim__layer[data-strength="2"] {
@@ -314,10 +313,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 36%,
-      transparent 72%
+      #000 30%,
+      transparent 65%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 36%, transparent 72%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 65%);
   }
 
   .header-scrim__layer[data-strength="3"] {
@@ -326,10 +325,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 20%,
-      transparent 52%
+      #000 18%,
+      transparent 48%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 20%, transparent 52%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 48%);
   }
 
   .header-scrim__layer[data-strength="4"] {
@@ -338,10 +337,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 12%,
-      transparent 38%
+      #000 10%,
+      transparent 36%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, transparent 38%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 10%, transparent 36%);
   }
 
   .header-scrim__tint {
@@ -349,10 +348,9 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgb(255 255 255 / 0.28) 0%,
-      rgb(255 255 255 / 0.12) 42%,
-      rgb(255 255 255 / 0.04) 68%,
-      transparent 90%
+      rgb(255 255 255 / 0.22) 0%,
+      rgb(255 255 255 / 0.08) 45%,
+      transparent 78%
     );
   }
 
