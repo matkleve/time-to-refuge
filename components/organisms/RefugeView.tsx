@@ -44,7 +44,7 @@ function NavButton({
     <IconButton
       icon={prev ? ChevronLeft : ChevronRight}
       label={prev ? "Previous person" : "Next person"}
-      glass
+      quiet
       onClick={onClick}
       disabled={!available}
       hideWhenDisabled
@@ -104,31 +104,31 @@ export function RefugeView({
       style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
       {/*
-        Card fills the space under the page chrome and above the record
-        button. Many fields scroll inside the card — the card shell stays put.
-        Horizontal swipe still changes person.
+        Person switcher sits in its own row above the card — quiet glyphs,
+        no glass chip overlaying the card corner. Card fills remaining height;
+        many fields scroll inside. Horizontal swipe still changes person.
       */}
+      <div className="flex shrink-0 items-center justify-end gap-1 px-4 pb-1">
+        <NavButton
+          direction="prev"
+          available={index > 0}
+          onClick={() => onIndexChange(index - 1)}
+        />
+        <span className="min-w-8 px-0.5 text-center text-sm tabular-nums text-muted">
+          {index + 1}/{people.length}
+        </span>
+        <NavButton
+          direction="next"
+          available={index < people.length - 1}
+          onClick={() => onIndexChange(index + 1)}
+        />
+      </div>
+
       <div
         className="relative min-h-0 flex-1 overflow-x-hidden"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        <div className="absolute top-3 right-4 z-20 flex items-center gap-1">
-          <NavButton
-            direction="prev"
-            available={index > 0}
-            onClick={() => onIndexChange(index - 1)}
-          />
-          <span className="min-w-8 px-0.5 text-center text-sm tabular-nums text-muted">
-            {index + 1}/{people.length}
-          </span>
-          <NavButton
-            direction="next"
-            available={index < people.length - 1}
-            onClick={() => onIndexChange(index + 1)}
-          />
-        </div>
-
         <div
           className="flex h-full w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
           style={{ transform: `translateX(-${index * 100}%)` }}
@@ -138,7 +138,7 @@ export function RefugeView({
             return (
               <div
                 key={p.id}
-                className="flex h-full w-full shrink-0 flex-col px-4 pt-12 pb-1"
+                className="flex h-full w-full shrink-0 flex-col px-4 pb-1"
               >
                 <PersonCard
                   fillHeight
