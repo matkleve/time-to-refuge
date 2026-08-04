@@ -36,6 +36,7 @@ import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import { PageEnter } from "@/components/atoms/PageEnter";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
+import { DesktopNav } from "@/components/atoms/DesktopNav";
 import { AppShell } from "@/components/AppShell";
 import { DesktopShell } from "@/components/DesktopShell";
 import { RefugeView } from "@/components/organisms/RefugeView";
@@ -396,11 +397,13 @@ export default function Home() {
         isDesktop ? "px-5 pb-1 pt-3" : "px-3 pb-1 pt-2",
       )}
     >
-      {view === "refuge" ? (
-        <PageTitle title="Session" />
-      ) : (
-        <PageTitle title="People" />
-      )}
+      {/* Desktop nav already names the page — keep the title on mobile only. */}
+      {!isDesktop &&
+        (view === "refuge" ? (
+          <PageTitle title="Session" />
+        ) : (
+          <PageTitle title="People" />
+        ))}
       <RetreatNameField value={retreatName} onChange={setRetreatName} />
     </div>
   ) : null;
@@ -408,19 +411,26 @@ export default function Home() {
   if (isDesktop) {
     return (
       <DesktopShell>
-        <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
-          <HeaderScrim className="h-[10rem]" />
-          <div className="relative z-10 px-5 py-3">
-            <div className="flex h-12 items-center justify-between gap-3">
-              <div className="pointer-events-auto">
-                <BrandLockup titleSize="2xl" onHome={() => setView("refuge")} />
-              </div>
-              <div className="pointer-events-auto flex shrink-0 items-center">
-                {menu}
-              </div>
-            </div>
-          </div>
-        </header>
+        <DesktopNav
+          view={view}
+          onChange={setView}
+          onUndo={handleUndo}
+          undoDisabled={undoStack.length === 0}
+          undoLabel={
+            undoStack[undoStack.length - 1]
+              ? `Undo: ${undoStack[undoStack.length - 1].message}`
+              : "Undo"
+          }
+          onRedo={handleRedo}
+          redoDisabled={redoStack.length === 0}
+          redoLabel={
+            redoStack[redoStack.length - 1]
+              ? `Redo: ${redoStack[redoStack.length - 1].message}`
+              : "Redo"
+          }
+          onExportAll={() => downloadCsv(people, fields, retreatName)}
+          exportDisabled={people.length === 0}
+        />
         <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden pt-[4.5rem]">
           {subheader}
           {page}
