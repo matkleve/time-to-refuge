@@ -37,26 +37,28 @@ export function DanaPage() {
   }
 
   return (
-    <ListPageFrame className="px-0 md:px-0">
-      <div className="shrink-0 px-3 md:px-0">
-        <PageTitle title={dana.pageTitle} />
-      </div>
+    <ListPageFrame>
+      <div className="mx-auto flex w-full max-w-xl flex-col gap-5 pb-2">
+        <PageTitle title={dana.pageTitle} className="shrink-0" />
 
-      {/* Full-bleed DRCE photo — edge to edge under the title. One scroll
-          with the frame (no nested overflow) so iOS Safari doesn’t clip a
-          second scroller above the browser chrome. */}
-      <div className="relative mt-2 aspect-[3/2] w-full shrink-0 bg-ink/10 md:overflow-hidden md:rounded-3xl">
-        <Image
-          src={dana.image}
-          alt={dana.imageAlt}
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 42rem"
-          className="object-cover"
-        />
-      </div>
+        {/* Same rounded shell as PersonCard — photo inset, not full-bleed. */}
+        <div
+          className={cn(
+            "relative aspect-[3/2] w-full overflow-hidden rounded-3xl bg-ink/10",
+            glassClass("card", { rim: true }),
+          )}
+        >
+          <Image
+            src={dana.image}
+            alt={dana.imageAlt}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 42rem"
+            className="object-cover"
+          />
+        </div>
 
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-5 px-4 pt-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:px-0">
+        <div className="flex flex-col gap-5">
         <div className="space-y-2">
           <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
           <p className="text-base text-muted">{dana.intro}</p>
@@ -149,6 +151,7 @@ export function DanaPage() {
         </ul>
 
         <p className="pb-2 text-center text-xs text-subtle">{dana.credit}</p>
+        </div>
       </div>
     </ListPageFrame>
   );
