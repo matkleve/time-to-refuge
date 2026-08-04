@@ -174,10 +174,13 @@ function FieldRow({
     <span
       className={cn(
         "font-display text-lg font-medium",
-        /* `muted`, not `subtle`: at 17px this needs 4.5:1, and `subtle` only
-           cleared that against solid white (4.59). Once the row went
-           translucent there was no headroom left — see design system §3a. */
-        filled || isTarget ? "text-ink" : "text-muted",
+        /* Armed destroy matches Fields: subject text goes danger red.
+           Idle empty stays muted; target/filled use ink (§3a). */
+        reset.armed
+          ? "text-danger-600"
+          : filled || isTarget
+            ? "text-ink"
+            : "text-muted",
       )}
     >
       {phaseLabel}

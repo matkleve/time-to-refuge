@@ -177,7 +177,7 @@ export function PersonCard({
           <h2
             className={cn(
               "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate px-2 font-display text-2xl font-semibold",
-              remove.armed ? "text-danger-600" : "text-ink",
+              remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
             )}
           >
             {isComplete(person, fields) && (
