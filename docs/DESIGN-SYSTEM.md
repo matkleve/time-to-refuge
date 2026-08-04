@@ -517,6 +517,8 @@ asks first instead of either silently allowing it or blocking it outright —
 see [`USE-CASES.md`](./USE-CASES.md) gap #5. Same reveal as filled-row
 actions (§5a): the stamp packs to **"Jump here"** at fixed height, with
 glass **X · OK** chips on the right — the row never expands vertically.
+While open it uses the **same active cue** as the record target (inset ring
++ held wash + ink label) so the row reads as armed, not idle.
 Tapping the phase that's actually next stays exactly as instant as capture
 itself needs to be — the question only ever interrupts the *uncommon* path.
 

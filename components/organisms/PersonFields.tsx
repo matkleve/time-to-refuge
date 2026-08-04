@@ -162,7 +162,9 @@ function FieldRow({
    * Empty / editing / skip shells keep glass on the outer wrap. Filled rows
    * put glass only on the stamp button — the action tray is a sibling (§5a).
    */
-  const targetClass = isTarget && "ring-2 ring-inset ring-flagblue-500";
+  /* Jump-here is a soft-armed target — same active cue as the record target. */
+  const active = isTarget || confirmSkip;
+  const targetClass = active && "ring-2 ring-inset ring-flagblue-500";
   const shellClassName = cn(
     "no-select transition-shadow duration-200",
     glassRowClass(),
@@ -240,14 +242,14 @@ function FieldRow({
             "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
             ROW_HEIGHT,
             glassRowClass(),
-            userFeedbackClass({ press: "md", on: isTarget }),
+            userFeedbackClass({ press: "md", on: active }),
             targetClass,
           )}
         >
           <span
             className={cn(
               "font-display text-lg font-medium",
-              confirmSkip || filled || isTarget ? "text-ink" : "text-muted",
+              active || filled ? "text-ink" : "text-muted",
             )}
           >
             {confirmSkip ? "Jump here" : phaseLabel}
