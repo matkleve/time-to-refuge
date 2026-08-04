@@ -71,12 +71,8 @@ export function DesktopNav({
       <HeaderScrim className="h-[10rem]" />
       <div className="app-content relative z-10 px-4 py-3 sm:px-5">
         <div className="relative flex h-12 items-center justify-center gap-2">
-          <div className="pointer-events-auto absolute inset-y-0 left-0 flex max-w-[30%] items-center">
-            <BrandLockup
-              titleSize="2xl"
-              onHome={() => onChange("refuge")}
-              className="[&_span]:hidden [&_span]:lg:inline"
-            />
+          <div className="pointer-events-auto absolute inset-y-0 left-0 flex max-w-[40%] items-center">
+            <BrandLockup titleSize="2xl" onHome={() => onChange("refuge")} />
           </div>
 
           <nav
