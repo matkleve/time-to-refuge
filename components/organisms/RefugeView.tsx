@@ -104,11 +104,12 @@ export function RefugeView({
       style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
       {/*
-        Card is content-sized and never scrolls vertically — only swipe.
-        Leftover height goes to the record button, which compresses first.
+        Card fills the space under the page chrome and above the record
+        button. Many fields scroll inside the card — the card shell stays put.
+        Horizontal swipe still changes person.
       */}
       <div
-        className="relative shrink-0 overflow-x-hidden"
+        className="relative min-h-0 flex-1 overflow-x-hidden"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -129,14 +130,18 @@ export function RefugeView({
         </div>
 
         <div
-          className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          className="flex h-full w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
           style={{ transform: `translateX(-${index * 100}%)` }}
         >
           {people.map((p) => {
             const isCurrent = p.id === current?.id;
             return (
-              <div key={p.id} className="w-full shrink-0 px-4 pt-12 pb-1">
+              <div
+                key={p.id}
+                className="flex h-full w-full shrink-0 flex-col px-4 pt-12 pb-1"
+              >
                 <PersonCard
+                  fillHeight
                   person={p}
                   fields={fields}
                   target={isCurrent ? target : null}
@@ -155,9 +160,8 @@ export function RefugeView({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col px-4 pt-3">
+      <div className="shrink-0 px-4 pt-3">
         <LiveClockButton
-          fillRemaining
           onCapture={handleCaptureClick}
           armed={target !== null}
           label={
