@@ -318,6 +318,24 @@ Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
 idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
 shared feedback cover + blue icon.
 
+**State coverage checklist (ship gate).** For every interactive surface,
+verify these are *visibly distinct* — not only wired in props:
+
+| Must show | Examples |
+| --- | --- |
+| Idle | Default glass / muted label |
+| Hover (pointer) | Feedback wash |
+| Pressed | Bounce + active wash |
+| Selected / armed / current | Held wash and/or inset ring + ink — **must match the caption that says what will happen** (e.g. field target ↔ “Tap to record X”) |
+| Disabled | Opacity, no pointer |
+| Focus-visible | Global ring |
+| Error / armed-destroy | Danger fill or red type |
+
+If a parent uses `overflow-hidden`, prefer **`ring-inset`** (or border) over
+outset rings — otherwise the “selected” cue clips away and looks like no
+state at all. Before merge: walk the primary path (UC-1) and confirm every
+armed/selected thing the copy refers to is marked on screen.
+
 ## 4a. Units
 
 **rem is the unit of this system.** Type, spacing, radii and control sizes all
