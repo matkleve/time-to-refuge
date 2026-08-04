@@ -10,6 +10,8 @@ interface ListPageFrameProps {
  * Shared chrome for open-backdrop utility pages (History, Fields, Dana).
  * Horizontal padding: phone owns it here; from `md` the shell `app-content`
  * pad is the single owner (avoid double inset).
+ * Bottom pad clears the iOS Safari toolbar / home indicator so content isn’t
+ * clipped under the browser chrome.
  */
 export function ListPageFrame({ children, className }: ListPageFrameProps) {
   return (
@@ -18,7 +20,10 @@ export function ListPageFrame({ children, className }: ListPageFrameProps) {
         "flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pt-2 md:px-0 md:pt-3",
         className,
       )}
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+      style={{
+        paddingBottom:
+          "max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))",
+      }}
     >
       {children}
     </div>

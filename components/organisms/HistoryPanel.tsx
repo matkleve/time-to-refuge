@@ -41,16 +41,16 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <ListPageFrame className="overflow-hidden">
+    <ListPageFrame>
       <PageTitle title="History" className="shrink-0" />
 
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
+      <div className="mt-3">
         {sorted.length === 0 ? (
           <GlassEmptyNote title="No moments yet" className="mt-16 px-6">
             Recorded, reset, and undone times will gather here as the ceremony goes.
           </GlassEmptyNote>
         ) : (
-          <ul className="mx-auto w-full max-w-xl space-y-2">
+          <ul className="mx-auto w-full max-w-xl space-y-2 pb-2">
             {sorted.map((entry) => (
               <li
                 key={entry.id}
