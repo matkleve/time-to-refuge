@@ -1,7 +1,7 @@
 {
   "name": "Timekeeper",
   "short_name": "Timekeeper",
-  "description": "Record exact wall-clock moments for each person in a session — to the millisecond.",
+  "description": "Record exact wall-clock moments for each person in a session \u2014 to the millisecond.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -20,6 +20,12 @@
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

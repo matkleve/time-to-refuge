@@ -1,36 +1,9 @@
-import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
-/** Triple-jewel mark — Buddha (saffron) · Dharma / Sangha (flag blue). */
-function LogoMark({ size }: { size: number }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 64 64"
-      width={size}
-      height={size}
-      className="shrink-0"
-      aria-hidden
-    >
-      <circle cx="32" cy="32" r="30" fill="#fff" />
-      <path d="M32 4A28 28 0 0 1 56.25 46L32 32Z" fill="#F5A623" />
-      <path d="M56.25 46A28 28 0 0 1 7.75 46L32 32Z" fill="#2456C9" />
-      <path d="M7.75 46A28 28 0 0 1 32 4L32 32Z" fill="#1A41A3" />
-      <circle cx="32" cy="32" r="5.5" fill="#fff" />
-      <path
-        d="M32 32L32 4M32 32L56.25 46M32 32L7.75 46"
-        stroke="#fff"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 /**
- * Header brand: triple-jewel mark + Timekeeper name.
- * Sized to sit in a single ~44–56px toolbar row (iOS / Material app bar).
- * Optional `onHome` — tap logo/title returns to the Session page.
+ * Header brand — wordmark only for now (mark asset TBD).
+ * Hover / press: the type scales up slightly — no wash fill behind the chip.
+ * Optional `onHome` returns to the Session page.
  */
 export function BrandLockup({
   titleSize = "lg",
@@ -43,20 +16,17 @@ export function BrandLockup({
   onHome?: () => void;
   className?: string;
 }) {
-  const mark = titleSize === "2xl" ? 32 : 28;
-
-  const label = (
-    <>
-      <LogoMark size={mark} />
-      <span
-        className={cn(
-          "truncate font-display font-semibold leading-none text-ink",
-          titleSize === "2xl" ? "text-2xl" : "text-lg",
-        )}
-      >
-        Timekeeper
-      </span>
-    </>
+  const title = (
+    <span
+      className={cn(
+        "origin-left truncate font-display font-semibold leading-none text-ink",
+        "transition-transform duration-200 ease-out",
+        "group-hover:scale-[1.06] group-active:scale-[0.97]",
+        titleSize === "2xl" ? "text-2xl" : "text-lg",
+      )}
+    >
+      Timekeeper
+    </span>
   );
 
   if (onHome) {
@@ -66,15 +36,14 @@ export function BrandLockup({
         onClick={onHome}
         aria-label="Timekeeper — open Session"
         className={cn(
-          "flex min-w-0 items-center gap-2 rounded-lg text-left",
-          userFeedbackClass({ press: "sm" }),
+          "group flex min-w-0 cursor-pointer items-center rounded-lg text-left",
           className,
         )}
       >
-        {label}
+        {title}
       </button>
     );
   }
 
-  return <div className={cn("flex min-w-0 items-center gap-2", className)}>{label}</div>;
+  return <div className={cn("flex min-w-0 items-center", className)}>{title}</div>;
 }

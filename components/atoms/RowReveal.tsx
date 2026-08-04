@@ -24,6 +24,10 @@ export function RowPackSpacer({ packed }: { packed: boolean }) {
  * Sibling action tray outside the glass stamp. `0fr` ↔ `1fr` grows to the
  * exact content width (`w-max` child). Opacity lags the open so chips are
  * never shown clipped mid-expand.
+ *
+ * `shrink-0` — the stamp is `flex-1 min-w-0`; without this the tray collapses
+ * and `overflow-hidden` slices the chips (and their shadows) mid-circle.
+ * When open, overflow is visible so glass specular isn’t clipped.
  */
 export function RowActionTray({
   open,
@@ -37,7 +41,7 @@ export function RowActionTray({
   return (
     <div
       className={cn(
-        "grid transition-[grid-template-columns]",
+        "grid shrink-0 transition-[grid-template-columns]",
         REVEAL_DURATION,
         REVEAL_EASE,
         open ? "grid-cols-[1fr]" : "grid-cols-[0fr] pointer-events-none",
@@ -45,10 +49,10 @@ export function RowActionTray({
       )}
       aria-hidden={!open}
     >
-      <div className="min-w-0 overflow-hidden">
+      <div className={cn(open ? "overflow-visible" : "min-w-0 overflow-hidden")}>
         <div
           className={cn(
-            "flex w-max items-center gap-4 py-0.5 pl-2 pr-1.5",
+            "flex w-max items-center gap-4 py-1 pl-2 pr-1.5",
             "transition-opacity",
             REVEAL_EASE,
             open

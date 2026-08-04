@@ -10,16 +10,30 @@ interface PageTitleProps {
 }
 
 /**
- * Shared page heading — plain `font-display text-2xl` title.
- * Row height matches trailing IconButton md (44px).
+ * Shared page heading — centered `font-display text-2xl` title.
+ * Brand stays in the header above; this row is the page name only.
+ * With `trailing`, a 3-col grid keeps the title centered.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (
-    <div className={cn("flex items-center justify-between gap-3", controlH.md, className)}>
-      <h2 className="min-w-0 truncate font-display text-2xl font-semibold text-ink">
+    <div
+      className={cn(
+        "grid items-center gap-3",
+        controlH.md,
+        trailing ? "grid-cols-[1fr_auto_1fr]" : "grid-cols-1",
+        className,
+      )}
+    >
+      {trailing ? <span aria-hidden className="min-w-0" /> : null}
+      <h2
+        className={cn(
+          "min-w-0 truncate text-center font-display text-2xl font-semibold text-ink",
+          trailing && "justify-self-center",
+        )}
+      >
         {title}
       </h2>
-      {trailing}
+      {trailing ? <div className="justify-self-end">{trailing}</div> : null}
     </div>
   );
 }

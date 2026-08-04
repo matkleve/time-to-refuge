@@ -10,8 +10,8 @@ import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
  * read through. People and History are pages in the same shell slot as
  * Refuge / Quick Log (not overlays). See design system §3 / §3a.
  *
- * Rendered below the `lg` breakpoint — see `app/page.tsx`, which switches
- * to `DesktopShell` above it instead of stretching this one.
+ * Rendered below the `md` breakpoint (768px) — see `app/page.tsx`, which
+ * switches to `DesktopShell` for tablet and up instead of stretching this one.
  */
 export function AppShell({ children }: { children: ReactNode }) {
   return (
