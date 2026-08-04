@@ -167,6 +167,18 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* Interactive affordance — browsers don't always default <button> to pointer. */
+  :where(button, [role="button"], [role="menuitem"], summary):not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    cursor: pointer;
+  }
+
+  :where(button, [role="button"], [role="menuitem"]):disabled,
+  :where(button, [role="button"], [role="menuitem"])[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 /*
@@ -185,6 +197,7 @@
     --feedback-press-up: 1.08;
     position: relative;
     isolation: isolate;
+    cursor: pointer;
     transition:
       color 200ms ease-out,
       opacity 200ms ease-out,
