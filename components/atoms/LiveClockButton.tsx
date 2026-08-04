@@ -12,8 +12,9 @@ interface LiveClockButtonProps {
   armed: boolean;
   label: string;
   /**
-   * Refuge mobile: fill leftover column height and compress before the
-   * person card ever scrolls. Desktop / default keeps a fixed min height.
+   * When true, stretch to fill a flex parent (legacy). Session mobile no
+   * longer uses this — the person card takes leftover height instead, and
+   * the record button stays a fixed comfortable size.
    */
   fillRemaining?: boolean;
 }

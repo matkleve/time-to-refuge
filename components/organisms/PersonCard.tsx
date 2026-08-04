@@ -33,6 +33,11 @@ interface PersonCardProps {
   isCurrent?: boolean;
   /** Stamped into the shared PNG; shown as a caption when set. */
   retreatName?: string;
+  /**
+   * Session mobile: stretch to the column height; field rows scroll inside.
+   * People list / desktop keep content height.
+   */
+  fillHeight?: boolean;
 }
 
 /**
@@ -53,6 +58,7 @@ export function PersonCard({
   onRename,
   isCurrent = false,
   retreatName = "",
+  fillHeight = false,
 }: PersonCardProps) {
   const [shareNote, setShareNote] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
@@ -193,22 +199,30 @@ export function PersonCard({
     <Surface
       material={isCurrent ? "glass-card-current" : "glass-card"}
       rim
-      className="overflow-hidden rounded-3xl"
+      className={cn(
+        "overflow-hidden rounded-3xl",
+        fillHeight && "flex h-full min-h-0 flex-col",
+      )}
     >
       {showRetreatCaption && (
-        <p className="truncate px-4 pt-3 text-xs tracking-wide text-ink uppercase">
+        <p className="shrink-0 truncate px-4 pt-3 text-xs tracking-wide text-ink uppercase">
           {retreatName}
         </p>
       )}
-      {nameRow}
+      <div className="shrink-0">{nameRow}</div>
 
       {shareNote && (
-        <p className="no-select animate-fade-in-up px-4 pt-1 text-sm text-flagblue-600" role="status">
+        <p className="no-select animate-fade-in-up shrink-0 px-4 pt-1 text-sm text-flagblue-600" role="status">
           {shareNote}
         </p>
       )}
 
-      <div className="p-3">
+      <div
+        className={cn(
+          "p-3",
+          fillHeight && "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+        )}
+      >
         <PersonFields
           person={person}
           fields={fields}
