@@ -5,13 +5,33 @@ import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LocationCheck } from "@/components/atoms/LocationCheck";
 import { ShowcaseSection } from "@/components/dev/ShowcaseSection";
 import { controlMinH } from "@/lib/control-size";
-import { interactiveGlassClass, interactiveActionClass, interactiveGlassFlushChipClass } from "@/lib/interactive-glass";
+import {
+  interactiveActionClass,
+  interactiveGlassClass,
+  interactiveGlassFlushChipClass,
+} from "@/lib/interactive-glass";
+import { PersonCardNameDisplay } from "@/components/organisms/PersonCardNameDisplay";
+import { BrandLockup } from "@/components/atoms/BrandLockup";
+import { DEMO_FIELDS, DEMO_PERSON_PARTIAL } from "@/components/dev/showcase-data";
 import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 
 export function ShowcaseMisc() {
   return (
     <>
+      <ShowcaseSection title="Person name + brand" hint="Feedback-only taps (no separate glass shell).">
+        <div className="max-w-sm space-y-3 rounded-2xl bg-white/40 p-3">
+          <PersonCardNameDisplay
+            person={DEMO_PERSON_PARTIAL}
+            fields={DEMO_FIELDS}
+            onSelectPerson={() => {}}
+            isCurrent
+            dangerTone={false}
+          />
+          <BrandLockup onHome={() => {}} />
+        </div>
+      </ShowcaseSection>
+
       <ShowcaseSection title="Landing card + CTA">
         <div className="grid max-w-lg gap-3 sm:grid-cols-2">
           <button

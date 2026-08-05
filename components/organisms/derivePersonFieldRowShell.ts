@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { glassFlushRowClass } from "@/lib/surfaces";
 
 export function derivePersonFieldRowShell(
   isTarget: boolean,

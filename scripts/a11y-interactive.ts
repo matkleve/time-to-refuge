@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Interactive glass audit — tappable controls must not pair `glass*Class` /
- * `actionClass` with `userFeedbackClass` manually. Use `@/lib/interactive-glass`.
+ * Interactive glass audit — components must not import `userFeedbackClass` or
+ * pair `glass*Class` / `actionClass` with feedback manually. Use
+ * `@/lib/interactive-glass` helpers so material + `.user-feedback` stay on ONE node.
  *
  * Run: `npm run a11y:interactive`
  */
@@ -20,17 +21,22 @@ const SKIP_DIRS = new Set([
   "docs",
 ]);
 
-const GLASS_IMPORT =
-  /from\s+["']@\/lib\/surfaces["']/;
-const FEEDBACK_IMPORT =
-  /from\s+["']@\/lib\/user-feedback["']/;
-const INTERACTIVE_IMPORT =
-  /from\s+["']@\/lib\/interactive-glass["']/;
+const GLASS_IMPORT = /from\s+["']@\/lib\/surfaces["']/;
+const FEEDBACK_VALUE_IMPORT =
+  /import\s+(?!type\s)\{[^}]*\buserFeedbackClass\b[^}]*\}\s+from\s+["']@\/lib\/user-feedback["']/;
+const FEEDBACK_NAMED_IMPORT =
+  /import\s+\{\s*userFeedbackClass\s*\}\s+from\s+["']@\/lib\/user-feedback["']/;
+const INTERACTIVE_IMPORT = /from\s+["']@\/lib\/interactive-glass["']/;
+
+const GLASS_CLASS_CALL =
+  /\b(?:glassFlushClass|glassFlushRowClass|glassFlushChipClass|glassClass|glassRowClass|glassChipClass|glassNavTabClass|actionClass)\s*\(/;
 
 const ALLOWLIST = new Set([
   "lib/interactive-glass.ts",
   "lib/surfaces.ts",
   "lib/user-feedback.ts",
+  "components/atoms/Surface.tsx",
+  "components/atoms/icon-button-classes.ts",
   "app/dev/fonts/FontPicker.tsx",
 ]);
 
@@ -55,13 +61,29 @@ for (const abs of files) {
   const rel = relative(ROOT, abs);
   if (ALLOWLIST.has(rel)) continue;
   const src = readFileSync(abs, "utf8");
+
+  if (FEEDBACK_VALUE_IMPORT.test(src) || FEEDBACK_NAMED_IMPORT.test(src)) {
+    problems.push(
+      `${rel}: imports userFeedbackClass — use interactiveFeedbackClass / interactive-glass helpers`,
+    );
+    continue;
+  }
+
   const hasGlass = GLASS_IMPORT.test(src);
-  const hasFeedback = FEEDBACK_IMPORT.test(src);
-  if (!hasGlass || !hasFeedback) continue;
-  if (INTERACTIVE_IMPORT.test(src)) continue;
-  problems.push(
-    `${rel}: imports both @/lib/surfaces and @/lib/user-feedback — use @/lib/interactive-glass helpers`,
-  );
+  const hasInteractive = INTERACTIVE_IMPORT.test(src);
+  const usesGlassClass = GLASS_CLASS_CALL.test(src);
+
+  if (hasGlass && !hasInteractive) {
+    problems.push(
+      `${rel}: imports @/lib/surfaces — use @/lib/interactive-glass (staticGlass* for non-interactive shells)`,
+    );
+  }
+
+  if (usesGlassClass && !hasInteractive && !ALLOWLIST.has(rel)) {
+    problems.push(
+      `${rel}: calls glass*Class / actionClass without @/lib/interactive-glass`,
+    );
+  }
 }
 
 if (problems.length) {

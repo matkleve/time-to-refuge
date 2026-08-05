@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
 import { controlMinH } from "@/lib/control-size";
-import { glassFlushClass } from "@/lib/surfaces";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
+import {
+  interactiveGlassFlushClass,
+  staticGlassFlushClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface RetreatNameFieldProps {
@@ -34,7 +36,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     controlMinH.md,
     className,
   );
-  const editingShell = cn(shellLayout, glassFlushClass(), glassPillFocusWithin);
+  const editingShell = cn(shellLayout, staticGlassFlushClass(), glassPillFocusWithin);
 
   if (editing) {
     return (

@@ -7,7 +7,7 @@ import {
   formatEuro,
   shortMarkLabel,
 } from "@/lib/dana-progress";
-import { glassFlushClass } from "@/lib/surfaces";
+import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface DanaProgressProps {
@@ -45,7 +45,7 @@ export function DanaProgress({
     <div
       className={cn(
         "flex flex-col gap-3 rounded-2xl px-4 py-3.5",
-        glassFlushClass(),
+        staticGlassFlushClass(),
       )}
     >
       <div className="flex items-baseline justify-between gap-3">

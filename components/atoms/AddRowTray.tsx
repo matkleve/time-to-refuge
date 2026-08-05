@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { glassFlushClass } from "@/lib/surfaces";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
+import {
+  interactiveGlassFlushClass,
+  staticGlassFlushClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 
@@ -54,7 +56,7 @@ export function AddRowTray({
           className={cn(
             "flex min-w-0 flex-1 items-center rounded-full",
             controlMinH.md,
-            glassFlushClass(),
+            staticGlassFlushClass(),
             glassPillFocusWithin,
           )}
         >

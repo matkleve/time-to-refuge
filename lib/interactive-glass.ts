@@ -3,8 +3,9 @@
  *
  * PressBounceRegister scales the nearest `.user-feedback` node. If glass
  * lives on a parent and feedback on a child, only the inner content bounces.
- * Always use these helpers for interactive controls — never pair
- * `glass*Class` + `userFeedbackClass` manually in components.
+ *
+ * Import surface from here only — never pair `glass*Class` / `actionClass` with
+ * `userFeedbackClass` manually in components.
  */
 import { cn } from "@/lib/utils";
 import {
@@ -21,6 +22,25 @@ export type InteractiveFeedback = {
   press?: FeedbackPress;
   on?: boolean;
 };
+
+/** Non-interactive glass (editing shells, static rows). No press bounce. */
+export function staticGlassFlushClass(
+  kind: "panel" | "card" | "cardCurrent" = "card",
+): string {
+  return glassFlushClass(kind);
+}
+
+export function staticGlassFlushRowClass(): string {
+  return glassFlushRowClass();
+}
+
+/** Feedback only — menu rows, opaque pills, composite sub-targets inside glass. */
+export function interactiveFeedbackClass(feedback: InteractiveFeedback = {}): string {
+  return userFeedbackClass(feedback);
+}
+
+/** Re-export for destroy-arm menu rows / icon buttons — not paired with glass. */
+export { armedDestroyClass } from "@/lib/user-feedback";
 
 export function interactiveGlassFlushClass(
   kind: "panel" | "card" | "cardCurrent" = "card",

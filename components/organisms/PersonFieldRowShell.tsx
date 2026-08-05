@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { glassFlushRowClass } from "@/lib/surfaces";
+import { staticGlassFlushRowClass } from "@/lib/interactive-glass";
 
 interface PersonFieldRowShellProps {
   editing: boolean;
@@ -18,7 +18,7 @@ export function PersonFieldRowShell({
 }: PersonFieldRowShellProps) {
   if (editing) {
     return (
-      <div className={cn("rounded-2xl", glassFlushRowClass(), shellClassName)}>{children}</div>
+      <div className={cn("rounded-2xl", staticGlassFlushRowClass(), shellClassName)}>{children}</div>
     );
   }
 

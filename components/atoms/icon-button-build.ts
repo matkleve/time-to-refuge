@@ -1,5 +1,4 @@
-import { interactiveGlassFlushChipClass } from "@/lib/interactive-glass";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveFeedbackClass, interactiveGlassFlushChipClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import {
   iconButtonIconSize,
@@ -40,7 +39,7 @@ export function buildIconButtonClassName({
     surfaceClass ??
       (useGlass
         ? interactiveGlassFlushChipClass({ press, on: feedbackOn })
-        : userFeedbackClass({ press, on: feedbackOn })),
+        : interactiveFeedbackClass({ press, on: feedbackOn })),
     visible ? iconButtonLabeledSizeClass[size] : iconButtonSizeClass[size],
     iconButtonToneClass(useGlass, armed, tone),
     hideWhenDisabled && "disabled:opacity-0",

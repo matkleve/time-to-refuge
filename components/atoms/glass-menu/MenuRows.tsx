@@ -1,7 +1,7 @@
 "use client";
 
 import { controlMinH } from "@/lib/control-size";
-import { armedDestroyClass, userFeedbackClass } from "@/lib/user-feedback";
+import { armedDestroyClass, interactiveFeedbackClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import type { GlassMenuItem } from "./types";
 
@@ -30,7 +30,7 @@ export function MenuRows({
               controlMinH.md,
               "disabled:pointer-events-none disabled:opacity-35",
               /* Chrome recipe: wash + bounce only — no second hover:bg. */
-              userFeedbackClass({ press: "md", on: item.selected }),
+              interactiveFeedbackClass({ press: "md", on: item.selected }),
               /* Destroy arm: same filled chip as IconButton.armed. */
               armed
                 ? armedDestroyClass
