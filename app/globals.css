@@ -371,6 +371,11 @@
     --feedback-active: rgb(255 255 255 / 0.18);
   }
 
+  /* Press bounce only — no hover/active wash (BrandLockup). */
+  .user-feedback--no-wash::after {
+    content: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .user-feedback.is-press-bounce {
       animation: none;
