@@ -4,7 +4,6 @@ import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
-import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
 import { PersonRailRow } from "./PersonRailRow";
