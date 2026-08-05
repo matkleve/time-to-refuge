@@ -7,6 +7,7 @@ import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
 import { controlH, controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
 import { glassFlushClass } from "@/lib/surfaces";
+import { glassPillFocusWithin } from "@/lib/focus-cues";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -39,9 +40,7 @@ export function TimezoneSelect({
     className,
   );
 
-  const focusWrap = cn(
-    "rounded-2xl focus-within:outline-none focus-within:ring-2 focus-within:ring-flagblue-600 focus-within:ring-offset-2",
-  );
+  const focusWrap = cn("rounded-2xl", glassPillFocusWithin);
 
   const menu =
     open && box ? (
