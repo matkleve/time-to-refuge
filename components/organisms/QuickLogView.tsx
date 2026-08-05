@@ -182,6 +182,60 @@ export function QuickLogView() {
   if (!ready) return null;
 
   const sorted = [...entries].sort((a, b) => b.at - a.at);
+  const isDesktop = !tapAnywhere;
+
+  const chrome = (
+    <div className="flex flex-col gap-2">
+      <PageTitle
+        title="Quick Log"
+        trailing={
+          <IconButton
+            icon={RotateCcw}
+            label={
+              clearAll.armed
+                ? "Confirm clear all logged times"
+                : "Clear all logged times"
+            }
+            showLabel="Clear"
+            glass
+            tone="danger"
+            size="md"
+            disabled={entries.length === 0}
+            armed={clearAll.armed}
+            onClick={(e) => {
+              e.stopPropagation();
+              clearAll.trigger();
+            }}
+          />
+        }
+      />
+      <p className="text-base tabular-nums text-muted">{entries.length} logged</p>
+      <TimezoneSelect value={tz} onChange={setTz} chip />
+    </div>
+  );
+
+  const logList = (
+    <div className="mx-auto flex w-full max-w-xl flex-col-reverse gap-2 px-1 py-3 md:mx-0 md:max-w-none md:px-0">
+      {sorted.length === 0 ? (
+        <GlassEmptyNote className="mx-auto md:mx-0">
+          {tapAnywhere
+            ? "Tap anywhere to log a time."
+            : "Tap the button to log a time."}
+        </GlassEmptyNote>
+      ) : (
+        sorted.map((entry, i) => (
+          <LogRow
+            key={entry.id}
+            index={sorted.length - i}
+            at={entry.at}
+            tz={tz}
+            armedAll={clearAll.armed}
+            onDelete={() => deleteEntry(entry.id)}
+          />
+        ))
+      )}
+    </div>
+  );
 
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
@@ -189,82 +243,39 @@ export function QuickLogView() {
        omit onClick — only QuickLogButton stamps. Keyboard uses that button. */
     <div
       className={cn(
-        "no-select absolute inset-0 z-0 flex flex-col",
+        "no-select absolute inset-0 z-0 flex flex-col md:flex-row md:gap-5 lg:gap-6",
         tapAnywhere && "cursor-pointer",
       )}
       onClick={tapAnywhere ? handleLog : undefined}
     >
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
-        <div onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}>
-          <StickyPageChrome>
-            <div className="flex flex-col gap-2">
-              <PageTitle
-                title="Quick Log"
-                trailing={
-                  <IconButton
-                    icon={RotateCcw}
-                    label={
-                      clearAll.armed
-                        ? "Confirm clear all logged times"
-                        : "Clear all logged times"
-                    }
-                    showLabel="Clear"
-                    glass
-                    tone="danger"
-                    size="md"
-                    disabled={entries.length === 0}
-                    armed={clearAll.armed}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      clearAll.trigger();
-                    }}
-                  />
-                }
-              />
-              <p className="text-base tabular-nums text-muted">
-                {entries.length} logged
-              </p>
-              <TimezoneSelect value={tz} onChange={setTz} chip />
-            </div>
-          </StickyPageChrome>
-        </div>
-
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Row actions shouldn’t also stamp a quick-log time. */}
-        <div
-          className="mx-auto flex w-full max-w-xl flex-col-reverse gap-2 px-1 py-3 md:px-0"
-          onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-        >
-          {sorted.length === 0 ? (
-            <GlassEmptyNote className="mx-auto">
-              {tapAnywhere
-                ? "Tap anywhere to log a time."
-                : "Tap the button to log a time."}
-            </GlassEmptyNote>
-          ) : (
-            sorted.map((entry, i) => (
-              <LogRow
-                key={entry.id}
-                index={sorted.length - i}
-                at={entry.at}
-                tz={tz}
-                armedAll={clearAll.armed}
-                onDelete={() => deleteEntry(entry.id)}
-              />
-            ))
-          )}
-        </div>
+      {/* Logs (+ chrome). Phone: top scroll. Desktop: right column. */}
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Stops the page-wide tap-to-log layer; Clear / rows are real controls. */}
+      <div
+        className="order-1 min-h-0 flex-1 overflow-y-auto overscroll-contain md:order-2"
+        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+      >
+        <StickyPageChrome>{chrome}</StickyPageChrome>
+        {logList}
       </div>
 
+      {/* Stamp button. Phone: bottom bar. Desktop: left column. */}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Record control owns the stamp; don’t double-fire from the pad. */}
       <div
-        className="mx-auto w-full max-w-xl shrink-0 px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:px-0"
+        className={cn(
+          "order-2 shrink-0 md:order-1",
+          isDesktop
+            ? "flex w-64 shrink-0 flex-col justify-center pt-[4.5rem] pb-4 lg:w-80"
+            : "mx-auto w-full max-w-xl px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2",
+        )}
         onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
       >
-        <QuickLogButton flash={flash} onLog={handleLog} />
+        <QuickLogButton
+          flash={flash}
+          onLog={handleLog}
+          hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
+        />
       </div>
     </div>
   );

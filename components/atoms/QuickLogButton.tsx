@@ -10,9 +10,15 @@ import { LocationCheck } from "./LocationCheck";
 interface QuickLogButtonProps {
   flash: boolean;
   onLog: () => void;
+  /** Phone copy says “anywhere”; desktop is button-only. */
+  hint?: string;
 }
 
-export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
+export function QuickLogButton({
+  flash,
+  onLog,
+  hint = "Tap anywhere to log",
+}: QuickLogButtonProps) {
   const [now, setNow] = useState<Date | null>(null);
   const rafRef = useRef<number | undefined>(undefined);
 
@@ -55,7 +61,7 @@ export function QuickLogButton({ flash, onLog }: QuickLogButtonProps) {
           {time}
           <span className="text-2xl text-ink/65">.{ms}</span>
         </span>
-        <span className="text-xs tracking-[0.2em] text-ink/80 uppercase">Tap anywhere to log</span>
+        <span className="text-xs tracking-[0.2em] text-ink/80 uppercase">{hint}</span>
       </button>
       {/* Same verify control as the Refuge record button (UC-6). */}
       <div className="absolute -top-3 -right-2">
