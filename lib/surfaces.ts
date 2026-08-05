@@ -164,10 +164,18 @@ export function glassFlushChipClass(): string {
 
 /**
  * Selected desktop nav tab — quiet white glass chip (not saffron).
- * Pair with `font-semibold` at the call site.
+ * Pair with `font-semibold` on every tab so selected state does not shift width.
  */
 export function glassNavSelectedClass(): string {
   return glassFlushChipClass();
+}
+
+/** Idle nav tab — same 1px border box as selected; no fill/blur (no layout jump). */
+export const GLASS_NAV_TAB_IDLE =
+  "border border-transparent bg-transparent shadow-none backdrop-blur-none backdrop-saturate-100" as const;
+
+export function glassNavTabClass(selected: boolean): string {
+  return selected ? glassNavSelectedClass() : GLASS_NAV_TAB_IDLE;
 }
 
 export function filledCardClass(isCurrent = false): string {

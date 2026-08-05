@@ -21,6 +21,7 @@ npm run a11y
 7. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no soft-lift). Soft-lift (`shadow-glass`) only on floating menus/panels. Never pair soft-lift + `overflow-x: clip` + `px-0`.
 8. **No nested vertical pad** inside `StickyPageChrome` on top of clearance.
 9. Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5`).
+10. **Desktop nav tabs** — always `font-semibold` + `glassNavTabClass(selected)` (idle = transparent border box, selected = glass fill). Never toggle font weight or border width only on selected.
 
 ## Overflow / focus
 
