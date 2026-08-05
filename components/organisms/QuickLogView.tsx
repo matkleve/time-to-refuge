@@ -15,6 +15,7 @@ import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { PageTitle } from "@/components/atoms/PageTitle";
+import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -188,64 +189,81 @@ export function QuickLogView() {
        omit onClick — only QuickLogButton stamps. Keyboard uses that button. */
     <div
       className={cn(
-        "no-select flex flex-1 flex-col overflow-hidden",
+        "no-select absolute inset-0 z-0 flex flex-col",
         tapAnywhere && "cursor-pointer",
       )}
       onClick={tapAnywhere ? handleLog : undefined}
     >
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+           Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
+        <div onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}>
+          <StickyPageChrome>
+            <div className="flex flex-col gap-2">
+              <PageTitle
+                title="Quick Log"
+                trailing={
+                  <IconButton
+                    icon={RotateCcw}
+                    label={
+                      clearAll.armed
+                        ? "Confirm clear all logged times"
+                        : "Clear all logged times"
+                    }
+                    showLabel="Clear"
+                    glass
+                    tone="danger"
+                    size="md"
+                    disabled={entries.length === 0}
+                    armed={clearAll.armed}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearAll.trigger();
+                    }}
+                  />
+                }
+              />
+              <p className="text-base tabular-nums text-muted">
+                {entries.length} logged
+              </p>
+              <TimezoneSelect value={tz} onChange={setTz} chip />
+            </div>
+          </StickyPageChrome>
+        </div>
+
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+           Row actions shouldn’t also stamp a quick-log time. */}
+        <div
+          className="mx-auto flex w-full max-w-xl flex-col-reverse gap-2 px-1 py-3 md:px-0"
+          onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+        >
+          {sorted.length === 0 ? (
+            <GlassEmptyNote className="mx-auto">
+              {tapAnywhere
+                ? "Tap anywhere to log a time."
+                : "Tap the button to log a time."}
+            </GlassEmptyNote>
+          ) : (
+            sorted.map((entry, i) => (
+              <LogRow
+                key={entry.id}
+                index={sorted.length - i}
+                at={entry.at}
+                tz={tz}
+                armedAll={clearAll.armed}
+                onDelete={() => deleteEntry(entry.id)}
+              />
+            ))
+          )}
+        </div>
+      </div>
+
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-         Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
+         Record control owns the stamp; don’t double-fire from the pad. */}
       <div
-        className="flex shrink-0 flex-col gap-2 px-3 pb-1 pt-2 md:px-0 md:pt-3"
+        className="mx-auto w-full max-w-xl shrink-0 px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:px-0"
         onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
       >
-        <PageTitle
-          title="Quick Log"
-          trailing={
-            <IconButton
-              icon={RotateCcw}
-              label={
-                clearAll.armed ? "Confirm clear all logged times" : "Clear all logged times"
-              }
-              showLabel="Clear"
-              glass
-              tone="danger"
-              size="md"
-              disabled={entries.length === 0}
-              armed={clearAll.armed}
-              onClick={(e) => {
-                e.stopPropagation();
-                clearAll.trigger();
-              }}
-            />
-          }
-        />
-        <p className="text-base tabular-nums text-muted">
-          {entries.length} logged
-        </p>
-        <TimezoneSelect value={tz} onChange={setTz} chip />
-      </div>
-
-      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col-reverse gap-2 overflow-y-auto px-1 py-3 md:px-0">
-        {sorted.length === 0 ? (
-          <GlassEmptyNote className="mx-auto">
-            {tapAnywhere ? "Tap anywhere to log a time." : "Tap the button to log a time."}
-          </GlassEmptyNote>
-        ) : (
-          sorted.map((entry, i) => (
-            <LogRow
-              key={entry.id}
-              index={sorted.length - i}
-              at={entry.at}
-              tz={tz}
-              armedAll={clearAll.armed}
-              onDelete={() => deleteEntry(entry.id)}
-            />
-          ))
-        )}
-      </div>
-
-      <div className="mx-auto w-full max-w-xl px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:px-0">
         <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>

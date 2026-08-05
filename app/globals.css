@@ -296,9 +296,9 @@
   }
 
   /*
-   * App header scrim — progressive fade under brand + page-title band so
-   * scrolling content softens as it disappears under the chrome. Strong blur
-   * stays in the toolbar; the title band only gets a light wash.
+   * Brand toolbar scrim — progressive fade under the floating header so
+   * scrolling lists soften as they pass under the brand. Page titles use
+   * `.title-scrim` in `StickyPageChrome` (separate band, title text stays sharp).
    */
   .header-scrim {
     pointer-events: none;
@@ -321,10 +321,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 45%,
-      transparent 88%
+      #000 55%,
+      transparent 100%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 88%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
   }
 
   .header-scrim__layer[data-strength="2"] {
@@ -333,10 +333,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 32%,
-      transparent 70%
+      #000 40%,
+      transparent 85%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 70%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 85%);
   }
 
   .header-scrim__layer[data-strength="3"] {
@@ -345,10 +345,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 18%,
-      transparent 48%
+      #000 22%,
+      transparent 60%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 48%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 22%, transparent 60%);
   }
 
   .header-scrim__layer[data-strength="4"] {
@@ -357,10 +357,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 10%,
-      transparent 36%
+      #000 12%,
+      transparent 42%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 10%, transparent 36%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, transparent 42%);
   }
 
   .header-scrim__tint {
@@ -368,15 +368,78 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgb(255 255 255 / 0.26) 0%,
-      rgb(255 255 255 / 0.1) 40%,
-      rgb(255 255 255 / 0.03) 68%,
-      transparent 90%
+      rgb(255 255 255 / 0.28) 0%,
+      rgb(255 255 255 / 0.12) 45%,
+      rgb(255 255 255 / 0.04) 75%,
+      transparent 100%
+    );
+  }
+
+  /*
+   * Page-title band scrim — sits inside `StickyPageChrome` behind the title
+   * text so lists fade under “Fields” / “People” / etc. without frosting the
+   * heading itself.
+   */
+  .title-scrim {
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .title-scrim__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .title-scrim__layer[data-strength="1"] {
+    -webkit-backdrop-filter: blur(1px) saturate(1.15);
+    backdrop-filter: blur(1px) saturate(1.15);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 50%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+  }
+
+  .title-scrim__layer[data-strength="2"] {
+    -webkit-backdrop-filter: blur(4px) saturate(1.2);
+    backdrop-filter: blur(4px) saturate(1.2);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 35%,
+      transparent 80%
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 80%);
+  }
+
+  .title-scrim__layer[data-strength="3"] {
+    -webkit-backdrop-filter: blur(8px) saturate(1.25);
+    backdrop-filter: blur(8px) saturate(1.25);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 18%,
+      transparent 55%
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 55%);
+  }
+
+  .title-scrim__tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.22) 0%,
+      rgb(255 255 255 / 0.08) 55%,
+      transparent 100%
     );
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .header-scrim__layer {
+    .header-scrim__layer,
+    .title-scrim__layer {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }

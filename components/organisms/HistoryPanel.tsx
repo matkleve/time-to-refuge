@@ -41,9 +41,7 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <ListPageFrame>
-      <PageTitle title="History" className="shrink-0" />
-
+    <ListPageFrame pin={<PageTitle title="History" />}>
       <div className="mt-3">
         {sorted.length === 0 ? (
           <GlassEmptyNote title="No moments yet" className="mt-16 px-6">
