@@ -328,12 +328,26 @@ fills use `.user-feedback--on-accent` (white wash). Chrome controls
 (`IconButton`, hamburger / ⋯) opt in via `userFeedbackClass()`; don’t invent
 a second hover recipe locally.
 
+**Three interaction recipes (only these).** Anything else is drift — see
+[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./INTERACTIVE-STATES-AUDIT-2026-08.md).
+
+| Recipe | Cue | Use |
+| --- | --- | --- |
+| **Chrome** | `userFeedbackClass` wash + press bounce (± `.is-feedback-on` when open/selected) | IconButton, nav, menu rows, chips, stamps |
+| **Record target** | Chrome + inset `ring-flagblue-500` + ink label + matching caption | Empty field / Jump-here |
+| **Destroy arm** | [`armedDestroyClass`](../lib/user-feedback.ts) filled danger + subject `text-danger-600` | IconButton `armed`, GlassMenu danger+selected, field/Quick Log resets |
+
+Named exceptions (do not copy elsewhere): large `actionClass` CTAs may add
+`hover:brightness-*`; BrandLockup stays scale-only (no wash).
+
 Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
 idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
 shared feedback cover + blue icon.
 
 **State coverage checklist (ship gate).** For every interactive surface,
-verify these are *visibly distinct* — not only wired in props:
+verify these are *visibly distinct* — not only wired in props. Full inventory
+of primitives vs one-offs:
+[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./INTERACTIVE-STATES-AUDIT-2026-08.md).
 
 | Must show | Examples |
 | --- | --- |

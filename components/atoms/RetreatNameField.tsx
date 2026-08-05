@@ -59,7 +59,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
+          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70"
         />
       </div>
     );

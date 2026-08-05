@@ -37,3 +37,11 @@ export function userFeedbackClass(options?: {
     options?.on && "is-feedback-on",
   );
 }
+
+/**
+ * Two-tap destroy arm — filled danger chip (IconButton, GlassMenu rows).
+ * Pair with subject copy `text-danger-600` (armed-subject gate).
+ */
+export const armedDestroyClass =
+  "user-feedback--on-accent bg-danger-600 text-white hover:text-white" as const;
+

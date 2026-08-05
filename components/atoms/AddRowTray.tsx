@@ -76,7 +76,7 @@ export function AddRowTray({
             placeholder={placeholder}
             aria-label={inputLabel}
             className={cn(
-              "min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70 focus:outline-none",
+              "min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70",
               controlMinH.md,
             )}
           />

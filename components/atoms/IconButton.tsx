@@ -2,7 +2,11 @@
 
 import type { LucideIcon } from "lucide-react";
 import { glassChipClass } from "@/lib/surfaces";
-import { userFeedbackClass, type FeedbackPress } from "@/lib/user-feedback";
+import {
+  armedDestroyClass,
+  userFeedbackClass,
+  type FeedbackPress,
+} from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
 type Tone = "neutral" | "accent" | "danger" | "onAccent";
@@ -133,7 +137,7 @@ export function IconButton({
            fill change + glyph contrast; aria-label already says Confirm. */
         useGlass ? glassChipClass() : null,
         armed
-          ? "user-feedback--on-accent bg-danger-600 text-white hover:text-white"
+          ? armedDestroyClass
           : useGlass
             ? glassToneClass[tone]
             : toneClass[tone],
