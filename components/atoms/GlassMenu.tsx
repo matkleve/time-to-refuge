@@ -1,138 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { MoreVertical, type LucideIcon } from "lucide-react";
-import { controlMinH } from "@/lib/control-size";
-import { actionClass } from "@/lib/surfaces";
-import { armedDestroyClass, userFeedbackClass } from "@/lib/user-feedback";
+import { MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
-import { Surface } from "@/components/atoms/Surface";
+import { IconButton } from "@/components/atoms/IconButton";
+import { GlassMenuPanel } from "@/components/atoms/glass-menu/GlassMenuPanel";
+import { useGlassMenu } from "@/components/atoms/glass-menu/useGlassMenu";
+import type { GlassMenuProps } from "@/components/atoms/glass-menu/types";
 
-export type GlassMenuItem = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  onSelect: () => void;
-  /** Danger copy / armed destructive. */
-  tone?: "neutral" | "danger";
-  disabled?: boolean;
-  /** Light glass wash — current page, or an armed destructive row. */
-  selected?: boolean;
-  /** Keep the menu open after this item (e.g. first arm tap). */
-  keepOpen?: boolean;
-};
-
-export type GlassMenuSection = {
-  /** Small tracked caption above the group (e.g. Pages, Actions). */
-  title: string;
-  items: GlassMenuItem[];
-};
-
-/** Icon-only strip at the bottom of a sectioned menu (Undo / Redo). */
-export type GlassMenuIconAction = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  onSelect: () => void;
-  disabled?: boolean;
-  /** Keep the menu open (multi-step undo/redo). */
-  keepOpen?: boolean;
-};
-
-/** Full-width primary CTA in a sectioned menu (e.g. Dana). */
-export type GlassMenuPrimaryAction = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  onSelect: () => void;
-  selected?: boolean;
-};
-
-interface GlassMenuProps {
-  label: string;
-  /** Flat list — person-card ⋯ and other single-group menus. */
-  items?: GlassMenuItem[];
-  /** Titled groups with a hairline between them (app hamburger). */
-  sections?: GlassMenuSection[];
-  /** Primary filled button under sections (before icon footer). */
-  primaryAction?: GlassMenuPrimaryAction;
-  /** Icon-only row under sections, after a hairline. */
-  iconActions?: GlassMenuIconAction[];
-  /** Trigger icon — hamburger or ⋯. */
-  triggerIcon?: LucideIcon;
-  /** Trigger chip size — default `md` (same as row actions). */
-  size?: IconButtonSize;
-  align?: "left" | "right";
-  className?: string;
-}
-
-type MenuBox = { top: number; left: number; minWidth: number };
-
-function MenuRows({
-  items,
-  onPick,
-}: {
-  items: GlassMenuItem[];
-  onPick: (item: GlassMenuItem) => void;
-}) {
-  return (
-    <>
-      {items.map((item) => {
-        const Icon = item.icon;
-        const danger = item.tone === "danger";
-        const armed = danger && item.selected;
-        return (
-          <button
-            key={item.id}
-            type="button"
-            role="menuitem"
-            disabled={item.disabled}
-            onClick={() => onPick(item)}
-            className={cn(
-              "flex w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
-              controlMinH.md,
-              "disabled:pointer-events-none disabled:opacity-35",
-              /* Chrome recipe: wash + bounce only — no second hover:bg. */
-              userFeedbackClass({ press: "md", on: item.selected }),
-              /* Destroy arm: same filled chip as IconButton.armed. */
-              armed
-                ? armedDestroyClass
-                : danger
-                  ? "text-danger-700"
-                  : "text-ink",
-            )}
-          >
-            <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
-            <span className="min-w-0 flex-1 truncate">{item.label}</span>
-          </button>
-        );
-      })}
-    </>
-  );
-}
-
-/** Safe items first; any `tone: "danger"` items sit below a hairline. */
-function MenuItemList({
-  items,
-  onPick,
-}: {
-  items: GlassMenuItem[];
-  onPick: (item: GlassMenuItem) => void;
-}) {
-  const safe = items.filter((item) => item.tone !== "danger");
-  const danger = items.filter((item) => item.tone === "danger");
-  return (
-    <>
-      <MenuRows items={safe} onPick={onPick} />
-      {safe.length > 0 && danger.length > 0 && (
-        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
-      )}
-      <MenuRows items={danger} onPick={onPick} />
-    </>
-  );
-}
+export type {
+  GlassMenuIconAction,
+  GlassMenuItem,
+  GlassMenuPrimaryAction,
+  GlassMenuSection,
+} from "@/components/atoms/glass-menu/types";
 
 /**
  * Cloudy menu: always icon + label. Hover / selected use the shared feedback
@@ -154,161 +34,16 @@ export function GlassMenu({
   align = "right",
   className,
 }: GlassMenuProps) {
-  const [open, setOpen] = useState(false);
-  const [box, setBox] = useState<MenuBox | null>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const dismiss = useCallback(() => setOpen(false), []);
-
-  const place = useCallback(() => {
-    const el = triggerRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const minWidth = Math.max(192, r.width);
-    const left = align === "right" ? r.right - minWidth : r.left;
-    setBox({
-      top: r.bottom + 6,
-      left: Math.min(Math.max(8, left), window.innerWidth - minWidth - 8),
-      minWidth,
-    });
-  }, [align]);
-
-  useLayoutEffect(() => {
-    if (!open) return;
-    place();
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
-    return () => {
-      window.removeEventListener("resize", place);
-      window.removeEventListener("scroll", place, true);
-    };
-  }, [open, place]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    let timer: ReturnType<typeof setTimeout>;
-    const arm = () => {
-      clearTimeout(timer);
-      timer = setTimeout(dismiss, 8000);
-    };
-
-    function onPointerDown(e: PointerEvent) {
-      const t = e.target as Node;
-      if (triggerRef.current?.contains(t)) return;
-      if (panelRef.current?.contains(t)) {
-        arm();
-        return;
-      }
-      dismiss();
-    }
-
-    arm();
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("pointerdown", onPointerDown);
-    };
-  }, [open, dismiss]);
-
-  function pick(item: GlassMenuItem) {
-    item.onSelect();
-    if (!item.keepOpen) setOpen(false);
-  }
-
-  function pickIcon(action: GlassMenuIconAction) {
-    action.onSelect();
-    if (!action.keepOpen) setOpen(false);
-  }
-
-  const body = sections?.length
-    ? sections.map((section, i) => (
-        <div key={section.title}>
-          {i > 0 && <div className="mx-2 my-1.5 border-t border-line" role="separator" />}
-          <p className="px-3 pb-1 pt-1.5 text-xs font-medium uppercase tracking-wide text-muted">
-            {section.title}
-          </p>
-          <MenuItemList items={section.items} onPick={pick} />
-        </div>
-      ))
-    : items
-      ? <MenuItemList items={items} onPick={pick} />
-      : null;
-
-  const primary =
-    primaryAction != null ? (
-      <div>
-        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
-        <div className="px-1 pb-0.5 pt-0.5">
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              primaryAction.onSelect();
-              setOpen(false);
-            }}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-              controlMinH.md,
-              /* Named CTA exception: brightness on large actionClass fills. */
-              "hover:brightness-[1.06]",
-              userFeedbackClass({ press: "md", on: primaryAction.selected }),
-              "user-feedback--on-accent",
-              actionClass("primary"),
-              /* Inset ring — outset clips awkwardly on glass panels. */
-              primaryAction.selected && "ring-2 ring-inset ring-white/70",
-            )}
-          >
-            <primaryAction.icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />
-            <span>{primaryAction.label}</span>
-          </button>
-        </div>
-      </div>
-    ) : null;
-
-  const iconStrip =
-    iconActions && iconActions.length > 0 ? (
-      <div>
-        <div className="mx-2 my-1.5 border-t border-line" role="separator" />
-        <div className="flex items-center justify-center gap-1 px-1 py-0.5">
-          {iconActions.map((action) => (
-            <IconButton
-              key={action.id}
-              icon={action.icon}
-              label={action.label}
-              size="md"
-              disabled={action.disabled}
-              onClick={() => pickIcon(action)}
-            />
-          ))}
-        </div>
-      </div>
-    ) : null;
-
-  const panel =
-    open &&
-    box &&
-    typeof document !== "undefined" &&
-    createPortal(
-      <div
-        ref={panelRef}
-        className="fixed z-50"
-        style={{ top: box.top, left: box.left, minWidth: box.minWidth }}
-      >
-        <Surface
-          material="glass-panel"
-          rim
-          role="menu"
-          aria-label={label}
-          className="overflow-hidden rounded-2xl p-1.5 shadow-lg animate-scale-in"
-        >
-          {body}
-          {primary}
-          {iconStrip}
-        </Surface>
-      </div>,
-      document.body,
-    );
+  const {
+    open,
+    box,
+    triggerRef,
+    panelRef,
+    pick,
+    pickIcon,
+    onPrimarySelect,
+    toggle,
+  } = useGlassMenu({ align, primaryAction });
 
   return (
     <div className={cn("relative", open && "z-50", className)} ref={triggerRef}>
@@ -319,14 +54,27 @@ export function GlassMenu({
         size={size}
         /* Same md chip as row Copy / Edit — glyph follows IconButton size. */
         feedbackOn={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         className={cn(
           "text-ink",
           "hover:text-flagblue-600",
           open && "text-flagblue-600",
         )}
       />
-      {panel}
+      {open && box && (
+        <GlassMenuPanel
+          panelRef={panelRef}
+          box={box}
+          label={label}
+          sections={sections}
+          items={items}
+          primaryAction={primaryAction}
+          iconActions={iconActions}
+          onPick={pick}
+          onPickIcon={pickIcon}
+          onPrimarySelect={onPrimarySelect}
+        />
+      )}
     </div>
   );
 }

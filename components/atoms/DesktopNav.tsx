@@ -3,23 +3,16 @@
 import {
   Clock,
   Contact,
-  Download,
-  HeartHandshake,
   History,
   ListTree,
-  Redo2,
-  Undo2,
   Users,
   type LucideIcon,
 } from "lucide-react";
 import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
-import { IconButton } from "@/components/atoms/IconButton";
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { glassNavSelectedClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
-import { cn } from "@/lib/utils";
-import dana from "@/content/dana.json";
+import { DesktopNavPages } from "@/components/atoms/DesktopNavPages";
+import { DesktopNavActions } from "@/components/atoms/DesktopNavActions";
 
 /**
  * Desktop page tabs — same order as the mobile Pages menu, minus Home
@@ -83,80 +76,20 @@ export function DesktopNav({
             className="min-w-0 shrink-0"
           />
 
-          <nav
-            aria-label="Primary"
-            className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 lg:gap-1"
-          >
-            {DESKTOP_NAV_PAGES.map(({ id, label, shortLabel, icon: Icon }) => {
-              const selected = view === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  aria-current={selected ? "page" : undefined}
-                  aria-label={label}
-                  title={label}
-                  onClick={() => onChange(id)}
-                  className={cn(
-                    "inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-full lg:h-11 lg:w-auto lg:px-3 xl:px-3.5",
-                    "text-base font-medium",
-                    userFeedbackClass({ press: "md", on: selected }),
-                    selected
-                      ? cn(glassNavSelectedClass(), "font-semibold text-ink")
-                      : "text-ink hover:text-ink",
-                  )}
-                >
-                  <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
-                  <span className="hidden lg:inline">{shortLabel}</span>
-                </button>
-              );
-            })}
-          </nav>
+          <DesktopNavPages view={view} onChange={onChange} />
 
-          <div className="flex shrink-0 items-center gap-0.5">
-            <IconButton
-              icon={Undo2}
-              label={undoLabel}
-              quiet
-              size="sm"
-              onClick={onUndo}
-              disabled={undoDisabled}
-            />
-            <IconButton
-              icon={Redo2}
-              label={redoLabel}
-              quiet
-              size="sm"
-              onClick={onRedo}
-              disabled={redoDisabled}
-            />
-            <div
-              className="ml-0.5 flex items-center gap-0.5 border-l border-line pl-1.5"
-              role="group"
-              aria-label="Actions"
-            >
-              <IconButton
-                icon={Download}
-                label="Export all"
-                quiet
-                size="sm"
-                onClick={onExportAll}
-                disabled={exportDisabled}
-              />
-              <IconButton
-                icon={HeartHandshake}
-                label={dana.menuCta}
-                quiet
-                size="sm"
-                tone={view === "dana" ? "accent" : "neutral"}
-                feedbackOn={view === "dana"}
-                className={
-                  view === "dana" ? cn(glassNavSelectedClass()) : undefined
-                }
-                onClick={() => onChange("dana")}
-              />
-            </div>
-          </div>
+          <DesktopNavActions
+            view={view}
+            onChange={onChange}
+            onUndo={onUndo}
+            undoDisabled={undoDisabled}
+            undoLabel={undoLabel}
+            onRedo={onRedo}
+            redoDisabled={redoDisabled}
+            redoLabel={redoLabel}
+            onExportAll={onExportAll}
+            exportDisabled={exportDisabled}
+          />
         </div>
       </div>
     </header>

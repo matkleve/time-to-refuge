@@ -1,12 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
-import { PersonCard } from "./PersonCard";
+import { RefugeCarousel } from "./RefugeCarousel";
+import { RefugePersonSwitcher } from "./RefugePersonSwitcher";
 
 interface RefugeViewProps {
   people: Person[];
@@ -24,34 +23,6 @@ interface RefugeViewProps {
   requestedPhase?: Phase | null;
   onRequestedPhaseConsumed?: () => void;
   retreatName?: string;
-}
-
-/**
- * Person navigation. When there is nobody that way the button keeps its
- * footprint and goes invisible, so the counter never shifts.
- */
-function NavButton({
-  direction,
-  available,
-  onClick,
-}: {
-  direction: "prev" | "next";
-  available: boolean;
-  onClick: () => void;
-}) {
-  const prev = direction === "prev";
-  return (
-    <IconButton
-      icon={prev ? ChevronLeft : ChevronRight}
-      label={prev ? "Previous person" : "Next person"}
-      quiet
-      onClick={onClick}
-      disabled={!available}
-      hideWhenDisabled
-      tone="neutral"
-      size="sm"
-    />
-  );
 }
 
 export function RefugeView({
@@ -108,57 +79,30 @@ export function RefugeView({
         no glass chip overlaying the card corner. Card fills remaining height;
         many fields scroll inside. Horizontal swipe still changes person.
       */}
-      <div className="flex shrink-0 items-center justify-end gap-1 px-3 pb-1">
-        <NavButton
-          direction="prev"
-          available={index > 0}
-          onClick={() => onIndexChange(index - 1)}
-        />
-        <span className="min-w-8 px-0.5 text-center text-sm tabular-nums text-muted">
-          {index + 1}/{people.length}
-        </span>
-        <NavButton
-          direction="next"
-          available={index < people.length - 1}
-          onClick={() => onIndexChange(index + 1)}
-        />
-      </div>
+      <RefugePersonSwitcher
+        index={index}
+        total={people.length}
+        onPrev={() => onIndexChange(index - 1)}
+        onNext={() => onIndexChange(index + 1)}
+      />
 
-      <div
-        className="relative min-h-0 flex-1 overflow-x-hidden"
+      <RefugeCarousel
+        people={people}
+        fields={fields}
+        index={index}
+        current={current}
+        target={target}
+        setSelectedPhase={setSelectedPhase}
+        onClear={onClear}
+        onResetAll={onResetAll}
+        onDelete={onDelete}
+        onExport={onExport}
+        onRename={onRename}
+        onEditTime={onEditTime}
+        retreatName={retreatName}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
-      >
-        <div
-          className="flex h-full w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          style={{ transform: `translateX(-${index * 100}%)` }}
-        >
-          {people.map((p) => {
-            const isCurrent = p.id === current?.id;
-            return (
-              <div
-                key={p.id}
-                className="flex h-full w-full shrink-0 flex-col px-3 pb-1"
-              >
-                <PersonCard
-                  fillHeight
-                  person={p}
-                  fields={fields}
-                  target={isCurrent ? target : null}
-                  onSelectPhase={isCurrent ? setSelectedPhase : undefined}
-                  onClear={(phase) => onClear(p.id, phase)}
-                  onResetAll={() => onResetAll(p.id)}
-                  onDelete={() => onDelete(p.id)}
-                  onExport={() => onExport(p)}
-                  onRename={(name) => onRename(p.id, name)}
-                  onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                  retreatName={retreatName}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      />
 
       <div className="shrink-0 px-3 pt-3">
         <LiveClockButton

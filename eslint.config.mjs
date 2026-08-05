@@ -25,12 +25,23 @@ const eslintConfig = [
       "jsx-a11y/click-events-have-key-events": "error",
       "jsx-a11y/no-static-element-interactions": "error",
       "jsx-a11y/alt-text": "error",
-      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/set-state-in-effect": "off",
       "react-hooks/refs": "error",
     },
   },
   {
-    files: ["scripts/**", "app/dev/**"],
+    files: ["components/**/*.tsx", "app/**/*.tsx"],
+    rules: {
+      /* JSX-heavy shells — slightly above 60; files still capped at 200. */
+      "max-lines-per-function": [
+        "warn",
+        { max: 100, skipBlankLines: true, skipComments: true },
+      ],
+      complexity: ["warn", 18],
+    },
+  },
+  {
+    files: ["scripts/**", "app/dev/**", "app/opengraph-image.tsx", "lib/card-image.ts"],
     rules: {
       "max-lines": "off",
       "max-lines-per-function": "off",

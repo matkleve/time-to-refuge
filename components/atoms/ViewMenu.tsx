@@ -1,26 +1,14 @@
 "use client";
 
-import {
-  Clock,
-  Contact,
-  Download,
-  HeartHandshake,
-  History,
-  Home,
-  ListTree,
-  Menu,
-  Redo2,
-  Undo2,
-  Users,
-} from "lucide-react";
-import {
-  GlassMenu,
-  type GlassMenuIconAction,
-  type GlassMenuPrimaryAction,
-  type GlassMenuSection,
-} from "@/components/atoms/GlassMenu";
+import { Menu } from "lucide-react";
+import { GlassMenu } from "@/components/atoms/GlassMenu";
 import type { IconButtonSize } from "@/components/atoms/IconButton";
-import dana from "@/content/dana.json";
+import {
+  buildViewMenuActions,
+  buildViewMenuIconActions,
+  buildViewMenuPages,
+  buildViewMenuPrimaryAction,
+} from "@/components/atoms/view-menu-sections";
 
 export type AppView =
   | "home"
@@ -62,93 +50,17 @@ export function ViewMenu({
   exportDisabled = false,
   size = "md",
 }: ViewMenuProps) {
-  const pages: GlassMenuSection = {
-    title: "Pages",
-    items: [
-      {
-        id: "home",
-        label: "Home",
-        icon: Home,
-        selected: view === "home",
-        onSelect: () => onChange("home"),
-      },
-      {
-        id: "fields",
-        label: "Fields",
-        icon: ListTree,
-        selected: view === "fields",
-        onSelect: () => onChange("fields"),
-      },
-      {
-        id: "people",
-        label: "People",
-        icon: Contact,
-        selected: view === "people",
-        onSelect: () => onChange("people"),
-      },
-      {
-        id: "refuge",
-        label: "Session",
-        icon: Users,
-        selected: view === "refuge",
-        onSelect: () => onChange("refuge"),
-      },
-      {
-        id: "quicklog",
-        label: "Quick Log",
-        icon: Clock,
-        selected: view === "quicklog",
-        onSelect: () => onChange("quicklog"),
-      },
-      {
-        id: "history",
-        label: "History",
-        icon: History,
-        selected: view === "history",
-        onSelect: () => onChange("history"),
-      },
-    ],
-  };
-
-  const actions: GlassMenuSection = {
-    title: "Actions",
-    items: [
-      {
-        id: "export",
-        label: "Export all",
-        icon: Download,
-        disabled: exportDisabled,
-        onSelect: onExportAll,
-      },
-    ],
-  };
-
-  const primaryAction: GlassMenuPrimaryAction = {
-    id: "dana",
-    label: dana.menuCta,
-    icon: HeartHandshake,
-    selected: view === "dana",
-    onSelect: () => onChange("dana"),
-  };
-
-  const iconActions: GlassMenuIconAction[] = [
-    {
-      id: "undo",
-      label: undoLabel,
-      icon: Undo2,
-      disabled: undoDisabled,
-      onSelect: onUndo,
-      keepOpen: true,
-    },
-    {
-      id: "redo",
-      label: redoLabel,
-      icon: Redo2,
-      disabled: redoDisabled,
-      onSelect: onRedo,
-      keepOpen: true,
-    },
-  ];
+  const pages = buildViewMenuPages(view, onChange);
+  const actions = buildViewMenuActions(onExportAll, exportDisabled);
+  const primaryAction = buildViewMenuPrimaryAction(view, onChange);
+  const iconActions = buildViewMenuIconActions(
+    onUndo,
+    onRedo,
+    undoDisabled,
+    undoLabel,
+    redoDisabled,
+    redoLabel,
+  );
 
   return (
     <GlassMenu

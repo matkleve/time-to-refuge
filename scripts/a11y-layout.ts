@@ -110,17 +110,17 @@ const pageFiles: Array<{ page: string; file: string }> = [
   { page: "dana", file: "components/organisms/DanaPage.tsx" },
 ];
 
-const shellTsx = read("components/TimekeeperApp.tsx");
+const desktopAppShell = read("components/timekeeper/TimekeeperDesktopShell.tsx");
 const pageEnter = read("components/atoms/PageEnter.tsx");
 const listFrame = read("components/atoms/ListPageFrame.tsx");
 
 const shellProblems: string[] = [];
 const shellSlotOk =
-  /className="relative flex min-h-0 flex-1 flex-col">\{page\}/.test(shellTsx) ||
-  /relative flex min-h-0 flex-1 flex-col">\{page\}/.test(shellTsx);
+  /className="relative flex min-h-0 flex-1 flex-col">\{page\}/.test(desktopAppShell) ||
+  /relative flex min-h-0 flex-1 flex-col">\{page\}/.test(desktopAppShell);
 if (!shellSlotOk) {
   shellProblems.push(
-    "TimekeeperApp slot missing `flex flex-col` around {page} — flex-1 pages collapse to height 0",
+    "TimekeeperDesktopShell slot missing `flex flex-col` around {page} — flex-1 pages collapse to height 0",
   );
 }
 if (!/\bh-full\b/.test(pageEnter) || !/\bflex-1\b/.test(pageEnter)) {
@@ -172,11 +172,13 @@ const rows: Row[] = pageFiles.map(({ page, file }) => {
 const shellRows: Row[] = [
   {
     page: "(shell) desktop slot",
-    file: "components/TimekeeperApp.tsx",
-    layers: layoutSignalCount(shellTsx),
+    file: "components/timekeeper/TimekeeperDesktopShell.tsx",
+    layers: layoutSignalCount(desktopAppShell),
     root: "DesktopShell → app-content → flex slot → PageEnter",
     problems: shellProblems.filter(
-      (p) => p.includes("TimekeeperApp") || p.includes("PageEnter"),
+      (p) =>
+        p.includes("TimekeeperDesktopShell") ||
+        p.includes("PageEnter"),
     ),
   },
   {
