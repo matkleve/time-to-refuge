@@ -84,7 +84,7 @@ export function DesktopNav({
 
           <nav
             aria-label="Primary"
-            className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto"
+            className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto sm:gap-2"
           >
             {DESKTOP_NAV_PAGES.map(({ id, label, shortLabel, icon: Icon }) => {
               const selected = view === id;

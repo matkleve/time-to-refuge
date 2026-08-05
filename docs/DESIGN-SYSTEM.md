@@ -50,12 +50,12 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.25rem (36px) | Hero clock |
-| `text-2xl` | 1.5rem (24px) | Person name on the focused card · desktop header “Timekeeper” |
-| `text-lg` | 1.0625rem (17px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
-| `text-base` | 0.9375rem (15px) | Default UI text |
-| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
-| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions **only** |
+| `text-4xl` | 2.5rem (40px) | Hero clock |
+| `text-2xl` | 1.75rem (28px) | Person name on the focused card · desktop header “Timekeeper” |
+| `text-lg` | 1.125rem (18px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
+| `text-base` | 1rem (16px) | Default UI text |
+| `text-sm` | 0.875rem (14px) | Meta, counters, secondary rows, button labels |
+| `text-xs` | 0.75rem (12px) | Tracked uppercase captions **only** |
 
 > **Don't invent size names.** A custom `text-clock` is read by tailwind-merge
 > as a *colour* utility and silently dropped whenever a colour follows it in the
@@ -197,6 +197,44 @@ had to be designed separately from the same data and handlers.
 specular light catch as every other glass surface. A light-to-dark wash
 fights the glass and muddies the one control that must read under ceremony
 pressure (**UC-1**).
+
+### Button variants
+
+Two families. Don’t invent a third fill recipe.
+
+#### A. `IconButton` surfaces ([`IconButton.tsx`](../components/atoms/IconButton.tsx))
+
+| Variant | API | Look | Use when | Where today |
+| --- | --- | --- | --- | --- |
+| **Quiet** | `quiet` | Glyph only — no fill, no rim | Chrome over the open backdrop that must **not** read as a chip (especially near a card) | Desktop nav Undo/Redo/Export; Session prev/next; Dana header icon when that page is **not** current |
+| **Glass** | `glass` | Cloudy round chip (`glassChipClass`) — fill + blur + rim + specular | Default row/chrome action over photo or glass; low–medium emphasis | Row Copy/Edit/Reset/Delete; Fields reorder/delete; Quick Log Clear; hamburger/⋯ trigger; Dana Copy IBAN + copy chips + link chips; Dana header icon when current |
+| **Armed** | `armed` | Solid `danger-600` fill, white glyph | Second tap of a two-tap destroy — never a dialog | Field reset, Quick Log delete/clear-all, Fields delete, person-card menu confirm |
+| **Labeled glass** | `glass` + `showLabel` | Same chip, icon + short word | Consequential or labeled chrome (Clear, Reset, Cancel/Add, Copy IBAN) | Quick Log Clear; Fields Reset; `CancelConfirmTray`; Dana primary Copy IBAN |
+
+**Tones** (glyph colour only; fill stays from the surface above): `neutral` · `accent` (→ flag blue on hover) · `danger` · `onAccent` (on tinted heroes).
+
+**Priority:** `armed` > `quiet` > `glass`. `quiet` wins over `glass` if both are set.
+
+#### B. Action glass (`actionClass` in [`surfaces.ts`](../lib/surfaces.ts))
+
+Hero / filled CTAs — tinted glass, **not** the round IconButton chip.
+
+| Variant | API | Look | Use when | Where today |
+| --- | --- | --- | --- | --- |
+| **Primary** | `actionClass("primary")` | Flag-blue tinted glass | Armed record — the UC-1 hit target | `LiveClockButton` when a phase is armed; hamburger Dana CTA; empty-state primary |
+| **Primary idle** | `actionClass("primaryIdle")` | White cloudy glass | Same control, not yet armed | `LiveClockButton` idle |
+| **Accent** | `actionClass("accent")` | Saffron tinted glass | Quick Log stamp only | `QuickLogButton` |
+
+#### C. Related controls (same materials, not IconButton)
+
+| Control | Material | Fits | Where |
+| --- | --- | --- | --- |
+| Desktop page nav pill | Selected → `glassChipClass`; else quiet text | Page switcher in header | `DesktopNav` |
+| Field / add / retreat / TZ stamps | Glass pill (`glass` row / chip recipes) | Named session chrome & stamps | `PersonFields`, `AddRowTray`, `RetreatNameField`, `TimezoneSelect` |
+| Glass menu row | Wash when `selected` / armed | Menu items inside `GlassMenu` | Hamburger Pages/Actions; person-card ⋯ |
+| External link chip | `glassChipClass` on `<a>` | Secondary outbound links | Dana “Open DRCE page” |
+
+**Pick rule (short):** backdrop chrome that must stay invisible → **quiet**; almost everything else icon-sized → **glass**; ceremony record / Quick Log / rare full-width menu CTA → **actionClass**; destroy confirm → **armed**.
 
 **Sizes.** One scale for **every** interactive surface — IconButton, glass
 chips, field stamps, selects, CTAs — via [`lib/control-size.ts`](../lib/control-size.ts)

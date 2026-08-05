@@ -50,7 +50,7 @@ export function DanaProgress({
     >
       <div className="flex items-baseline justify-between gap-3">
         <p className="font-display text-lg font-semibold text-ink">{label}</p>
-        <p className="shrink-0 font-mono text-sm tabular-nums text-saffron-700">
+        <p className="shrink-0 font-mono text-base tabular-nums text-saffron-700">
           {formatEuro(currentEuros)}
         </p>
       </div>
