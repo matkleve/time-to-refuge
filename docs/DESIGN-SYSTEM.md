@@ -50,12 +50,12 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.25rem (36px) | Hero clock |
-| `text-2xl` | 1.5rem (24px) | Person name on the focused card · desktop header “Timekeeper” |
-| `text-lg` | 1.0625rem (17px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
-| `text-base` | 0.9375rem (15px) | Default UI text |
-| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
-| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions **only** |
+| `text-4xl` | 2.5rem (40px) | Hero clock |
+| `text-2xl` | 1.75rem (28px) | Person name on the focused card · desktop header “Timekeeper” |
+| `text-lg` | 1.125rem (18px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
+| `text-base` | 1rem (16px) | Default UI text |
+| `text-sm` | 0.875rem (14px) | Meta, counters, secondary rows, button labels |
+| `text-xs` | 0.75rem (12px) | Tracked uppercase captions **only** |
 
 > **Don't invent size names.** A custom `text-clock` is read by tailwind-merge
 > as a *colour* utility and silently dropped whenever a colour follows it in the
@@ -267,9 +267,16 @@ chrome without frosting the labels:
    behind the heading text.
 
 List pages use a **full-bleed scroller** under the header (not padding the
-shell below it) so rows actually pass through both scrims. The retreat
-name is **not** in the toolbar — on Session / People it sits under the
-title as a left-aligned glass chip with a leading icon (§6c).
+shell below it) so rows actually pass through both scrims. Where a scroll
+root needs top clearance instead, use `--app-header-clearance` /
+`app-scroll-clearance`. Native scrollbars are replaced by thin frosted
+thumbs (glassy track) so the OS bar doesn’t puncture the chrome. The
+retreat name is **not** in the toolbar — on Session / People it sits under
+the title as a left-aligned glass chip with a leading icon (§6c).
+
+**Dana** ([`DanaPage`](../components/organisms/DanaPage.tsx)) is a
+two-column desktop board (story + image | progress + transfer); phone stays
+a single column with the image first.
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline
