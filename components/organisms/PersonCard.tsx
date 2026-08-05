@@ -192,6 +192,8 @@ export function PersonCard({
               }
               className={cn(
                 "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate rounded-xl px-2 text-left font-display text-2xl font-semibold",
+                /* Inset ring — outset outline would widen the rail scrollport. */
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-flagblue-600",
                 remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
               )}
             >

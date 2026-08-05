@@ -539,15 +539,18 @@
 }
 
 /*
- * Gutter inside overflow-y-auto (or overflow-hidden) scrollports so the
- * global `:focus-visible` outline (2px + 2px offset) is not clipped by the
- * scrollport edge. CSS cannot set overflow-x:visible while overflow-y is
- * auto — the other axis becomes auto too — so padding is the reliable fix.
- * See DESIGN-SYSTEM §4c.
+ * Gutter inside overflow-y-auto scrollports so the global `:focus-visible`
+ * outline (2px + 2px offset) is not clipped by the scrollport edge.
+ *
+ * Also force `overflow-x: clip`: a lone `overflow-y: auto` computes the
+ * other axis to `auto` too, so outset rings / shadows / -right absolute
+ * chips inflate scrollWidth and a horizontal scrollbar appears (e.g. after
+ * focusing a Session rail name). See DESIGN-SYSTEM §4c.
  */
 @utility focus-safe-scroll {
   padding: 0.375rem;
   scroll-padding: 0.375rem;
+  overflow-x: clip;
 }
 
 /*

@@ -71,7 +71,7 @@ export function DesktopWorkspace({
         parent overflow clip.
       */}
       <ul
-        className="focus-safe-scroll flex w-72 shrink-0 flex-col gap-3 overflow-y-auto lg:w-80 xl:w-96"
+        className="focus-safe-scroll flex w-72 shrink-0 flex-col gap-3 overflow-y-auto overflow-x-clip lg:w-80 xl:w-96"
         aria-label="People"
       >
         {people.map((p) => {

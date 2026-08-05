@@ -22,8 +22,10 @@ When you add or change layout:
    actions). Horizontal scroll on chrome clips focus rings on BOTH axes
    (CSS quirk: overflow-x:visible cannot pair with overflow-y:auto).
 3. Every overflow-y-auto list of buttons/links/cards MUST either:
-   - pad the scrollport (≥ outline + offset; e.g. focus-safe-scroll), OR
+   - use `focus-safe-scroll` (padding + `overflow-x: clip`), OR
    - use inset focus/selection cues on children (ring-inset / border).
+   Never leave bare `overflow-y-auto`: the other axis becomes `auto` and
+   outset focus rings invent a horizontal scrollbar.
 4. Menus, popovers, and dropdowns that escape a card/shell MUST render in a
    portal (document body), not inside the overflow parent.
 5. overflow-hidden is OK on non-interactive media frames (images, progress
