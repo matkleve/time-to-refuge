@@ -325,7 +325,9 @@ idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
 shared feedback cover + blue icon.
 
 **State coverage checklist (ship gate).** For every interactive surface,
-verify these are *visibly distinct* — not only wired in props:
+verify these are *visibly distinct* — not only wired in props. Full inventory
+of primitives vs one-offs:
+[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./INTERACTIVE-STATES-AUDIT-2026-08.md).
 
 | Must show | Examples |
 | --- | --- |
