@@ -32,7 +32,7 @@ export function PersonFieldRowFilledStamp({
       aria-expanded={showActions}
       aria-current={isTarget ? "true" : undefined}
       className={cn(
-        "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+        "flex min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl px-4",
         ROW_HEIGHT,
         interactiveGlassRowClass({ press: "md", on: isTarget }),
         targetClass,

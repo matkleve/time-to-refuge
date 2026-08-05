@@ -65,7 +65,7 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
+    <div className="flex min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5">
       {/*
         Progress rail — scan who’s done. Horizontal padding stays 0: the shell
         already applies `.app-content` + `px-4 sm:px-5` (same gutter as nav).

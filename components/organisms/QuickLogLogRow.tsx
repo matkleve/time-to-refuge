@@ -67,7 +67,7 @@ export function QuickLogLogRow({
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
        Stops the page-wide tap-to-log layer; the row's real controls are buttons. */
     <div
-      className="max-w-full shrink-0 animate-fade-in-up overflow-hidden"
+      className="max-w-full shrink-0 animate-fade-in-up"
       onClick={(e) => e.stopPropagation()}
     >
       <div

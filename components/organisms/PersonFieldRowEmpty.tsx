@@ -33,7 +33,7 @@ export function PersonFieldRowEmpty({
   onConfirmSkip,
 }: PersonFieldRowEmptyProps) {
   return (
-    <div ref={confirmSkipRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
+    <div ref={confirmSkipRef} className={cn("flex min-w-0 w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
       <button
         type="button"
         onClick={onRowClick}
@@ -47,7 +47,7 @@ export function PersonFieldRowEmpty({
               : `Select ${phaseLabel} to record`
         }
         className={cn(
-          "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
+          "flex min-w-0 flex-1 items-center gap-2 rounded-2xl px-4 text-left",
           ROW_HEIGHT,
           interactiveGlassRowClass({ press: "md", on: active }),
           targetClass,

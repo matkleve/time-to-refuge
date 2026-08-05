@@ -28,9 +28,9 @@ export function PersonCardFieldsSection({
   return (
     <div
       className={cn(
-        "p-3",
+        "px-3 py-3",
         fillHeight &&
-          "focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3.5",
+          "focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain",
       )}
     >
       <PersonFields

@@ -30,7 +30,7 @@ export function QuickLogLogRowStamp({
         showActions ? `Hide actions for log #${index}` : `Show actions for log #${index}`
       }
       className={cn(
-        "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
+        "flex min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl px-4",
         controlMinH.md,
         interactiveGlassFlushClass(undefined, { press: "md" }),
       )}
