@@ -16,6 +16,4 @@ export const siteKeywords = [
   "retreat ceremony recording",
   "Worlds of Wisdom timekeeper",
   "offline retreat app",
-  "Zufluchtszeremonie Timer",
-  "Retreat Zeitnehmer",
 ];
