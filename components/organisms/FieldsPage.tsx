@@ -204,7 +204,7 @@ function FieldEditorRow({
               }
             }}
             aria-label="Field name"
-            className="box-border min-w-0 flex-1 rounded-full bg-transparent font-display text-lg font-semibold leading-snug text-ink focus:outline-none"
+            className="box-border min-w-0 flex-1 rounded-full bg-transparent font-display text-lg font-semibold leading-snug text-ink"
           />
         </div>
       ) : (

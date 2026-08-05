@@ -75,7 +75,7 @@ export function TimezoneSelect({
           onChange={(e) => onChange(e.target.value)}
           aria-label="Time zone"
           className={cn(
-            "min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink focus:outline-none",
+            "min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink",
             controlH.sm,
             userFeedbackClass({ press: "md" }),
           )}

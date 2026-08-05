@@ -11,19 +11,21 @@ of materials (`lib/surfaces.ts`) or motion timings ([`MOTION-AUDIT.md`](./MOTION
 
 ## Verdict
 
-One shared feedback API exists (`userFeedbackClass` + `.user-feedback` wash +
-`PressBounceRegister`), and most tappable chrome uses it. Drift is elsewhere:
+Approach **C** is adopted in the design system (§4 — three recipes). Shared
+API: `userFeedbackClass` + `armedDestroyClass` + `PressBounceRegister`.
 
-1. **Selected / current / target** is three+ recipes (held wash, inset ring,
-   material swap, outset ring).
-2. **Armed destroy** is filled danger on `IconButton`, but light wash + red
-   text in `GlassMenu` (PersonCard ⋯).
-3. **Second hover recipes** (brightness, `hover:bg-white/40`, scale-only)
-   sit next to the feedback wash — against §4 “don’t invent a second hover.”
-4. Several editors kill the global focus ring with `focus:outline-none`.
+**Shipped in the follow-up implementation pass:**
 
-Fix path: pick one of the three approaches in § Approaches, then close the
-P0/P1 gaps in § Priority fixes — don’t add more one-off hover classes.
+| # | Fix |
+| --- | --- |
+| P0.1 | GlassMenu danger+selected → `armedDestroyClass` (same as IconButton) |
+| P0.2 | Removed `focus:outline-none` on Retreat / Add / Fields rename / Timezone chip |
+| P0.3 | GlassMenu rows: no second `hover:bg-white/40` |
+| P1.5–6 | LocationCheck: `feedbackOn` when open; idle badge drops `hover:bg-*` |
+| P2.9 | Menu Dana selected → inset ring |
+
+Still open: LiveClock idle-as-disabled (P1.4), BrandLockup exception docs only,
+`useCopyFeedback` (P2).
 
 ---
 
@@ -145,8 +147,9 @@ border focus instead of killing the global ring.
 - **Pros:** matches how the app already feels; smallest code churn.  
 - **Cons:** still three recipes — must stay disciplined.
 
-**Recommendation:** **C now**, migrate toward **B** if a second product surface
-appears. Do not invent a fourth hover.
+**Recommendation:** **C** — adopted. Encode recipes in §4 of the design
+system; share `armedDestroyClass`. Revisit **B** only if a second product
+surface appears.
 
 ---
 

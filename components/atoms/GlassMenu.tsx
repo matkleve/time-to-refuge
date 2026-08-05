@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { MoreVertical, type LucideIcon } from "lucide-react";
 import { controlMinH } from "@/lib/control-size";
 import { actionClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { armedDestroyClass, userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
 import { Surface } from "@/components/atoms/Surface";
@@ -82,6 +82,7 @@ function MenuRows({
       {items.map((item) => {
         const Icon = item.icon;
         const danger = item.tone === "danger";
+        const armed = danger && item.selected;
         return (
           <button
             key={item.id}
@@ -93,12 +94,14 @@ function MenuRows({
               "flex w-full items-center gap-3 rounded-xl px-3.5 text-left text-base font-medium",
               controlMinH.md,
               "disabled:pointer-events-none disabled:opacity-35",
+              /* Chrome recipe: wash + bounce only — no second hover:bg. */
               userFeedbackClass({ press: "md", on: item.selected }),
-              danger ? "text-danger-700" : "text-ink",
-              /* iOS: soft wash, not a solid fill */
-              item.selected
-                ? "bg-white/55"
-                : "hover:bg-white/40 focus-visible:bg-white/40",
+              /* Destroy arm: same filled chip as IconButton.armed. */
+              armed
+                ? armedDestroyClass
+                : danger
+                  ? "text-danger-700"
+                  : "text-ink",
             )}
           >
             <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
@@ -132,12 +135,13 @@ function MenuItemList({
 }
 
 /**
- * iOS-style cloudy menu: always icon + label; hover / selected is a light
- * glass wash — never a solid filled pill. Portaled so card overflow can't
- * clip it (navbar + person-card ⋯).
+ * Cloudy menu: always icon + label. Hover / selected use the shared feedback
+ * wash (§4 chrome recipe) — no second `hover:bg-*`. Portaled so card overflow
+ * can't clip it (navbar + person-card ⋯).
  *
- * Destructive items (`tone: "danger"`) always render at the bottom of their
- * list, below a hairline separator from safe actions.
+ * Destructive items (`tone: "danger"`) render at the bottom below a hairline.
+ * When armed (`selected` on a danger row), the row uses the same filled
+ * danger chip as `IconButton.armed`.
  */
 export function GlassMenu({
   label,
@@ -246,11 +250,13 @@ export function GlassMenu({
             className={cn(
               "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
               controlMinH.md,
+              /* Named CTA exception: brightness on large actionClass fills. */
               "hover:brightness-[1.06]",
-              userFeedbackClass({ press: "md" }),
+              userFeedbackClass({ press: "md", on: primaryAction.selected }),
               "user-feedback--on-accent",
               actionClass("primary"),
-              primaryAction.selected && "ring-2 ring-flagblue-600 ring-offset-2 ring-offset-white/40",
+              /* Inset ring — outset clips awkwardly on glass panels. */
+              primaryAction.selected && "ring-2 ring-inset ring-white/70",
             )}
           >
             <primaryAction.icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />

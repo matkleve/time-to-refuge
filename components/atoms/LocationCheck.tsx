@@ -151,7 +151,7 @@ function compareZones(deviceZone: string, placeZone: string): {
 }
 
 const toneBadge: Record<ProbeTone, string> = {
-  idle: "border-white/80 bg-white/95 text-muted hover:bg-white hover:text-ink",
+  idle: "border-white/80 bg-white/95 text-muted hover:text-ink",
   checking: "border-white/80 bg-white/95 text-muted",
   ok: "border-saffron-200 bg-saffron-50 text-saffron-800",
   warn: "border-saffron-200 bg-saffron-50 text-saffron-800",
@@ -822,7 +822,7 @@ export function LocationCheck() {
           /* pl matches vertical inset around the size-7 mark in h-11 ((44-28)/2). */
           "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2 shadow-sm",
           controlH.md,
-          userFeedbackClass({ press: "sm" }),
+          userFeedbackClass({ press: "sm", on: open }),
           /* Opaque light fill — glass was too see-through on the record button. */
           toneBadge[tone],
         )}
