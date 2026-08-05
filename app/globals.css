@@ -37,11 +37,11 @@
   --text-sm--line-height: 1.4;
   --text-base: 1rem;       /* 16px — default UI text */
   --text-base--line-height: 1.5;
-  --text-lg: 1.125rem;     /* 18px — panel titles, overview name, field rows */
+  --text-lg: 1.0625rem;   /* 17px — page titles, field rows, overview name */
   --text-lg--line-height: 1.35;
-  --text-2xl: 1.75rem;     /* 28px — person name on the focused card */
+  --text-2xl: 1.5rem;      /* 24px — person name on the focused card · brand */
   --text-2xl--line-height: 1.2;
-  --text-4xl: 2.5rem;      /* 40px — the hero clock */
+  --text-4xl: 2.25rem;     /* 36px — the hero clock */
   --text-4xl--line-height: 1.1;
 
   /* ── Colour ───────────────────────────────────────────────────────────
@@ -69,12 +69,11 @@
   --color-danger-600: #b42318;
   --color-danger-700: #9c2816; /* body text on cloudy glass panels */
 
-  /* Ink. `line` is for hairlines ONLY — never as a foreground colour.
-   * Using it on icons is what made them invisible (1.12:1). */
-  --color-ink: #1f1b16;
-  --color-muted: #5f574e;   /* secondary text, and icons at rest */
-  --color-subtle: #7d7469;  /* tertiary text: counters, empty values */
-  --color-line: #ddd8d1;    /* hairlines and dividers */
+  /* Ink — very dark blue (flag family), not warm black. */
+  --color-ink: #152238;
+  --color-muted: #4a5568;   /* secondary text, and icons at rest */
+  --color-subtle: #64748b;  /* tertiary text: counters, empty values */
+  --color-line: #d4d8e0;    /* hairlines and dividers */
 
   /* Surfaces — see lib/surfaces.ts for glass / filled / solid materials.
    * Overview cards use these opaque fills; the focused card is cloudy glass. */
@@ -96,22 +95,22 @@
    *
    * Glass shadows are the light-deflection recipe (specular top catch +
    * soft lift). That is the glass identity — not heavy blur. */
-  --shadow-sm: 0 1px 2px rgb(31 27 22 / 0.06);    /* a filled row */
-  --shadow-lg: 0 4px 16px rgb(31 27 22 / 0.12);   /* legacy solid lift */
-  --shadow-2xl: 0 12px 40px rgb(31 27 22 / 0.16); /* popovers */
+  --shadow-sm: 0 1px 2px rgb(21 34 56 / 0.08);    /* a filled row */
+  --shadow-lg: 0 4px 16px rgb(21 34 56 / 0.14);   /* legacy solid lift */
+  --shadow-2xl: 0 12px 40px rgb(21 34 56 / 0.16); /* popovers */
   --shadow-glass:
     inset 0 1px 0 0 rgb(255 255 255 / 0.72),
     inset 0 -1px 0 0 rgb(255 255 255 / 0.18),
-    0 1px 2px rgb(31 27 22 / 0.04),
-    0 10px 28px rgb(31 27 22 / 0.08);
+    0 1px 2px rgb(21 34 56 / 0.04),
+    0 10px 28px rgb(21 34 56 / 0.08);
   --shadow-glass-action:
     inset 0 1.5px 0 0 rgb(255 255 255 / 0.78),
     inset 0 -1px 0 0 rgb(255 255 255 / 0.2),
-    0 2px 4px rgb(31 27 22 / 0.06),
-    0 14px 36px rgb(31 27 22 / 0.12);
+    0 2px 4px rgb(21 34 56 / 0.06),
+    0 14px 36px rgb(21 34 56 / 0.12);
   --shadow-glass-row:
     inset 0 1px 0 0 rgb(255 255 255 / 0.55),
-    0 1px 2px rgb(31 27 22 / 0.04);
+    0 1px 2px rgb(21 34 56 / 0.04);
 
 
   /* Motion — three durations on ease-out (design system §5).
@@ -169,7 +168,7 @@
    */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(255 255 255 / 0.55) rgb(31 27 22 / 0.08);
+    scrollbar-color: rgb(255 255 255 / 0.55) rgb(21 34 56 / 0.08);
   }
 
   *::-webkit-scrollbar {
@@ -197,7 +196,7 @@
     box-shadow:
       inset 0 1px 0 0 rgb(255 255 255 / 0.85),
       inset 0 -1px 0 0 rgb(255 255 255 / 0.2),
-      0 1px 2px rgb(31 27 22 / 0.12);
+      0 1px 2px rgb(21 34 56 / 0.12);
   }
 
   *::-webkit-scrollbar-thumb:hover {

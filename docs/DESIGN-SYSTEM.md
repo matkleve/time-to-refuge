@@ -50,9 +50,9 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.5rem (40px) | Hero clock |
-| `text-2xl` | 1.75rem (28px) | Person name on the focused card · desktop header “Timekeeper” |
-| `text-lg` | 1.125rem (18px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
+| `text-4xl` | 2.25rem (36px) | Hero clock |
+| `text-2xl` | 1.5rem (24px) | Person name on the focused card · desktop header “Timekeeper” |
+| `text-lg` | 1.0625rem (17px) | **Page titles**, field rows, overview name · mobile header |
 | `text-base` | 1rem (16px) | Default UI text |
 | `text-sm` | 0.875rem (14px) | Meta, counters, secondary rows, button labels |
 | `text-xs` | 0.75rem (12px) | Tracked uppercase captions **only** |
@@ -73,7 +73,7 @@ Saffron marks a **recorded** time and the Quick Log. Flag blue marks the
 
 | Token | Role |
 | --- | --- |
-| `ink` | Primary text |
+| `ink` | Primary text — **very dark blue** (`#152238`), not black |
 | `muted` | Secondary text — **and every icon at rest** |
 | `subtle` | Tertiary text: counters, empty values, hints |
 | `line` | Hairlines and dividers, **never a foreground** |

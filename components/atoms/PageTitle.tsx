@@ -10,9 +10,10 @@ interface PageTitleProps {
 }
 
 /**
- * Shared page heading — left-aligned `font-display text-2xl` (retreat chip
- * sits under it on Session / People). From `md` up, DesktopNav owns the
- * page name: hide the heading; keep trailing actions when present.
+ * Shared page heading — left-aligned `font-display text-lg` (retreat chip
+ * sits under it on Session / People). Person names stay `text-2xl`; page
+ * titles stay a step below. From `md` up, DesktopNav owns the page name:
+ * hide the heading; keep trailing actions when present.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (
@@ -26,7 +27,7 @@ export function PageTitle({ title, trailing, className }: PageTitleProps) {
     >
       <h2
         className={cn(
-          "min-w-0 truncate font-display text-2xl font-semibold text-ink",
+          "min-w-0 truncate font-display text-lg font-semibold text-ink",
           trailing && "md:hidden",
         )}
       >
