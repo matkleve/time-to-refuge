@@ -46,7 +46,7 @@ export function FieldEditorRow({
   );
 
   return (
-    <div className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, controlMinH.md)}>
+    <div className={cn("flex min-w-0 w-full items-center", BUTTON_CLUSTER_GAP, controlMinH.md)}>
       <FieldEditorRowLabel
         field={field}
         editing={editing}

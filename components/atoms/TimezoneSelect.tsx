@@ -6,7 +6,6 @@ import { TimezoneSelectMenu } from "@/components/atoms/TimezoneSelectMenu";
 import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
 import { controlH, controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { glassPillFocusWithin } from "@/lib/focus-cues";
 import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
@@ -34,11 +33,9 @@ export function TimezoneSelect({
 
   const shell = cn(
     interactiveGlassFlushClass(undefined, { press: "md", on: open }),
-    "w-full text-left focus-visible:outline-none",
+    "w-full text-left",
     className,
   );
-
-  const focusWrap = cn("rounded-2xl", glassPillFocusWithin);
 
   const menu =
     open && box ? (
@@ -53,7 +50,7 @@ export function TimezoneSelect({
 
   if (chip) {
     return (
-      <div ref={triggerRef} className={cn("relative w-full", focusWrap)}>
+      <div ref={triggerRef} className="relative w-full">
         <button
           type="button"
           onClick={toggle}
@@ -79,7 +76,7 @@ export function TimezoneSelect({
   return (
     <div ref={triggerRef} className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
-      <span className={cn("relative inline-flex min-w-0 items-center", focusWrap)}>
+      <span className="relative inline-flex min-w-0 items-center">
         <button
           type="button"
           onClick={toggle}

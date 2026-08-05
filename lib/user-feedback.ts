@@ -30,11 +30,14 @@ export function userFeedbackClass(options?: {
   press?: FeedbackPress;
   /** Force the hover wash on (open menu, selected). */
   on?: boolean;
+  /** Hover/active ink wash. Default true. Brand lockup uses false. */
+  wash?: boolean;
 }): string {
   return cn(
     "user-feedback",
     pressClass[options?.press ?? "sm"],
     options?.on && "is-feedback-on",
+    options?.wash === false && "user-feedback--no-wash",
   );
 }
 

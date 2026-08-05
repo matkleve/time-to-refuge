@@ -21,6 +21,8 @@ import { userFeedbackClass, type FeedbackPress } from "@/lib/user-feedback";
 export type InteractiveFeedback = {
   press?: FeedbackPress;
   on?: boolean;
+  /** Hover/active wash. Default true — false for brand wordmark etc. */
+  wash?: boolean;
 };
 
 /** Non-interactive glass (editing shells, static rows). No press bounce. */

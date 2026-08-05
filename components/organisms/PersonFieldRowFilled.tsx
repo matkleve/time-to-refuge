@@ -50,7 +50,7 @@ export function PersonFieldRowFilled({
   phase,
 }: PersonFieldRowFilledProps) {
   return (
-    <div ref={dismissRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
+    <div ref={dismissRef} className={cn("flex min-w-0 w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
       <PersonFieldRowFilledStamp
         phaseLabel={phaseLabel}
         value={value}

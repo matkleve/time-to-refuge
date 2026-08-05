@@ -44,8 +44,8 @@ export function BrandLockup({
         onClick={onHome}
         aria-label="Timekeeper — open Home"
         className={cn(
-          "flex min-w-0 cursor-pointer items-center gap-2 rounded-lg text-left",
-          interactiveFeedbackClass({ press: "sm" }),
+          "flex min-w-0 cursor-pointer items-center gap-2 text-left",
+          interactiveFeedbackClass({ press: "sm", wash: false }),
           className,
         )}
       >
