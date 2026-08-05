@@ -232,12 +232,12 @@
    * focus fell back to the browser default and vanished against the filled
    * cards and the coloured record button (WCAG 2.4.7).
    *
-   * `:focus-visible` (not `:focus`) matches ForJu's clickFocus suppression —
-   * mouse click does not leave a stuck ring; keyboard / AT still get one.
+   * Outset offset clips inside `focus-safe-scroll` (overflow-x: clip, px-0).
+   * Inset ring stays inside the control — see lib/focus-cues.ts.
    */
   :where(a, button, input, select, textarea, [tabindex]):focus-visible {
     outline: 2px solid var(--color-flagblue-600);
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 
   * {
