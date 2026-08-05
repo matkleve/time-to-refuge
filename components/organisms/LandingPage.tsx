@@ -17,8 +17,8 @@ interface LandingPageProps {
  */
 export function LandingPage({ onStart }: LandingPageProps) {
   return (
-    <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col items-center overflow-hidden px-3 md:px-0">
-      <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col justify-center gap-5 py-2 sm:gap-6">
+    <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col items-center overflow-x-clip px-3 md:px-0">
+      <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col justify-center gap-5 py-2 sm:gap-6 sm:py-4">
         <header className="mx-auto max-w-2xl space-y-2 text-center">
           <h1 className="font-display text-2xl font-semibold text-ink">
             {landing.headline}

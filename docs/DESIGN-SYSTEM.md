@@ -430,13 +430,15 @@ broken or unfocused.
    scroll on chrome is a confession the row doesn’t fit — and it clips
    focus rings on both axes (CSS: if one axis is not `visible`, the other
    can’t stay `visible`).
-3. **Scroll lists of interactive rows** must use the `focus-safe-scroll`
-   utility (padding + scroll-padding gutter ≥ outline + offset) **or** put
-   selected/focus cues **inset** (`ring-inset` / border) on children.
+3. **Scroll lists of interactive / glass rows** must use `focus-safe-scroll`
+   (padding ≥ `--focus-safe-bleed` for glass soft-lift + focus ring, and
+   `overflow-x: clip`). A hard-cut shadow under a card means the bleed is
+   too small or a parent still uses bare `overflow-hidden`.
 4. **Portals for popovers/menus** (`GlassMenu`) so shell overflow cannot
    clip the panel — don’t fight the scrollport with `z-index` alone.
 5. **Media / progress clips** (`overflow-hidden` on rounded image frames,
-   progress bars) are fine — those children are not keyboard focus targets.
+   progress bars) are fine — those children are not keyboard focus targets
+   and don’t carry soft-lift shadows that must read outside the frame.
 6. **CSS breakpoint ≠ JS media query.** `useMediaQuery` defaults `false`
    until mount. If `md:flex-row` already moves a control under the brand
    column, its clearance/`justify-*`/`w-*` must also be `md:` utilities —
@@ -446,7 +448,8 @@ broken or unfocused.
 Merge checklist: Tab through the changed surface. If any ring is missing a
 corner or a selected chip looks “cut off,” fix the parent overflow before
 adding more outline CSS. At desktop width, confirm nothing sits under the
-brand toolbar.
+brand toolbar. Scroll to the last glass card and confirm its soft shadow
+fades — no hard horizontal cut.
 
 Pasteable agent rule: [`AGENT-OVERFLOW-OUTLINES.md`](./AGENT-OVERFLOW-OUTLINES.md).
 

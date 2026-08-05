@@ -112,6 +112,13 @@
     inset 0 1px 0 0 rgb(255 255 255 / 0.55),
     0 1px 2px rgb(21 34 56 / 0.04);
 
+  /*
+   * Space a scrollport must keep around glass children so soft lift
+   * (`0 10px 28px` in --shadow-glass) and outset focus rings aren’t
+   * sliced by overflow:auto/clip. Used by `focus-safe-scroll`.
+   */
+  --focus-safe-bleed: 1.75rem;
+
 
   /* Motion — three durations on ease-out (design system §5).
    * Prefer the shared utilities below for entrances so reduced-motion applies. */
@@ -539,17 +546,17 @@
 }
 
 /*
- * Gutter inside overflow-y-auto scrollports so the global `:focus-visible`
- * outline (2px + 2px offset) is not clipped by the scrollport edge.
+ * Gutter inside overflow-y-auto scrollports so glass soft-lift shadows
+ * (`--shadow-glass` ≈ 10px + 28px blur) and the global `:focus-visible`
+ * outline aren’t sliced by the scrollport edge.
  *
  * Also force `overflow-x: clip`: a lone `overflow-y: auto` computes the
- * other axis to `auto` too, so outset rings / shadows / -right absolute
- * chips inflate scrollWidth and a horizontal scrollbar appears (e.g. after
- * focusing a Session rail name). See DESIGN-SYSTEM §4c.
+ * other axis to `auto` too, so outset rings inflate scrollWidth and a
+ * horizontal scrollbar appears. See DESIGN-SYSTEM §4c.
  */
 @utility focus-safe-scroll {
-  padding: 0.375rem;
-  scroll-padding: 0.375rem;
+  padding: var(--focus-safe-bleed);
+  scroll-padding: var(--focus-safe-bleed);
   overflow-x: clip;
 }
 
