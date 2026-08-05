@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { interactiveFeedbackClass, interactiveGlassFlushClass } from "@/lib/interactive-glass";
+import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface SessionPersonRowProps {
@@ -74,14 +74,12 @@ export function SessionPersonRow({
                 }
                 aria-pressed={armed || undefined}
                 className={cn(
-                  "inline-flex size-7 items-center justify-center rounded-full",
-                  interactiveFeedbackClass({ press: "sm", on: armed }),
+                  "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-none",
                   filled
-                    ? "bg-saffron-400/55 text-ink"
-                    : cn(
-                        "border-2 border-ink/25 bg-white/35 text-transparent",
-                        armed && "border-flagblue-600 bg-flagblue-600/15",
-                      ),
+                    ? "border-transparent bg-saffron-400/55 text-ink"
+                    : armed
+                      ? "border-flagblue-600 bg-flagblue-600/15 text-transparent"
+                      : "border-ink/25 bg-white/35 text-transparent",
                 )}
               >
                 <Check
