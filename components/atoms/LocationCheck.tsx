@@ -15,6 +15,7 @@ import {
   Clock,
   Loader2,
   MapPin,
+  Monitor,
   Smartphone,
 } from "lucide-react";
 import { controlH } from "@/lib/control-size";
@@ -25,9 +26,21 @@ import {
   type ClockSkewTone,
   type NetworkTimeSample,
 } from "@/lib/network-time";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
+
+/**
+ * Copy noun for the local clock host: fine pointer → "computer", else
+ * "device" (phone/tablet — never hard-code "phone" in the probe UI).
+ */
+function useHostNoun(): { noun: string; Noun: string; Icon: typeof Monitor } {
+  const computer = useMediaQuery("(pointer: fine)");
+  return computer
+    ? { noun: "computer", Noun: "Computer", Icon: Monitor }
+    : { noun: "device", Noun: "Device", Icon: Smartphone };
+}
 
 type Status = "idle" | "checking" | "ok" | "denied" | "unavailable" | "error";
 
@@ -173,23 +186,25 @@ function offsetGapCopy(
   placeOffset: string,
   deviceOffset: string,
   matched: boolean,
+  hostNoun: string,
 ): string | null {
   const placeMin = parseOffsetLabel(placeOffset);
   const deviceMin = parseOffsetLabel(deviceOffset);
   if (placeMin === null || deviceMin === null) return null;
   const diffMin = Math.abs(deviceMin - placeMin);
   if (matched || diffMin < 1) {
-    return "Same UTC offset — this phone’s wall clock matches this place.";
+    return `Same UTC offset — this ${hostNoun}’s wall clock matches this place.`;
   }
   const hours = Math.floor(diffMin / 60);
   const mins = diffMin % 60;
+  const Host = hostNoun.charAt(0).toUpperCase() + hostNoun.slice(1);
   if (hours === 0) {
-    return `Device is ${mins} minutes off from this place.`;
+    return `${Host} is ${mins} minutes off from this place.`;
   }
   if (mins === 0) {
-    return `Device is ${hours} hour${hours === 1 ? "" : "s"} off from this place.`;
+    return `${Host} is ${hours} hour${hours === 1 ? "" : "s"} off from this place.`;
   }
-  return `Device is about ${hours}h ${mins}m off from this place.`;
+  return `${Host} is about ${hours}h ${mins}m off from this place.`;
 }
 
 type PanelBox = { bottom: number; left: number };
@@ -208,10 +223,18 @@ const skewDot: Record<ClockSkewTone | "network", string> = {
 };
 
 /**
- * Horizontal rail: network UTC at center (0), phone mark at measured skew.
+ * Horizontal rail: network UTC at center (0), host mark at measured skew.
  * Uncertainty band = ±RTT/2 from the probe.
  */
-function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
+function ClockSkewRail({
+  sample,
+  hostNoun,
+  HostNoun,
+}: {
+  sample: NetworkTimeSample;
+  hostNoun: string;
+  HostNoun: string;
+}) {
   const tone = clockSkewTone(sample);
   const halfRange = Math.max(
     sample.uncertaintyMs * 3,
@@ -221,10 +244,10 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
   const toPct = (ms: number) =>
     Math.min(100, Math.max(0, ((ms + halfRange) / (2 * halfRange)) * 100));
   const netPct = toPct(0);
-  const phonePct = toPct(sample.skewMs);
+  const hostPct = toPct(sample.skewMs);
   const bandLeft = toPct(-sample.uncertaintyMs);
   const bandRight = toPct(sample.uncertaintyMs);
-  const aligned = Math.abs(phonePct - netPct) < 2.5;
+  const aligned = Math.abs(hostPct - netPct) < 2.5;
   const rangeLabel =
     halfRange >= 1000
       ? `±${(halfRange / 1000).toFixed(halfRange >= 10_000 ? 0 : 1)} s`
@@ -233,9 +256,9 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
   return (
     <div className="space-y-2 rounded-2xl bg-ink/[0.04] px-3 py-3">
       <div className="flex items-center justify-between gap-2 text-xs font-medium tracking-wide text-muted uppercase">
-        <span>Phone slow</span>
+        <span>{HostNoun} slow</span>
         <span>Clock probe</span>
-        <span>Phone fast</span>
+        <span>{HostNoun} fast</span>
       </div>
 
       <div className="relative h-4">
@@ -260,7 +283,7 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
               skewDot[tone],
             )}
             style={{ left: `${netPct}%` }}
-            title="Network & phone"
+            title={`Network & ${hostNoun}`}
           />
         ) : (
           <>
@@ -277,8 +300,8 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
                 "absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white",
                 skewDot[tone],
               )}
-              style={{ left: `${phonePct}%` }}
-              title="Phone"
+              style={{ left: `${hostPct}%` }}
+              title={HostNoun}
             />
           </>
         )}
@@ -292,7 +315,7 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
         <span className="text-center tabular-nums text-subtle">{rangeLabel}</span>
         <span className="inline-flex items-center gap-1.5">
           <span className={cn("size-2 rounded-full", skewDot[tone])} aria-hidden />
-          Phone
+          {HostNoun}
         </span>
       </div>
 
@@ -304,7 +327,8 @@ function ClockSkewRail({ sample }: { sample: NetworkTimeSample }) {
           tone === "danger" && "text-danger-700",
         )}
       >
-        Phone is <span className="font-semibold tabular-nums">{formatSkewMs(sample.skewMs)}</span>
+        {HostNoun} is{" "}
+        <span className="font-semibold tabular-nums">{formatSkewMs(sample.skewMs)}</span>
         {" · "}
         round-trip {sample.rttMs} ms · uncertainty ±{sample.uncertaintyMs} ms
       </p>
@@ -376,6 +400,7 @@ function StatusMark({
  * Prefer IANA zone from reverse-geocode over a longitude estimate. See §6b.
  */
 export function LocationCheck() {
+  const { noun: hostNoun, Noun: HostNoun, Icon: HostIcon } = useHostNoun();
   const [open, setOpen] = useState(false);
   const [box, setBox] = useState<PanelBox | null>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -640,7 +665,9 @@ export function LocationCheck() {
         return {
           title: "Time zone matches this place",
           detail:
-            "Same zone id as this location — the phone isn’t still set somewhere you traveled from.",
+            "Same zone id as this location — the " +
+            hostNoun +
+            " isn’t still set somewhere you traveled from.",
         };
       }
       if (info.matchKind === "offset") {
@@ -662,7 +689,12 @@ export function LocationCheck() {
   const { title, detail } = headline();
   const gapCopy =
     info?.placeOffset && info.deviceOffset && status !== "checking"
-      ? offsetGapCopy(info.placeOffset, info.deviceOffset, info.matchesLocation)
+      ? offsetGapCopy(
+          info.placeOffset,
+          info.deviceOffset,
+          info.matchesLocation,
+          hostNoun,
+        )
       : null;
 
   const panel =
@@ -678,7 +710,7 @@ export function LocationCheck() {
         <Surface
           material="glass-panel"
           rim
-          className="animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto rounded-3xl p-4 text-left shadow-lg"
+          className="animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto overflow-x-clip rounded-3xl p-4 text-left shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start gap-3">
@@ -733,8 +765,8 @@ export function LocationCheck() {
                   }
                 />
                 <SideCard
-                  icon={<Smartphone className="size-3.5" aria-hidden />}
-                  label="Device"
+                  icon={<HostIcon className="size-3.5" aria-hidden />}
+                  label={HostNoun}
                   zone={info.deviceZone.replace(/_/g, " ")}
                   offset={info.deviceOffset}
                   tone={info.matchesLocation ? "ok" : "danger"}
@@ -759,13 +791,17 @@ export function LocationCheck() {
           {clock.status === "probing" ? (
             <p className="mt-3 flex items-center gap-2 text-sm text-muted">
               <Loader2 className="size-4 animate-spin" strokeWidth={2.25} aria-hidden />
-              Comparing phone time to network UTC…
+              Comparing {hostNoun} time to network UTC…
             </p>
           ) : null}
 
           {clock.status === "ready" ? (
             <div className="mt-3">
-              <ClockSkewRail sample={clock.sample} />
+              <ClockSkewRail
+                sample={clock.sample}
+                hostNoun={hostNoun}
+                HostNoun={HostNoun}
+              />
             </div>
           ) : null}
 
@@ -787,8 +823,8 @@ export function LocationCheck() {
           {clock.status === "ready" ? (
             <p className="mt-2 text-xs text-subtle">
               Network probe uses a public UTC edge clock and round-trip delay (±
-              {clock.sample.uncertaintyMs} ms). It is not a lab atomic lock — if the
-              phone looks wrong, fix Date &amp; Time in settings before the ceremony.
+              {clock.sample.uncertaintyMs} ms). It is not a lab atomic lock — if the{" "}
+              {hostNoun} looks wrong, fix Date &amp; Time in settings before the ceremony.
             </p>
           ) : status === "ok" || status === "unavailable" ? (
             <p className="mt-2 text-xs text-subtle">
