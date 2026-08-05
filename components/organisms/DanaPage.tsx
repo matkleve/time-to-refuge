@@ -43,12 +43,12 @@ export function DanaPage() {
 
   return (
     <ListPageFrame pin={<PageTitle title={dana.pageTitle} />}>
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 pb-2 md:gap-8">
-        <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:gap-8 lg:gap-10">
+      <div className="mx-auto flex w-full flex-col gap-6 pb-2 md:gap-8 lg:gap-10">
+        <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-8 lg:gap-12">
           <div className="flex flex-col gap-5 md:gap-6">
             <div
               className={cn(
-                "relative aspect-[3/2] w-full overflow-hidden rounded-3xl bg-ink/10 md:aspect-[4/3] lg:min-h-[22rem]",
+                "relative aspect-[3/2] w-full overflow-hidden rounded-3xl bg-ink/10 md:aspect-[4/3] md:min-h-[24rem] lg:min-h-[28rem]",
                 glassClass("card", { rim: true }),
               )}
             >
@@ -57,7 +57,7 @@ export function DanaPage() {
                 alt={dana.imageAlt}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 48vw, 36rem"
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 55vw, 40rem"
                 className="object-cover"
               />
             </div>
@@ -72,8 +72,8 @@ export function DanaPage() {
             </div>
 
             <blockquote className="hidden space-y-1 border-l-2 border-saffron-400 pl-3 md:block md:pl-4">
-              <p className="font-display text-lg text-ink">{dana.quote.text}</p>
-              <footer className="text-sm text-muted">
+              <p className="font-display text-lg text-ink md:text-2xl">{dana.quote.text}</p>
+              <footer className="text-sm text-muted md:text-base">
                 — {dana.quote.attribution}
               </footer>
             </blockquote>
@@ -89,14 +89,14 @@ export function DanaPage() {
 
             <div
               className={cn(
-                "space-y-3 rounded-2xl px-4 py-3.5 md:px-5 md:py-4",
+                "space-y-3 rounded-2xl px-4 py-3.5 md:space-y-4 md:px-5 md:py-5",
                 glassClass("card", { rim: true }),
               )}
             >
               <p className="text-xs font-medium tracking-wide text-muted uppercase">
                 Bank transfer
               </p>
-              <p className="font-display text-lg font-semibold text-ink">
+              <p className="font-display text-lg font-semibold text-ink md:text-2xl">
                 {dana.bank.accountName}
               </p>
 
@@ -131,7 +131,7 @@ export function DanaPage() {
                   : dana.primaryCta.label
               }
               glass
-              size="md"
+              size="lg"
               tone="accent"
               press="md"
               onClick={() => handleCopy("iban", dana.bank.iban)}
