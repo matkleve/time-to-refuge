@@ -166,11 +166,10 @@ bleed, one column, exactly what §0–§3 describe. At `md` and up, `page.tsx`
 switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
 shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
-page, `DesktopWorkspace` — a persistent **overview of full `PersonCard`s**
-on the left (same card as the People page — never a name-only chip row)
-and the current person's card with the record button directly beneath it
-on the right. Tap a rail card's name (or an empty field) to focus that
-person for recording. **Tablet (`768–1023`)** is the stressed
+page, `DesktopWorkspace` — a persistent **progress rail** (`SessionPersonRow`:
+name + one status circle per field — empty ring / check when recorded) and the
+current person's full `PersonCard` with the record button beneath it. Tap a
+row name to focus that person; tap a circle to arm that field. **Tablet (`768–1023`)** is the stressed
 band for nav density; page links use **icon-only below `lg`**, short labels
 from `lg` up (brand lockup is Home — no duplicate Home tab). Export / Dana
 sit in a quiet actions cluster so they don’t fight UC-1.
@@ -595,7 +594,7 @@ tap so pointer and touch share one path.
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
 | Add person (People / desktop rail) | Tap → name field in the stamp, Add / Cancel in the tray |
 | Person card (overview / focused) | ⋯ menu → Rename / Export / Share, then separator, then Reset all / Delete |
-| Session overview rail name | Tap name → focus that person for recording (`onSelectPerson`) |
+| Session progress rail | Tap name → focus; tap field circle → arm that phase |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 
 Destructive controls still use the two-click armed pattern (§4): the first

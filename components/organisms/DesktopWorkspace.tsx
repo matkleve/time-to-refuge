@@ -6,6 +6,7 @@ import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
+import { SessionPersonRow } from "./SessionPersonRow";
 
 interface DesktopWorkspaceProps {
   people: Person[];
@@ -26,8 +27,8 @@ interface DesktopWorkspaceProps {
 }
 
 /**
- * Desktop / tablet Session: overview PersonCards on the left (same card as
- * People — never name-only chips); focused card + record on the right.
+ * Desktop / tablet Session: compact progress rows on the left (name + one
+ * circle per field); focused PersonCard + record on the right.
  *
  * Scrollports use `focus-safe-scroll` so outset `:focus-visible` rings are
  * not clipped by `overflow-y-auto` (see DESIGN-SYSTEM §4c).
@@ -66,36 +67,27 @@ export function DesktopWorkspace({
   return (
     <div className="app-scroll-clearance flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
       {/*
-        Overview cards — full PersonCard, not a name chip. Scrollport is
-        focus-safe so keyboard rings / selected cues aren’t sliced by the
-        parent overflow clip. Horizontal padding stays 0: the shell already
-        applies `.app-content` + `px-4 sm:px-5` (same gutter as DesktopNav).
+        Progress rail — scan who’s done. Horizontal padding stays 0: the shell
+        already applies `.app-content` + `px-4 sm:px-5` (same gutter as nav).
       */}
       <ul
-        className="focus-safe-scroll flex w-72 shrink-0 flex-col gap-3 overflow-y-auto overflow-x-clip px-0 lg:w-80 xl:w-96"
+        className="focus-safe-scroll flex w-64 shrink-0 flex-col gap-2 overflow-y-auto overflow-x-clip px-0 lg:w-72 xl:w-80"
         aria-label="People"
       >
         {people.map((p) => {
           const selected = p.id === current?.id;
           return (
             <li key={p.id} className="min-w-0">
-              <PersonCard
+              <SessionPersonRow
                 person={p}
                 fields={fields}
                 isCurrent={selected}
                 target={selected ? target : null}
-                onSelectPerson={() => onOpenAt(p.id, null)}
+                onSelect={() => onOpenAt(p.id, null)}
                 onSelectPhase={(phase) => {
                   if (selected) setSelectedPhase(phase);
                   else onOpenAt(p.id, phase);
                 }}
-                onClear={(phase) => onClear(p.id, phase)}
-                onResetAll={() => onResetAll(p.id)}
-                onDelete={() => onDelete(p.id)}
-                onExport={() => onExport(p)}
-                onRename={(name) => onRename(p.id, name)}
-                onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                retreatName={retreatName}
               />
             </li>
           );

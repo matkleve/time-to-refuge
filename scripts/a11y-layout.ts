@@ -86,7 +86,14 @@ function problemsFor(page: string, file: string, src: string): string[] {
   }
 
   if (file.includes("PersonRailRow")) {
-    problems.push("name-only rail — use PersonCard");
+    problems.push("legacy name-only rail — use SessionPersonRow");
+  }
+  if (
+    file.includes("DesktopWorkspace") &&
+    /PersonCard/.test(src) &&
+    !/SessionPersonRow/.test(src)
+  ) {
+    problems.push("Session rail must use SessionPersonRow (progress dots), not full cards");
   }
 
   return problems;
