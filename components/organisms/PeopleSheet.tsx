@@ -7,6 +7,8 @@ import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
+import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
+import { cn } from "@/lib/utils";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -56,7 +58,7 @@ export function PeopleSheet({
         <PageTitle title="People" />
       </StickyPageChrome>
 
-      <ul className="mx-auto w-full max-w-xl space-y-3 px-3 md:px-0">
+      <ul className={cn("mx-auto w-full max-w-xl space-y-3", PAGE_INLINE_GUTTER)}>
         {people.map((p) => (
           <li key={p.id} className="animate-fade-in-up">
             <PersonCard

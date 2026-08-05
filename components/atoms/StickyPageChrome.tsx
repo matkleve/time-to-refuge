@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { TitleScrim } from "@/components/atoms/TitleScrim";
+import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 interface StickyPageChromeProps {
@@ -13,6 +14,7 @@ interface StickyPageChromeProps {
  * Pins page title under the floating brand toolbar.
  * Parent must be a full-bleed scroller that extends under the header so
  * lists pass behind brand (`HeaderScrim`) and this title (`TitleScrim`).
+ * Horizontal inset = `PAGE_INLINE_GUTTER` only (same edge as page body).
  */
 export function StickyPageChrome({
   children,
@@ -32,13 +34,25 @@ export function StickyPageChrome({
       {children != null && children !== false ? (
         <div className="relative">
           <TitleScrim className="absolute inset-0" />
-          <div className="pointer-events-auto relative px-3 pb-1 pt-2 md:px-0 md:pt-3">
+          <div
+            className={cn(
+              "pointer-events-auto relative pb-1 pt-2 md:pt-3",
+              PAGE_INLINE_GUTTER,
+            )}
+          >
             {children}
           </div>
         </div>
       ) : null}
       {below ? (
-        <div className="pointer-events-auto relative px-3 pb-2 md:px-0">{below}</div>
+        <div
+          className={cn(
+            "pointer-events-auto relative pb-2",
+            PAGE_INLINE_GUTTER,
+          )}
+        >
+          {below}
+        </div>
       ) : null}
     </div>
   );

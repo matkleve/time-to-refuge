@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
+import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 interface ListPageFrameProps {
@@ -11,8 +12,7 @@ interface ListPageFrameProps {
 
 /**
  * Normal document page inside the app shell: fill the PageEnter slot and
- * scroll. Ordinary flex-child fill (h-full + flex-1) — not a positioned
- * overlay. History, Fields, and Dana share this frame.
+ * scroll. Title + body share `PAGE_INLINE_GUTTER` — one column, one edge.
  */
 export function ListPageFrame({ children, pin, className }: ListPageFrameProps) {
   return (
@@ -29,7 +29,7 @@ export function ListPageFrame({ children, pin, className }: ListPageFrameProps) 
       {pin ? <StickyPageChrome>{pin}</StickyPageChrome> : null}
       <div
         className={cn(
-          "px-3 md:px-0",
+          PAGE_INLINE_GUTTER,
           !pin &&
             "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)] md:pt-[4.5rem]",
         )}

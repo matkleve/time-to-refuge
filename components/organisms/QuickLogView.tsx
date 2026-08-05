@@ -18,6 +18,7 @@ import { PageTitle } from "@/components/atoms/PageTitle";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
+import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
@@ -219,9 +220,9 @@ export function QuickLogView() {
   );
 
   const logList = (
-    <div className="mx-auto flex w-full max-w-xl flex-col-reverse gap-2 px-1 py-3 md:mx-0 md:max-w-none md:px-0">
+    <div className={cn("flex w-full flex-col-reverse gap-2 py-3", PAGE_INLINE_GUTTER)}>
       {sorted.length === 0 ? (
-        <GlassEmptyNote className="mx-auto md:mx-0">
+        <GlassEmptyNote>
           {tapAnywhere
             ? "Tap anywhere to log a time."
             : "Tap the button to log a time."}
@@ -272,9 +273,10 @@ export function QuickLogView() {
          Record control owns the stamp; don’t double-fire from the pad. */}
       <div
         className={cn(
-          "order-2 mx-auto w-full max-w-xl shrink-0 px-1 pt-2",
+          "order-2 w-full shrink-0 pt-2",
+          PAGE_INLINE_GUTTER,
           "pb-[max(1rem,env(safe-area-inset-bottom))]",
-          "md:order-1 md:mx-0 md:flex md:w-64 md:max-w-none md:flex-col md:justify-center md:self-stretch md:px-0 md:pb-4 lg:w-80",
+          "md:order-1 md:flex md:w-64 md:flex-col md:justify-center md:self-stretch md:px-0 md:pb-4 lg:w-80",
           "md:pt-[var(--app-header-clearance)]",
         )}
         onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}

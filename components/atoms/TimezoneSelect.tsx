@@ -62,7 +62,7 @@ export function TimezoneSelect({
     return (
       <div
         className={cn(
-          "relative flex w-full max-w-md items-center gap-2.5 rounded-2xl px-3.5",
+          "relative flex w-full items-center gap-2.5 rounded-2xl px-3.5",
           controlH.md,
           glassClass("card", { rim: true }),
           className,
