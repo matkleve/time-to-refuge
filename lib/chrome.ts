@@ -34,3 +34,7 @@ export const QUICKLOG_BODY_GRID =
 
 /** Compact editor rows — readable label + action chips (~400px). */
 export const READABLE_ROW_MAX = "w-full max-w-[25rem]" as const;
+
+/** People overview — auto-fill 2–3 card columns capped at ~25rem. */
+export const PEOPLE_CARD_GRID =
+  "grid w-full grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),25rem))] gap-3" as const;

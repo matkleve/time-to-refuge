@@ -5,7 +5,9 @@ import { downloadPersonCsv } from "@/lib/csv";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
-import { AddPersonRow } from "./AddPersonRow";
+import { PEOPLE_CARD_GRID } from "@/lib/chrome";
+import { cn } from "@/lib/utils";
+import { AddPersonCard } from "./AddPersonCard";
 import { PersonCard } from "./PersonCard";
 
 interface PeopleSheetProps {
@@ -47,28 +49,30 @@ export function PeopleSheet({
         ) : undefined
       }
     >
-      <ul className="space-y-3">
+      <ul className={cn(PEOPLE_CARD_GRID, "pt-1.5 pb-2")}>
         {people.map((p) => (
-          <li key={p.id} className="animate-fade-in-up">
-            <PersonCard
-              person={p}
-              fields={fields}
-              isCurrent={p.id === currentId}
-              onOpenPerson={() => onOpenAt(p.id, null)}
-              onSelectPhase={(phase) => onOpenAt(p.id, phase)}
-              onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-              onClear={(phase) => onClearTime(p.id, phase)}
-              onResetAll={() => onResetAll(p.id)}
-              onDelete={() => onDelete(p.id)}
-              onExport={() => downloadPersonCsv(p, fields, retreatName)}
-              onRename={(name) => onRename(p.id, name)}
-              retreatName={retreatName}
-            />
+          <li key={p.id} className="animate-fade-in-up min-w-0">
+            <div className="h-full">
+              <PersonCard
+                person={p}
+                fields={fields}
+                isCurrent={p.id === currentId}
+                onOpenPerson={() => onOpenAt(p.id, null)}
+                onSelectPhase={(phase) => onOpenAt(p.id, phase)}
+                onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                onClear={(phase) => onClearTime(p.id, phase)}
+                onResetAll={() => onResetAll(p.id)}
+                onDelete={() => onDelete(p.id)}
+                onExport={() => downloadPersonCsv(p, fields, retreatName)}
+                onRename={(name) => onRename(p.id, name)}
+                retreatName={retreatName}
+              />
+            </div>
           </li>
         ))}
 
-        <li>
-          <AddPersonRow onAdd={onAdd} />
+        <li className="min-w-0">
+          <AddPersonCard fields={fields} onAdd={onAdd} />
         </li>
       </ul>
     </ListPageFrame>
