@@ -56,8 +56,9 @@ interface DesktopNavProps {
  * brand (→ Home) · page tabs · undo/redo · Export/Dana.
  *
  * Standard toolbar pattern: no horizontal scroll, no clipped outlines.
- * Density: icon-only below `lg`, short labels from `lg` up. Actions stay
- * `shrink-0` so they never get eaten by the tab flex.
+ * Density: icon-only below `lg`, short labels from `lg` up. Labels are
+ * `text-base` + ink (not muted) so they clear WCAG AA on the header scrim.
+ * Actions stay `shrink-0` so they never get eaten by the tab flex.
  */
 export function DesktopNav({
   view,
@@ -97,15 +98,15 @@ export function DesktopNav({
                   title={label}
                   onClick={() => onChange(id)}
                   className={cn(
-                    "inline-flex size-10 shrink-0 items-center justify-center gap-1.5 rounded-full lg:h-10 lg:w-auto lg:px-2.5 xl:px-3",
-                    "text-sm font-medium",
+                    "inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-full lg:h-11 lg:w-auto lg:px-3 xl:px-3.5",
+                    "text-base font-medium",
                     userFeedbackClass({ press: "md", on: selected }),
                     selected
                       ? cn(glassNavSelectedClass(), "font-semibold text-ink")
-                      : "text-muted hover:text-ink",
+                      : "text-ink hover:text-ink",
                   )}
                 >
-                  <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
+                  <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
                   <span className="hidden lg:inline">{shortLabel}</span>
                 </button>
               );

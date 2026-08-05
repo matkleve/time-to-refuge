@@ -78,6 +78,9 @@ export const PAIRS = [
   { name: "focus ring on card", fg: "flagblue600", bg: "card", min: 3.0 },
   { name: "armed row ring on card", fg: "flagblue500", bg: "card", min: 3.0 },
   { name: "row border on card", fg: "line", bg: "card", min: 1.0 },
+
+  // — Desktop nav idle labels on solid white (worst opaque backdrop) —
+  { name: "nav idle ink on white", fg: "ink", bg: "white", min: 4.5 },
 ];
 
 /**
@@ -120,8 +123,11 @@ export const GLASS_PAIRS = [
   { name: "clock on primary action glass", fg: "white", bg: "flagblue600", surface: "actionPrimary", min: 3.0 },
   { name: "phase label on primary action glass", fg: "white", bg: "flagblue600", surface: "actionPrimary", min: 4.5 },
   { name: "clock on idle action glass", fg: "muted", bg: "white", surface: "actionIdle", min: 4.5 },
-  { name: "clock on accent action glass", fg: "ink", bg: "saffron400", surface: "actionAccent", min: 3.0 },
-  { name: "label on accent action glass", fg: "ink", bg: "saffron400", surface: "actionAccent", min: 4.5 },
+
+  // — Desktop nav (labels over header scrim / photo) —
+  // Idle tabs use ink (not muted): muted fails AA on the light glass backdrop.
+  { name: "nav idle ink on panel glass", fg: "ink", bg: "white", surface: "panel", min: 4.5 },
+  { name: "nav selected ink on panel glass", fg: "ink", bg: "white", surface: "panel", min: 4.5 },
 ];
 
 /** Guard: fill class `/NN` must match `alpha` or the UI and the checker diverge. */
