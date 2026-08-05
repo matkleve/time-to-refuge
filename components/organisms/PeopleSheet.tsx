@@ -46,7 +46,7 @@ export function PeopleSheet({
 
   return (
     <div
-      className="absolute inset-0 z-0 overflow-y-auto overscroll-contain"
+      className="focus-safe-scroll absolute inset-0 z-0 overflow-y-auto overscroll-contain"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
       <StickyPageChrome

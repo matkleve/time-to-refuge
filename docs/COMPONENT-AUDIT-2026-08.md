@@ -29,7 +29,7 @@ component zoo.
 | Menus | `GlassMenu`, `ViewMenu` |
 | Session chips | `RetreatNameField`, `TimezoneSelect` |
 | Capture CTAs | `LiveClockButton`, `QuickLogButton` |
-| Person stack | `PersonCard` → `PersonFields`; `PersonRailRow` |
+| Person stack | `PersonCard` → `PersonFields` (Session rail = overview cards) |
 | Shells | `AppShell`, `DesktopShell`, `PageEnter` |
 | Dana meter | `DanaProgress` |
 
@@ -56,7 +56,7 @@ component zoo.
 
 ## Do not unify
 
-- `PersonCard` vs `PersonRailRow`  
+- ~~`PersonCard` vs `PersonRailRow`~~ — rail uses `PersonCard` 
 - `LiveClockButton` vs `QuickLogButton` as products  
 - `glassRowClass` (on card) vs `glassClass("card")` (stamps on photo)  
 - Desktop rail “People” caption vs `PageTitle`  

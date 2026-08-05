@@ -10,7 +10,7 @@ shared component. Companion to [`UX-AUDIT-2026-08.md`](./UX-AUDIT-2026-08.md)
   `DesktopNav` (not Tailwind `lg`).
 - Content clamp: `.app-content` = `max-width: clamp(22rem, 94vw, 68rem)` —
   nav and main share one column.
-- Session: compact `PersonRailRow` rail (`w-56` → `lg:w-72`) + focused
+- Session: overview `PersonCard` rail (`w-72` → `xl:w-96`) + focused
   `PersonCard` + `LiveClockButton` (`max-w-xl`). No carousel.
 - Page titles: hidden on Session/People when desktop; still rendered inside
   Fields / History / Quick Log / Dana.
@@ -33,8 +33,8 @@ wastes the clamp outside Session.
 
 - **Desktop Session model matches §3b / UC-4:** click rail to switch; no
   carousel; full edit stays on the focused card / People page.
-- **Compact `PersonRailRow`:** name + completion only — prior P0 rail
-  overload is resolved; UC-1 isn’t competing with Reset/Delete in the list.
+- **Overview `PersonCard` rail:** same card as People (not name-only chips);
+  name tap focuses for recording; ⋯ stays on the card.
 - **Always-visible Undo / Redo** on the desktop toolbar (UC-3 mistap path)
   beats burying them in the mobile hamburger footer.
 - **Brand lockup** (`text-2xl` wordmark) + progressive header scrim: brand
@@ -127,8 +127,9 @@ wastes the clamp outside Session.
 - **Recommendation:** Below `lg`, consider a slightly narrower rail
   (`w-48` / name-only denser padding) or collapsing the rail to a
   compact select/list overlay only when width &lt; ~900px — without
-  bringing back full `PersonCard`s in the rail. Prefer keeping the
-  persistent list if at all possible; shrink before you hide.
+  bringing back a denser rail. Prefer keeping the
+  persistent list if at all possible; shrink before you hide. Full overview
+  `PersonCard`s in the rail are intentional (same card as People).
 
 ### Medium — Docs / breakpoint drift (§3b vs code)
 - **Device:** both (authoring risk).

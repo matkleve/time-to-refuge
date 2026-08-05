@@ -81,7 +81,7 @@ Shared feedback API = `userFeedbackClass({ press, on })` unless noted.
 | **Field row actions** | → IconButton | IconButton | Y | Y | Y | P — copied saffron | Y Reset armed | N | Y | N | P — copy Check |
 | **Fields name chip** | `organisms/FieldsPage.tsx` | Shared; bump animation | Y | Y | Y | P — edit shell; reorder bump | Y — name red when delete armed | P Up/Down | P — edit `outline-none` | N | N |
 | **Fields Reset defaults** | same | IconButton `armed` | Y | Y | Y | N | Y chip (no row subject) | Y at default | Y | N | N |
-| **PersonRailRow** | `organisms/PersonRailRow.tsx` | Shared `on: isCurrent` + card material | Y | Y | Y | Y — current fill + wash + `aria-current` | N | N | Y | N | N |
+| **PersonCard name (Session rail)** | `organisms/PersonCard.tsx` `onSelectPerson` | Name button + `glass-card-current` when focused | Y | Y | Y | Y — `aria-current` + current material | Y menu / fields | N | Y | N | N |
 | **PersonCard name / ⋯** | `organisms/PersonCard.tsx` | GlassMenu arming | Y | Y | Y | Y menu `selected` | P — name red **Y**; menu row ≠ filled chip | Y empty actions | Y | N | N |
 | **Quick Log row** | `organisms/QuickLogView.tsx` | Shared; `aria-expanded` | Y | Y | Y | Y open wash | Y time red + Trash chip; Clear-all | N | Y | N | N |
 | **Dana copy / CTA** | `organisms/DanaPage.tsx` | Shared (+ brightness on CTAs) | Y | P | Y | N | N | N | Y | N | P — copied flash |

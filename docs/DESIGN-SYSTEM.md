@@ -166,9 +166,11 @@ bleed, one column, exactly what §0–§3 describe. At `md` and up, `page.tsx`
 switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
 shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
-page, `DesktopWorkspace` — a persistent list of everyone on the left (quick
-switch while recording) and the current person's card with the record button
-directly beneath it on the right. **Tablet (`768–1023`)** is the stressed
+page, `DesktopWorkspace` — a persistent **overview of full `PersonCard`s**
+on the left (same card as the People page — never a name-only chip row)
+and the current person's card with the record button directly beneath it
+on the right. Tap a rail card's name (or an empty field) to focus that
+person for recording. **Tablet (`768–1023`)** is the stressed
 band for nav density; page links use **icon-only below `lg`**, short labels
 from `lg` up (brand lockup is Home — no duplicate Home tab). Export / Dana
 sit in a quiet actions cluster so they don’t fight UC-1.
@@ -411,6 +413,36 @@ outset rings — otherwise the “selected” cue clips away and looks like no
 state at all. Before merge: walk the primary path (UC-1) and confirm every
 armed/selected thing the copy refers to is marked on screen — including
 armed-destroy **subject text**, not only the chip.
+
+## 4c. Overflow vs outlines (hard rule)
+
+Global `:focus-visible` uses an **outset** outline (`outline-offset: 2px`).
+Any ancestor with `overflow: hidden | auto | scroll | clip` will slice that
+ring — and often neighboring hover washes / shadows — so the control looks
+broken or unfocused.
+
+**Before shipping a scrollport or clipped shell, check all of:**
+
+1. **Do you need overflow at all?** Prefer `min-h-0` + flex shrink over
+   `overflow-hidden` when the goal is only “contain the flex child.”
+2. **Never use `overflow-x-auto` on a toolbar** to “fit more tabs.” Compress
+   density (icon-only, short labels, `shrink-0` actions) instead. Horizontal
+   scroll on chrome is a confession the row doesn’t fit — and it clips
+   focus rings on both axes (CSS: if one axis is not `visible`, the other
+   can’t stay `visible`).
+3. **Scroll lists of interactive rows** must use the `focus-safe-scroll`
+   utility (padding + scroll-padding gutter ≥ outline + offset) **or** put
+   selected/focus cues **inset** (`ring-inset` / border) on children.
+4. **Portals for popovers/menus** (`GlassMenu`) so shell overflow cannot
+   clip the panel — don’t fight the scrollport with `z-index` alone.
+5. **Media / progress clips** (`overflow-hidden` on rounded image frames,
+   progress bars) are fine — those children are not keyboard focus targets.
+
+Merge checklist: Tab through the changed surface. If any ring is missing a
+corner or a selected chip looks “cut off,” fix the parent overflow before
+adding more outline CSS.
+
+Pasteable agent rule: [`AGENT-OVERFLOW-OUTLINES.md`](./AGENT-OVERFLOW-OUTLINES.md).
 
 ## 4a. Units
 

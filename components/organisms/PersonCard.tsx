@@ -28,6 +28,12 @@ interface PersonCardProps {
    * the only list→Refuge affordance (name is not a nav control).
    */
   onOpenPerson?: () => void;
+  /**
+   * Session overview rail: tap the name to focus this person for recording.
+   * People page does not pass this — name stays a heading there; Eye is the
+   * list→Session control (`onOpenPerson`).
+   */
+  onSelectPerson?: () => void;
   /** When provided, Rename appears in the ⋯ menu. */
   onRename?: (name: string) => void;
   isCurrent?: boolean;
@@ -55,6 +61,7 @@ export function PersonCard({
   onDelete,
   onExport,
   onOpenPerson,
+  onSelectPerson,
   onRename,
   isCurrent = false,
   retreatName = "",
@@ -65,8 +72,9 @@ export function PersonCard({
   const [draft, setDraft] = useState(person.name);
 
   const anyFilled = fields.some((field) => getTime(person, field.id) !== null);
-  /* §6c: caption on the focused recording card only — not list / rail rows. */
-  const showRetreatCaption = !onOpenPerson && retreatName.trim().length > 0;
+  /* §6c: caption on the focused recording card only — not overview / rail. */
+  const showRetreatCaption =
+    !onOpenPerson && !onSelectPerson && retreatName.trim().length > 0;
 
   // Two-click: the first press turns the values red, the second carries it out.
   const resetAll = useArmedAction(() => onResetAll?.());
@@ -174,17 +182,37 @@ export function PersonCard({
         />
       ) : (
         <>
-          <h2
-            className={cn(
-              "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate px-2 font-display text-2xl font-semibold",
-              remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
-            )}
-          >
-            {isComplete(person, fields) && (
-              <Check className="size-4 shrink-0 text-saffron-700" aria-label="All fields recorded" />
-            )}
-            <span className="truncate">{person.name}</span>
-          </h2>
+          {onSelectPerson ? (
+            <button
+              type="button"
+              onClick={onSelectPerson}
+              aria-current={isCurrent ? "true" : undefined}
+              aria-label={
+                isCurrent ? `${person.name}, recording` : `Select ${person.name}`
+              }
+              className={cn(
+                "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate rounded-xl px-2 text-left font-display text-2xl font-semibold",
+                remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
+              )}
+            >
+              {isComplete(person, fields) && (
+                <Check className="size-4 shrink-0 text-saffron-700" aria-hidden />
+              )}
+              <span className="truncate">{person.name}</span>
+            </button>
+          ) : (
+            <h2
+              className={cn(
+                "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate px-2 font-display text-2xl font-semibold",
+                remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
+              )}
+            >
+              {isComplete(person, fields) && (
+                <Check className="size-4 shrink-0 text-saffron-700" aria-label="All fields recorded" />
+              )}
+              <span className="truncate">{person.name}</span>
+            </h2>
+          )}
 
           {menuItems.length > 0 && (
             <GlassMenu

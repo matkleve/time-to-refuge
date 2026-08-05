@@ -19,7 +19,7 @@ export function ListPageFrame({ children, pin, className }: ListPageFrameProps) 
   return (
     <div
       className={cn(
-        "absolute inset-0 z-0 overflow-y-auto overscroll-contain md:px-0",
+        "focus-safe-scroll absolute inset-0 z-0 overflow-y-auto overscroll-contain md:px-0",
         className,
       )}
       style={{
