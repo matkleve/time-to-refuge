@@ -32,6 +32,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               key={step.title}
               className={cn(
                 "flex min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 sm:px-4 sm:py-4",
+                /* Decorative shrink on pointer hover only — not a control. */
+                "transition-transform duration-200 ease-out",
+                "motion-safe:[@media(hover:hover)]:hover:scale-[0.97]",
                 glassClass("card", { rim: true }),
               )}
             >
