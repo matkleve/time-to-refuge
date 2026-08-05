@@ -256,7 +256,7 @@ export function QuickLogView() {
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Stops the page-wide tap-to-log layer; Clear / rows are real controls. */}
       <div
-        className="focus-safe-scroll order-1 min-h-0 flex-1 overflow-y-auto overscroll-contain md:order-2"
+        className="focus-safe-scroll order-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-0 md:order-2"
         onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
       >
         <StickyPageChrome>{chrome}</StickyPageChrome>
