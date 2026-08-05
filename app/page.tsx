@@ -429,10 +429,13 @@ export default function Home() {
           onExportAll={() => downloadCsv(people, fields, retreatName)}
           exportDisabled={people.length === 0}
         />
-        <div className="relative z-0 min-h-0 flex-1">
+        <div className="relative z-0 flex min-h-0 flex-1 flex-col">
           <div className="app-content absolute inset-0 flex flex-col px-4 sm:px-5">
             {subheader}
-            <div className="relative min-h-0 flex-1">{page}</div>
+            {/* Must be a flex column: PageEnter / pages use flex-1 + min-h-0.
+                Without display:flex here, flex-1 is a no-op, absolute pages
+                collapse to 0 height, and the UI looks like empty backdrop. */}
+            <div className="relative flex min-h-0 flex-1 flex-col">{page}</div>
           </div>
         </div>
       </DesktopShell>
@@ -457,11 +460,11 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <div className="relative z-0 min-h-0 flex-1">
+      <div className="relative z-0 flex min-h-0 flex-1 flex-col">
         {view === "refuge" ? (
           <div className="absolute inset-0 flex flex-col overflow-hidden">
             {subheader}
-            <div className="relative min-h-0 flex-1">{page}</div>
+            <div className="relative flex min-h-0 flex-1 flex-col">{page}</div>
           </div>
         ) : (
           page
