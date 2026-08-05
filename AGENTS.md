@@ -17,7 +17,7 @@ npm run a11y
 3. **Page slot must be `flex flex-col`** with `flex-1 min-h-0` around `{page}`. `PageEnter` needs `h-full flex-1`.
 4. **Never gate layout clearance on `useMediaQuery`** (defaults false until mount). Column geometry and header clearance use **`md:` / `lg:` CSS**, not JS.
 5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
-6. **Flush-edge chips** (Session rail, Add person, retreat) → `glassFlushClass` (no soft-lift). Soft-lift (`shadow-glass`) only on floating menus/panels. Never pair soft-lift + `overflow-x: clip` + `px-0`.
+6. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no soft-lift). Soft-lift (`shadow-glass`) only on floating menus/panels. Never pair soft-lift + `overflow-x: clip` + `px-0`.
 7. **No nested vertical pad** inside `StickyPageChrome` on top of clearance.
 
 ## Overflow / focus

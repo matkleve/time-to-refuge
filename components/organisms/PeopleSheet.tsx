@@ -26,8 +26,7 @@ interface PeopleSheetProps {
 }
 
 /**
- * People page — normal scrolling document in the shell slot. Cards fade
- * under brand + sticky title scrims while you scroll.
+ * People page — normal scrolling document in the shell slot.
  */
 export function PeopleSheet({
   people,

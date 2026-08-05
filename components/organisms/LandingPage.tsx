@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
 import { controlMinH } from "@/lib/control-size";
-import { actionClass, glassClass } from "@/lib/surfaces";
+import { actionClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +38,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 className={cn(
                   "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
                   userFeedbackClass({ press: "md" }),
-                  glassClass("card", { rim: true }),
+                  glassFlushClass(),
                 )}
               >
                 <span className="text-xs font-medium tracking-wide text-subtle uppercase">

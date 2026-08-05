@@ -147,9 +147,19 @@ export function glassRowClass(): string {
   return cx(GLASS.cardRow.fill, "shadow-glass-row");
 }
 
+/** Field / stamp row inside scrollports — no outer shadow (clip-safe). */
+export function glassFlushRowClass(): string {
+  return GLASS.cardRow.fill;
+}
+
 /** Round action chip — cloudy glass with blur so it reads over the photo too. */
 export function glassChipClass(): string {
   return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM, GLASS_SPECULAR);
+}
+
+/** Chip at gutter / list edge — rim + blur, no soft-lift. */
+export function glassFlushChipClass(): string {
+  return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM);
 }
 
 /**
@@ -157,7 +167,7 @@ export function glassChipClass(): string {
  * Pair with `font-semibold` at the call site.
  */
 export function glassNavSelectedClass(): string {
-  return glassChipClass();
+  return glassFlushChipClass();
 }
 
 export function filledCardClass(isCurrent = false): string {

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import { controlH, controlMinH } from "@/lib/control-size";
-import { glassClass } from "@/lib/surfaces";
+import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -64,7 +64,7 @@ export function TimezoneSelect({
         className={cn(
           "relative flex w-full items-center gap-2.5 rounded-2xl px-3.5",
           controlH.md,
-          glassClass("card", { rim: true }),
+          glassFlushClass(),
           className,
         )}
       >
@@ -108,7 +108,7 @@ export function TimezoneSelect({
             "min-w-0 max-w-[60vw] appearance-none rounded-xl pr-7 pl-8 text-sm text-ink",
             controlMinH.md,
             userFeedbackClass({ press: "md" }),
-            glassClass("card", { rim: true }),
+            glassFlushClass(),
           )}
         >
           {zones.map((z) => (

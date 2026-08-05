@@ -1,7 +1,7 @@
 import { controlMinH } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { glassRowClass } from "@/lib/surfaces";
+import { glassFlushRowClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { RowPackSpacer } from "@/components/atoms/RowReveal";
@@ -50,7 +50,7 @@ export function PersonFieldRowEmpty({
         className={cn(
           "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
           ROW_HEIGHT,
-          glassRowClass(),
+          glassFlushRowClass(),
           userFeedbackClass({ press: "md", on: active }),
           targetClass,
         )}

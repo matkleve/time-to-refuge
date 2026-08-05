@@ -13,8 +13,8 @@
  * 2. Title, filters, and rows share that same left/right edge.
  * 3. `focus-safe-scroll` is **vertical bleed only** — never a second
  *    horizontal frame (`px-0` on scrollports is fine).
- * 4. Flush-edge list chips use `glassFlushClass` (no soft-lift). Soft-lift
- *    is for floating panels/menus only.
+ * 4. Flush-edge controls → `glassFlushClass`, `glassFlushRowClass`, or
+ *    `glassFlushChipClass` (no soft-lift). Soft-lift is for floating panels only.
  * 5. Glass is on *controls*, not a full-page inner card. No title scrim.
  */
 

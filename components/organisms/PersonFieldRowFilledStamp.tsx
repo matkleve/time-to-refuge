@@ -1,7 +1,7 @@
 import { controlMinH } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { glassRowClass } from "@/lib/surfaces";
+import { glassFlushRowClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { PersonFieldRowLabel } from "./PersonFieldRowLabel";
 
@@ -36,8 +36,7 @@ export function PersonFieldRowFilledStamp({
         "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
         userFeedbackClass({ press: "md", on: isTarget }),
         ROW_HEIGHT,
-        glassRowClass(),
-        "shadow-sm",
+        glassFlushRowClass(),
         targetClass,
       )}
     >
