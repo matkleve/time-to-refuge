@@ -22,7 +22,7 @@ import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
 
-/** Primary destinations — same set as the mobile hamburger Pages group. */
+/** Primary destinations — same order as the mobile hamburger Pages group. */
 export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   id: AppView;
   label: string;
@@ -30,9 +30,9 @@ export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   icon: LucideIcon;
 }> = [
   { id: "home", label: "Home", shortLabel: "Home", icon: Home },
-  { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
-  { id: "people", label: "People", shortLabel: "People", icon: Contact },
   { id: "fields", label: "Fields", shortLabel: "Fields", icon: ListTree },
+  { id: "people", label: "People", shortLabel: "People", icon: Contact },
+  { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
   { id: "quicklog", label: "Quick Log", shortLabel: "Log", icon: Clock },
   { id: "history", label: "History", shortLabel: "History", icon: History },
 ];
