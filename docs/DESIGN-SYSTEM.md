@@ -584,6 +584,7 @@ tap so pointer and touch share one path.
 | Field row (either card) | Tap the recorded time → reveal Copy / Edit / Reset |
 | Add person (People / desktop rail) | Tap → name field in the stamp, Add / Cancel in the tray |
 | Person card (overview / focused) | ⋯ menu → Rename / Export / Share, then separator, then Reset all / Delete |
+| Session overview rail name | Tap name → focus that person for recording (`onSelectPerson`) |
 | Quick Log entry | Tap the row → reveal Copy / Delete |
 
 Destructive controls still use the two-click armed pattern (§4): the first
