@@ -16,11 +16,7 @@ export function PersonFieldRowShell({
   children,
 }: PersonFieldRowShellProps) {
   if (editing) {
-    return (
-      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
-        {children}
-      </div>
-    );
+    return <div className={cn("rounded-2xl", shellClassName)}>{children}</div>;
   }
 
   if (!filled) {
@@ -28,11 +24,7 @@ export function PersonFieldRowShell({
   }
 
   if (!onClear) {
-    return (
-      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
-        {children}
-      </div>
-    );
+    return <div className={cn("rounded-2xl", shellClassName)}>{children}</div>;
   }
 
   return <div className="rounded-2xl">{children}</div>;

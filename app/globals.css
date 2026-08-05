@@ -434,21 +434,13 @@
 /*
  * Vertical bleed only inside overflow-y-auto scrollports.
  *
- * Horizontal pad was removed on purpose: shell already owns the content
- * gutter (`PAGE_INLINE_GUTTER` / `.app-content`). Agents then overrode
- * with `px-0` while keeping `overflow-x: clip`, which sliced glass pills
- * and soft-lift shadows on the left edge of Session / People lists.
- *
- * Rule: flush-edge list children must use inset focus + `glassFlushClass`
- * (no soft-lift). Soft-lift (`shadow-glass`) is for floating panels only.
- *
- * Still force `overflow-x: clip`: a lone `overflow-y: auto` computes the
- * other axis to `auto` too (horizontal scrollbar from outset rings).
+ * Horizontal pad lives on the shell (`PAGE_INLINE_GUTTER` / `.app-content`).
+ * Flush-edge list children use `glassFlushClass` (no soft-lift shadow to clip).
+ * Focus rings are inset globally — no overflow-x clip on scrollports.
  */
 @utility focus-safe-scroll {
   padding-block: var(--focus-safe-bleed);
   scroll-padding-block: var(--focus-safe-bleed);
-  overflow-x: clip;
 }
 
 /*

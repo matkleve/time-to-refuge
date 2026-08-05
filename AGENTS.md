@@ -30,6 +30,7 @@ npm run a11y
 - Menus/popovers → portal (`GlassMenu`).
 - Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).
 - **Interactive glass** — tappable controls use `lib/interactive-glass.ts` helpers (`interactiveGlassFlushClass`, `interactiveGlassRowClass`, `interactiveActionClass`, …). Material + `userFeedbackClass` on **one** element. Never pair `glass*Class` / `actionClass` with `userFeedbackClass` manually in components (`npm run a11y:interactive`).
+- **No overlay cut** — never `overflow-x-clip` or `contain-paint` on layout chrome / scrollports / cards. Scrollports: `focus-safe-scroll` + `overflow-y-auto` only. Floating panels portaled (`GlassMenu`, LocationCheck). Inset focus globally — no horizontal clip for rings.
 
 ## Session desktop
 

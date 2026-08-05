@@ -70,6 +70,29 @@ function checkFile(file: string): Hit[] {
     const trimmed = line.trim();
     if (!trimmed) return;
 
+    // Never clip shadows / rounded corners on chrome.
+    if (/\boverflow-x-clip\b/.test(line)) {
+      hits.push({
+        file: rel,
+        line: n,
+        token: "overflow-x-clip",
+        reason:
+          "Horizontal clip slices glass shadows and rounded corners. Use focus-safe-scroll + glassFlushClass instead.",
+        snippet: trimmed.slice(0, 160),
+      });
+    }
+
+    if (/\bcontain-paint\b/.test(line)) {
+      hits.push({
+        file: rel,
+        line: n,
+        token: "contain-paint",
+        reason:
+          "Paint containment clips descendant shadows and popover bleed. Remove contain-paint from layout chrome.",
+        snippet: trimmed.slice(0, 160),
+      });
+    }
+
     // Ban horizontal scroll on chrome — clips focus on both axes (§4c #2).
     if (/\boverflow-x-auto\b/.test(line)) {
       hits.push({
@@ -95,7 +118,7 @@ function checkFile(file: string): Hit[] {
           line: n,
           token: "overflow-y-auto/scroll",
           reason:
-            "Bare overflow-y makes overflow-x compute to auto. Add `focus-safe-scroll` (preferred) or `overflow-x-clip` on the same scrollport.",
+            "Bare overflow-y makes overflow-x compute to auto. Pair with `focus-safe-scroll` on the same scrollport (inset focus — no overflow-x clip).",
           snippet: trimmed.slice(0, 160),
         });
       }
