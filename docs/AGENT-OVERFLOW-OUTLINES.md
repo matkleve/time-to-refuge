@@ -29,10 +29,16 @@ When you add or change layout:
 5. overflow-hidden is OK on non-interactive media frames (images, progress
    bars, decorative rounded clips) — not on parents of focusable controls
    unless inset cues + padding are in place.
+6. NEVER gate header clearance / column geometry on useMediaQuery (or any
+   JS breakpoint that defaults false on SSR). If CSS already switches layout
+   at md/lg (`md:flex-row`, `md:order-*`), clearance and width MUST be the
+   same `md:`/`lg:` utilities. JS-false + CSS-desktop = content under the
+   floating header (Quick Log stamp under brand/nav).
 
 Verify before merge: keyboard-tab the changed surface. If a focus ring or
 selected chip is missing a corner / looks cut off, fix the parent overflow
-first — do not “fix” it by removing the focus ring.
+first — do not “fix” it by removing the focus ring. Reload at desktop
+width and confirm nothing paints through the brand toolbar.
 ```
 
 ---

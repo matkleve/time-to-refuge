@@ -182,6 +182,10 @@ export function QuickLogView() {
   if (!ready) return null;
 
   const sorted = [...entries].sort((a, b) => b.at - a.at);
+  /* Layout classes must be pure CSS (`md:`), not `useMediaQuery` — that
+     hook defaults false until mount, so a wide viewport briefly (or stuck)
+     gets flex-row stamp-on-left with phone `pt-2` and the saffron clock
+     sits under the brand/nav. Hint copy can still follow the hook. */
   const isDesktop = !tapAnywhere;
 
   const chrome = (
@@ -259,15 +263,19 @@ export function QuickLogView() {
         {logList}
       </div>
 
-      {/* Stamp button. Phone: bottom bar. Desktop: left column. */}
+      {/*
+        Stamp. Phone: bottom bar. Desktop: left column under header clearance.
+        Width / justify / padding are `md:` utilities — never JS-gated — so the
+        clock cannot paint into the brand/nav band (see DESIGN-SYSTEM §4c).
+      */}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Record control owns the stamp; don’t double-fire from the pad. */}
       <div
         className={cn(
-          "order-2 shrink-0 md:order-1",
-          isDesktop
-            ? "flex w-64 shrink-0 flex-col justify-center pt-[4.5rem] pb-4 lg:w-80"
-            : "mx-auto w-full max-w-xl px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2",
+          "order-2 mx-auto w-full max-w-xl shrink-0 px-1 pt-2",
+          "pb-[max(1rem,env(safe-area-inset-bottom))]",
+          "md:order-1 md:mx-0 md:flex md:w-64 md:max-w-none md:flex-col md:justify-center md:self-stretch md:px-0 md:pb-4 lg:w-80",
+          "md:pt-[var(--app-header-clearance)]",
         )}
         onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
       >

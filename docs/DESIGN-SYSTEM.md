@@ -437,10 +437,16 @@ broken or unfocused.
    clip the panel — don’t fight the scrollport with `z-index` alone.
 5. **Media / progress clips** (`overflow-hidden` on rounded image frames,
    progress bars) are fine — those children are not keyboard focus targets.
+6. **CSS breakpoint ≠ JS media query.** `useMediaQuery` defaults `false`
+   until mount. If `md:flex-row` already moves a control under the brand
+   column, its clearance/`justify-*`/`w-*` must also be `md:` utilities —
+   never `isDesktop ? … : …`. JS-false + CSS-desktop paints into the
+   floating header (Quick Log stamp under Fields).
 
 Merge checklist: Tab through the changed surface. If any ring is missing a
 corner or a selected chip looks “cut off,” fix the parent overflow before
-adding more outline CSS.
+adding more outline CSS. At desktop width, confirm nothing sits under the
+brand toolbar.
 
 Pasteable agent rule: [`AGENT-OVERFLOW-OUTLINES.md`](./AGENT-OVERFLOW-OUTLINES.md).
 
