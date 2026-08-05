@@ -38,3 +38,8 @@ export const READABLE_ROW_MAX = "w-full max-w-[25rem]" as const;
 /** People overview — auto-fill 2–3 card columns capped at ~25rem. */
 export const PEOPLE_CARD_GRID =
   "grid w-full grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),25rem))] gap-3" as const;
+
+/** PersonCard interior — keep AddPersonCard spacers in sync. */
+export const PERSON_CARD_INSET = "px-2 py-2" as const;
+export const PERSON_CARD_HEADER_INSET = "px-2 pt-2" as const;
+export const PERSON_CARD_FIELD_GAP = "gap-2" as const;

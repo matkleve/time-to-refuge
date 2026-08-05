@@ -4,6 +4,10 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import type { FieldDef } from "@/lib/types";
 import { BUTTON_CLUSTER_GAP, controlMinH } from "@/lib/control-size";
+import {
+  PERSON_CARD_HEADER_INSET,
+  PERSON_CARD_INSET,
+} from "@/lib/chrome";
 import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
@@ -47,7 +51,7 @@ export function AddPersonCard({ fields, onAdd }: AddPersonCardProps) {
     >
       {open ? (
         <>
-          <div className={cn("flex items-center px-3 pt-3", BUTTON_CLUSTER_GAP)}>
+          <div className={cn("flex items-center", PERSON_CARD_HEADER_INSET, BUTTON_CLUSTER_GAP)}>
             <input
               /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by tap on the card. */
               autoFocus
@@ -76,7 +80,7 @@ export function AddPersonCard({ fields, onAdd }: AddPersonCardProps) {
               press="md"
             />
           </div>
-          <div className="px-3 py-3">{body}</div>
+          <div className={PERSON_CARD_INSET}>{body}</div>
         </>
       ) : (
         <button
@@ -84,7 +88,7 @@ export function AddPersonCard({ fields, onAdd }: AddPersonCardProps) {
           onClick={() => setOpen(true)}
           className="flex h-full min-h-0 w-full flex-col text-left"
         >
-          <div className={cn("flex items-center px-3 pt-3", BUTTON_CLUSTER_GAP)}>
+          <div className={cn("flex items-center", PERSON_CARD_HEADER_INSET, BUTTON_CLUSTER_GAP)}>
             <span
               className={cn(
                 "flex h-10 min-w-0 flex-1 items-center gap-2 truncate rounded-xl px-2 font-display text-2xl font-semibold text-muted",
@@ -96,7 +100,7 @@ export function AddPersonCard({ fields, onAdd }: AddPersonCardProps) {
             </span>
             <span className={cn(controlMinH.md, "w-11 shrink-0")} aria-hidden />
           </div>
-          <div className="px-3 py-3">{body}</div>
+          <div className={PERSON_CARD_INSET}>{body}</div>
         </button>
       )}
     </Surface>

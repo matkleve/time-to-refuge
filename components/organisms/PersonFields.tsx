@@ -1,6 +1,8 @@
 "use client";
 
 import { Person, Phase, FieldDef } from "@/lib/types";
+import { PERSON_CARD_FIELD_GAP } from "@/lib/chrome";
+import { cn } from "@/lib/utils";
 import { PersonFieldRow } from "./PersonFieldRow";
 
 interface PersonFieldsProps {
@@ -29,7 +31,7 @@ export function PersonFields({
   armedAll = false,
 }: PersonFieldsProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className={cn("flex flex-col", PERSON_CARD_FIELD_GAP)}>
       {fields.map((field) => (
         <PersonFieldRow
           key={field.id}

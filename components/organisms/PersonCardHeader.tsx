@@ -40,7 +40,7 @@ export function PersonCardHeader({
   return (
     <>
       {showRetreatCaption && (
-        <p className="shrink-0 truncate px-4 pt-3 text-xs tracking-wide text-ink uppercase">
+        <p className="shrink-0 truncate px-2 pt-2 text-xs tracking-wide text-ink uppercase">
           {retreatName}
         </p>
       )}
@@ -62,7 +62,7 @@ export function PersonCardHeader({
         />
       </div>
       {shareNote && (
-        <p className="no-select animate-fade-in-up shrink-0 px-4 pt-1 text-sm text-flagblue-600" role="status">
+        <p className="no-select animate-fade-in-up shrink-0 px-2 pt-1 text-sm text-flagblue-600" role="status">
           {shareNote}
         </p>
       )}

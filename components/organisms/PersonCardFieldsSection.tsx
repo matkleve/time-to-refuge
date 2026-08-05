@@ -1,4 +1,5 @@
 import { Person, Phase, FieldDef } from "@/lib/types";
+import { PERSON_CARD_INSET } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 import { PersonFields } from "./PersonFields";
 
@@ -28,7 +29,7 @@ export function PersonCardFieldsSection({
   return (
     <div
       className={cn(
-        "px-3 py-3",
+        PERSON_CARD_INSET,
         fillHeight &&
           "focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain",
       )}
