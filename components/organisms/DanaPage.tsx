@@ -28,7 +28,7 @@ export function DanaPage() {
 
   return (
     <ListPageFrame pin={<PageTitle title={dana.pageTitle} />}>
-      <div className="mx-auto flex w-full flex-col gap-6 pb-2 md:gap-8 lg:gap-10">
+      <div className="flex w-full flex-col gap-6 pb-2 md:gap-8 lg:gap-10">
         <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-8 lg:gap-12">
           <DanaPageStory />
           <DanaPageAside copied={copied} onCopy={handleCopy} />

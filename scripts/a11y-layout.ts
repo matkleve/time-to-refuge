@@ -78,6 +78,28 @@ function problemsFor(page: string, file: string, src: string): string[] {
   }
 
   if (
+    ["people", "history", "fields"].includes(page) &&
+    /\bmax-w-(?:md|lg|xl|2xl)\b/.test(src)
+  ) {
+    problems.push("list body clamped with max-w-* — shell owns the column");
+  }
+
+  if (
+    ["people", "quicklog"].includes(page) &&
+    !/<ListPageFrame/.test(src)
+  ) {
+    problems.push("page must use ListPageFrame (one scroll/clearance model)");
+  }
+
+  if (page.startsWith("session/") && !/<ListPageFrame/.test(read("components/timekeeper/timekeeper-refuge-page.tsx"))) {
+    problems.push("Session must use ListPageFrame via timekeeper-refuge-page");
+  }
+
+  if (page === "home" && !/<ListPageFrame/.test(src)) {
+    problems.push("Home must use ListPageFrame fill=workspace");
+  }
+
+  if (
     /\boverflow-y-(?:auto|scroll)\b/.test(src) &&
     !/\bfocus-safe-scroll\b/.test(src) &&
     !/\boverflow-x-(?:clip|hidden)\b/.test(src)
@@ -111,6 +133,7 @@ const pageFiles: Array<{ page: string; file: string }> = [
 ];
 
 const desktopAppShell = read("components/timekeeper/TimekeeperDesktopShell.tsx");
+const mobileAppShell = read("components/timekeeper/TimekeeperMobileShell.tsx");
 const pageEnter = read("components/atoms/PageEnter.tsx");
 const listFrame = read("components/atoms/ListPageFrame.tsx");
 
@@ -155,6 +178,9 @@ if (
 }
 if (/\babsolute inset-0\b/.test(listFrame)) {
   shellProblems.push("ListPageFrame still uses absolute inset-0 — prefer h-full flex-1 scroll");
+}
+if (/subheader/.test(desktopAppShell) || /subheader/.test(mobileAppShell)) {
+  shellProblems.push("shell subheader removed — page titles live in ListPageFrame pin");
 }
 
 const rows: Row[] = pageFiles.map(({ page, file }) => {

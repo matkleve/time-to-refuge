@@ -9,11 +9,9 @@ import { undoRedoMenuProps } from "@/components/timekeeper/timekeeper-menu-props
 
 export function TimekeeperDesktopShell({
   app,
-  subheader,
   page,
 }: {
   app: TimekeeperAppModel;
-  subheader: ReactNode;
   page: ReactNode;
 }) {
   const undoRedo = undoRedoMenuProps(app.undoStack, app.redoStack);
@@ -30,7 +28,6 @@ export function TimekeeperDesktopShell({
       />
       <div className="relative z-0 flex min-h-0 flex-1 flex-col">
         <div className="app-content absolute inset-0 flex flex-col px-4 sm:px-5">
-          {subheader}
           <div className="relative flex min-h-0 flex-1 flex-col">{page}</div>
         </div>
       </div>

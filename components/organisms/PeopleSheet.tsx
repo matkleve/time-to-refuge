@@ -2,13 +2,11 @@
 
 import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
-import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
-import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
-import { cn } from "@/lib/utils";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -25,10 +23,6 @@ interface PeopleSheetProps {
   onRetreatNameChange?: (name: string) => void;
 }
 
-/**
- * People page — normal scrolling document in the shell slot. Cards fade
- * under brand + sticky title scrims while you scroll.
- */
 export function PeopleSheet({
   people,
   fields,
@@ -44,21 +38,15 @@ export function PeopleSheet({
   onRetreatNameChange,
 }: PeopleSheetProps) {
   return (
-    <div
-      className="focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain px-0"
-      style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+    <ListPageFrame
+      pin={<PageTitle title="People" />}
+      pinBelow={
+        onRetreatNameChange ? (
+          <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
+        ) : undefined
+      }
     >
-      <StickyPageChrome
-        below={
-          onRetreatNameChange ? (
-            <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
-          ) : null
-        }
-      >
-        <PageTitle title="People" />
-      </StickyPageChrome>
-
-      <ul className={cn("mx-auto w-full max-w-xl space-y-3", PAGE_INLINE_GUTTER)}>
+      <ul className="space-y-3">
         {people.map((p) => (
           <li key={p.id} className="animate-fade-in-up">
             <PersonCard
@@ -82,6 +70,6 @@ export function PeopleSheet({
           <AddPersonRow onAdd={onAdd} />
         </li>
       </ul>
-    </div>
+    </ListPageFrame>
   );
 }

@@ -48,7 +48,7 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
             Recorded, reset, and undone times will gather here as the ceremony goes.
           </GlassEmptyNote>
         ) : (
-          <ul className="mx-auto w-full max-w-xl space-y-2 pb-2">
+          <ul className="space-y-2 pb-2">
             {sorted.map((entry) => (
               <li
                 key={entry.id}

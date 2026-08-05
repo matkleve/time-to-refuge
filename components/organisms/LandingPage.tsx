@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { controlMinH } from "@/lib/control-size";
 import { actionClass, glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
@@ -13,15 +14,10 @@ interface LandingPageProps {
   onNavigate: (view: AppView) => void;
 }
 
-/**
- * Home / landing — one viewport, no scroll. Crawlable copy lives here when
- * this view is active; metadata + JSON-LD cover the rest for search.
- * Step cards jump to the matching page (People / Quick Log / Session).
- */
 export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
   return (
-    <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col items-center overflow-x-clip px-3 md:px-0">
-      <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col justify-center gap-5 py-2 sm:gap-6 sm:py-4">
+    <ListPageFrame fill="workspace">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 py-2 sm:gap-6 sm:py-4">
         <header className="mx-auto max-w-2xl space-y-2 text-center">
           <h1 className="font-display text-2xl font-semibold text-ink">
             {landing.headline}
@@ -29,7 +25,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
           <p className="text-base text-muted sm:text-lg">{landing.intro}</p>
         </header>
 
-        <ol className="grid min-h-0 grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
+        <ol className="grid min-h-0 w-full grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
           {landing.steps.map((step, index) => (
             <li key={step.title} className="min-w-0">
               <button
@@ -74,6 +70,6 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
           <p className="text-center text-sm text-subtle">{landing.footnote}</p>
         </div>
       </div>
-    </div>
+    </ListPageFrame>
   );
 }

@@ -2,9 +2,26 @@
 
 import { downloadPersonCsv } from "@/lib/csv";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
+import { PageTitle } from "@/components/atoms/PageTitle";
+import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { RefugeView } from "@/components/organisms/RefugeView";
 import { DesktopWorkspace } from "@/components/organisms/DesktopWorkspace";
 import type { TimekeeperAppModel } from "@/components/timekeeper/timekeeper-app-content";
+
+function sessionFrame(app: TimekeeperAppModel, children: React.ReactNode) {
+  return (
+    <ListPageFrame
+      fill="workspace"
+      pin={<PageTitle title="Session" />}
+      pinBelow={
+        <RetreatNameField value={app.retreatName} onChange={app.setRetreatName} />
+      }
+    >
+      {children}
+    </ListPageFrame>
+  );
+}
 
 export function TimekeeperRefugePage({
   app,
@@ -14,7 +31,8 @@ export function TimekeeperRefugePage({
   isDesktop: boolean;
 }) {
   if (isDesktop) {
-    return (
+    return sessionFrame(
+      app,
       <DesktopWorkspace
         people={app.people}
         fields={app.fields}
@@ -31,23 +49,25 @@ export function TimekeeperRefugePage({
         requestedPhase={app.requestedPhase}
         onRequestedPhaseConsumed={() => app.setRequestedPhase(null)}
         retreatName={app.retreatName}
-      />
+      />,
     );
   }
 
   if (app.people.length === 0) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center px-8">
+    return sessionFrame(
+      app,
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-4">
         <GlassEmptyNote
           action={{ label: "Add a person", onClick: () => app.setView("people") }}
         >
           Add people to begin this session.
         </GlassEmptyNote>
-      </div>
+      </div>,
     );
   }
 
-  return (
+  return sessionFrame(
+    app,
     <RefugeView
       people={app.people}
       fields={app.fields}
@@ -63,6 +83,6 @@ export function TimekeeperRefugePage({
       requestedPhase={app.requestedPhase}
       onRequestedPhaseConsumed={() => app.setRequestedPhase(null)}
       retreatName={app.retreatName}
-    />
+    />,
   );
 }
