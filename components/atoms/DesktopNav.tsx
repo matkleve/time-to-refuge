@@ -6,7 +6,6 @@ import {
   Download,
   HeartHandshake,
   History,
-  Home,
   ListTree,
   Redo2,
   Undo2,
@@ -22,14 +21,16 @@ import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
 
-/** Primary destinations — same order as the mobile hamburger Pages group. */
+/**
+ * Desktop page tabs — same order as the mobile Pages menu, minus Home
+ * (the brand lockup already goes home; a second Home tab overcrowds the bar).
+ */
 export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   id: AppView;
   label: string;
   shortLabel: string;
   icon: LucideIcon;
 }> = [
-  { id: "home", label: "Home", shortLabel: "Home", icon: Home },
   { id: "fields", label: "Fields", shortLabel: "Fields", icon: ListTree },
   { id: "people", label: "People", shortLabel: "People", icon: Contact },
   { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
@@ -51,13 +52,12 @@ interface DesktopNavProps {
 }
 
 /**
- * Desktop / tablet chrome inside `app-content`:
- * brand · page links (flex) · undo/redo · Export/Dana actions cluster.
+ * Desktop / tablet chrome:
+ * brand (→ Home) · page tabs · undo/redo · Export/Dana.
  *
- * Left-aligned after the brand (no absolute-center fight on tablet).
- * Page labels stay visible; Quick Log shortens to “Log” below `lg`.
- * Selected tab = quiet white glass chip + semibold (not saffron). Dana stays
- * quiet glyph — chip only when that page is current.
+ * Standard toolbar pattern: no horizontal scroll, no clipped outlines.
+ * Density: icon-only below `lg`, short labels from `lg` up. Actions stay
+ * `shrink-0` so they never get eaten by the tab flex.
  */
 export function DesktopNav({
   view,
@@ -72,23 +72,19 @@ export function DesktopNav({
   exportDisabled = false,
 }: DesktopNavProps) {
   return (
-    <header className="pointer-events-none absolute inset-x-0 top-0 z-40">
+    <header className="pointer-events-none absolute inset-x-0 top-0 z-40 overflow-visible">
       <HeaderScrim />
-      <div className="app-content relative z-10 px-4 py-3 sm:px-5">
-        <div className="pointer-events-auto flex h-12 items-center gap-2 sm:gap-3">
+      <div className="app-content relative z-10 overflow-visible px-4 py-2.5 sm:px-5">
+        <div className="pointer-events-auto flex min-h-12 items-center gap-2 sm:gap-3">
           <BrandLockup
             titleSize="2xl"
             onHome={() => onChange("home")}
-            className="mr-1 min-w-0 shrink sm:mr-2"
+            className="min-w-0 shrink-0"
           />
 
-          {/*
-            py/my: overflow-x-auto otherwise forces overflow-y clip and
-            shears the global :focus-visible outline on the pills.
-          */}
           <nav
             aria-label="Primary"
-            className="-my-2 flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto py-2 sm:gap-2"
+            className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 lg:gap-1"
           >
             {DESKTOP_NAV_PAGES.map(({ id, label, shortLabel, icon: Icon }) => {
               const selected = view === id;
@@ -101,16 +97,16 @@ export function DesktopNav({
                   title={label}
                   onClick={() => onChange(id)}
                   className={cn(
-                    "inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm lg:gap-2 lg:px-3 lg:text-base",
+                    "inline-flex size-10 shrink-0 items-center justify-center gap-1.5 rounded-full lg:h-10 lg:w-auto lg:px-2.5 xl:px-3",
+                    "text-sm font-medium",
                     userFeedbackClass({ press: "md", on: selected }),
                     selected
                       ? cn(glassNavSelectedClass(), "font-semibold text-ink")
-                      : "font-medium text-muted hover:text-ink",
+                      : "text-muted hover:text-ink",
                   )}
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
-                  <span className="lg:hidden">{shortLabel}</span>
-                  <span className="hidden lg:inline">{label}</span>
+                  <span className="hidden lg:inline">{shortLabel}</span>
                 </button>
               );
             })}
@@ -121,7 +117,7 @@ export function DesktopNav({
               icon={Undo2}
               label={undoLabel}
               quiet
-              size="md"
+              size="sm"
               onClick={onUndo}
               disabled={undoDisabled}
             />
@@ -129,7 +125,7 @@ export function DesktopNav({
               icon={Redo2}
               label={redoLabel}
               quiet
-              size="md"
+              size="sm"
               onClick={onRedo}
               disabled={redoDisabled}
             />
@@ -142,7 +138,7 @@ export function DesktopNav({
                 icon={Download}
                 label="Export all"
                 quiet
-                size="md"
+                size="sm"
                 onClick={onExportAll}
                 disabled={exportDisabled}
               />
@@ -150,7 +146,7 @@ export function DesktopNav({
                 icon={HeartHandshake}
                 label={dana.menuCta}
                 quiet
-                size="md"
+                size="sm"
                 tone={view === "dana" ? "accent" : "neutral"}
                 feedbackOn={view === "dana"}
                 className={
