@@ -169,11 +169,13 @@ shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
 page, `DesktopWorkspace` — a persistent list of everyone on the left (quick
 switch while recording) and the current person's card with the record button
 directly beneath it on the right. **Tablet (`768–1023`)** is the stressed
-band for nav density; page links stay labeled (short “Log” below `lg`), and
-Export / Dana sit in a quiet actions cluster so they don’t fight UC-1.
+band for nav density; page links use **icon-only below `lg`**, short labels
+from `lg` up (brand lockup is Home — no duplicate Home tab). Export / Dana
+sit in a quiet actions cluster so they don’t fight UC-1.
 The **current page** is a quiet white glass chip (`glassNavSelectedClass`) +
 semibold — not saffron. Brand wordmark is bold display type with **no**
-hover scale.
+hover scale. The toolbar never uses `overflow-x-auto` (that clips focus
+rings and neighboring glyphs); density compresses instead.
 **People**, **History**, and the other destinations are their own pages via
 the top nav (same `AppView` switch as Quick Log), not overlays. Only one
 shell tree is ever mounted (`useMediaQuery`, not a CSS breakpoint toggling
