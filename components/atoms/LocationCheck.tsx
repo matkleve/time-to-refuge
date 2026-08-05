@@ -307,7 +307,7 @@ function ClockSkewRail({
         )}
       </div>
 
-      <div className="flex items-start justify-between gap-2 text-xs text-muted">
+      <div className="flex items-start justify-between gap-2 text-sm text-muted">
         <span className="inline-flex items-center gap-1.5">
           <span className={cn("size-2 rounded-full", skewDot.network)} aria-hidden />
           Network UTC
@@ -365,7 +365,7 @@ function SideCard({
       <p className="mt-1 truncate font-mono text-sm font-semibold text-ink">
         {offset || "—"}
       </p>
-      <p className="mt-0.5 truncate text-xs text-muted">{zone || "Unknown"}</p>
+      <p className="mt-0.5 truncate text-sm text-muted">{zone || "Unknown"}</p>
     </div>
   );
 }
@@ -821,13 +821,13 @@ export function LocationCheck() {
           {detail ? <p className="mt-3 text-sm text-muted">{detail}</p> : null}
 
           {clock.status === "ready" ? (
-            <p className="mt-2 text-xs text-subtle">
+            <p className="mt-2 text-sm text-subtle">
               Network probe uses a public UTC edge clock and round-trip delay (±
               {clock.sample.uncertaintyMs} ms). It is not a lab atomic lock — if the{" "}
               {hostNoun} looks wrong, fix Date &amp; Time in settings before the ceremony.
             </p>
           ) : status === "ok" || status === "unavailable" ? (
-            <p className="mt-2 text-xs text-subtle">
+            <p className="mt-2 text-sm text-subtle">
               Zone check does not prove the clock is synced to the second. If the time
               itself looks wrong, fix Date &amp; Time in settings before the ceremony.
             </p>
