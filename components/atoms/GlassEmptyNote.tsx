@@ -26,6 +26,7 @@ export function GlassEmptyNote({
       <Surface
         material="glass-panel"
         rim
+        flush
         className="rounded-2xl px-5 py-4"
       >
         {title ? (

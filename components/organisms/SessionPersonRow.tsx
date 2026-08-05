@@ -2,7 +2,8 @@
 
 import { Check } from "lucide-react";
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
-import { glassClass } from "@/lib/surfaces";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,7 @@ export function SessionPersonRow({
     <div
       className={cn(
         "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
-        glassClass(isCurrent ? "cardCurrent" : "card", { rim: true }),
+        glassFlushClass(isCurrent ? "cardCurrent" : "card"),
       )}
     >
       <button
@@ -57,7 +58,7 @@ export function SessionPersonRow({
         {person.name}
       </button>
 
-      <ul className="flex shrink-0 items-center gap-1" aria-label="Field progress">
+      <ul className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)} aria-label="Field progress">
         {fields.map((field) => {
           const filled = getTime(person, field.id) !== null;
           const armed = isCurrent && target === field.id;

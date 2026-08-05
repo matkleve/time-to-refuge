@@ -2,10 +2,7 @@
 
 import { downloadCsv } from "@/lib/csv";
 import type { useTimekeeperApp } from "@/lib/use-timekeeper-app";
-import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { PageEnter } from "@/components/atoms/PageEnter";
-import { PageTitle } from "@/components/atoms/PageTitle";
-import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { ViewMenu } from "@/components/atoms/ViewMenu";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { FieldsPage } from "@/components/organisms/FieldsPage";
@@ -31,19 +28,6 @@ export function TimekeeperViewMenu({ app }: { app: TimekeeperAppModel }) {
       exportDisabled={app.people.length === 0}
       size="md"
     />
-  );
-}
-
-export function TimekeeperSubheader({ app }: { app: TimekeeperAppModel }) {
-  if (app.view !== "refuge") return null;
-  return (
-    <StickyPageChrome
-      below={
-        <RetreatNameField value={app.retreatName} onChange={app.setRetreatName} />
-      }
-    >
-      <PageTitle title="Session" />
-    </StickyPageChrome>
   );
 }
 

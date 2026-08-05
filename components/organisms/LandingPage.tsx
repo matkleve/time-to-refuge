@@ -3,25 +3,28 @@
 import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
-import { controlMinH } from "@/lib/control-size";
-import { actionClass, glassClass } from "@/lib/surfaces";
+import { ListPageFrame } from "@/components/atoms/ListPageFrame";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { actionClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
+
+/** Short nav labels — matches `DesktopNav` page names for deco hints on step cards. */
+const STEP_NAV_LABEL: Record<string, string> = {
+  people: "People",
+  quicklog: "Quick Log",
+  refuge: "Session",
+};
 
 interface LandingPageProps {
   onStart: () => void;
   onNavigate: (view: AppView) => void;
 }
 
-/**
- * Home / landing — one viewport, no scroll. Crawlable copy lives here when
- * this view is active; metadata + JSON-LD cover the rest for search.
- * Step cards jump to the matching page (People / Quick Log / Session).
- */
 export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
   return (
-    <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col items-center overflow-x-clip px-3 md:px-0">
-      <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col justify-center gap-5 py-2 sm:gap-6 sm:py-4">
+    <ListPageFrame fill="workspace">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 py-2 sm:gap-6 sm:py-4">
         <header className="mx-auto max-w-2xl space-y-2 text-center">
           <h1 className="font-display text-2xl font-semibold text-ink">
             {landing.headline}
@@ -29,7 +32,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
           <p className="text-base text-muted sm:text-lg">{landing.intro}</p>
         </header>
 
-        <ol className="grid min-h-0 grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
+        <ol className="grid min-h-0 w-full grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
           {landing.steps.map((step, index) => (
             <li key={step.title} className="min-w-0">
               <button
@@ -38,7 +41,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 className={cn(
                   "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
                   userFeedbackClass({ press: "md" }),
-                  glassClass("card", { rim: true }),
+                  glassFlushClass(),
                 )}
               >
                 <span className="text-xs font-medium tracking-wide text-subtle uppercase">
@@ -50,6 +53,16 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 <p className="text-sm leading-snug text-muted sm:text-base">
                   {step.body}
                 </p>
+                <span
+                  className={cn(
+                    "mt-auto flex items-center justify-end pt-2 text-sm font-medium text-flagblue-600",
+                    BUTTON_CLUSTER_GAP,
+                  )}
+                  aria-hidden
+                >
+                  {STEP_NAV_LABEL[step.view] ?? step.view}
+                  <ArrowRight className="size-3.5 shrink-0" strokeWidth={2.5} />
+                </span>
               </button>
             </li>
           ))}
@@ -74,6 +87,6 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
           <p className="text-center text-sm text-subtle">{landing.footnote}</p>
         </div>
       </div>
-    </div>
+    </ListPageFrame>
   );
 }

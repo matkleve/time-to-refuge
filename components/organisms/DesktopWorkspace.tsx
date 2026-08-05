@@ -30,8 +30,8 @@ interface DesktopWorkspaceProps {
  * Desktop / tablet Session: compact progress rows on the left (name + one
  * circle per field); focused PersonCard + record on the right.
  *
- * Scrollports use `focus-safe-scroll` so outset `:focus-visible` rings are
- * not clipped by `overflow-y-auto` (see DESIGN-SYSTEM §4c).
+ * Scrollports use `focus-safe-scroll` (vertical bleed + overflow-x clip).
+ * Rail chips use `glassFlushClass` so soft-lift isn’t sliced at the edge.
  */
 export function DesktopWorkspace({
   people,
@@ -65,7 +65,7 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="app-scroll-clearance flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
+    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
       {/*
         Progress rail — scan who’s done. Horizontal padding stays 0: the shell
         already applies `.app-content` + `px-4 sm:px-5` (same gutter as nav).
@@ -100,7 +100,7 @@ export function DesktopWorkspace({
 
       <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto overflow-x-clip px-0 py-1 sm:py-2">
         {current ? (
-          <div className="flex w-full max-w-xl flex-col gap-4 sm:gap-5">
+          <div className="flex w-full flex-col gap-4 sm:gap-5">
             <PersonCard
               person={current}
               fields={fields}

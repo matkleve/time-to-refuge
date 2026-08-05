@@ -2,8 +2,8 @@
 
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
-import { controlMinH } from "@/lib/control-size";
-import { glassChipClass, glassClass } from "@/lib/surfaces";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { glassFlushChipClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
@@ -29,7 +29,7 @@ export function DanaPageAside({
       <div
         className={cn(
           "space-y-3 rounded-2xl px-4 py-3.5 md:space-y-4 md:px-5 md:py-5",
-          glassClass("card", { rim: true }),
+          glassFlushClass(),
         )}
       >
         <p className="text-xs font-medium tracking-wide text-muted uppercase">Bank transfer</p>
@@ -75,7 +75,7 @@ export function DanaPageAside({
         <footer className="text-sm text-muted">— {dana.quote.attribution}</footer>
       </blockquote>
 
-      <ul className="flex flex-wrap items-center gap-2">
+      <ul className={cn("flex flex-wrap items-center", BUTTON_CLUSTER_GAP)}>
         {dana.links.map((link) => (
           <li key={link.href}>
             <a
@@ -85,7 +85,7 @@ export function DanaPageAside({
               className={cn(
                 "inline-flex items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted hover:text-ink",
                 controlMinH.md,
-                glassChipClass(),
+                glassFlushChipClass(),
                 userFeedbackClass({ press: "md" }),
               )}
             >

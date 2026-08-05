@@ -298,19 +298,16 @@ Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 
 **App header** follows a compact toolbar (iOS ~44pt / Material ~56dp): one
 row for brand + hamburger with equal inset. It **floats** over the shell —
-no solid bar. Two progressive blur bands so scrolling lists soften under
-chrome without frosting the labels:
-
-1. **Brand** — [`.header-scrim`](../components/atoms/HeaderScrim.tsx) under
-   the toolbar.
-2. **Page title** — [`.title-scrim`](../components/atoms/TitleScrim.tsx)
-   inside [`StickyPageChrome`](../components/atoms/StickyPageChrome.tsx),
-   behind the heading text.
+no solid bar. **One** soften band under the brand
+([`.header-scrim`](../components/atoms/HeaderScrim.tsx)) — not a stack of
+progressive blur layers, and **no** separate title scrim. Page titles are
+plain text in [`StickyPageChrome`](../components/atoms/StickyPageChrome.tsx).
 
 List pages use a **full-bleed scroller** under the header (not padding the
-shell below it) so rows actually pass through both scrims. The retreat
-name is **not** in the toolbar — on Session / People it sits under the
-title as a left-aligned glass chip with a leading icon (§6c).
+shell below it) so rows pass under the brand soften. Flush-edge list chips
+use `glassFlushClass` (no soft-lift). The retreat name is **not** in the
+toolbar — on Session / People it sits under the title as a left-aligned
+chip with a leading icon (§6c).
 
 Person-card ⋯ stays a flat menu (no section titles). Any item with
 `tone: "danger"` is moved to the **bottom** of its list, below a hairline

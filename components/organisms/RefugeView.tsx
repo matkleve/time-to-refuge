@@ -104,7 +104,7 @@ export function RefugeView({
         onTouchEnd={onTouchEnd}
       />
 
-      <div className="shrink-0 px-3 pt-3">
+      <div className="shrink-0 pt-3">
         <LiveClockButton
           onCapture={handleCaptureClick}
           armed={target !== null}

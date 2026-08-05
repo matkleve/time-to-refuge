@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { clampPopoverHorizontal } from "@/lib/popover-placement";
 import type { GlassMenuPrimaryAction, MenuBox } from "./types";
 import { useGlassMenuDismiss } from "./useGlassMenuDismiss";
 import { useGlassMenuPickers } from "./useGlassMenuPickers";
@@ -23,11 +24,12 @@ export function useGlassMenu({
     if (!el) return;
     const r = el.getBoundingClientRect();
     const minWidth = Math.max(192, r.width);
-    const left = align === "right" ? r.right - minWidth : r.left;
+    const preferredLeft = align === "right" ? r.right - minWidth : r.left;
+    const { left, width } = clampPopoverHorizontal(preferredLeft, minWidth);
     setBox({
       top: r.bottom + 6,
-      left: Math.min(Math.max(8, left), window.innerWidth - minWidth - 8),
-      minWidth,
+      left,
+      minWidth: width,
     });
   }, [align]);
 

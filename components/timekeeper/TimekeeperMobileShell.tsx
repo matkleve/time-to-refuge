@@ -9,12 +9,10 @@ import type { TimekeeperAppModel } from "@/components/timekeeper/timekeeper-app-
 export function TimekeeperMobileShell({
   app,
   menu,
-  subheader,
   page,
 }: {
   app: TimekeeperAppModel;
   menu: ReactNode;
-  subheader: ReactNode;
   page: ReactNode;
 }) {
   return (
@@ -35,16 +33,7 @@ export function TimekeeperMobileShell({
           </div>
         </div>
       </header>
-      <div className="relative z-0 flex min-h-0 flex-1 flex-col">
-        {app.view === "refuge" ? (
-          <div className="absolute inset-0 flex flex-col overflow-hidden">
-            {subheader}
-            <div className="relative flex min-h-0 flex-1 flex-col">{page}</div>
-          </div>
-        ) : (
-          page
-        )}
-      </div>
+      <div className="relative z-0 flex min-h-0 flex-1 flex-col">{page}</div>
     </AppShell>
   );
 }

@@ -63,7 +63,7 @@ export function FieldsPage({ fields, onChange }: {
 
   return (
     <ListPageFrame pin={<FieldsPagePin atDefault={atDefault} resetAll={resetAll} />}>
-      <ul className="mx-auto mt-4 w-full max-w-xl space-y-3 pt-1.5 pb-2">
+      <ul className="mt-4 space-y-3 pt-1.5 pb-2">
         {fields.map((field, index) => (
           <li key={field.id}>
             <FieldEditorRow

@@ -1,4 +1,4 @@
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { Person, Phase } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { RowActionTray } from "@/components/atoms/RowReveal";
@@ -50,7 +50,7 @@ export function PersonFieldRowFilled({
   phase,
 }: PersonFieldRowFilledProps) {
   return (
-    <div ref={dismissRef} className={cn("flex w-full items-center", ROW_HEIGHT)}>
+    <div ref={dismissRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
       <PersonFieldRowFilledStamp
         phaseLabel={phaseLabel}
         value={value}

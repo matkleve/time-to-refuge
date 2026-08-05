@@ -2,6 +2,7 @@
 
 import { MoreVertical } from "lucide-react";
 import { Person, FieldDef } from "@/lib/types";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import { GlassMenu } from "@/components/atoms/GlassMenu";
 import type { PersonCardMenuProps } from "./PersonCardMenu";
@@ -43,7 +44,7 @@ export function PersonCardNameRow({
   const dangerTone = removeArmed || resetAllArmed;
 
   return (
-    <div className={cn("flex items-center gap-1 px-3", showRetreatCaption ? "pt-1" : "pt-3")}>
+    <div className={cn("flex items-center px-3", BUTTON_CLUSTER_GAP, showRetreatCaption ? "pt-1" : "pt-3")}>
       {editing ? (
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only

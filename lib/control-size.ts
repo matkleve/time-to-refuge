@@ -21,3 +21,6 @@ export const controlMinH = {
 } as const;
 
 export type ControlSize = keyof typeof controlH;
+
+/** Gap between adjacent button/icon chips in a row (always ≥ this). */
+export const BUTTON_CLUSTER_GAP = "gap-1.5" as const;

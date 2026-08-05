@@ -1,4 +1,4 @@
-import { glassChipClass } from "@/lib/surfaces";
+import { glassFlushChipClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import {
@@ -36,7 +36,7 @@ export function buildIconButtonClassName({
     "inline-flex shrink-0 items-center justify-center rounded-full",
     userFeedbackClass({ press, on: feedbackOn }),
     visible ? iconButtonLabeledSizeClass[size] : iconButtonSizeClass[size],
-    useGlass ? glassChipClass() : null,
+    useGlass ? glassFlushChipClass() : null,
     iconButtonToneClass(useGlass, armed, tone),
     hideWhenDisabled && "disabled:opacity-0",
     className,
