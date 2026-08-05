@@ -1,11 +1,15 @@
 "use client";
 
 import { MoreVertical } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
-import { GlassMenuPanel } from "@/components/atoms/glass-menu/GlassMenuPanel";
-import { useGlassMenu } from "@/components/atoms/glass-menu/useGlassMenu";
+import { useCallback, useState } from "react";
+import {
+  buildIconButtonClassName,
+  iconButtonIconSize,
+} from "@/components/atoms/icon-button-build";
 import type { GlassMenuProps } from "@/components/atoms/glass-menu/types";
+import { GlassMenuBody } from "@/components/atoms/glass-menu/GlassMenuBody";
+import { GlassPopover, MenuTrigger, UiButton } from "@/components/ui";
+import { cn } from "@/lib/utils";
 
 export type {
   GlassMenuIconAction,
@@ -16,8 +20,7 @@ export type {
 
 /**
  * Cloudy menu: always icon + label. Hover / selected use the shared feedback
- * wash (§4 chrome recipe) — no second `hover:bg-*`. Portaled so card overflow
- * can't clip it (navbar + person-card ⋯).
+ * wash (§4 chrome recipe) — no second `hover:bg-*`. Portaled via ui/Popover.
  *
  * Destructive items (`tone: "danger"`) render at the bottom below a hairline.
  * When armed (`selected` on a danger row), the row uses the same filled
@@ -34,47 +37,49 @@ export function GlassMenu({
   align = "right",
   className,
 }: GlassMenuProps) {
-  const {
-    open,
-    box,
-    triggerRef,
-    panelRef,
-    pick,
-    pickIcon,
-    onPrimarySelect,
-    toggle,
-  } = useGlassMenu({ align, primaryAction });
+  const [open, setOpen] = useState(false);
+  const placement = align === "right" ? "bottom end" : "bottom start";
+
+  const onPrimarySelect = useCallback(() => {
+    primaryAction?.onSelect();
+  }, [primaryAction]);
 
   return (
-    <div className={cn("relative", open && "z-50", className)} ref={triggerRef}>
-      <IconButton
-        icon={TriggerIcon}
-        label={open ? `Close ${label}` : label}
-        glass
-        size={size}
-        /* Same md chip as row Copy / Edit — glyph follows IconButton size. */
-        feedbackOn={open}
-        onClick={toggle}
-        className={cn(
-          "text-ink",
-          "hover:text-flagblue-600",
-          open && "text-flagblue-600",
-        )}
-      />
-      {open && box && (
-        <GlassMenuPanel
-          panelRef={panelRef}
-          box={box}
+    <div className={cn("relative", open && "z-50", className)}>
+      <MenuTrigger isOpen={open} onOpenChange={setOpen}>
+      <UiButton
+        aria-label={open ? `Close ${label}` : label}
+        className={({ isPressed }) =>
+          buildIconButtonClassName({
+            visible: null,
+            size,
+            useGlass: true,
+            armed: false,
+            tone: "neutral",
+            press: "sm",
+            feedbackOn: open || isPressed,
+            hideWhenDisabled: false,
+            className: cn(
+              "text-ink hover:text-flagblue-600",
+              open && "text-flagblue-600",
+              className,
+            ),
+          })
+        }
+      >
+        <TriggerIcon className={iconButtonIconSize[size]} strokeWidth={2} aria-hidden />
+      </UiButton>
+      <GlassPopover placement={placement} aria-label={label}>
+        <GlassMenuBody
           label={label}
-          sections={sections}
           items={items}
+          sections={sections}
           primaryAction={primaryAction}
           iconActions={iconActions}
-          onPick={pick}
-          onPickIcon={pickIcon}
           onPrimarySelect={onPrimarySelect}
         />
-      )}
+      </GlassPopover>
+      </MenuTrigger>
     </div>
   );
 }

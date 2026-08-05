@@ -1,6 +1,6 @@
 # Agent rules — Timekeeper
 
-Hard gates before merge. Companion: `docs/AGENT-OVERFLOW-OUTLINES.md`, `lib/chrome.ts`.
+Hard gates before merge. Companion: `docs/AGENT-OVERFLOW-OUTLINES.md`, `lib/chrome.ts`, `docs/adr/`.
 
 ## CI (must pass)
 
@@ -9,6 +9,22 @@ npm run typecheck
 npm run lint
 npm run a11y
 ```
+
+## Engine & layer (ADR-0001, ADR-0002)
+
+> **One problem domain = one engine.** Interaktion → React Aria Components in `components/ui/`.
+
+| Layer | Owns |
+| --- | --- |
+| `components/ui/` | Fokus, Portal, Position, Tastatur — **einziger** Import von `react-aria-components` |
+| `atoms/` | Timekeeper-Glass-Skins (`GlassMenu`, `TimezoneSelect`, …) |
+| `lib/surfaces.ts` | Look — Materialien, Rim, Specular (**unverändert**) |
+
+- **Verboten:** `react-aria-components` außerhalb `components/ui/`
+- **Verboten:** native `<select>`, `<input type="date|time|number|…">`, handgerollte `role="menu|listbox"` außerhalb `components/ui/`
+- **Verboten:** Punkt-Libraries für einzelne Controls (Radix, react-day-picker, …)
+- Floating UI → `components/ui/Popover` + `Menu` / `Select` — nie `absolute top-full` + eigene Dismiss-Hooks
+- Inline row reveal → `useDismissible` (kein Overlay)
 
 ## Layout — one column, one gutter (never regress)
 

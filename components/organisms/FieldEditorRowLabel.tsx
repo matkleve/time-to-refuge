@@ -1,9 +1,10 @@
 "use client";
 
+import { UiInput } from "@/components/ui";
 import type { FieldDef } from "@/lib/types";
 import { controlMinH } from "@/lib/control-size";
 import { glassClass } from "@/lib/surfaces";
-import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
+import { glassPillFocusWithin } from "@/lib/focus-cues";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +36,7 @@ export function FieldEditorRowLabel({
   if (editing) {
     return (
       <div className={cn(pillClass, glassPillFocusWithin)}>
-        <input
+        <UiInput
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
           autoFocus
           autoComplete="off"
@@ -50,10 +51,7 @@ export function FieldEditorRowLabel({
             if (e.key === "Escape") onCancelEdit();
           }}
           aria-label="Field name"
-          className={cn(
-            "box-border min-w-0 flex-1 rounded-full bg-transparent font-display text-lg font-semibold leading-snug text-ink",
-            suppressInputOutline,
-          )}
+          className="box-border min-w-0 flex-1 rounded-full bg-transparent font-display text-lg font-semibold leading-snug text-ink"
         />
       </div>
     );

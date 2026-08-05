@@ -1,13 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { createPortal } from "react-dom";
+import { DialogTrigger, GlassPopover } from "@/components/ui";
 import { LocationCheckPanel } from "./location-check/LocationCheckPanel";
 import { LocationCheckTrigger } from "./location-check/LocationCheckTrigger";
-import {
-  usePanelDismiss,
-  usePanelPlacement,
-} from "./location-check/use-location-check-panel";
 import { useLocationCheckModel } from "./location-check/use-location-check-model";
 
 /**
@@ -18,45 +14,20 @@ import { useLocationCheckModel } from "./location-check/use-location-check-model
  */
 export function LocationCheck() {
   const [open, setOpen] = useState(false);
-  const dismiss = useCallback(() => setOpen(false), []);
-  const { triggerRef, panelRef, box } = usePanelPlacement(open);
-  usePanelDismiss(open, dismiss, panelRef, triggerRef);
   const model = useLocationCheckModel();
 
-  const handleOpen = () => {
-    setOpen(true);
-    model.handleOpen();
-  };
-
-  const panel =
-    open &&
-    box &&
-    typeof document !== "undefined" &&
-    createPortal(
-      <LocationCheckPanel
-        panelRef={panelRef}
-        box={box}
-        tone={model.tone}
-        trouble={model.trouble}
-        title={model.title}
-        detail={model.detail}
-        info={model.info}
-        status={model.status}
-        clock={model.clock}
-        hostNoun={model.hostNoun}
-        HostNoun={model.HostNoun}
-        HostIcon={model.HostIcon}
-        gapCopy={model.gapCopy}
-      />,
-      document.body,
-    );
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      setOpen(isOpen);
+      if (isOpen) model.handleOpen();
+    },
+    [model],
+  );
 
   return (
-    <>
+    <DialogTrigger isOpen={open} onOpenChange={handleOpenChange}>
       <LocationCheckTrigger
-        triggerRef={triggerRef}
         open={open}
-        onOpen={handleOpen}
         tone={model.tone}
         buttonAria={model.buttonAria}
         badgeLabel={model.badgeLabel}
@@ -66,7 +37,26 @@ export function LocationCheck() {
         info={model.info}
         softUnavailable={model.softUnavailable}
       />
-      {panel}
-    </>
+      <GlassPopover
+        placement="top end"
+        offset={8}
+        bare
+        className="z-50 max-w-[calc(100vw-1rem)] outline-none"
+      >
+        <LocationCheckPanel
+          tone={model.tone}
+          trouble={model.trouble}
+          title={model.title}
+          detail={model.detail}
+          info={model.info}
+          status={model.status}
+          clock={model.clock}
+          hostNoun={model.hostNoun}
+          HostNoun={model.HostNoun}
+          HostIcon={model.HostIcon}
+          gapCopy={model.gapCopy}
+        />
+      </GlassPopover>
+    </DialogTrigger>
   );
 }

@@ -1,13 +1,18 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Globe } from "lucide-react";
-import { TimezoneSelectMenu } from "@/components/atoms/TimezoneSelectMenu";
-import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
+import {
+  GlassPopover,
+  ListBox,
+  SelectValue,
+  UiButton,
+  UiListBoxItem,
+  UiSelect,
+} from "@/components/ui";
 import { controlH, controlMinH } from "@/lib/control-size";
-import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { glassFlushClass } from "@/lib/surfaces";
 import { glassPillFocusWithin } from "@/lib/focus-cues";
+import { listTimezones, formatTimezoneLabel } from "@/lib/timezone-options";
+import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -29,83 +34,83 @@ export function TimezoneSelect({
   chip = false,
   className,
 }: TimezoneSelectProps) {
-  const { open, box, zones, triggerRef, panelRef, toggle, pick } =
-    useTimezoneSelect(value, onChange);
+  const zones = listTimezones(value);
   const label = formatTimezoneLabel(value);
 
   const shell = cn(
     glassFlushClass(),
     "w-full text-left focus-visible:outline-none",
-    userFeedbackClass({ press: "md", on: open }),
     className,
   );
 
   const focusWrap = cn("rounded-2xl", glassPillFocusWithin);
 
-  const menu =
-    open && box ? (
-      <TimezoneSelectMenu
-        panelRef={panelRef}
-        box={box}
-        zones={zones}
-        value={value}
-        onPick={pick}
-      />
-    ) : null;
+  const list = (
+    <ListBox
+      aria-label="Time zones"
+      className="focus-safe-scroll max-h-64 overflow-y-auto overflow-x-clip outline-none"
+      items={zones.map((zone) => ({ id: zone, label: formatTimezoneLabel(zone) }))}
+    >
+      {(item) => (
+        <UiListBoxItem id={item.id} textValue={item.label}>
+          <span className="min-w-0 truncate">{item.label}</span>
+        </UiListBoxItem>
+      )}
+    </ListBox>
+  );
 
   if (chip) {
     return (
-      <div ref={triggerRef} className={cn("relative w-full", focusWrap)}>
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-label={`Time zone: ${label}`}
-          className={cn("flex w-full items-center gap-2.5 rounded-2xl px-3.5", controlH.md, shell)}
+      <UiSelect
+        selectedKey={value}
+        onSelectionChange={(key) => onChange(String(key))}
+        aria-label={`Time zone: ${label}`}
+        className={cn("relative w-full", focusWrap, className)}
+      >
+        <UiButton
+          className={({ isPressed }) =>
+            cn(
+              "flex w-full items-center gap-2.5 rounded-2xl px-3.5 outline-none",
+              controlH.md,
+              shell,
+              userFeedbackClass({ press: "md", on: isPressed }),
+            )
+          }
         >
           <Globe className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
-          <span className="min-w-0 flex-1 truncate font-display text-base font-semibold text-ink">
-            {label}
-          </span>
-          <ChevronDown
-            className={cn("size-4 shrink-0 text-muted transition-transform", open && "rotate-180")}
-            aria-hidden
-          />
-        </button>
-        {menu}
-      </div>
+          <SelectValue className="min-w-0 flex-1 truncate font-display text-base font-semibold text-ink" />
+          <ChevronDown className="size-4 shrink-0 text-muted [[data-open]_&]:rotate-180 transition-transform" aria-hidden />
+        </UiButton>
+        <GlassPopover panelClassName="p-1.5">{list}</GlassPopover>
+      </UiSelect>
     );
   }
 
   return (
-    <div ref={triggerRef} className={cn("flex flex-col gap-0.5", className)}>
+    <UiSelect
+      selectedKey={value}
+      onSelectionChange={(key) => onChange(String(key))}
+      aria-label={`Time zone: ${label}`}
+      className={cn("flex flex-col gap-0.5", className)}
+    >
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
       <span className={cn("relative inline-flex min-w-0 items-center", focusWrap)}>
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-label={`Time zone: ${label}`}
-          className={cn(
-            "inline-flex min-w-0 max-w-full items-center rounded-xl px-3 pr-8 pl-8",
-            controlMinH.md,
-            shell,
-          )}
+        <UiButton
+          className={({ isPressed }) =>
+            cn(
+              "inline-flex min-w-0 max-w-full items-center rounded-xl px-3 pr-8 pl-8 outline-none",
+              controlMinH.md,
+              shell,
+              userFeedbackClass({ press: "md", on: isPressed }),
+            )
+          }
         >
-          <span className="min-w-0 truncate text-sm text-ink">{label}</span>
-        </button>
+          <SelectValue className="min-w-0 truncate text-sm text-ink" />
+        </UiButton>
         <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-        <ChevronDown
-          className={cn(
-            "pointer-events-none absolute right-2 size-4 text-muted transition-transform",
-            open && "rotate-180",
-          )}
-          aria-hidden
-        />
+        <ChevronDown className="pointer-events-none absolute right-2 size-4 text-muted [[data-open]_&]:rotate-180 transition-transform" aria-hidden />
       </span>
-      {menu}
-    </div>
+      <GlassPopover panelClassName="p-1.5">{list}</GlassPopover>
+    </UiSelect>
   );
 }

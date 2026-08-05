@@ -714,7 +714,26 @@ header line.
   the record button inside it.
 - Targets are never below 2.25rem (36px).
 
-## 8. Shipping a change described as "everywhere"
+## 8. Native controls & interaction engine
+
+See [`docs/adr/ADR-0001-interaction-engine.md`](./adr/ADR-0001-interaction-engine.md)
+and [`docs/adr/ADR-0002-layer-ownership.md`](./adr/ADR-0002-layer-ownership.md).
+
+**Rule:** one problem domain = one engine (`react-aria-components` via `components/ui/`).
+Glass look stays in `lib/surfaces.ts` — the engine is unstyled underneath.
+
+| Control | Decision | Use |
+| --- | --- | --- |
+| Text | **Allowed** via `components/ui/Input` | Names, labels, retreat name |
+| `<select>` | **Forbidden** | `components/ui/Select` |
+| `<input type="date/time/number/range/color/file">` | **Forbidden** | matching `ui/` primitive when needed |
+| Floating menu / popover | **Forbidden** as hand-roll | `ui/Menu` + `ui/Popover` |
+| Time edit (field row) | Text `ui/Input` + validation | No `type="time"` |
+| Row action reveal | `useDismissible` | Not an overlay — stays in `lib/` |
+
+ESLint enforces forbidden patterns outside `components/ui/`.
+
+## 9. Shipping a change described as "everywhere"
 
 Materials are centralized in `lib/surfaces.ts`. To change cloudy glass
 strength: edit `GLASS.*.alpha` **and** the matching `fill` class there, then

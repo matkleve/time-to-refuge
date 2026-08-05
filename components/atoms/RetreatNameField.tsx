@@ -1,10 +1,11 @@
 "use client";
 
+import { UiInput } from "@/components/ui";
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
 import { controlMinH } from "@/lib/control-size";
 import { glassFlushClass } from "@/lib/surfaces";
-import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
+import { glassPillFocusWithin } from "@/lib/focus-cues";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +43,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     return (
       <div className={editingShell}>
         <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
-        <input
+        <UiInput
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an explicit tap. */
           autoFocus
           autoComplete="off"
@@ -62,10 +63,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className={cn(
-            "box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70",
-            suppressInputOutline,
-          )}
+          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70"
         />
       </div>
     );

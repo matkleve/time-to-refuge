@@ -164,6 +164,9 @@ if (!/\boverflow-hidden\b/.test(desktopShell) || !/\bh-dvh\b/.test(desktopShell)
 }
 
 const globals = read("app/globals.css");
+if (!/html\s*\{[^}]*scrollbar-gutter:\s*stable/s.test(globals)) {
+  shellProblems.push("html must set scrollbar-gutter: stable (no layout shift on scrollbar)");
+}
 if (!/html,\s*\n\s*body\s*\{[^}]*overflow:\s*hidden/s.test(globals)) {
   shellProblems.push("html, body must set overflow:hidden so page switches never jump");
 }

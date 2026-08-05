@@ -1,5 +1,6 @@
 "use client";
 
+import { UiInput } from "@/components/ui";
 import { MoreVertical } from "lucide-react";
 import { Person, FieldDef } from "@/lib/types";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
@@ -46,7 +47,7 @@ export function PersonCardNameRow({
   return (
     <div className={cn("flex items-center px-3", BUTTON_CLUSTER_GAP, showRetreatCaption ? "pt-1" : "pt-3")}>
       {editing ? (
-        <input
+        <UiInput
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
              appears on an explicit user action, so focusing it is expected. */
           autoFocus

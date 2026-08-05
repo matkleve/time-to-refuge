@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { UiInput } from "@/components/ui";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { glassFlushClass } from "@/lib/surfaces";
-import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
+import { glassPillFocusWithin } from "@/lib/focus-cues";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
@@ -58,7 +59,7 @@ export function AddRowTray({
             glassPillFocusWithin,
           )}
         >
-          <input
+          <UiInput
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
                explicit user action; focusing the field is expected. */
             autoFocus
@@ -80,7 +81,6 @@ export function AddRowTray({
             className={cn(
               "min-w-0 flex-1 rounded-full bg-transparent px-4 py-2.5 font-display text-lg font-semibold leading-snug text-ink placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:text-muted/70",
               controlMinH.md,
-              suppressInputOutline,
             )}
           />
         </div>

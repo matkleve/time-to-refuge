@@ -1,16 +1,14 @@
-import type { RefObject } from "react";
 import { controlH } from "@/lib/control-size";
 import type { ClockProbeState, LocationInfo, ProbeTone, Status } from "@/lib/location-check/types";
 import { toneBadge } from "@/lib/location-check/tone-styles";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
+import { UiButton } from "@/components/ui";
 import { LocationCheckBadgeIcon } from "./LocationCheckBadgeIcon";
 import { StatusMark } from "./StatusMark";
 
 export function LocationCheckTrigger({
-  triggerRef,
   open,
-  onOpen,
   tone,
   buttonAria,
   badgeLabel,
@@ -20,9 +18,7 @@ export function LocationCheckTrigger({
   info,
   softUnavailable,
 }: {
-  triggerRef: RefObject<HTMLDivElement | null>;
   open: boolean;
-  onOpen: () => void;
   tone: ProbeTone;
   buttonAria: string;
   badgeLabel: string;
@@ -33,34 +29,27 @@ export function LocationCheckTrigger({
   softUnavailable: boolean;
 }) {
   return (
-    <div className={cn("relative", open && "z-50")} ref={triggerRef}>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onOpen();
-        }}
-        aria-label={buttonAria}
-        className={cn(
-          /* pl matches vertical inset around the size-7 mark in h-11 ((44-28)/2). */
-          "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2 shadow-sm",
+    <UiButton
+      aria-label={buttonAria}
+      className={({ isPressed }) =>
+        cn(
+          "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2 shadow-sm outline-none",
           controlH.md,
-          userFeedbackClass({ press: "sm", on: open }),
-          /* Opaque light fill — glass was too see-through on the record button. */
+          userFeedbackClass({ press: "sm", on: open || isPressed }),
           toneBadge[tone],
-        )}
-      >
-        <StatusMark tone={tone}>
-          <LocationCheckBadgeIcon
-            status={status}
-            clock={clock}
-            trouble={trouble}
-            info={info}
-            softUnavailable={softUnavailable}
-          />
-        </StatusMark>
-        <span className="truncate text-sm font-medium">{badgeLabel}</span>
-      </button>
-    </div>
+        )
+      }
+    >
+      <StatusMark tone={tone}>
+        <LocationCheckBadgeIcon
+          status={status}
+          clock={clock}
+          trouble={trouble}
+          info={info}
+          softUnavailable={softUnavailable}
+        />
+      </StatusMark>
+      <span className="truncate text-sm font-medium">{badgeLabel}</span>
+    </UiButton>
   );
 }

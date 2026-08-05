@@ -52,17 +52,19 @@ hamburger Actions menu downloads a CSV of everyone at once.
 ```
 app/          routes, root layout (fonts), global colour tokens
 components/
-  atoms/      Surface, buttons, icons — single-purpose UI
+  ui/         interaction primitives on React Aria (Popover, Menu, Select, Input)
+  atoms/      glass skins, Surface, buttons — single-purpose UI
   organisms/  composed, stateful views
   AppShell    phone-first frame
 lib/          types, storage, surfaces (glass/filled/solid), share
-docs/         use cases → design system
+docs/         use cases → design system → ADRs
 ```
 
 See [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) for colour, type and
-gesture conventions, and [`docs/USE-CASES.md`](docs/USE-CASES.md) for what
-the app is meant to support during a ceremony.
+gesture conventions, [`docs/USE-CASES.md`](docs/USE-CASES.md) for what
+the app is meant to support during a ceremony, and [`docs/adr/`](docs/adr/)
+for engine decisions.
 
 ## Stack
 
-Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · lucide-react · react-aria-components

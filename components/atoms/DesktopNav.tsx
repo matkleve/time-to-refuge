@@ -69,7 +69,7 @@ export function DesktopNav({
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40 overflow-visible">
       <HeaderScrim />
       <div className="app-content relative z-10 overflow-visible px-4 py-2.5 sm:px-5">
-        <div className="pointer-events-auto flex min-h-12 items-center gap-2 sm:gap-3">
+        <div className="pointer-events-auto grid min-h-12 w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
           <BrandLockup
             titleSize="2xl"
             onHome={() => onChange("home")}

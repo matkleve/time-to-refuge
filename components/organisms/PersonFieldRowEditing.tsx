@@ -1,3 +1,4 @@
+import { UiInput } from "@/components/ui";
 import { controlMinH } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import { PersonFieldRowLabel } from "./PersonFieldRowLabel";
@@ -29,7 +30,7 @@ export function PersonFieldRowEditing({
         filled={false}
         isTarget={false}
       />
-      <input
+      <UiInput
         /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
            explicit user action, so focusing it is the expected behaviour. */
         autoFocus
