@@ -108,7 +108,7 @@ export function RefugeView({
         no glass chip overlaying the card corner. Card fills remaining height;
         many fields scroll inside. Horizontal swipe still changes person.
       */}
-      <div className="flex shrink-0 items-center justify-end gap-1 px-4 pb-1">
+      <div className="flex shrink-0 items-center justify-end gap-1 px-3 pb-1">
         <NavButton
           direction="prev"
           available={index > 0}
@@ -138,7 +138,7 @@ export function RefugeView({
             return (
               <div
                 key={p.id}
-                className="flex h-full w-full shrink-0 flex-col px-4 pb-1"
+                className="flex h-full w-full shrink-0 flex-col px-3 pb-1"
               >
                 <PersonCard
                   fillHeight
@@ -160,7 +160,7 @@ export function RefugeView({
         </div>
       </div>
 
-      <div className="shrink-0 px-4 pt-3">
+      <div className="shrink-0 px-3 pt-3">
         <LiveClockButton
           onCapture={handleCaptureClick}
           armed={target !== null}

@@ -64,14 +64,15 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="app-scroll-clearance flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
+    <div className="app-scroll-clearance flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
       {/*
         Overview cards — full PersonCard, not a name chip. Scrollport is
         focus-safe so keyboard rings / selected cues aren’t sliced by the
-        parent overflow clip.
+        parent overflow clip. Horizontal padding stays 0: the shell already
+        applies `.app-content` + `px-4 sm:px-5` (same gutter as DesktopNav).
       */}
       <ul
-        className="focus-safe-scroll flex w-72 shrink-0 flex-col gap-3 overflow-y-auto overflow-x-clip lg:w-80 xl:w-96"
+        className="focus-safe-scroll flex w-72 shrink-0 flex-col gap-3 overflow-y-auto overflow-x-clip px-0 lg:w-80 xl:w-96"
         aria-label="People"
       >
         {people.map((p) => {
@@ -105,7 +106,7 @@ export function DesktopWorkspace({
         </li>
       </ul>
 
-      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto overflow-x-clip py-1 sm:py-2">
+      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto overflow-x-clip px-0 py-1 sm:py-2">
         {current ? (
           <div className="flex w-full max-w-xl flex-col gap-4 sm:gap-5">
             <PersonCard

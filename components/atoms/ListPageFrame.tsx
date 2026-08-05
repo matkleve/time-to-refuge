@@ -18,7 +18,7 @@ export function ListPageFrame({ children, pin, className }: ListPageFrameProps) 
   return (
     <div
       className={cn(
-        "focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain md:px-0",
+        "focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain px-0",
         className,
       )}
       style={{

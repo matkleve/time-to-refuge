@@ -43,7 +43,7 @@ export function PeopleSheet({
 }: PeopleSheetProps) {
   return (
     <div
-      className="focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain"
+      className="focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain px-0"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
       <StickyPageChrome
