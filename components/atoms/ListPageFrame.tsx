@@ -10,16 +10,15 @@ interface ListPageFrameProps {
 }
 
 /**
- * Shared chrome for open-backdrop utility pages (History, Fields, Dana).
- * Full-bleed scroller under the floating header so lists pass through
- * brand + title scrims. Horizontal pad: phone here; from `md` the shell
- * `app-content` owns inset.
+ * Normal document page inside the app shell: fill the PageEnter slot and
+ * scroll. Ordinary flex-child fill (h-full + flex-1) — not a positioned
+ * overlay. History, Fields, and Dana share this frame.
  */
 export function ListPageFrame({ children, pin, className }: ListPageFrameProps) {
   return (
     <div
       className={cn(
-        "focus-safe-scroll absolute inset-0 z-0 overflow-y-auto overscroll-contain md:px-0",
+        "focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain md:px-0",
         className,
       )}
       style={{
@@ -28,7 +27,13 @@ export function ListPageFrame({ children, pin, className }: ListPageFrameProps) 
       }}
     >
       {pin ? <StickyPageChrome>{pin}</StickyPageChrome> : null}
-      <div className={cn("px-3 md:px-0", !pin && "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)] md:pt-[4.5rem]")}>
+      <div
+        className={cn(
+          "px-3 md:px-0",
+          !pin &&
+            "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)] md:pt-[4.5rem]",
+        )}
+      >
         {children}
       </div>
     </div>

@@ -41,7 +41,8 @@ function layoutSignalCount(src: string): number {
 }
 
 function rootKind(src: string): string {
-  // First return’s opening className is a decent proxy for the page root.
+  if (src.includes("<ListPageFrame")) return "flow scroll (ListPageFrame)";
+
   const m =
     src.match(
       /return\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*<(?:ListPageFrame|[A-Z][A-Za-z]+|div)[^>]*className=\{?cn\(([\s\S]*?)\)\}?/,
@@ -49,19 +50,15 @@ function rootKind(src: string): string {
     src.match(
       /return\s*\(\s*(?:\/\*[\s\S]*?\*\/\s*)*<(?:ListPageFrame|div)([^>]*)>/,
     );
-  if (!m) {
-    if (src.includes("<ListPageFrame")) return "ListPageFrame (absolute scroll)";
-    return "unknown";
-  }
+  if (!m) return "unknown";
   const chunk = m[1] ?? "";
-  if (src.includes("<ListPageFrame") && !chunk.includes("absolute")) {
-    return "ListPageFrame (absolute scroll)";
-  }
   if (/\babsolute\b/.test(chunk) && /\binset-0\b/.test(chunk)) {
-    return "absolute inset-0";
+    return "absolute inset-0 (avoid)";
+  }
+  if (/\bh-full\b/.test(chunk) && /\bflex-1\b/.test(chunk)) {
+    return "flow fill (h-full flex-1)";
   }
   if (/\bflex-1\b/.test(chunk)) return "flex-1 column";
-  if (src.includes("<ListPageFrame")) return "ListPageFrame (absolute scroll)";
   return chunk.replace(/\s+/g, " ").slice(0, 60) || "unknown";
 }
 
@@ -69,23 +66,17 @@ function problemsFor(page: string, file: string, src: string): string[] {
   const problems: string[] = [];
   const kind = rootKind(src);
 
-  if (kind.startsWith("absolute") || kind.startsWith("ListPageFrame")) {
-    // Absolute pages need a positioned ancestor with real height (PageEnter).
-    if (!src.includes("inset-0") && !src.includes("ListPageFrame")) {
-      problems.push("absolute root without inset-0");
-    }
+  // Prefer ordinary fill+scroll over absolute inset-0 page roots.
+  if (kind.includes("absolute inset-0")) {
+    problems.push(
+      "page root is absolute inset-0 — use h-full min-h-0 flex-1 overflow-y-auto (normal document in shell)",
+    );
   }
 
-  if (kind === "flex-1 column" || /\bflex-1\b/.test(src.slice(0, 800))) {
-    // flex-1 at page root is fine IF shell slot is flex — checked on page.tsx.
-  }
-
-  // Narrow board clamp — Dana should use the shell width, not a phone column.
   if (page === "dana" && /max-w-(?:xl|2xl|3xl|4xl|5xl)\b/.test(src)) {
     problems.push("board page clamped with max-w-* inside app-content (reads tiny)");
   }
 
-  // Bare overflow-y without x guard (also in a11y:overflow; double-signal here).
   if (
     /\boverflow-y-(?:auto|scroll)\b/.test(src) &&
     !/\bfocus-safe-scroll\b/.test(src) &&
@@ -128,8 +119,17 @@ if (
 if (!/\bh-full\b/.test(pageEnter) || !/\bflex-1\b/.test(pageEnter)) {
   shellProblems.push("PageEnter must keep h-full + flex-1");
 }
-if (!/\babsolute inset-0\b/.test(listFrame) || !/\bfocus-safe-scroll\b/.test(listFrame)) {
-  shellProblems.push("ListPageFrame must stay absolute inset-0 + focus-safe-scroll");
+if (
+  !/\bh-full\b/.test(listFrame) ||
+  !/\bflex-1\b/.test(listFrame) ||
+  !/\bfocus-safe-scroll\b/.test(listFrame)
+) {
+  shellProblems.push(
+    "ListPageFrame must be normal flow fill (h-full flex-1 + focus-safe-scroll), not absolute inset-0",
+  );
+}
+if (/\babsolute inset-0\b/.test(listFrame)) {
+  shellProblems.push("ListPageFrame still uses absolute inset-0 — prefer h-full flex-1 scroll");
 }
 
 const rows: Row[] = pageFiles.map(({ page, file }) => {
@@ -163,7 +163,7 @@ const shellRows: Row[] = [
     page: "(shell) ListPageFrame",
     file: "components/atoms/ListPageFrame.tsx",
     layers: layoutSignalCount(listFrame),
-    root: "absolute inset-0 scroll",
+    root: "flow fill (h-full flex-1 scroll)",
     problems: shellProblems.filter((p) => p.includes("ListPageFrame")),
   },
 ];

@@ -25,8 +25,8 @@ interface PeopleSheetProps {
 }
 
 /**
- * People page — open backdrop. Full-bleed scroller under brand + sticky
- * title so cards fade through the chrome scrims.
+ * People page — normal scrolling document in the shell slot. Cards fade
+ * under brand + sticky title scrims while you scroll.
  */
 export function PeopleSheet({
   people,
@@ -46,7 +46,7 @@ export function PeopleSheet({
 
   return (
     <div
-      className="focus-safe-scroll absolute inset-0 z-0 overflow-y-auto overscroll-contain"
+      className="focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
       <StickyPageChrome

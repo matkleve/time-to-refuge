@@ -247,7 +247,7 @@ export function QuickLogView() {
        omit onClick — only QuickLogButton stamps. Keyboard uses that button. */
     <div
       className={cn(
-        "no-select absolute inset-0 z-0 flex flex-col md:flex-row md:gap-5 lg:gap-6",
+        "no-select flex h-full min-h-0 w-full flex-1 flex-col md:flex-row md:gap-5 lg:gap-6",
         tapAnywhere && "cursor-pointer",
       )}
       onClick={tapAnywhere ? handleLog : undefined}
