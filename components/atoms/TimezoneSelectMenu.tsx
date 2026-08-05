@@ -40,7 +40,7 @@ export function TimezoneSelectMenu({
         rim
         role="listbox"
         aria-label="Time zones"
-        className="focus-safe-scroll max-h-64 overflow-y-auto rounded-2xl p-1.5 shadow-lg animate-scale-in"
+        className="focus-safe-scroll max-h-64 overflow-y-auto rounded-2xl p-1.5 animate-scale-in"
       >
         {zones.map((zone) => {
           const selected = zone === value;

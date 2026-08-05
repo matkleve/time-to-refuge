@@ -41,7 +41,7 @@ export function LocationCheckPanel(props: PanelProps) {
       <Surface
         material="glass-panel"
         rim
-        className="focus-safe-scroll animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto rounded-3xl p-4 text-left shadow-lg"
+        className="focus-safe-scroll animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto rounded-3xl p-4 text-left"
         onClick={(e) => e.stopPropagation()}
       >
         <PanelHeader

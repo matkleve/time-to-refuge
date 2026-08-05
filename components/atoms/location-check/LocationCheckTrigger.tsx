@@ -43,7 +43,7 @@ export function LocationCheckTrigger({
         aria-label={buttonAria}
         className={cn(
           /* pl matches vertical inset around the size-7 mark in h-11 ((44-28)/2). */
-          "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2 shadow-sm",
+          "no-select flex max-w-44 items-center gap-1.5 rounded-full border pr-3 pl-2",
           controlH.md,
           userFeedbackClass({ press: "sm", on: open }),
           /* Opaque light fill — glass was too see-through on the record button. */
