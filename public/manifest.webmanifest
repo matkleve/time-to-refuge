@@ -1,7 +1,7 @@
 {
-  "name": "Timekeeper",
+  "name": "Timekeeper — Refuge Ceremony Timer",
   "short_name": "Timekeeper",
-  "description": "Record exact wall-clock moments for each person in a session \u2014 to the millisecond.",
+  "description": "Record exact refuge moments to the millisecond — Buddha, Dharma, Sangha for each aspirant. Offline-ready for retreat timekeepers.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -33,7 +33,7 @@ function LogoMark({ size }: { size: number }) {
 /**
  * Header brand: mark + Timekeeper wordmark.
  * Hover / press: the type scales up slightly — no wash fill behind the chip.
- * Optional `onHome` returns to the Session page.
+ * Optional `onHome` returns to the Home landing page.
  */
 export function BrandLockup({
   titleSize = "lg",
@@ -42,7 +42,7 @@ export function BrandLockup({
 }: {
   /** `lg` mobile toolbar · `2xl` desktop toolbar. */
   titleSize?: "lg" | "2xl";
-  /** Opens Session (home). */
+  /** Opens Home (landing). */
   onHome?: () => void;
   className?: string;
 }) {
@@ -69,7 +69,7 @@ export function BrandLockup({
       <button
         type="button"
         onClick={onHome}
-        aria-label="Timekeeper — open Session"
+        aria-label="Timekeeper — open Home"
         className={cn(
           "group flex min-w-0 cursor-pointer items-center gap-2 rounded-lg text-left",
           className,

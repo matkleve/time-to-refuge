@@ -6,6 +6,7 @@ import {
   Download,
   HeartHandshake,
   History,
+  Home,
   ListTree,
   Menu,
   Redo2,
@@ -21,7 +22,14 @@ import {
 import type { IconButtonSize } from "@/components/atoms/IconButton";
 import dana from "@/content/dana.json";
 
-export type AppView = "refuge" | "quicklog" | "history" | "people" | "fields" | "dana";
+export type AppView =
+  | "home"
+  | "refuge"
+  | "quicklog"
+  | "history"
+  | "people"
+  | "fields"
+  | "dana";
 
 interface ViewMenuProps {
   view: AppView;
@@ -57,6 +65,13 @@ export function ViewMenu({
   const pages: GlassMenuSection = {
     title: "Pages",
     items: [
+      {
+        id: "home",
+        label: "Home",
+        icon: Home,
+        selected: view === "home",
+        onSelect: () => onChange("home"),
+      },
       {
         id: "fields",
         label: "Fields",

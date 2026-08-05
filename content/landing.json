@@ -1,0 +1,20 @@
+{
+  "headline": "Refuge ceremony timer",
+  "intro": "Record the exact wall-clock moment of each vow — Buddha, Dharma, Sangha — to the millisecond. Built for retreat timekeepers.",
+  "steps": [
+    {
+      "title": "Add people",
+      "body": "Name each aspirant and set the retreat."
+    },
+    {
+      "title": "Check the clock",
+      "body": "Verify time zone and network time before you begin."
+    },
+    {
+      "title": "Record each snap",
+      "body": "One tap per phase — export CSV or share cards after."
+    }
+  ],
+  "cta": "Open Session",
+  "footnote": "Offline-ready after one visit. No account needed."
+}
