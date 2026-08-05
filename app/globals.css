@@ -222,15 +222,12 @@
   }
 
   /*
-   * One focus ring for the whole app. There was none before, so keyboard
-   * focus fell back to the browser default and vanished against the filled
-   * cards and the coloured record button (WCAG 2.4.7).
-   *
-   * Inset ring stays inside the control — see lib/focus-cues.ts.
+   * One focus ring for the whole app. Inset box-shadow (not outline) so the
+   * ring scales with press-bounce transform — outlines do not follow transform.
    */
   :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid var(--color-flagblue-600);
-    outline-offset: -2px;
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--color-flagblue-600);
   }
 
   * {
@@ -309,6 +306,22 @@
   .user-feedback > * {
     position: relative;
     z-index: 1;
+  }
+
+  /* Inset ring on a pseudo so it scales with is-press-bounce (same element). */
+  .user-feedback:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .user-feedback:focus-visible::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 2px var(--color-flagblue-600);
   }
 
   @media (hover: hover) {
