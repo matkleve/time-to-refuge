@@ -7,7 +7,6 @@ import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
-import { useMediaQuery } from "@/lib/use-media-query";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -42,8 +41,6 @@ export function PeopleSheet({
   retreatName = "",
   onRetreatNameChange,
 }: PeopleSheetProps) {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-
   return (
     <div
       className="focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overflow-x-clip overscroll-contain"
@@ -56,7 +53,7 @@ export function PeopleSheet({
           ) : null
         }
       >
-        {!isDesktop ? <PageTitle title="People" /> : null}
+        <PageTitle title="People" />
       </StickyPageChrome>
 
       <ul className="mx-auto w-full max-w-xl space-y-3 px-3 md:px-0">

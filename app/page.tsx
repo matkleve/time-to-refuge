@@ -402,7 +402,7 @@ export default function Home() {
         <RetreatNameField value={retreatName} onChange={setRetreatName} />
       }
     >
-      {!isDesktop ? <PageTitle title="Session" /> : null}
+      <PageTitle title="Session" />
     </StickyPageChrome>
   ) : null;
 
