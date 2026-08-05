@@ -77,7 +77,7 @@ export function DesktopWorkspace({
         {people.map((p) => {
           const selected = p.id === current?.id;
           return (
-            <li key={p.id}>
+            <li key={p.id} className="min-w-0">
               <PersonCard
                 person={p}
                 fields={fields}
@@ -100,12 +100,12 @@ export function DesktopWorkspace({
           );
         })}
 
-        <li>
+        <li className="min-w-0">
           <AddPersonRow onAdd={onAdd} />
         </li>
       </ul>
 
-      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto py-1 sm:py-2">
+      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto overflow-x-clip py-1 sm:py-2">
         {current ? (
           <div className="flex w-full max-w-xl flex-col gap-4 sm:gap-5">
             <PersonCard
