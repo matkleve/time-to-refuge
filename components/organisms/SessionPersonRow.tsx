@@ -39,6 +39,8 @@ export function SessionPersonRow({
       className={cn(
         "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
         glassFlushClass(isCurrent ? "cardCurrent" : "card"),
+        /* Bounce the whole chip — glass is on this shell, not the name button. */
+        userFeedbackClass({ press: "sm", on: isCurrent }),
       )}
     >
       <button
@@ -50,10 +52,7 @@ export function SessionPersonRow({
             ? `${person.name}, all fields recorded`
             : `${person.name}, ${filledCount} of ${fields.length} recorded`
         }
-        className={cn(
-          "min-w-0 flex-1 truncate text-left font-display text-base font-semibold text-ink",
-          userFeedbackClass({ press: "sm", on: isCurrent }),
-        )}
+        className="min-w-0 flex-1 truncate text-left font-display text-base font-semibold text-ink"
       >
         {person.name}
       </button>
