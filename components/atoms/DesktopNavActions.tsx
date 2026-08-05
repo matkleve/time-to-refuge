@@ -4,6 +4,7 @@ import { Download, HeartHandshake, Redo2, Undo2 } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import { glassNavSelectedClass } from "@/lib/surfaces";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
 
@@ -31,7 +32,7 @@ export function DesktopNavActions({
   exportDisabled?: boolean;
 }) {
   return (
-    <div className="flex shrink-0 items-center gap-0.5">
+    <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
       <IconButton
         icon={Undo2}
         label={undoLabel}
@@ -49,7 +50,10 @@ export function DesktopNavActions({
         disabled={redoDisabled}
       />
       <div
-        className="ml-0.5 flex items-center gap-0.5 border-l border-line pl-1.5"
+        className={cn(
+          "ml-0.5 flex items-center border-l border-line pl-1.5",
+          BUTTON_CLUSTER_GAP,
+        )}
         role="group"
         aria-label="Actions"
       >

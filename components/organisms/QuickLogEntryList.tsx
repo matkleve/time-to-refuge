@@ -1,0 +1,44 @@
+"use client";
+
+import { QuickLogEntry } from "@/lib/types";
+import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
+import { QuickLogLogRow } from "@/components/organisms/QuickLogLogRow";
+import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
+import { cn } from "@/lib/utils";
+
+export function QuickLogEntryList({
+  entries,
+  tz,
+  tapAnywhere,
+  clearAllArmed,
+  onDelete,
+}: {
+  entries: QuickLogEntry[];
+  tz: string;
+  tapAnywhere: boolean;
+  clearAllArmed: boolean;
+  onDelete: (id: string) => void;
+}) {
+  const sorted = [...entries].sort((a, b) => b.at - a.at);
+
+  return (
+    <div className={cn("flex w-full flex-col-reverse gap-2 py-3", PAGE_INLINE_GUTTER)}>
+      {sorted.length === 0 ? (
+        <GlassEmptyNote>
+          {tapAnywhere ? "Tap anywhere to log a time." : "Tap the button to log a time."}
+        </GlassEmptyNote>
+      ) : (
+        sorted.map((entry, i) => (
+          <QuickLogLogRow
+            key={entry.id}
+            index={sorted.length - i}
+            at={entry.at}
+            tz={tz}
+            armedAll={clearAllArmed}
+            onDelete={() => onDelete(entry.id)}
+          />
+        ))
+      )}
+    </div>
+  );
+}

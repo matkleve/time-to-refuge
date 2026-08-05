@@ -4,7 +4,9 @@ import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import type { FieldDef } from "@/lib/types";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import type { useArmedAction } from "@/lib/use-armed-action";
+import { cn } from "@/lib/utils";
 
 export function FieldEditorRowActions({
   field,
@@ -25,7 +27,7 @@ export function FieldEditorRowActions({
 }) {
   return (
     <RowActionTray open>
-      <div className="flex shrink-0 items-center gap-2">
+      <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
         <IconButton
           icon={ArrowUp}
           label={`Move ${field.label} up`}

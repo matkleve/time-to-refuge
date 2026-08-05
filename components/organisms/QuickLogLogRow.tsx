@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { formatInZone } from "@/lib/format";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { useDismissible } from "@/lib/use-dismissible";
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import { QuickLogLogRowActions } from "@/components/organisms/QuickLogLogRowActions";
 import { QuickLogLogRowStamp } from "@/components/organisms/QuickLogLogRowStamp";
@@ -67,7 +67,7 @@ export function QuickLogLogRow({
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
        Stops the page-wide tap-to-log layer; the row's real controls are buttons. */
     <div className="shrink-0 animate-fade-in-up" onClick={(e) => e.stopPropagation()}>
-      <div ref={dismissRef} className={cn("flex w-full items-center", controlMinH.md)}>
+      <div ref={dismissRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, controlMinH.md)}>
         <QuickLogLogRowStamp
           index={index}
           date={date}

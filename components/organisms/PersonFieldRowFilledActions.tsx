@@ -1,5 +1,7 @@
 import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { Phase } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 
 interface PersonFieldRowLookActionsProps {
@@ -18,7 +20,7 @@ export function PersonFieldRowLookActions({
   onCopy,
 }: PersonFieldRowLookActionsProps) {
   return (
-    <div className="flex shrink-0 items-center gap-2">
+    <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
       {onOpenPerson && (
         <IconButton
           icon={Eye}
@@ -58,7 +60,7 @@ export function PersonFieldRowChangeActions({
   onStartEdit,
 }: PersonFieldRowChangeActionsProps) {
   return (
-    <div className="flex shrink-0 items-center gap-2">
+    <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
       {onEditTime && (
         <IconButton
           icon={Pencil}

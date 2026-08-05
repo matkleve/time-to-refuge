@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -47,7 +47,7 @@ export function AddRowTray({
   }
 
   return (
-    <div className="flex w-full items-center">
+    <div className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP)}>
       {open ? (
         <div
           className={cn(

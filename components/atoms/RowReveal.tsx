@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 
 /** Shared reveal timing — tray width only; pack spacer snaps (see below). */
@@ -52,7 +53,8 @@ export function RowActionTray({
       <div className={cn(open ? "overflow-visible" : "min-w-0 overflow-hidden")}>
         <div
           className={cn(
-            "flex w-max items-center gap-4 py-1 pl-2 pr-1.5",
+            "flex w-max items-center py-1 pr-1.5",
+            BUTTON_CLUSTER_GAP,
             "transition-opacity",
             REVEAL_EASE,
             open

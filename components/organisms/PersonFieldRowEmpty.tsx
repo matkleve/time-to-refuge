@@ -1,4 +1,4 @@
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { glassFlushRowClass } from "@/lib/surfaces";
@@ -34,7 +34,7 @@ export function PersonFieldRowEmpty({
   onConfirmSkip,
 }: PersonFieldRowEmptyProps) {
   return (
-    <div ref={confirmSkipRef} className={cn("flex w-full items-center", ROW_HEIGHT)}>
+    <div ref={confirmSkipRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
       <button
         type="button"
         onClick={onRowClick}

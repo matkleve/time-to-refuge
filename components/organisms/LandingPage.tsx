@@ -3,7 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { actionClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -58,7 +58,10 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                   {step.body}
                 </p>
                 <span
-                  className="mt-auto flex items-center justify-end gap-1 pt-2 text-sm font-medium text-flagblue-600"
+                  className={cn(
+                    "mt-auto flex items-center justify-end pt-2 text-sm font-medium text-flagblue-600",
+                    BUTTON_CLUSTER_GAP,
+                  )}
                   aria-hidden
                 >
                   {STEP_NAV_LABEL[step.view] ?? step.view}

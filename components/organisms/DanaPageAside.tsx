@@ -2,7 +2,7 @@
 
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
-import { controlMinH } from "@/lib/control-size";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { glassFlushChipClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
@@ -75,7 +75,7 @@ export function DanaPageAside({
         <footer className="text-sm text-muted">— {dana.quote.attribution}</footer>
       </blockquote>
 
-      <ul className="flex flex-wrap items-center gap-2">
+      <ul className={cn("flex flex-wrap items-center", BUTTON_CLUSTER_GAP)}>
         {dana.links.map((link) => (
           <li key={link.href}>
             <a
