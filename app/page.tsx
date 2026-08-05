@@ -46,12 +46,13 @@ import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { FieldsPage } from "@/components/organisms/FieldsPage";
 import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
+import { LandingPage } from "@/components/organisms/LandingPage";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [ready, setReady] = useState(false);
-  const [view, setView] = useState<AppView>("refuge");
+  const [view, setView] = useState<AppView>("home");
   const [fields, setFields] = useState<FieldDef[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -326,6 +327,8 @@ export default function Home() {
 
   const danaPage = <DanaPage />;
 
+  const homePage = <LandingPage onStart={() => setView("refuge")} />;
+
   const quickLogPage = <QuickLogView />;
 
   const refugePage = isDesktop ? (
@@ -375,17 +378,19 @@ export default function Home() {
 
   const page = (
     <PageEnter viewKey={view}>
-      {view === "quicklog"
-        ? quickLogPage
-        : view === "history"
-          ? historyPage
-          : view === "people"
-            ? peoplePage
-            : view === "fields"
-              ? fieldsPage
-              : view === "dana"
-                ? danaPage
-                : refugePage}
+      {view === "home"
+        ? homePage
+        : view === "quicklog"
+          ? quickLogPage
+          : view === "history"
+            ? historyPage
+            : view === "people"
+              ? peoplePage
+              : view === "fields"
+                ? fieldsPage
+                : view === "dana"
+                  ? danaPage
+                  : refugePage}
     </PageEnter>
   );
 
@@ -451,7 +456,7 @@ export default function Home() {
         >
           <div className="flex h-11 items-center justify-between gap-3">
             <div className="pointer-events-auto">
-              <BrandLockup titleSize="lg" onHome={() => setView("refuge")} />
+              <BrandLockup titleSize="lg" onHome={() => setView("home")} />
             </div>
             <div className="pointer-events-auto flex shrink-0 items-center">
               {menu}

@@ -6,6 +6,7 @@ import {
   Download,
   HeartHandshake,
   History,
+  Home,
   ListTree,
   Redo2,
   Undo2,
@@ -28,6 +29,7 @@ export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   shortLabel: string;
   icon: LucideIcon;
 }> = [
+  { id: "home", label: "Home", shortLabel: "Home", icon: Home },
   { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
   { id: "people", label: "People", shortLabel: "People", icon: Contact },
   { id: "fields", label: "Fields", shortLabel: "Fields", icon: ListTree },
@@ -75,7 +77,7 @@ export function DesktopNav({
         <div className="pointer-events-auto flex h-12 items-center gap-2 sm:gap-3">
           <BrandLockup
             titleSize="2xl"
-            onHome={() => onChange("refuge")}
+            onHome={() => onChange("home")}
             className="min-w-0 shrink [&_span]:max-w-[7rem] [&_span]:truncate xl:[&_span]:max-w-none"
           />
 

@@ -2,6 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Literata, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
 import { PressBounceRegister } from "@/components/PressBounceRegister";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { SeoJsonLd } from "@/components/SeoJsonLd";
+import {
+  siteDescription,
+  siteKeywords,
+  siteName,
+  siteTitle,
+  siteUrl,
+} from "@/lib/site";
 import "./globals.css";
 
 /* Quiet book — Literata · Source Sans 3 · Source Code Pro (dev/fonts option B). */
@@ -25,13 +33,34 @@ const sourceCode = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "Timekeeper",
-  description:
-    "Record exact wall-clock moments for each person in a session — to the millisecond.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteTitle,
+    template: `%s · ${siteName}`,
+  },
+  description: siteDescription,
+  keywords: siteKeywords,
+  applicationName: siteName,
   manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName,
+    title: siteTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
   appleWebApp: {
     capable: true,
-    title: "Timekeeper",
+    title: siteName,
     statusBarStyle: "default",
   },
   icons: {
@@ -66,6 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${literata.variable} ${sourceSans.variable} ${sourceCode.variable}`}
     >
       <body>
+        <SeoJsonLd />
         {children}
         <PressBounceRegister />
         <ServiceWorkerRegister />
