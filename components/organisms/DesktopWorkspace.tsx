@@ -63,7 +63,12 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
+    <div
+      className="flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5"
+      style={{
+        minHeight: "calc(100dvh - var(--app-header-clearance) - 1rem)",
+      }}
+    >
       <Surface
         material="glass-panel"
         rim

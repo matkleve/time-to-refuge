@@ -431,8 +431,8 @@ export default function Home() {
           onExportAll={() => downloadCsv(people, fields, retreatName)}
           exportDisabled={people.length === 0}
         />
-        <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden pt-[4.5rem]">
-          <div className="app-content flex min-h-0 flex-1 flex-col px-4 sm:px-5">
+        <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="app-content app-scroll-clearance flex min-h-0 flex-1 flex-col overflow-y-auto px-4 sm:px-5">
             {subheader}
             {page}
           </div>
@@ -460,10 +460,10 @@ export default function Home() {
         </div>
       </header>
       <div
-        className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden"
+        className="app-scroll-clearance relative z-0 flex min-h-0 flex-1 flex-col overflow-y-auto"
         style={{
-          paddingTop:
-            "calc(max(0.375rem, env(safe-area-inset-top, 0px)) + 2.75rem + 0.375rem)",
+          paddingBottom:
+            "max(1.5rem, env(safe-area-inset-bottom, 0px))",
         }}
       >
         {subheader}

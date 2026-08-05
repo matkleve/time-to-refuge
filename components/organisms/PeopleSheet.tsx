@@ -38,7 +38,7 @@ export function PeopleSheet({
 }: PeopleSheetProps) {
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4 md:px-0"
+      className="flex min-h-0 flex-1 flex-col px-3 py-4 md:px-0"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
       <ul className="mx-auto w-full max-w-xl space-y-3">

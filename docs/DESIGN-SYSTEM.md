@@ -50,12 +50,12 @@ These are **Tailwind's own steps**, re-valued — not custom names.
 
 | Utility | Size | Used for |
 | --- | --- | --- |
-| `text-4xl` | 2.25rem (36px) | Hero clock |
-| `text-2xl` | 1.5rem (24px) | Person name on the focused card · desktop header “Timekeeper” |
-| `text-lg` | 1.0625rem (17px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
-| `text-base` | 0.9375rem (15px) | Default UI text |
-| `text-sm` | 0.8125rem (13px) | Meta, counters, secondary rows, button labels |
-| `text-xs` | 0.6875rem (11px) | Tracked uppercase captions **only** |
+| `text-4xl` | 2.5rem (40px) | Hero clock |
+| `text-2xl` | 1.75rem (28px) | Person name on the focused card · desktop header “Timekeeper” |
+| `text-lg` | 1.125rem (18px) | Panel titles, overview name, field rows · mobile header “Timekeeper” |
+| `text-base` | 1rem (16px) | Default UI text |
+| `text-sm` | 0.875rem (14px) | Meta, counters, secondary rows, button labels |
+| `text-xs` | 0.75rem (12px) | Tracked uppercase captions **only** |
 
 > **Don't invent size names.** A custom `text-clock` is read by tailwind-merge
 > as a *colour* utility and silently dropped whenever a colour follows it in the
@@ -256,7 +256,9 @@ Triggers use the shared user-feedback cover (§4) — circular, no idle outline.
 row for brand + hamburger with equal inset. It **floats** over the shell —
 no solid bar. A Cursor-style progressive blur (`.header-scrim`) fades from
 the top edge so content can scroll underneath; Timekeeper is plain text;
-the hamburger is a round glass chip (same as Refuge nav arrows). The retreat
+the hamburger is a round glass chip (same as Refuge nav arrows). Scroll
+roots use `--app-header-clearance` / `app-scroll-clearance` (not shell
+padding) so content paints under the scrim while scrolling. The retreat
 name is **not** in the toolbar — on Refuge / People it sits below as a
 left-aligned glass chip with a leading icon (§6c).
 
