@@ -140,6 +140,14 @@ export function glassChipClass(): string {
   return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM, GLASS_SPECULAR);
 }
 
+/**
+ * Selected desktop nav tab — saffron mist glass (Buddhism), not a white chip.
+ * Pair with `font-bold` at the call site.
+ */
+export function glassNavSelectedClass(): string {
+  return cx(GLASS.cardCurrent.fill, GLASS_FX, GLASS_RIM, GLASS_SPECULAR);
+}
+
 export function filledCardClass(isCurrent = false): string {
   return isCurrent ? FILLED.cardCurrent : FILLED.card;
 }

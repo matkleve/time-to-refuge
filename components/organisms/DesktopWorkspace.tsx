@@ -4,7 +4,6 @@ import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LiveClockButton } from "@/components/atoms/LiveClockButton";
-import { Surface } from "@/components/atoms/Surface";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
 import { PersonRailRow } from "./PersonRailRow";
@@ -64,31 +63,26 @@ export function DesktopWorkspace({
 
   return (
     <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
-      <Surface
-        material="glass-panel"
-        rim
-        className="flex w-48 shrink-0 flex-col overflow-hidden rounded-3xl lg:w-72"
+      {/* No panel shell — just stacked person chips + add, open over the backdrop. */}
+      <ul
+        className="flex w-48 shrink-0 flex-col gap-2 overflow-y-auto lg:w-72"
+        aria-label="People"
       >
-        <div className="border-b border-line px-3 py-2.5 lg:px-4 lg:py-3">
-          <h2 className="font-display text-lg font-semibold text-ink">People</h2>
-        </div>
-        <ul className="flex-1 space-y-2 overflow-y-auto p-2.5 lg:p-3">
-          {people.map((p) => (
-            <li key={p.id}>
-              <PersonRailRow
-                person={p}
-                fields={fields}
-                isCurrent={p.id === current?.id}
-                onSelect={() => onOpenAt(p.id, null)}
-              />
-            </li>
-          ))}
-
-          <li>
-            <AddPersonRow onAdd={onAdd} />
+        {people.map((p) => (
+          <li key={p.id}>
+            <PersonRailRow
+              person={p}
+              fields={fields}
+              isCurrent={p.id === current?.id}
+              onSelect={() => onOpenAt(p.id, null)}
+            />
           </li>
-        </ul>
-      </Surface>
+        ))}
+
+        <li>
+          <AddPersonRow onAdd={onAdd} />
+        </li>
+      </ul>
 
       <div className="flex min-w-0 flex-1 flex-col items-center overflow-y-auto py-1 sm:py-2">
         {current ? (

@@ -171,6 +171,9 @@ switch while recording) and the current person's card with the record button
 directly beneath it on the right. **Tablet (`768–1023`)** is the stressed
 band for nav density; page links stay labeled (short “Log” below `lg`), and
 Export / Dana sit in a quiet actions cluster so they don’t fight UC-1.
+The **current page** is saffron mist glass (`glassNavSelectedClass`) + bold
+type — not a white chip (those stay for row actions). Brand wordmark is bold
+display type with **no** hover scale.
 **People**, **History**, and the other destinations are their own pages via
 the top nav (same `AppView` switch as Quick Log), not overlays. Only one
 shell tree is ever mounted (`useMediaQuery`, not a CSS breakpoint toggling
@@ -338,7 +341,11 @@ a second hover recipe locally.
 | **Destroy arm** | [`armedDestroyClass`](../lib/user-feedback.ts) filled danger + subject `text-danger-600` | IconButton `armed`, GlassMenu danger+selected, field/Quick Log resets |
 
 Named exceptions (do not copy elsewhere): large `actionClass` CTAs may add
-`hover:brightness-*`; BrandLockup stays scale-only (no wash).
+`hover:brightness-*`. BrandLockup is plain bold type + mark — **no** hover
+scale and **no** wash (scale used to collide with the nav).
+
+Desktop selected page tabs use [`glassNavSelectedClass`](../lib/surfaces.ts)
+(saffron mist + bold) — never the white `glassChipClass` pill.
 
 Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
 idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the

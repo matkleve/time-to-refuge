@@ -17,12 +17,12 @@ import { BrandLockup } from "@/components/atoms/BrandLockup";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import { IconButton } from "@/components/atoms/IconButton";
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { glassChipClass } from "@/lib/surfaces";
+import { glassNavSelectedClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
 
-/** Primary destinations — same set as the mobile hamburger Pages group. */
+/** Primary destinations — same order as the mobile hamburger Pages group. */
 export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   id: AppView;
   label: string;
@@ -30,9 +30,9 @@ export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   icon: LucideIcon;
 }> = [
   { id: "home", label: "Home", shortLabel: "Home", icon: Home },
-  { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
-  { id: "people", label: "People", shortLabel: "People", icon: Contact },
   { id: "fields", label: "Fields", shortLabel: "Fields", icon: ListTree },
+  { id: "people", label: "People", shortLabel: "People", icon: Contact },
+  { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
   { id: "quicklog", label: "Quick Log", shortLabel: "Log", icon: Clock },
   { id: "history", label: "History", shortLabel: "History", icon: History },
 ];
@@ -56,7 +56,8 @@ interface DesktopNavProps {
  *
  * Left-aligned after the brand (no absolute-center fight on tablet).
  * Page labels stay visible; Quick Log shortens to “Log” below `lg`.
- * Dana is quiet glass — filled only when that page is current (UC-1).
+ * Selected tab = saffron mist glass + bold (not a white chip). Dana stays
+ * quiet glyph — filled only via accent tone when that page is current.
  */
 export function DesktopNav({
   view,
@@ -78,7 +79,7 @@ export function DesktopNav({
           <BrandLockup
             titleSize="2xl"
             onHome={() => onChange("home")}
-            className="min-w-0 shrink [&_span]:max-w-[7rem] [&_span]:truncate xl:[&_span]:max-w-none"
+            className="mr-1 min-w-0 shrink sm:mr-2"
           />
 
           <nav
@@ -96,11 +97,11 @@ export function DesktopNav({
                   title={label}
                   onClick={() => onChange(id)}
                   className={cn(
-                    "inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm font-medium lg:gap-2 lg:px-3 lg:text-base",
+                    "inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm lg:gap-2 lg:px-3 lg:text-base",
                     userFeedbackClass({ press: "md", on: selected }),
                     selected
-                      ? cn(glassChipClass(), "text-ink")
-                      : "text-muted hover:text-ink",
+                      ? cn(glassNavSelectedClass(), "font-bold text-ink")
+                      : "font-medium text-muted hover:text-ink",
                   )}
                 >
                   <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden />
@@ -144,11 +145,15 @@ export function DesktopNav({
               <IconButton
                 icon={HeartHandshake}
                 label={dana.menuCta}
-                quiet={view !== "dana"}
-                glass={view === "dana"}
+                quiet
                 size="md"
                 tone={view === "dana" ? "accent" : "neutral"}
                 feedbackOn={view === "dana"}
+                className={
+                  view === "dana"
+                    ? cn(glassNavSelectedClass(), "text-flagblue-600")
+                    : undefined
+                }
                 onClick={() => onChange("dana")}
               />
             </div>
