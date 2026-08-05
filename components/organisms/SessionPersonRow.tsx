@@ -2,7 +2,7 @@
 
 import { Check } from "lucide-react";
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
-import { glassClass } from "@/lib/surfaces";
+import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ export function SessionPersonRow({
     <div
       className={cn(
         "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
-        glassClass(isCurrent ? "cardCurrent" : "card", { rim: true }),
+        glassFlushClass(isCurrent ? "cardCurrent" : "card"),
       )}
     >
       <button

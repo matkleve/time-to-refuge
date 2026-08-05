@@ -372,9 +372,9 @@
   }
 
   /*
-   * Brand toolbar scrim — progressive fade under the floating header so
-   * scrolling lists soften as they pass under the brand. Page titles use
-   * `.title-scrim` in `StickyPageChrome` (separate band, title text stays sharp).
+   * Brand toolbar soften — one element, one blur, fade to transparent.
+   * Do not reintroduce multi-layer progressive scrims or a separate
+   * title-scrim band (those read as milky panes / fake light shadows).
    */
   .header-scrim {
     pointer-events: none;
@@ -382,141 +382,25 @@
     inset-inline: 0;
     top: 0;
     z-index: 0;
-  }
-
-  .header-scrim__layer {
-    position: absolute;
-    inset: 0;
-    -webkit-backdrop-filter: saturate(1.25);
-    backdrop-filter: saturate(1.25);
-  }
-
-  .header-scrim__layer[data-strength="1"] {
-    -webkit-backdrop-filter: blur(2px) saturate(1.2);
-    backdrop-filter: blur(2px) saturate(1.2);
-    -webkit-mask-image: linear-gradient(
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
+    background: linear-gradient(
       to bottom,
-      #000 0%,
-      #000 55%,
+      rgb(255 255 255 / 0.28) 0%,
+      rgb(255 255 255 / 0.1) 55%,
       transparent 100%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
-  }
-
-  .header-scrim__layer[data-strength="2"] {
-    -webkit-backdrop-filter: blur(6px) saturate(1.25);
-    backdrop-filter: blur(6px) saturate(1.25);
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
       #000 40%,
-      transparent 85%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 85%);
-  }
-
-  .header-scrim__layer[data-strength="3"] {
-    -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    backdrop-filter: blur(14px) saturate(1.3);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 22%,
-      transparent 60%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 22%, transparent 60%);
-  }
-
-  .header-scrim__layer[data-strength="4"] {
-    -webkit-backdrop-filter: blur(22px) saturate(1.35);
-    backdrop-filter: blur(22px) saturate(1.35);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 12%,
-      transparent 42%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, transparent 42%);
-  }
-
-  .header-scrim__tint {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgb(255 255 255 / 0.32) 0%,
-      rgb(255 255 255 / 0.14) 45%,
-      rgb(255 255 255 / 0.05) 75%,
       transparent 100%
     );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
   }
 
-  /*
-   * Page-title band scrim — sits inside `StickyPageChrome` behind the title
-   * text so lists fade under “Fields” / “People” / etc. without frosting the
-   * heading itself.
-   */
-  .title-scrim {
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .title-scrim__layer {
-    position: absolute;
-    inset: 0;
-  }
-
-  .title-scrim__layer[data-strength="1"] {
-    -webkit-backdrop-filter: blur(1px) saturate(1.15);
-    backdrop-filter: blur(1px) saturate(1.15);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 50%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
-  }
-
-  .title-scrim__layer[data-strength="2"] {
-    -webkit-backdrop-filter: blur(4px) saturate(1.2);
-    backdrop-filter: blur(4px) saturate(1.2);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 35%,
-      transparent 80%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 80%);
-  }
-
-  .title-scrim__layer[data-strength="3"] {
-    -webkit-backdrop-filter: blur(8px) saturate(1.25);
-    backdrop-filter: blur(8px) saturate(1.25);
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 18%,
-      transparent 55%
-    );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 18%, transparent 55%);
-  }
-
-  .title-scrim__tint {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgb(255 255 255 / 0.22) 0%,
-      rgb(255 255 255 / 0.08) 55%,
-      transparent 100%
-    );
-  }
-
-  /* Keep a soft tint wash when motion is reduced; drop the blur layers. */
   @media (prefers-reduced-motion: reduce) {
-    .header-scrim__layer,
-    .title-scrim__layer {
+    .header-scrim {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
@@ -548,17 +432,22 @@
 }
 
 /*
- * Gutter inside overflow-y-auto scrollports so glass soft-lift shadows
- * (`--shadow-glass` ≈ 10px + 28px blur) and the global `:focus-visible`
- * outline aren’t sliced by the scrollport edge.
+ * Vertical bleed only inside overflow-y-auto scrollports.
  *
- * Also force `overflow-x: clip`: a lone `overflow-y: auto` computes the
- * other axis to `auto` too, so outset rings inflate scrollWidth and a
- * horizontal scrollbar appears. See DESIGN-SYSTEM §4c.
+ * Horizontal pad was removed on purpose: shell already owns the content
+ * gutter (`PAGE_INLINE_GUTTER` / `.app-content`). Agents then overrode
+ * with `px-0` while keeping `overflow-x: clip`, which sliced glass pills
+ * and soft-lift shadows on the left edge of Session / People lists.
+ *
+ * Rule: flush-edge list children must use inset focus + `glassFlushClass`
+ * (no soft-lift). Soft-lift (`shadow-glass`) is for floating panels only.
+ *
+ * Still force `overflow-x: clip`: a lone `overflow-y: auto` computes the
+ * other axis to `auto` too (horizontal scrollbar from outset rings).
  */
 @utility focus-safe-scroll {
-  padding: var(--focus-safe-bleed);
-  scroll-padding: var(--focus-safe-bleed);
+  padding-block: var(--focus-safe-bleed);
+  scroll-padding-block: var(--focus-safe-bleed);
   overflow-x: clip;
 }
 

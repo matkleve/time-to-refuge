@@ -110,14 +110,26 @@ export const GLASS_SURFACES = {
 
 export function glassClass(
   kind: "panel" | "card" | "cardCurrent",
-  opts: { rim?: boolean } = {},
+  opts: { rim?: boolean; lift?: boolean } = {},
 ): string {
+  const lift = opts.lift !== false;
   return cx(
     GLASS[kind].fill,
     GLASS_FX,
-    GLASS_SPECULAR,
+    lift && GLASS_SPECULAR,
     opts.rim && GLASS_RIM,
   );
+}
+
+/**
+ * Dense list / rail chips flush to a scrollport edge — fill + blur + rim,
+ * **no** soft-lift shadow. Soft-lift needs horizontal bleed; bleed fought
+ * the one-gutter rule (`px-0`) and clipped pills on the left.
+ */
+export function glassFlushClass(
+  kind: "panel" | "card" | "cardCurrent" = "card",
+): string {
+  return glassClass(kind, { rim: true, lift: false });
 }
 
 /**

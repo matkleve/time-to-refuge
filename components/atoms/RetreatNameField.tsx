@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
 import { controlMinH } from "@/lib/control-size";
-import { glassClass } from "@/lib/surfaces";
+import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +31,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
   const shell = cn(
     "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
     controlMinH.md,
-    glassClass("card", { rim: true }),
+    glassFlushClass(),
     className,
   );
 
