@@ -32,7 +32,7 @@ function LogoMark({ size }: { size: number }) {
 
 /**
  * Header brand: mark + Timekeeper wordmark.
- * Hover / press: the type scales up slightly — no wash fill behind the chip.
+ * No hover scale — that grew into the nav and read as shaky type.
  * Optional `onHome` returns to the Home landing page.
  */
 export function BrandLockup({
@@ -53,10 +53,8 @@ export function BrandLockup({
       <LogoMark size={mark} />
       <span
         className={cn(
-          "origin-left truncate font-display font-semibold leading-none text-ink",
-          "transition-transform duration-200 ease-out",
-          "group-hover:scale-[1.06] group-active:scale-[0.97]",
-          titleSize === "2xl" ? "text-2xl" : "text-lg",
+          "truncate font-display font-bold leading-none text-ink",
+          titleSize === "2xl" ? "text-lg xl:text-2xl" : "text-lg",
         )}
       >
         Timekeeper
@@ -71,7 +69,7 @@ export function BrandLockup({
         onClick={onHome}
         aria-label="Timekeeper — open Home"
         className={cn(
-          "group flex min-w-0 cursor-pointer items-center gap-2 rounded-lg text-left",
+          "flex min-w-0 cursor-pointer items-center gap-2 rounded-lg text-left",
           className,
         )}
       >

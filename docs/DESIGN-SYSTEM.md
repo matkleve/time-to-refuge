@@ -338,7 +338,11 @@ a second hover recipe locally.
 | **Destroy arm** | [`armedDestroyClass`](../lib/user-feedback.ts) filled danger + subject `text-danger-600` | IconButton `armed`, GlassMenu danger+selected, field/Quick Log resets |
 
 Named exceptions (do not copy elsewhere): large `actionClass` CTAs may add
-`hover:brightness-*`; BrandLockup stays scale-only (no wash).
+`hover:brightness-*`. BrandLockup is plain bold type + mark — **no** hover
+scale and **no** wash (scale used to collide with the nav).
+
+Desktop selected page tabs use [`glassNavSelectedClass`](../lib/surfaces.ts)
+(saffron mist + bold) — never the white `glassChipClass` pill.
 
 Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
 idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
