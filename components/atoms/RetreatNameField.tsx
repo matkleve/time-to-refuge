@@ -35,9 +35,14 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     className,
   );
 
+  const editingShell = cn(
+    shell,
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-flagblue-600 focus-within:ring-offset-2",
+  );
+
   if (editing) {
     return (
-      <div className={shell}>
+      <div className={editingShell}>
         <Mountain className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an explicit tap. */
@@ -59,7 +64,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70"
+          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink outline-none focus:outline-none focus-visible:outline-none placeholder:font-sans placeholder:font-normal placeholder:text-muted/70"
         />
       </div>
     );
