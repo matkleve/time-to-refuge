@@ -328,7 +328,9 @@ export default function Home() {
 
   const danaPage = <DanaPage />;
 
-  const homePage = <LandingPage onStart={() => setView("refuge")} />;
+  const homePage = (
+    <LandingPage onStart={() => setView("refuge")} onNavigate={setView} />
+  );
 
   const quickLogPage = <QuickLogView />;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
 import { controlMinH } from "@/lib/control-size";
 import { actionClass, glassClass } from "@/lib/surfaces";
@@ -9,13 +10,15 @@ import { cn } from "@/lib/utils";
 
 interface LandingPageProps {
   onStart: () => void;
+  onNavigate: (view: AppView) => void;
 }
 
 /**
  * Home / landing — one viewport, no scroll. Crawlable copy lives here when
  * this view is active; metadata + JSON-LD cover the rest for search.
+ * Step cards jump to the matching page (People / Quick Log / Session).
  */
-export function LandingPage({ onStart }: LandingPageProps) {
+export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
   return (
     <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col items-center overflow-x-clip px-3 md:px-0">
       <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col justify-center gap-5 py-2 sm:gap-6 sm:py-4">
@@ -28,23 +31,26 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
         <ol className="grid min-h-0 grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
           {landing.steps.map((step, index) => (
-            <li
-              key={step.title}
-              className={cn(
-                "flex min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 sm:px-4 sm:py-4",
-                /* Decorative shrink on pointer hover only — not a control. */
-                "transition-transform duration-200 ease-out",
-                "motion-safe:[@media(hover:hover)]:hover:scale-[0.97]",
-                glassClass("card", { rim: true }),
-              )}
-            >
-              <span className="text-xs font-medium tracking-wide text-subtle uppercase">
-                Step {index + 1}
-              </span>
-              <h2 className="font-display text-base font-semibold text-ink sm:text-lg">
-                {step.title}
-              </h2>
-              <p className="text-sm leading-snug text-muted sm:text-base">{step.body}</p>
+            <li key={step.title} className="min-w-0">
+              <button
+                type="button"
+                onClick={() => onNavigate(step.view as AppView)}
+                className={cn(
+                  "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
+                  userFeedbackClass({ press: "md" }),
+                  glassClass("card", { rim: true }),
+                )}
+              >
+                <span className="text-xs font-medium tracking-wide text-subtle uppercase">
+                  Step {index + 1}
+                </span>
+                <h2 className="font-display text-base font-semibold text-ink sm:text-lg">
+                  {step.title}
+                </h2>
+                <p className="text-sm leading-snug text-muted sm:text-base">
+                  {step.body}
+                </p>
+              </button>
             </li>
           ))}
         </ol>
