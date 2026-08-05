@@ -159,26 +159,30 @@ People) sit in that shell — glass over the photo, not a second full-screen
 backdrop layer. Overview cards, the focused card, and the record / Quick Log
 buttons are glass over that photo.
 
-## 3b. Desktop, not mobile-stretched
+## 3b. Desktop & tablet, not mobile-stretched
 
-Below `lg` (1024px) the app is the phone-first flow in `AppShell` — full
-bleed, one column, exactly what §0–§3 describe. At `lg` and up, `page.tsx`
+Below `md` (768px) the app is the phone-first flow in `AppShell` — full
+bleed, one column, exactly what §0–§3 describe. At `md` and up, `page.tsx`
 switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
-`DesktopWorkspace` — on the **Refuge** page, a persistent list of everyone
-on the left (quick switch while recording) and the current person's card
-with the record button directly beneath it on the right. **People** and
-**History** are their own pages via the hamburger (same `AppView` switch as
-Quick Log), not overlays. Only one shell tree is ever mounted
-(`useMediaQuery`, not a CSS breakpoint toggling visibility) — mounting both
-would run two copies of `LiveClockButton`'s animation-frame loop at once.
+shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
+page, `DesktopWorkspace` — a persistent list of everyone on the left (quick
+switch while recording) and the current person's card with the record button
+directly beneath it on the right. **Tablet (`768–1023`)** is the stressed
+band for nav density; page links stay labeled (short “Log” below `lg`), and
+Export / Dana sit in a quiet actions cluster so they don’t fight UC-1.
+**People**, **History**, and the other destinations are their own pages via
+the top nav (same `AppView` switch as Quick Log), not overlays. Only one
+shell tree is ever mounted (`useMediaQuery`, not a CSS breakpoint toggling
+visibility) — mounting both would run two copies of `LiveClockButton`'s
+animation-frame loop at once.
 
-`RefugeView` (mobile) and `DesktopWorkspace` (desktop) share their targeting
-logic through one hook, [`usePhaseTarget`](../lib/use-phase-target.ts),
+`RefugeView` (mobile) and `DesktopWorkspace` (desktop / tablet) share their
+targeting logic through one hook, [`usePhaseTarget`](../lib/use-phase-target.ts),
 precisely so "which phase is armed" can't quietly diverge between the two
 layouts. What's deliberately *not* shared is the interaction model: mobile
 swipes between people in a carousel because that's what a touch screen
-affords; desktop has no carousel at all — clicking someone in the list
+affords; desktop/tablet has no carousel at all — clicking someone in the list
 *is* the navigation, because a persistent list is what a pointer and a wide
 screen afford. Resizing the mobile card up doesn't produce this; the two
 had to be designed separately from the same data and handlers.
@@ -262,19 +266,25 @@ separator — callers can push items in any order.
 
 **Confirming — two clicks, never a dialog.**
 [`useArmedAction`](../lib/use-armed-action.ts) is the only way a destructive
-action happens. The first press *arms* it: **the value about to be destroyed
-turns red**, and **the same control** becomes a filled danger chip
-(`bg-danger-600` / white glyph — contrast-checked; no inset ring). It does
-not sprout a second Confirm/Cancel pair. The second press on that same
-control carries it out. It disarms itself after a few seconds if you walk
-away. **At most one** armed control is live app-wide — arming another
-disarms the previous.
+action happens. The first press *arms* it: **every subject about to be
+destroyed turns `text-danger-600`**, and **the same control** becomes a
+filled danger chip (`bg-danger-600` / white glyph — contrast-checked; no
+inset ring). It does not sprout a second Confirm/Cancel pair. The second
+press on that same control carries it out. It disarms itself after a few
+seconds if you walk away. **At most one** armed control is live app-wide —
+arming another disarms the previous.
+
+**Armed-subject gate (ship).** When anything is armed to destroy, the
+*subject copy* goes danger red — not only the chip. Same rule on Person
+card, Fields rows, and Quick Log; no surface may arm silently with only a
+red chip.
 
 | Action | What turns red / fills |
 | --- | --- |
-| Reset one time | That time (text) + filled danger reset chip — never a ring on the stamp |
-| Reset all times | All three times |
-| Delete a person | Their name |
+| Reset one time | That field’s **label + time** + filled danger reset chip — never a ring on the stamp |
+| Reset all times | Person **name** + every field **label + time** |
+| Delete a person | Their **name** |
+| Delete a field | That field’s **label** + filled danger delete chip |
 | Delete a logged time | That time (text) + filled danger delete chip |
 | Clear the whole log | Every logged time |
 
@@ -313,6 +323,25 @@ a second hover recipe locally.
 Triggers (hamburger / ⋯) stay a **circular** hit target — no outline at
 idle. Presence from a larger glyph (`size-6` / `size-7`); hover/open use the
 shared feedback cover + blue icon.
+
+**State coverage checklist (ship gate).** For every interactive surface,
+verify these are *visibly distinct* — not only wired in props:
+
+| Must show | Examples |
+| --- | --- |
+| Idle | Default glass / muted label |
+| Hover (pointer) | Feedback wash |
+| Pressed | Bounce + active wash |
+| Selected / armed / current | Held wash and/or inset ring + ink — **must match the caption that says what will happen** (e.g. field target ↔ “Tap to record X”) |
+| Disabled | Opacity, no pointer |
+| Focus-visible | Global ring |
+| Error / armed-destroy | Danger fill **and** subject text `text-danger-600` (see Confirming gate) |
+
+If a parent uses `overflow-hidden`, prefer **`ring-inset`** (or border) over
+outset rings — otherwise the “selected” cue clips away and looks like no
+state at all. Before merge: walk the primary path (UC-1) and confirm every
+armed/selected thing the copy refers to is marked on screen — including
+armed-destroy **subject text**, not only the chip.
 
 ## 4a. Units
 
@@ -477,11 +506,19 @@ pair is never adjacent to the destructive one. Editing writes the corrected
 time rather than re-capturing, because re-capturing would stamp *now* — not the
 moment that actually happened.
 
+**Armed / selected empty field (UC-1 target).** The phase the record button
+will stamp must be glanceable on the card — not only in the button caption.
+Empty target stamps use: inset `flagblue-600` ring + held feedback wash +
+ink label (`aria-current`). Use `ring-inset` so overflow-hidden glass rows
+don’t clip the ring away. Idle empty fields stay muted with no ring.
+
 **Arming an empty field out of order** (Sangha while Buddha's still empty)
 asks first instead of either silently allowing it or blocking it outright —
 see [`USE-CASES.md`](./USE-CASES.md) gap #5. Same reveal as filled-row
 actions (§5a): the stamp packs to **"Jump here"** at fixed height, with
 glass **X · OK** chips on the right — the row never expands vertically.
+While open it uses the **same active cue** as the record target (inset ring
++ held wash + ink label) so the row reads as armed, not idle.
 Tapping the phase that's actually next stays exactly as instant as capture
 itself needs to be — the question only ever interrupts the *uncommon* path.
 

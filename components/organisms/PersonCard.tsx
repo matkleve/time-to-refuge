@@ -158,6 +158,10 @@ export function PersonCard({
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- the field only
              appears on an explicit user action, so focusing it is expected. */
           autoFocus
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          name="tk-person-name"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commitName}
@@ -173,7 +177,7 @@ export function PersonCard({
           <h2
             className={cn(
               "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate px-2 font-display text-2xl font-semibold",
-              remove.armed ? "text-danger-600" : "text-ink",
+              remove.armed || resetAll.armed ? "text-danger-600" : "text-ink",
             )}
           >
             {isComplete(person, fields) && (

@@ -71,7 +71,7 @@ export function LiveClockButton({
       >
         <span
           className={cn(
-            "text-xs tracking-[0.18em] uppercase",
+            "text-sm tracking-[0.14em] uppercase",
             armed ? "text-white/85" : "text-muted",
           )}
         >

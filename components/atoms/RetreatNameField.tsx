@@ -42,6 +42,10 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an explicit tap. */
           autoFocus
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          name="tk-retreat-name"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commit}
@@ -55,7 +59,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
           placeholder="Retreat name"
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
-          className="box-border max-w-full min-w-[8rem] bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
+          className="box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70 focus:outline-none"
         />
       </div>
     );

@@ -17,6 +17,7 @@ import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { PageTitle } from "@/components/atoms/PageTitle";
 import { IconButton } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * One logged time — idle = glass stamp only. Tap opens the Copy / Delete
@@ -150,6 +151,8 @@ export function QuickLogView() {
   const [entries, setEntries] = useState<QuickLogEntry[]>([]);
   const [tz, setTz] = useState("UTC");
   const [flash, setFlash] = useState(false);
+  /** Desktop / tablet: only the hero button logs — no page-wide capture. */
+  const tapAnywhere = !useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     setEntries(loadQuickLog());
@@ -181,15 +184,20 @@ export function QuickLogView() {
 
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-       Pointer-only convenience layer so any tap on the page logs a time. The
-       keyboard-accessible equivalent is the real <button> in QuickLogButton
-       below, which is focusable and fires on Enter/Space. */
-    <div className="no-select flex flex-1 cursor-pointer flex-col overflow-hidden" onClick={handleLog}>
+       Phone: pointer-only convenience so any tap logs a time. Desktop/tablet
+       omit onClick — only QuickLogButton stamps. Keyboard uses that button. */
+    <div
+      className={cn(
+        "no-select flex flex-1 flex-col overflow-hidden",
+        tapAnywhere && "cursor-pointer",
+      )}
+      onClick={tapAnywhere ? handleLog : undefined}
+    >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Stops the page-wide tap-to-log layer; Clear / timezone are real controls. */}
       <div
-        className="flex shrink-0 flex-col gap-2 px-3 pb-1 pt-2 sm:px-5 sm:pt-3"
-        onClick={(e) => e.stopPropagation()}
+        className="flex shrink-0 flex-col gap-2 px-3 pb-1 pt-2 md:px-0 md:pt-3"
+        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
       >
         <PageTitle
           title="Quick Log"
@@ -218,10 +226,10 @@ export function QuickLogView() {
         <TimezoneSelect value={tz} onChange={setTz} chip />
       </div>
 
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col-reverse gap-2 overflow-y-auto px-4 py-3">
+      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col-reverse gap-2 overflow-y-auto px-1 py-3 md:px-0">
         {sorted.length === 0 ? (
           <GlassEmptyNote className="mx-auto">
-            Tap anywhere to log a time.
+            {tapAnywhere ? "Tap anywhere to log a time." : "Tap the button to log a time."}
           </GlassEmptyNote>
         ) : (
           sorted.map((entry, i) => (
@@ -237,7 +245,7 @@ export function QuickLogView() {
         )}
       </div>
 
-      <div className="mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+      <div className="mx-auto w-full max-w-xl px-1 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:px-0">
         <QuickLogButton flash={flash} onLog={handleLog} />
       </div>
     </div>

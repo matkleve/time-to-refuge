@@ -179,6 +179,25 @@
   :where(button, [role="button"], [role="menuitem"])[aria-disabled="true"] {
     cursor: not-allowed;
   }
+
+  /*
+   * Safari / Chrome paint autofill with a solid yellow (or blue) fill that
+   * punches through glass pills. Neutralize to transparent + ink text so the
+   * parent glass rim stays the surface. Long transition is the usual trick
+   * to keep the UA from re-applying its fill on focus.
+   */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-ink);
+    caret-color: var(--color-ink);
+    border-radius: inherit;
+    transition:
+      background-color 99999s ease-out,
+      color 99999s ease-out;
+    box-shadow: 0 0 0 1000px transparent inset;
+  }
 }
 
 /*
@@ -277,8 +296,9 @@
   }
 
   /*
-   * App header scrim — progressive fade under the brand toolbar only.
-   * Soft out before the page title band so titles stay sharp (not frosted).
+   * App header scrim — progressive fade under brand + page-title band so
+   * scrolling content softens as it disappears under the chrome. Strong blur
+   * stays in the toolbar; the title band only gets a light wash.
    */
   .header-scrim {
     pointer-events: none;
@@ -301,10 +321,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 40%,
-      transparent 78%
+      #000 45%,
+      transparent 88%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 78%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 88%);
   }
 
   .header-scrim__layer[data-strength="2"] {
@@ -313,10 +333,10 @@
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 30%,
-      transparent 65%
+      #000 32%,
+      transparent 70%
     );
-    mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 65%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 70%);
   }
 
   .header-scrim__layer[data-strength="3"] {
@@ -348,9 +368,10 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgb(255 255 255 / 0.22) 0%,
-      rgb(255 255 255 / 0.08) 45%,
-      transparent 78%
+      rgb(255 255 255 / 0.26) 0%,
+      rgb(255 255 255 / 0.1) 40%,
+      rgb(255 255 255 / 0.03) 68%,
+      transparent 90%
     );
   }
 
