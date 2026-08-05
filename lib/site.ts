@@ -1,6 +1,6 @@
-/** Canonical public URL — override with NEXT_PUBLIC_SITE_URL in production. */
+/** Canonical public URL — override with NEXT_PUBLIC_SITE_URL if needed. */
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://time-to-refuge.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.usetimekeeper.app";
 
 export const siteName = "Timekeeper";
 
