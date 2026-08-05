@@ -62,7 +62,7 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
+    <div className="app-scroll-clearance flex min-h-0 flex-1 gap-3 overflow-hidden px-1 py-3 sm:gap-4 sm:px-2 sm:py-4 lg:gap-5">
       {/* No panel shell — just stacked person chips + add, open over the backdrop. */}
       <ul
         className="flex w-48 shrink-0 flex-col gap-2 overflow-y-auto lg:w-72"
