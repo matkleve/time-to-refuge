@@ -35,6 +35,7 @@ import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import { PageEnter } from "@/components/atoms/PageEnter";
 import { PageTitle } from "@/components/atoms/PageTitle";
+import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { ViewMenu, type AppView } from "@/components/atoms/ViewMenu";
 import { DesktopNav } from "@/components/atoms/DesktopNav";
 import { AppShell } from "@/components/AppShell";
@@ -47,7 +48,6 @@ import { FieldsPage } from "@/components/organisms/FieldsPage";
 import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { useMediaQuery } from "@/lib/use-media-query";
-import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [ready, setReady] = useState(false);
@@ -317,6 +317,7 @@ export default function Home() {
       onEditTime={handleEditTime}
       onClearTime={handleClear}
       retreatName={retreatName}
+      onRetreatNameChange={setRetreatName}
     />
   );
 
@@ -389,23 +390,15 @@ export default function Home() {
     </PageEnter>
   );
 
-  const showSubheader = view === "refuge" || view === "people";
+  const showSubheader = view === "refuge";
   const subheader = showSubheader ? (
-    <div
-      className={cn(
-        "flex shrink-0 flex-col gap-2",
-        isDesktop ? "px-1 pb-1 pt-2 sm:px-2 sm:pt-3" : "px-3 pb-1 pt-2",
-      )}
+    <StickyPageChrome
+      below={
+        <RetreatNameField value={retreatName} onChange={setRetreatName} />
+      }
     >
-      {/* Desktop nav already names the page — keep the title on mobile only. */}
-      {!isDesktop &&
-        (view === "refuge" ? (
-          <PageTitle title="Session" />
-        ) : (
-          <PageTitle title="People" />
-        ))}
-      <RetreatNameField value={retreatName} onChange={setRetreatName} />
-    </div>
+      {!isDesktop ? <PageTitle title="Session" /> : null}
+    </StickyPageChrome>
   ) : null;
 
   if (isDesktop) {
@@ -431,10 +424,10 @@ export default function Home() {
           onExportAll={() => downloadCsv(people, fields, retreatName)}
           exportDisabled={people.length === 0}
         />
-        <div className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden pt-[4.5rem]">
-          <div className="app-content flex min-h-0 flex-1 flex-col px-4 sm:px-5">
+        <div className="relative z-0 min-h-0 flex-1">
+          <div className="app-content absolute inset-0 flex flex-col px-4 sm:px-5">
             {subheader}
-            {page}
+            <div className="relative min-h-0 flex-1">{page}</div>
           </div>
         </div>
       </DesktopShell>
@@ -459,15 +452,15 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <div
-        className="relative z-0 flex min-h-0 flex-1 flex-col overflow-hidden"
-        style={{
-          paddingTop:
-            "calc(max(0.375rem, env(safe-area-inset-top, 0px)) + 2.75rem + 0.375rem)",
-        }}
-      >
-        {subheader}
-        {page}
+      <div className="relative z-0 min-h-0 flex-1">
+        {view === "refuge" ? (
+          <div className="absolute inset-0 flex flex-col overflow-hidden">
+            {subheader}
+            <div className="relative min-h-0 flex-1">{page}</div>
+          </div>
+        ) : (
+          page
+        )}
       </div>
     </AppShell>
   );

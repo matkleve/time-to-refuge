@@ -17,7 +17,10 @@ export function PageEnter({
   return (
     <div
       key={viewKey}
-      className={cn("flex min-h-0 flex-1 flex-col animate-fade-in-up", className)}
+      className={cn(
+        "relative flex min-h-0 flex-1 flex-col animate-fade-in-up",
+        className,
+      )}
     >
       {children}
     </div>

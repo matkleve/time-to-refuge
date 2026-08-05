@@ -37,10 +37,8 @@ export function DanaPage() {
   }
 
   return (
-    <ListPageFrame>
+    <ListPageFrame pin={<PageTitle title={dana.pageTitle} />}>
       <div className="mx-auto flex w-full max-w-xl flex-col gap-5 pb-2">
-        <PageTitle title={dana.pageTitle} className="shrink-0" />
-
         {/* Same rounded shell as PersonCard — photo inset, not full-bleed. */}
         <div
           className={cn(

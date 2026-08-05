@@ -75,34 +75,36 @@ export function FieldsPage({ fields, onChange }: FieldsPageProps) {
   }
 
   return (
-    <ListPageFrame>
-      <div className="shrink-0 space-y-1">
-        <PageTitle
-          title="Fields"
-          trailing={
-            <IconButton
-              icon={RotateCcw}
-              label={
-                resetAll.armed
-                  ? "Confirm reset fields to Buddha, Dharma, Sangha"
-                  : "Reset fields to defaults"
-              }
-              showLabel="Reset"
-              glass
-              tone="danger"
-              size="md"
-              press="md"
-              disabled={atDefault}
-              armed={resetAll.armed}
-              onClick={resetAll.trigger}
-            />
-          }
-        />
-        <p className="text-sm text-muted">
-          Choose what you record — rename, reorder, or add your own.
-        </p>
-      </div>
-
+    <ListPageFrame
+      pin={
+        <div className="space-y-1">
+          <PageTitle
+            title="Fields"
+            trailing={
+              <IconButton
+                icon={RotateCcw}
+                label={
+                  resetAll.armed
+                    ? "Confirm reset fields to Buddha, Dharma, Sangha"
+                    : "Reset fields to defaults"
+                }
+                showLabel="Reset"
+                glass
+                tone="danger"
+                size="md"
+                press="md"
+                disabled={atDefault}
+                armed={resetAll.armed}
+                onClick={resetAll.trigger}
+              />
+            }
+          />
+          <p className="text-sm text-muted">
+            Choose what you record — rename, reorder, or add your own.
+          </p>
+        </div>
+      }
+    >
       {/* Side pad so glass chip shadows aren’t clipped by the scroller. */}
       <ul className="mx-auto mt-4 w-full max-w-xl space-y-3 px-2 pt-1.5 pb-2">
         {fields.map((field, index) => (

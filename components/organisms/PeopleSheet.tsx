@@ -2,8 +2,12 @@
 
 import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
+import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
+import { PageTitle } from "@/components/atoms/PageTitle";
+import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -17,11 +21,12 @@ interface PeopleSheetProps {
   onDelete: (id: string) => void;
   onRename: (id: string, name: string) => void;
   retreatName?: string;
+  onRetreatNameChange?: (name: string) => void;
 }
 
 /**
- * People page — same open backdrop as Refuge (no full-page glass panel).
- * Title + retreat chip live in the shell chrome above this list.
+ * People page — open backdrop. Full-bleed scroller under brand + sticky
+ * title so cards fade through the chrome scrims.
  */
 export function PeopleSheet({
   people,
@@ -35,13 +40,26 @@ export function PeopleSheet({
   onDelete,
   onRename,
   retreatName = "",
+  onRetreatNameChange,
 }: PeopleSheetProps) {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4 md:px-0"
+      className="absolute inset-0 z-0 overflow-y-auto overscroll-contain"
       style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
     >
-      <ul className="mx-auto w-full max-w-xl space-y-3">
+      <StickyPageChrome
+        below={
+          onRetreatNameChange ? (
+            <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
+          ) : null
+        }
+      >
+        {!isDesktop ? <PageTitle title="People" /> : null}
+      </StickyPageChrome>
+
+      <ul className="mx-auto w-full max-w-xl space-y-3 px-3 md:px-0">
         {people.map((p) => (
           <li key={p.id} className="animate-fade-in-up">
             <PersonCard
