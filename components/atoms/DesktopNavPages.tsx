@@ -1,8 +1,7 @@
 "use client";
 
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { glassNavTabClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassNavTabClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { DESKTOP_NAV_PAGES } from "@/components/atoms/DesktopNav";
@@ -36,8 +35,7 @@ export function DesktopNavPages({
             className={cn(
               "inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-full lg:h-11 lg:w-auto lg:px-3 xl:px-3.5",
               "text-base font-semibold text-ink",
-              glassNavTabClass(selected),
-              userFeedbackClass({ press: "md", on: selected }),
+              interactiveGlassNavTabClass(selected),
             )}
           >
             <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />

@@ -1,8 +1,7 @@
 "use client";
 
 import { controlMinH } from "@/lib/control-size";
-import { actionClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveActionClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import type { GlassMenuPrimaryAction } from "./types";
 
@@ -23,15 +22,19 @@ export function MenuPrimaryAction({
           role="menuitem"
           onClick={onSelect}
           className={cn(
-            "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-            controlMinH.md,
-            /* Named CTA exception: brightness on large actionClass fills. */
-            "hover:brightness-[1.06]",
-            userFeedbackClass({ press: "md", on: action.selected }),
-            "user-feedback--on-accent",
-            actionClass("primary"),
-            /* Inset ring — outset clips awkwardly on glass panels. */
-            action.selected && "ring-2 ring-inset ring-white/70",
+            interactiveActionClass(
+              "primary",
+              { press: "md", on: action.selected },
+              cn(
+                "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
+                controlMinH.md,
+                /* Named CTA exception: brightness on large actionClass fills. */
+                "hover:brightness-[1.06]",
+                "user-feedback--on-accent",
+                /* Inset ring — outset clips awkwardly on glass panels. */
+                action.selected && "ring-2 ring-inset ring-white/70",
+              ),
+            ),
           )}
         >
           <Icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />

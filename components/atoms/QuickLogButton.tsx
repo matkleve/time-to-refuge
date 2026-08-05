@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock } from "@/lib/format";
-import { actionClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveActionClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { LocationCheck } from "./LocationCheck";
 
@@ -50,10 +49,7 @@ export function QuickLogButton({
           "no-select flex min-h-38 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl py-6",
           "transition-[box-shadow,background-color,filter] duration-200 ease-out",
           "hover:brightness-[1.04]",
-          userFeedbackClass({ press: "lg" }),
-          /* Saffron glass + specular light catch. Ink on gold (contrast rule). */
-          actionClass("accent"),
-          flash && "animate-flash-blue",
+          interactiveActionClass("accent", { press: "lg" }, flash ? "animate-flash-blue" : undefined),
         )}
       >
         <span className="text-xs tracking-[0.18em] text-ink/80 uppercase">{day}</span>

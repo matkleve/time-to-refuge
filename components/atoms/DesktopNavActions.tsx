@@ -3,7 +3,7 @@
 import { Download, HeartHandshake, Redo2, Undo2 } from "lucide-react";
 import { IconButton } from "@/components/atoms/IconButton";
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { glassNavTabClass } from "@/lib/surfaces";
+import { interactiveGlassNavTabClass } from "@/lib/interactive-glass";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
@@ -71,8 +71,7 @@ export function DesktopNavActions({
           quiet
           size="sm"
           tone={view === "dana" ? "accent" : "neutral"}
-          feedbackOn={view === "dana"}
-          className={glassNavTabClass(view === "dana")}
+          surfaceClass={interactiveGlassNavTabClass(view === "dana")}
           onClick={() => onChange("dana")}
         />
       </div>

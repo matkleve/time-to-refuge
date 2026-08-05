@@ -1,4 +1,4 @@
-import { glassFlushChipClass } from "@/lib/surfaces";
+import { interactiveGlassFlushChipClass } from "@/lib/interactive-glass";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import {
@@ -20,6 +20,7 @@ export function buildIconButtonClassName({
   press,
   feedbackOn,
   hideWhenDisabled,
+  surfaceClass,
   className,
 }: {
   visible: string | null;
@@ -30,13 +31,17 @@ export function buildIconButtonClassName({
   press: "sm" | "md" | "lg";
   feedbackOn: boolean;
   hideWhenDisabled: boolean;
+  /** Combined glass + feedback (e.g. nav tab) — replaces chip glass + userFeedback. */
+  surfaceClass?: string;
   className?: string;
 }) {
   return cn(
     "inline-flex shrink-0 items-center justify-center rounded-full",
-    userFeedbackClass({ press, on: feedbackOn }),
+    surfaceClass ??
+      (useGlass
+        ? interactiveGlassFlushChipClass({ press, on: feedbackOn })
+        : userFeedbackClass({ press, on: feedbackOn })),
     visible ? iconButtonLabeledSizeClass[size] : iconButtonSizeClass[size],
-    useGlass ? glassFlushChipClass() : null,
     iconButtonToneClass(useGlass, armed, tone),
     hideWhenDisabled && "disabled:opacity-0",
     className,

@@ -29,6 +29,7 @@ npm run a11y
 - Every `overflow-y-auto` list of controls → `focus-safe-scroll` or inset focus cues.
 - Menus/popovers → portal (`GlassMenu`).
 - Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).
+- **Interactive glass** — tappable controls use `lib/interactive-glass.ts` helpers (`interactiveGlassFlushClass`, `interactiveGlassRowClass`, `interactiveActionClass`, …). Material + `userFeedbackClass` on **one** element. Never pair `glass*Class` / `actionClass` with `userFeedbackClass` manually in components (`npm run a11y:interactive`).
 
 ## Session desktop
 

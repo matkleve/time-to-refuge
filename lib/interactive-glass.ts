@@ -1,0 +1,64 @@
+/**
+ * Tappable glass — material + `userFeedbackClass` on ONE element.
+ *
+ * PressBounceRegister scales the nearest `.user-feedback` node. If glass
+ * lives on a parent and feedback on a child, only the inner content bounces.
+ * Always use these helpers for interactive controls — never pair
+ * `glass*Class` + `userFeedbackClass` manually in components.
+ */
+import { cn } from "@/lib/utils";
+import {
+  actionClass,
+  glassClass,
+  glassFlushChipClass,
+  glassFlushClass,
+  glassFlushRowClass,
+  glassNavTabClass,
+} from "@/lib/surfaces";
+import { userFeedbackClass, type FeedbackPress } from "@/lib/user-feedback";
+
+export type InteractiveFeedback = {
+  press?: FeedbackPress;
+  on?: boolean;
+};
+
+export function interactiveGlassFlushClass(
+  kind: "panel" | "card" | "cardCurrent" = "card",
+  feedback: InteractiveFeedback = {},
+): string {
+  return cn(glassFlushClass(kind), userFeedbackClass(feedback));
+}
+
+export function interactiveGlassClass(
+  kind: "panel" | "card" | "cardCurrent",
+  opts: { rim?: boolean; lift?: boolean } = {},
+  feedback: InteractiveFeedback = {},
+): string {
+  return cn(glassClass(kind, opts), userFeedbackClass(feedback));
+}
+
+export function interactiveGlassRowClass(feedback: InteractiveFeedback = {}): string {
+  return cn(glassFlushRowClass(), userFeedbackClass(feedback));
+}
+
+export function interactiveGlassFlushChipClass(feedback: InteractiveFeedback = {}): string {
+  return cn(glassFlushChipClass(), userFeedbackClass(feedback));
+}
+
+export function interactiveGlassNavTabClass(
+  selected: boolean,
+  feedback: InteractiveFeedback = {},
+): string {
+  return cn(
+    glassNavTabClass(selected),
+    userFeedbackClass({ press: "md", on: selected, ...feedback }),
+  );
+}
+
+export function interactiveActionClass(
+  kind: "primary" | "primaryIdle" | "accent",
+  feedback: InteractiveFeedback = {},
+  className?: string,
+): string {
+  return cn(actionClass(kind), userFeedbackClass(feedback), className);
+}

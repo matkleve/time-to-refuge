@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { glassFlushClass } from "@/lib/surfaces";
+import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
@@ -38,9 +38,10 @@ export function SessionPersonRow({
     <div
       className={cn(
         "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
-        glassFlushClass(isCurrent ? "cardCurrent" : "card"),
-        /* Bounce the whole chip — glass is on this shell, not the name button. */
-        userFeedbackClass({ press: "sm", on: isCurrent }),
+        interactiveGlassFlushClass(isCurrent ? "cardCurrent" : "card", {
+          press: "sm",
+          on: isCurrent,
+        }),
       )}
     >
       <button
