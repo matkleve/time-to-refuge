@@ -119,6 +119,24 @@ if (
 if (!/\bh-full\b/.test(pageEnter) || !/\bflex-1\b/.test(pageEnter)) {
   shellProblems.push("PageEnter must keep h-full + flex-1");
 }
+if (/\banimate-fade-in-up\b/.test(pageEnter)) {
+  shellProblems.push(
+    "PageEnter must not use animate-fade-in-up (translateY flashes a document scrollbar on switch)",
+  );
+}
+if (!/\banimate-fade-in\b/.test(pageEnter)) {
+  shellProblems.push("PageEnter should use animate-fade-in (opacity only)");
+}
+
+const desktopShell = read("components/DesktopShell.tsx");
+if (!/\boverflow-hidden\b/.test(desktopShell) || !/\bh-dvh\b/.test(desktopShell)) {
+  shellProblems.push("DesktopShell must be h-dvh overflow-hidden (no document scroll)");
+}
+
+const globals = read("app/globals.css");
+if (!/html,\s*\n\s*body\s*\{[^}]*overflow:\s*hidden/s.test(globals)) {
+  shellProblems.push("html, body must set overflow:hidden so page switches never jump");
+}
 if (
   !/\bh-full\b/.test(listFrame) ||
   !/\bflex-1\b/.test(listFrame) ||
@@ -153,11 +171,27 @@ const shellRows: Row[] = [
     problems: shellProblems.filter((p) => p.includes("page.tsx") || p.includes("PageEnter")),
   },
   {
+    page: "(shell) DesktopShell",
+    file: "components/DesktopShell.tsx",
+    layers: layoutSignalCount(desktopShell),
+    root: "h-dvh overflow-hidden flex-col",
+    problems: shellProblems.filter((p) => p.includes("DesktopShell")),
+  },
+  {
+    page: "(shell) document",
+    file: "app/globals.css",
+    layers: 0,
+    root: "html/body overflow hidden",
+    problems: shellProblems.filter((p) => p.includes("html, body")),
+  },
+  {
     page: "(shell) PageEnter",
     file: "components/atoms/PageEnter.tsx",
     layers: layoutSignalCount(pageEnter),
-    root: "flex h-full flex-1 flex-col",
-    problems: shellProblems.filter((p) => p.includes("PageEnter")),
+    root: "flex h-full flex-1 + fade (no translate)",
+    problems: shellProblems.filter(
+      (p) => p.includes("PageEnter") || p.includes("animate-fade"),
+    ),
   },
   {
     page: "(shell) ListPageFrame",

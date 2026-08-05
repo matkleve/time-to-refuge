@@ -158,6 +158,7 @@
   html,
   body {
     height: 100%;
+    overflow: hidden; /* shells own scroll — never flash a document scrollbar */
     overscroll-behavior-y: none;
   }
 
@@ -576,6 +577,16 @@
   }
 }
 
+/* Page switches only — no translateY (that flashes a document scrollbar). */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes scale-in {
   from {
     opacity: 0;
@@ -629,6 +640,10 @@
 
 @utility animate-fade-in-up {
   animation: fade-in-up 220ms ease-out both;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 180ms ease-out both;
 }
 
 @utility animate-scale-in {

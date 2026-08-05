@@ -13,7 +13,7 @@ import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
 export function DesktopShell({ children }: { children: ReactNode }) {
   return (
     <div
-      className={`relative flex h-dvh w-full flex-col ${BACKDROP_CLASS}`}
+      className={`relative flex h-dvh w-full flex-col overflow-hidden ${BACKDROP_CLASS}`}
       style={backdropStyle}
     >
       {children}
