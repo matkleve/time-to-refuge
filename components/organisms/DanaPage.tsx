@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
 import { controlMinH } from "@/lib/control-size";
-import { actionClass, glassClass } from "@/lib/surfaces";
+import { glassChipClass, glassClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
@@ -28,6 +28,8 @@ async function copyText(value: string): Promise<boolean> {
  *
  * Desktop: two-column board (story + image | progress + transfer).
  * Phone: single column, image first.
+ * Actions use IconButton `glass` / `glassChipClass` — the cloudy round chip
+ * (not `quiet`, which is glyph-only over the backdrop).
  */
 export function DanaPage() {
   const [copied, setCopied] = useState<"iban" | "bic" | null>(null);
@@ -120,30 +122,28 @@ export function DanaPage() {
               </p>
             </div>
 
-            <button
-              type="button"
+            <IconButton
+              icon={copied === "iban" ? Check : Copy}
+              label={
+                copied === "iban"
+                  ? dana.primaryCta.copiedLabel
+                  : dana.primaryCta.label
+              }
+              showLabel={
+                copied === "iban"
+                  ? dana.primaryCta.copiedLabel
+                  : dana.primaryCta.label
+              }
+              glass
+              size="md"
+              tone="accent"
+              press="md"
               onClick={() => handleCopy("iban", dana.bank.iban)}
               className={cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-medium text-white",
-                controlMinH.md,
-                "hover:brightness-[1.06]",
-                userFeedbackClass({ press: "lg" }),
-                "user-feedback--on-accent",
-                actionClass("primary"),
+                "w-full max-w-none justify-center [&_span]:max-w-none",
+                copied === "iban" && "text-saffron-700",
               )}
-            >
-              {copied === "iban" ? (
-                <>
-                  <Check className="size-4" aria-hidden />
-                  {dana.primaryCta.copiedLabel}
-                </>
-              ) : (
-                <>
-                  <Copy className="size-4" aria-hidden />
-                  {dana.primaryCta.label}
-                </>
-              )}
-            </button>
+            />
 
             <blockquote className="space-y-1 border-l-2 border-saffron-400 pl-3 md:hidden">
               <p className="font-display text-base text-ink">{dana.quote.text}</p>
@@ -152,7 +152,7 @@ export function DanaPage() {
               </footer>
             </blockquote>
 
-            <ul className="space-y-2">
+            <ul className="flex flex-wrap items-center gap-2">
               {dana.links.map((link) => (
                 <li key={link.href}>
                   <a
@@ -160,13 +160,14 @@ export function DanaPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "flex items-center justify-center gap-2 rounded-xl px-4 text-base font-medium text-flagblue-600",
+                      "inline-flex items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted hover:text-ink",
                       controlMinH.md,
+                      glassChipClass(),
                       userFeedbackClass({ press: "md" }),
                     )}
                   >
                     {link.label}
-                    <ExternalLink className="size-4" aria-hidden />
+                    <ExternalLink className="size-4 shrink-0" aria-hidden />
                   </a>
                 </li>
               ))}
