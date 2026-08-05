@@ -3,7 +3,10 @@
 import { Check } from "lucide-react";
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
+import {
+  interactiveGlassFlushClass,
+  interactiveSessionPhaseDotClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface SessionPersonRowProps {
@@ -73,14 +76,7 @@ export function SessionPersonRow({
                     : `Record ${fieldLabel(fields, field.id)} for ${person.name}`
                 }
                 aria-pressed={armed || undefined}
-                className={cn(
-                  "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-none",
-                  filled
-                    ? "border-transparent bg-saffron-400/55 text-ink"
-                    : armed
-                      ? "border-flagblue-600 bg-flagblue-600/15 text-transparent"
-                      : "border-ink/25 bg-white/35 text-transparent",
-                )}
+                className={interactiveSessionPhaseDotClass({ filled, armed })}
               >
                 <Check
                   className={cn("size-3.5", filled ? "opacity-100" : "opacity-0")}

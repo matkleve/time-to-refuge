@@ -39,6 +39,26 @@ export function interactiveFeedbackClass(feedback: InteractiveFeedback = {}): st
   return userFeedbackClass(feedback);
 }
 
+/**
+ * Session rail field circle — tappable (press bounce on pointerdown) but armed
+ * state is border/fill only. Never pass `on: armed`: that held wash re-renders
+ * when the card changes target and reads as a spurious bounce/jump.
+ */
+export function interactiveSessionPhaseDotClass(opts: {
+  filled: boolean;
+  armed: boolean;
+}): string {
+  return cn(
+    "inline-flex size-7 shrink-0 items-center justify-center rounded-full border-2 transition-none",
+    interactiveFeedbackClass({ press: "sm" }),
+    opts.filled
+      ? "border-transparent bg-saffron-400/55 text-ink"
+      : opts.armed
+        ? "border-flagblue-600 bg-flagblue-600/15 text-transparent"
+        : "border-ink/25 bg-white/35 text-transparent",
+  );
+}
+
 /** Re-export for destroy-arm menu rows / icon buttons — not paired with glass. */
 export { armedDestroyClass } from "@/lib/user-feedback";
 
