@@ -11,10 +11,14 @@ interface ListPageFrameProps {
   /** Extra pinned block under the title (e.g. retreat chip). */
   pinBelow?: ReactNode;
   /**
-   * `scroll` — document page (default): one scroller, lists fade under scrims.
+   * `scroll` — document page (default): one scroller, lists fade under brand.
    * `workspace` — fixed viewport slot: pin + flex children (Session, Quick Log, Home).
    */
   fill?: "scroll" | "workspace";
+  /** Page owns StickyPageChrome internally — skip fallback header clearance. */
+  selfClearance?: boolean;
+  /** Page applies PAGE_INLINE_GUTTER internally — skip on body wrapper. */
+  selfGutter?: boolean;
 }
 
 const HEADER_CLEARANCE =
@@ -30,6 +34,8 @@ export function ListPageFrame({
   pinBelow,
   className,
   fill = "scroll",
+  selfClearance = false,
+  selfGutter = false,
 }: ListPageFrameProps) {
   const isWorkspace = fill === "workspace";
 
@@ -55,9 +61,9 @@ export function ListPageFrame({
       ) : null}
       <div
         className={cn(
-          PAGE_INLINE_GUTTER,
+          !selfGutter && PAGE_INLINE_GUTTER,
           isWorkspace && "flex min-h-0 flex-1 flex-col",
-          !pin && HEADER_CLEARANCE,
+          !pin && !selfClearance && HEADER_CLEARANCE,
         )}
       >
         {children}

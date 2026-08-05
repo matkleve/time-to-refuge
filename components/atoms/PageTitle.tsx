@@ -12,8 +12,6 @@ interface PageTitleProps {
 /**
  * In-page heading under the brand toolbar. Always visible — DesktopNav
  * marks the section, this names the page you’re in (Fields / History / …).
- * Hiding only the word on `md` left a frosted TitleScrim band with a lone
- * Reset/Clear chip and no title — that read as a random light shadow.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (

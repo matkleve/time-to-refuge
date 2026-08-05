@@ -110,14 +110,26 @@ export const GLASS_SURFACES = {
 
 export function glassClass(
   kind: "panel" | "card" | "cardCurrent",
-  opts: { rim?: boolean } = {},
+  opts: { rim?: boolean; lift?: boolean } = {},
 ): string {
+  const lift = opts.lift !== false;
   return cx(
     GLASS[kind].fill,
     GLASS_FX,
-    GLASS_SPECULAR,
+    lift && GLASS_SPECULAR,
     opts.rim && GLASS_RIM,
   );
+}
+
+/**
+ * Dense list / rail chips flush to a scrollport edge — fill + blur + rim,
+ * **no** soft-lift shadow. Soft-lift needs horizontal bleed; bleed fought
+ * the one-gutter rule (`px-0`) and clipped pills on the left.
+ */
+export function glassFlushClass(
+  kind: "panel" | "card" | "cardCurrent" = "card",
+): string {
+  return glassClass(kind, { rim: true, lift: false });
 }
 
 /**
@@ -135,17 +147,35 @@ export function glassRowClass(): string {
   return cx(GLASS.cardRow.fill, "shadow-glass-row");
 }
 
+/** Field / stamp row inside scrollports — no outer shadow (clip-safe). */
+export function glassFlushRowClass(): string {
+  return GLASS.cardRow.fill;
+}
+
 /** Round action chip — cloudy glass with blur so it reads over the photo too. */
 export function glassChipClass(): string {
   return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM, GLASS_SPECULAR);
 }
 
+/** Chip at gutter / list edge — rim + blur, no soft-lift. */
+export function glassFlushChipClass(): string {
+  return cx(GLASS.cardRow.fill, GLASS_FX, GLASS_RIM);
+}
+
 /**
  * Selected desktop nav tab — quiet white glass chip (not saffron).
- * Pair with `font-semibold` at the call site.
+ * Pair with `font-semibold` on every tab so selected state does not shift width.
  */
 export function glassNavSelectedClass(): string {
-  return glassChipClass();
+  return glassFlushChipClass();
+}
+
+/** Idle nav tab — same 1px border box as selected; no fill/blur (no layout jump). */
+export const GLASS_NAV_TAB_IDLE =
+  "border border-transparent bg-transparent shadow-none backdrop-blur-none backdrop-saturate-100" as const;
+
+export function glassNavTabClass(selected: boolean): string {
+  return selected ? glassNavSelectedClass() : GLASS_NAV_TAB_IDLE;
 }
 
 export function filledCardClass(isCurrent = false): string {

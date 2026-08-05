@@ -8,8 +8,11 @@ import {
   useState,
   type RefObject,
 } from "react";
-import { PANEL_WIDTH } from "@/lib/location-check/tone-styles";
 import type { PanelBox } from "@/lib/location-check/types";
+import { PANEL_WIDTH } from "@/lib/location-check/tone-styles";
+import {
+  placePanelAboveTrigger,
+} from "@/lib/popover-placement";
 
 export function usePanelPlacement(open: boolean) {
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -20,14 +23,8 @@ export function usePanelPlacement(open: boolean) {
     const el = triggerRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const left = Math.min(
-      Math.max(8, r.right - PANEL_WIDTH),
-      window.innerWidth - PANEL_WIDTH - 8,
-    );
-    setBox({
-      bottom: Math.max(8, window.innerHeight - r.top + 8),
-      left,
-    });
+    const { left, bottom, width } = placePanelAboveTrigger(r, PANEL_WIDTH);
+    setBox({ bottom, left, width });
   }, []);
 
   useLayoutEffect(() => {

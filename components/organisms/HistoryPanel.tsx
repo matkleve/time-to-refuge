@@ -2,7 +2,7 @@
 
 import { LogEntry, FieldDef, fieldLabel } from "@/lib/types";
 import { formatLogTime } from "@/lib/format";
-import { glassClass } from "@/lib/surfaces";
+import { glassFlushClass } from "@/lib/surfaces";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { PageTitle } from "@/components/atoms/PageTitle";
@@ -54,7 +54,7 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
                 key={entry.id}
                 className={cn(
                   "rounded-2xl px-4 py-3 animate-fade-in-up",
-                  glassClass("card", { rim: true }),
+                  glassFlushClass(),
                 )}
               >
                 <p className="font-display text-base font-semibold text-ink">

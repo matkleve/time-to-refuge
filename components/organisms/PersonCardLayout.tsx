@@ -8,6 +8,7 @@ export function PersonCardLayout(props: PersonCardLayoutProps) {
     <Surface
       material={props.isCurrent ? "glass-card-current" : "glass-card"}
       rim
+      flush
       className={cn(
         "overflow-hidden rounded-3xl",
         props.fillHeight && "flex h-full min-h-0 flex-col",

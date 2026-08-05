@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import type { FieldDef } from "@/lib/types";
-import { controlMinH } from "@/lib/control-size";
-import { glassClass } from "@/lib/surfaces";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { glassFlushClass } from "@/lib/surfaces";
 import { FieldEditorRowActions } from "./FieldEditorRowActions";
 import { FieldEditorRowLabel } from "./FieldEditorRowLabel";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -44,11 +44,11 @@ export function FieldEditorRow({
   const pill = cn(
     "flex min-w-0 flex-1 items-center rounded-full px-4 py-2.5",
     controlMinH.md,
-    glassClass("card", { rim: true }),
+    glassFlushClass(),
   );
 
   return (
-    <div className={cn("flex w-full items-center gap-0", controlMinH.md)}>
+    <div className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, controlMinH.md)}>
       <FieldEditorRowLabel
         field={field}
         editing={editing}

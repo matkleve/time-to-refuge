@@ -3,7 +3,9 @@
 import { Check, X } from "lucide-react";
 import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
 import { RowActionTray } from "@/components/atoms/RowReveal";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import type { FeedbackPress } from "@/lib/user-feedback";
+import { cn } from "@/lib/utils";
 
 interface CancelConfirmTrayProps {
   open: boolean;
@@ -32,7 +34,7 @@ export function CancelConfirmTray({
 }: CancelConfirmTrayProps) {
   return (
     <RowActionTray open={open}>
-      <div className="flex shrink-0 items-center gap-2">
+      <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
         <IconButton
           icon={X}
           label={cancelLabel}

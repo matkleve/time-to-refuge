@@ -30,8 +30,8 @@ interface DesktopWorkspaceProps {
  * Desktop / tablet Session: compact progress rows on the left (name + one
  * circle per field); focused PersonCard + record on the right.
  *
- * Scrollports use `focus-safe-scroll` so outset `:focus-visible` rings are
- * not clipped by `overflow-y-auto` (see DESIGN-SYSTEM §4c).
+ * Scrollports use `focus-safe-scroll` (vertical bleed + overflow-x clip).
+ * Rail chips use `glassFlushClass` so soft-lift isn’t sliced at the edge.
  */
 export function DesktopWorkspace({
   people,

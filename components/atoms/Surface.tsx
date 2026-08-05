@@ -19,6 +19,8 @@ type SurfaceOwnProps<T extends ElementType> = {
   material: SurfaceMaterial;
   /** Soft white rim — for floating cloudy panels, not for edge-to-edge bars. */
   rim?: boolean;
+  /** No soft-lift shadow — use on cards/rows in scrollports at the gutter edge. */
+  flush?: boolean;
   className?: string;
   children?: ReactNode;
 };
@@ -26,14 +28,19 @@ type SurfaceOwnProps<T extends ElementType> = {
 type SurfaceProps<T extends ElementType> = SurfaceOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof SurfaceOwnProps<T>>;
 
-function materialClass(material: SurfaceMaterial, rim: boolean): string {
+function materialClass(
+  material: SurfaceMaterial,
+  rim: boolean,
+  flush: boolean,
+): string {
+  const lift = !flush;
   switch (material) {
     case "glass-panel":
-      return glassClass("panel", { rim });
+      return glassClass("panel", { rim, lift });
     case "glass-card":
-      return glassClass("card", { rim });
+      return glassClass("card", { rim, lift });
     case "glass-card-current":
-      return glassClass("cardCurrent", { rim });
+      return glassClass("cardCurrent", { rim, lift });
     case "filled-card":
       return filledCardClass(false);
     case "filled-card-current":
@@ -52,13 +59,14 @@ export function Surface<T extends ElementType = "div">({
   as,
   material,
   rim = false,
+  flush = false,
   className,
   children,
   ...rest
 }: SurfaceProps<T>) {
   const Comp = as ?? "div";
   return (
-    <Comp className={cn(materialClass(material, rim), className)} {...rest}>
+    <Comp className={cn(materialClass(material, rim, flush), className)} {...rest}>
       {children}
     </Comp>
   );

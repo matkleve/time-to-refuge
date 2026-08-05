@@ -4,10 +4,17 @@ import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { controlMinH } from "@/lib/control-size";
-import { actionClass, glassClass } from "@/lib/surfaces";
+import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { actionClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
+
+/** Short nav labels — matches `DesktopNav` page names for deco hints on step cards. */
+const STEP_NAV_LABEL: Record<string, string> = {
+  people: "People",
+  quicklog: "Quick Log",
+  refuge: "Session",
+};
 
 interface LandingPageProps {
   onStart: () => void;
@@ -34,7 +41,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 className={cn(
                   "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
                   userFeedbackClass({ press: "md" }),
-                  glassClass("card", { rim: true }),
+                  glassFlushClass(),
                 )}
               >
                 <span className="text-xs font-medium tracking-wide text-subtle uppercase">
@@ -46,6 +53,16 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 <p className="text-sm leading-snug text-muted sm:text-base">
                   {step.body}
                 </p>
+                <span
+                  className={cn(
+                    "mt-auto flex items-center justify-end pt-2 text-sm font-medium text-flagblue-600",
+                    BUTTON_CLUSTER_GAP,
+                  )}
+                  aria-hidden
+                >
+                  {STEP_NAV_LABEL[step.view] ?? step.view}
+                  <ArrowRight className="size-3.5 shrink-0" strokeWidth={2.5} />
+                </span>
               </button>
             </li>
           ))}

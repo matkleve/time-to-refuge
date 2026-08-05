@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { glassRowClass } from "@/lib/surfaces";
+import { glassFlushRowClass } from "@/lib/surfaces";
 
 export function derivePersonFieldRowShell(
   isTarget: boolean,
@@ -10,8 +10,7 @@ export function derivePersonFieldRowShell(
   const targetClass = active && "ring-2 ring-inset ring-flagblue-500";
   const shellClassName = cn(
     "no-select transition-shadow duration-200",
-    glassRowClass(),
-    filled && "shadow-sm",
+    glassFlushRowClass(),
     targetClass,
   );
 

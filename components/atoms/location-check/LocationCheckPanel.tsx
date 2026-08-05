@@ -1,7 +1,6 @@
 import type { RefObject } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Surface } from "@/components/atoms/Surface";
-import { PANEL_WIDTH } from "@/lib/location-check/tone-styles";
 import type {
   ClockProbeState,
   LocationInfo,
@@ -36,8 +35,8 @@ export function LocationCheckPanel(props: PanelProps) {
   return (
     <div
       ref={panelRef}
-      className="fixed z-50"
-      style={{ bottom: box.bottom, left: box.left, width: PANEL_WIDTH }}
+      className="fixed z-50 max-w-[calc(100vw-1rem)]"
+      style={{ bottom: box.bottom, left: box.left, width: box.width }}
     >
       <Surface
         material="glass-panel"

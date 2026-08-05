@@ -23,6 +23,7 @@ interface PeopleSheetProps {
   onRetreatNameChange?: (name: string) => void;
 }
 
+/** People — scrolling document; cards use flush glass at the page gutter. */
 export function PeopleSheet({
   people,
   fields,
