@@ -46,3 +46,5 @@ npm run a11y
 ## Before shipping a page change
 
 Check **Home, Session, People, Quick Log, Fields** on desktop + mobile: nav and content share the same left/right edge.
+
+**Interactive states:** `/dev/components` — tap every control; whole chip must bounce. Glass + feedback on one node (`lib/interactive-glass.ts`).
