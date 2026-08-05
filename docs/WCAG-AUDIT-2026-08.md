@@ -26,7 +26,7 @@ on dense chrome, and icon-only tabs below `lg`.
 | Glass panel / card / row | ink, muted, saffron-700, flagblue | 4.5 / 3.0 | Pass |
 | Action glass | white on flagblue; ink on saffron | 4.5 / 3.0 | Pass |
 | **Nav idle (before)** | muted `text-sm` on scrim/photo | 4.5:1 | **Fail (UX)** — fixed |
-| **Nav idle (after)** | ink/80 → ink, `text-base` | 4.5:1 | Pass (pair added) |
+| **Nav idle (after)** | ink, `text-base` | 4.5:1 | Pass (pair added) |
 | Nav selected | ink on white glass chip | 4.5:1 | Pass |
 | Focus ring | flagblue-600 on white/card | 3.0:1 non-text | Pass |
 | Quiet undo/redo icons | muted on photo | 3.0:1 UI | Watch — quiet glyphs |
