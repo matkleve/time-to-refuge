@@ -64,6 +64,6 @@ export function usePersonFieldRowInteractions(
     commitEdit,
     startEdit,
     setConfirmSkip: skip.setConfirmSkip,
-    shell: derivePersonFieldRowShell(isTarget, skip.confirmSkip, filled),
+    shell: derivePersonFieldRowShell(isTarget, skip.confirmSkip),
   };
 }
