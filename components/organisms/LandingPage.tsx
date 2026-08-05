@@ -8,6 +8,13 @@ import { actionClass, glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
+/** Short nav labels — matches `DesktopNav` page names for deco hints on step cards. */
+const STEP_NAV_LABEL: Record<string, string> = {
+  people: "People",
+  quicklog: "Quick Log",
+  refuge: "Session",
+};
+
 interface LandingPageProps {
   onStart: () => void;
   onNavigate: (view: AppView) => void;
@@ -50,6 +57,13 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 <p className="text-sm leading-snug text-muted sm:text-base">
                   {step.body}
                 </p>
+                <span
+                  className="mt-auto flex items-center justify-end gap-1 pt-2 text-sm font-medium text-flagblue-600"
+                  aria-hidden
+                >
+                  {STEP_NAV_LABEL[step.view] ?? step.view}
+                  <ArrowRight className="size-3.5 shrink-0" strokeWidth={2.5} />
+                </span>
               </button>
             </li>
           ))}
