@@ -58,7 +58,7 @@ export function TimezoneSelectMenu({
                 "flex w-full items-center rounded-xl px-3.5 text-left text-base font-medium text-ink",
                 controlMinH.md,
                 userFeedbackClass({ press: "md", on: selected }),
-                selected && "font-semibold",
+                selected && "bg-white/40 font-semibold",
               )}
             >
               <span className="min-w-0 truncate">{formatTimezoneLabel(zone)}</span>

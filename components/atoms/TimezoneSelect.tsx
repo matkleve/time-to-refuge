@@ -34,9 +34,13 @@ export function TimezoneSelect({
 
   const shell = cn(
     glassFlushClass(),
-    "w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flagblue-600 focus-visible:ring-offset-2",
+    "w-full text-left focus-visible:outline-none",
     userFeedbackClass({ press: "md", on: open }),
     className,
+  );
+
+  const focusWrap = cn(
+    "rounded-2xl focus-within:outline-none focus-within:ring-2 focus-within:ring-flagblue-600 focus-within:ring-offset-2",
   );
 
   const menu =
@@ -52,14 +56,14 @@ export function TimezoneSelect({
 
   if (chip) {
     return (
-      <div ref={triggerRef} className="relative w-full">
+      <div ref={triggerRef} className={cn("relative w-full", focusWrap)}>
         <button
           type="button"
           onClick={toggle}
           aria-expanded={open}
           aria-haspopup="listbox"
           aria-label={`Time zone: ${label}`}
-          className={cn("flex items-center gap-2.5 rounded-2xl px-3.5", controlH.md, shell)}
+          className={cn("flex w-full items-center gap-2.5 rounded-2xl px-3.5", controlH.md, shell)}
         >
           <Globe className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
           <span className="min-w-0 flex-1 truncate font-display text-base font-semibold text-ink">
@@ -78,7 +82,7 @@ export function TimezoneSelect({
   return (
     <div ref={triggerRef} className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
-      <span className="relative inline-flex min-w-0 items-center">
+      <span className={cn("relative inline-flex min-w-0 items-center", focusWrap)}>
         <button
           type="button"
           onClick={toggle}

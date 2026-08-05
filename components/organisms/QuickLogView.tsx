@@ -50,6 +50,15 @@ export function QuickLogView() {
 
   const isDesktop = !tapAnywhere;
 
+  const pageChrome = (
+    <QuickLogPageChrome
+      entryCount={entries.length}
+      tz={tz}
+      onTzChange={setTz}
+      clearAll={clearAll}
+    />
+  );
+
   return (
     /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
        Phone: pointer-only convenience so any tap logs a time. */
@@ -60,14 +69,7 @@ export function QuickLogView() {
       )}
       onClick={tapAnywhere ? handleLog : undefined}
     >
-      <StickyPageChrome>
-        <QuickLogPageChrome
-          entryCount={entries.length}
-          tz={tz}
-          onTzChange={setTz}
-          clearAll={clearAll}
-        />
-      </StickyPageChrome>
+      <StickyPageChrome className="md:hidden">{pageChrome}</StickyPageChrome>
 
       <div
         className={cn(
@@ -77,25 +79,31 @@ export function QuickLogView() {
         )}
       >
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           List column — clipped so rows never bleed into the button column. */}
+           List column — chrome + scroll; clipped so glass rows never bleed into the button column. */}
         <div
-          className="isolate min-h-0 min-w-0 overflow-x-clip overflow-y-auto overscroll-contain px-0"
+          className="isolate flex min-h-0 min-w-0 flex-col contain-paint"
           onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
         >
-          <QuickLogEntryList
-            entries={entries}
-            tz={tz}
-            tapAnywhere={tapAnywhere}
-            clearAllArmed={clearAll.armed}
-            onDelete={deleteEntry}
-          />
+          <StickyPageChrome className="hidden md:block">{pageChrome}</StickyPageChrome>
+
+          <div
+            className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overflow-x-clip overscroll-contain px-0"
+          >
+            <QuickLogEntryList
+              entries={entries}
+              tz={tz}
+              tapAnywhere={tapAnywhere}
+              clearAllArmed={clearAll.armed}
+              onDelete={deleteEntry}
+            />
+          </div>
         </div>
 
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Record column — isolated stack above any list bleed. */}
+           Record column — isolated stack; no list backdrop bleeds through glass. */}
         <div
           className={cn(
-            "isolate min-h-0 min-w-0 overflow-hidden pt-2",
+            "isolate min-h-0 min-w-0 overflow-hidden contain-paint pt-2",
             PAGE_INLINE_GUTTER,
             "md:flex md:flex-col md:justify-center md:px-0 md:pt-0 md:pb-4",
           )}
