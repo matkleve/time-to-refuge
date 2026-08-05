@@ -43,6 +43,8 @@ Verify before merge: keyboard-tab the changed surface. If a focus ring or
 selected chip is missing a corner / looks cut off, fix the parent overflow
 first — do not “fix” it by removing the focus ring. Reload at desktop
 width and confirm nothing paints through the brand toolbar.
+
+CI: run `npm run a11y:overflow` (also part of `npm run a11y`).
 ```
 
 ---
