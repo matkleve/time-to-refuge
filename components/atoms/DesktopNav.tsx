@@ -56,8 +56,8 @@ interface DesktopNavProps {
  *
  * Left-aligned after the brand (no absolute-center fight on tablet).
  * Page labels stay visible; Quick Log shortens to “Log” below `lg`.
- * Selected tab = saffron mist glass + bold (not a white chip). Dana stays
- * quiet glyph — filled only via accent tone when that page is current.
+ * Selected tab = quiet white glass chip + semibold (not saffron). Dana stays
+ * quiet glyph — chip only when that page is current.
  */
 export function DesktopNav({
   view,
@@ -82,9 +82,13 @@ export function DesktopNav({
             className="mr-1 min-w-0 shrink sm:mr-2"
           />
 
+          {/*
+            py/my: overflow-x-auto otherwise forces overflow-y clip and
+            shears the global :focus-visible outline on the pills.
+          */}
           <nav
             aria-label="Primary"
-            className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto sm:gap-2"
+            className="-my-2 flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto py-2 sm:gap-2"
           >
             {DESKTOP_NAV_PAGES.map(({ id, label, shortLabel, icon: Icon }) => {
               const selected = view === id;
@@ -100,7 +104,7 @@ export function DesktopNav({
                     "inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm lg:gap-2 lg:px-3 lg:text-base",
                     userFeedbackClass({ press: "md", on: selected }),
                     selected
-                      ? cn(glassNavSelectedClass(), "font-bold text-ink")
+                      ? cn(glassNavSelectedClass(), "font-semibold text-ink")
                       : "font-medium text-muted hover:text-ink",
                   )}
                 >
@@ -150,9 +154,7 @@ export function DesktopNav({
                 tone={view === "dana" ? "accent" : "neutral"}
                 feedbackOn={view === "dana"}
                 className={
-                  view === "dana"
-                    ? cn(glassNavSelectedClass(), "text-flagblue-600")
-                    : undefined
+                  view === "dana" ? cn(glassNavSelectedClass()) : undefined
                 }
                 onClick={() => onChange("dana")}
               />

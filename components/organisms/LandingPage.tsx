@@ -17,7 +17,7 @@ interface LandingPageProps {
  */
 export function LandingPage({ onStart }: LandingPageProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 md:px-0">
+    <div className="app-scroll-clearance flex min-h-0 flex-1 flex-col overflow-hidden px-3 md:px-0">
       <div className="mx-auto flex w-full max-w-2xl min-h-0 flex-1 flex-col justify-center gap-4 py-1">
         <header className="space-y-1.5 text-center">
           <h1 className="font-display text-2xl font-semibold text-ink">{landing.headline}</h1>
