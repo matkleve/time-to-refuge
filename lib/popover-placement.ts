@@ -1,6 +1,6 @@
 /** Keep portaled popovers inside the visible viewport (incl. visualViewport). */
 
-export const POPOVER_MARGIN = 8;
+export const POPOVER_MARGIN = 16;
 
 export type ViewportBounds = {
   left: number;

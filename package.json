@@ -13,7 +13,8 @@
     "a11y:type": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/a11y-type.ts",
     "a11y:overflow": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/a11y-overflow.ts",
     "a11y:layout": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/a11y-layout.ts",
-    "a11y": "npm run a11y:contrast && npm run a11y:type && npm run a11y:overflow && npm run a11y:layout"
+    "a11y:interactive": "node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/a11y-interactive.ts",
+    "a11y": "npm run a11y:contrast && npm run a11y:type && npm run a11y:overflow && npm run a11y:layout && npm run a11y:interactive"
   },
   "dependencies": {
     "clsx": "^2.1.1",

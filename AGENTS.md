@@ -18,7 +18,7 @@ npm run a11y
 4. **Never gate layout clearance on `useMediaQuery`** (defaults false until mount). Column geometry and header clearance use **`md:` / `lg:` CSS**, not JS.
 5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
 6. **Page skeleton** — every AppView: `StickyPageChrome` (title + optional pin) at top, then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: **list left `1.6fr`**, record button **right `1fr`** (`QUICKLOG_BODY_GRID`) — isolated columns, no row bleed.
-7. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no soft-lift). Soft-lift (`shadow-glass`) only on floating menus/panels. Never pair soft-lift + `overflow-x: clip` + `px-0`.
+7. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no outer shadow). Glass uses inset specular rim only — no `--shadow-glass` drop lift on controls or list rows.
 8. **No nested vertical pad** inside `StickyPageChrome` on top of clearance.
 9. Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5`).
 10. **Desktop nav tabs** — always `font-semibold` + `glassNavTabClass(selected)` (idle = transparent border box, selected = glass fill). Never toggle font weight or border width only on selected.
@@ -29,6 +29,8 @@ npm run a11y
 - Every `overflow-y-auto` list of controls → `focus-safe-scroll` or inset focus cues.
 - Menus/popovers → portal (`GlassMenu`).
 - Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).
+- **Interactive glass** — tappable controls use `lib/interactive-glass.ts` only (`interactiveGlassFlushClass`, `interactiveGlassRowClass`, `interactiveActionClass`, `staticGlassFlushClass` for editing shells, `interactiveFeedbackClass` for feedback-only rows). Material + `userFeedbackClass` on **one** element. Never import `userFeedbackClass` or `glass*Class` from `@/lib/surfaces` in components (`npm run a11y:interactive`).
+- **No overlay cut** — never `overflow-x-clip` or `contain-paint` on layout chrome / scrollports / cards. Scrollports: `focus-safe-scroll` + `overflow-y-auto` only. Floating panels portaled (`GlassMenu`, LocationCheck). Inset focus globally — no horizontal clip for rings.
 
 ## Session desktop
 
@@ -44,3 +46,5 @@ npm run a11y
 ## Before shipping a page change
 
 Check **Home, Session, People, Quick Log, Fields** on desktop + mobile: nav and content share the same left/right edge.
+
+**Interactive states:** `/dev/components` — tap every control; whole chip must bounce. Glass + feedback on one node (`lib/interactive-glass.ts`).

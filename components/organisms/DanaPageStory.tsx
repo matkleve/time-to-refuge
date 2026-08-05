@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import dana from "@/content/dana.json";
-import { glassFlushClass } from "@/lib/surfaces";
+import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 export function DanaPageStory() {
@@ -11,7 +11,7 @@ export function DanaPageStory() {
       <div
         className={cn(
           "relative aspect-[3/2] w-full overflow-hidden rounded-3xl bg-ink/10 md:aspect-[4/3] md:min-h-[24rem] lg:min-h-[28rem]",
-          glassFlushClass(),
+          staticGlassFlushClass(),
         )}
       >
         <Image

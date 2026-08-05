@@ -6,9 +6,8 @@ import { TimezoneSelectMenu } from "@/components/atoms/TimezoneSelectMenu";
 import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
 import { controlH, controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { glassFlushClass } from "@/lib/surfaces";
 import { glassPillFocusWithin } from "@/lib/focus-cues";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface TimezoneSelectProps {
@@ -34,9 +33,8 @@ export function TimezoneSelect({
   const label = formatTimezoneLabel(value);
 
   const shell = cn(
-    glassFlushClass(),
+    interactiveGlassFlushClass(undefined, { press: "md", on: open }),
     "w-full text-left focus-visible:outline-none",
-    userFeedbackClass({ press: "md", on: open }),
     className,
   );
 

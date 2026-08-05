@@ -1,6 +1,6 @@
 /**
- * Focus rings inside `focus-safe-scroll` scrollports (px-0, overflow-x: clip).
- * Outset outlines clip at the gutter edge on md+ — use inset cues on pills.
+ * Focus rings inside `focus-safe-scroll` scrollports (px-0, vertical bleed).
+ * Global outline is inset — no overflow-x clip on scrollports.
  */
 
 /** Inner input must not paint its own outset ring. */

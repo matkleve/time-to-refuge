@@ -5,8 +5,7 @@ import type { AppView } from "@/components/atoms/ViewMenu";
 import landing from "@/content/landing.json";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { actionClass, glassClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassClass, interactiveActionClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 /** Short nav labels — matches `DesktopNav` page names for deco hints on step cards. */
@@ -40,8 +39,7 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                 onClick={() => onNavigate(step.view as AppView)}
                 className={cn(
                   "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
-                  userFeedbackClass({ press: "md" }),
-                  glassClass("card", { rim: true }),
+                  interactiveGlassClass("card", { rim: true }, { press: "md" }),
                 )}
               >
                 <span className="text-xs font-medium tracking-wide text-subtle uppercase">
@@ -73,12 +71,16 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
             type="button"
             onClick={onStart}
             className={cn(
-              "inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl px-6 text-base font-medium text-white sm:w-auto sm:text-lg",
-              controlMinH.lg,
-              "hover:brightness-[1.06]",
-              userFeedbackClass({ press: "lg" }),
-              "user-feedback--on-accent",
-              actionClass("primary"),
+              interactiveActionClass(
+                "primary",
+                { press: "lg" },
+                cn(
+                  "inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl px-6 text-base font-medium text-white sm:w-auto sm:text-lg",
+                  controlMinH.lg,
+                  "hover:brightness-[1.06]",
+                  "user-feedback--on-accent",
+                ),
+              ),
             )}
           >
             {landing.cta}

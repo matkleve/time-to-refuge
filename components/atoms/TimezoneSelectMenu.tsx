@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import type { RefObject } from "react";
 import { controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -40,7 +40,7 @@ export function TimezoneSelectMenu({
         rim
         role="listbox"
         aria-label="Time zones"
-        className="focus-safe-scroll max-h-64 overflow-y-auto overflow-x-clip rounded-2xl p-1.5 shadow-lg animate-scale-in"
+        className="focus-safe-scroll max-h-64 overflow-y-auto rounded-2xl p-1.5 animate-scale-in"
       >
         {zones.map((zone) => {
           const selected = zone === value;
@@ -57,7 +57,7 @@ export function TimezoneSelectMenu({
               className={cn(
                 "flex w-full items-center rounded-xl px-3.5 text-left text-base font-medium text-ink",
                 controlMinH.md,
-                userFeedbackClass({ press: "md", on: selected }),
+                interactiveFeedbackClass({ press: "md", on: selected }),
                 selected && "bg-white/40 font-semibold",
               )}
             >

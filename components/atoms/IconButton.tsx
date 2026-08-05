@@ -26,6 +26,7 @@ interface IconButtonProps {
   feedbackOn?: boolean;
   press?: FeedbackPress;
   armed?: boolean;
+  surfaceClass?: string;
   className?: string;
 }
 
@@ -43,6 +44,7 @@ export function IconButton({
   feedbackOn = false,
   press = "sm",
   armed = false,
+  surfaceClass,
   className,
 }: IconButtonProps) {
   const visible =
@@ -65,6 +67,7 @@ export function IconButton({
         press,
         feedbackOn,
         hideWhenDisabled,
+        surfaceClass,
         className,
       })}
     >

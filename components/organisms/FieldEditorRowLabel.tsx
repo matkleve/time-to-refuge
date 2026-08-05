@@ -2,9 +2,11 @@
 
 import type { FieldDef } from "@/lib/types";
 import { controlMinH } from "@/lib/control-size";
-import { glassClass } from "@/lib/surfaces";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import {
+  interactiveGlassFlushClass,
+  staticGlassFlushClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 export function FieldEditorRowLabel({
@@ -34,7 +36,7 @@ export function FieldEditorRowLabel({
 }) {
   if (editing) {
     return (
-      <div className={cn(pillClass, glassPillFocusWithin)}>
+      <div className={cn(pillClass, staticGlassFlushClass(), glassPillFocusWithin)}>
         <input
           /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by rename. */
           autoFocus
@@ -69,7 +71,7 @@ export function FieldEditorRowLabel({
         pillClass,
         "text-left font-display text-lg font-semibold leading-snug",
         armed ? "text-danger-600" : "text-ink",
-        userFeedbackClass({ press: "md" }),
+        interactiveGlassFlushClass(undefined, { press: "md" }),
         bumpNonce > 0 && "animate-chip-bump",
       )}
     >

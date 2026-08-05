@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 
 /**
  * Header brand: time emoji + Timekeeper wordmark.
@@ -44,6 +45,7 @@ export function BrandLockup({
         aria-label="Timekeeper — open Home"
         className={cn(
           "flex min-w-0 cursor-pointer items-center gap-2 rounded-lg text-left",
+          interactiveFeedbackClass({ press: "sm" }),
           className,
         )}
       >

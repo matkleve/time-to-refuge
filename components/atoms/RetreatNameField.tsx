@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
 import { controlMinH } from "@/lib/control-size";
-import { glassFlushClass } from "@/lib/surfaces";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import {
+  interactiveGlassFlushClass,
+  staticGlassFlushClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface RetreatNameFieldProps {
@@ -29,14 +31,12 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
     setEditing(false);
   }
 
-  const shell = cn(
+  const shellLayout = cn(
     "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
     controlMinH.md,
-    glassFlushClass(),
     className,
   );
-
-  const editingShell = cn(shell, glassPillFocusWithin);
+  const editingShell = cn(shellLayout, staticGlassFlushClass(), glassPillFocusWithin);
 
   if (editing) {
     return (
@@ -79,7 +79,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
         setEditing(true);
       }}
       aria-label={value ? `Retreat: ${value}. Tap to change.` : "Add a retreat name"}
-      className={cn(shell, userFeedbackClass({ press: "md" }))}
+      className={cn(shellLayout, interactiveGlassFlushClass(undefined, { press: "md" }))}
     >
       <Mountain
         className={cn("size-5 shrink-0", value ? "text-flagblue-600" : "text-muted")}

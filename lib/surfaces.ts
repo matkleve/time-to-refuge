@@ -37,7 +37,7 @@ export const GLASS_FX = "backdrop-blur-xl backdrop-saturate-150" as const;
 export const GLASS_RIM = "border border-white/55" as const;
 
 /**
- * Specular light catch — inset top highlight + soft lift.
+ * Specular light catch — inset top highlight only (no outer drop shadow).
  * Defined as `--shadow-glass` / `--shadow-glass-action` in globals.css.
  */
 export const GLASS_SPECULAR = "shadow-glass" as const;
@@ -123,8 +123,7 @@ export function glassClass(
 
 /**
  * Dense list / rail chips flush to a scrollport edge — fill + blur + rim,
- * **no** soft-lift shadow. Soft-lift needs horizontal bleed; bleed fought
- * the one-gutter rule (`px-0`) and clipped pills on the left.
+ * **no** outer shadow.
  */
 export function glassFlushClass(
   kind: "panel" | "card" | "cardCurrent" = "card",

@@ -1,8 +1,7 @@
 "use client";
 
 import { controlMinH } from "@/lib/control-size";
-import { glassFlushClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 export function QuickLogLogRowStamp({
@@ -33,8 +32,7 @@ export function QuickLogLogRowStamp({
       className={cn(
         "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
         controlMinH.md,
-        userFeedbackClass({ press: "md" }),
-        glassFlushClass(),
+        interactiveGlassFlushClass(undefined, { press: "md" }),
       )}
     >
       <span className="shrink-0 text-sm tabular-nums text-subtle">#{index}</span>

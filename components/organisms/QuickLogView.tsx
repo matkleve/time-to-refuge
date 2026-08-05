@@ -81,14 +81,14 @@ export function QuickLogView() {
           )}
         >
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-             List column — chrome + scroll; clipped so glass rows never bleed into the button column. */}
+             List column — chrome + scroll. */}
           <div
-            className="isolate flex min-h-0 min-w-0 flex-col contain-paint"
+            className="flex min-h-0 min-w-0 flex-col"
             onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
           >
             <StickyPageChrome className="hidden md:block">{pageChrome}</StickyPageChrome>
 
-            <div className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overflow-x-clip overscroll-contain px-0">
+            <div className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-0">
               <QuickLogEntryList
                 entries={entries}
                 tz={tz}
@@ -100,10 +100,10 @@ export function QuickLogView() {
           </div>
 
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-             Record column — isolated stack; no list backdrop bleeds through glass. */}
+             Record column. */}
           <div
             className={cn(
-              "isolate min-h-0 min-w-0 overflow-hidden contain-paint pt-2",
+              "min-h-0 min-w-0 pt-2",
               PAGE_INLINE_GUTTER,
               "md:flex md:flex-col md:justify-center md:px-0 md:pt-0 md:pb-4",
             )}

@@ -3,8 +3,10 @@
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { glassFlushChipClass, glassFlushClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import {
+  interactiveGlassFlushChipClass,
+  staticGlassFlushClass,
+} from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/atoms/IconButton";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
@@ -29,7 +31,7 @@ export function DanaPageAside({
       <div
         className={cn(
           "space-y-3 rounded-2xl px-4 py-3.5 md:space-y-4 md:px-5 md:py-5",
-          glassFlushClass(),
+          staticGlassFlushClass(),
         )}
       >
         <p className="text-xs font-medium tracking-wide text-muted uppercase">Bank transfer</p>
@@ -85,8 +87,7 @@ export function DanaPageAside({
               className={cn(
                 "inline-flex items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted hover:text-ink",
                 controlMinH.md,
-                glassFlushChipClass(),
-                userFeedbackClass({ press: "md" }),
+                interactiveGlassFlushChipClass({ press: "md" }),
               )}
             >
               {link.label}

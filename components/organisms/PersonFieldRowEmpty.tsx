@@ -1,8 +1,7 @@
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { glassFlushRowClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassRowClass } from "@/lib/interactive-glass";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { RowPackSpacer } from "@/components/atoms/RowReveal";
 
@@ -50,8 +49,7 @@ export function PersonFieldRowEmpty({
         className={cn(
           "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
           ROW_HEIGHT,
-          glassFlushRowClass(),
-          userFeedbackClass({ press: "md", on: active }),
+          interactiveGlassRowClass({ press: "md", on: active }),
           targetClass,
         )}
       >

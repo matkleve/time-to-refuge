@@ -1,8 +1,7 @@
 import { controlMinH } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { glassFlushRowClass } from "@/lib/surfaces";
-import { userFeedbackClass } from "@/lib/user-feedback";
+import { interactiveGlassRowClass } from "@/lib/interactive-glass";
 import { PersonFieldRowLabel } from "./PersonFieldRowLabel";
 
 const ROW_HEIGHT = controlMinH.md;
@@ -34,9 +33,8 @@ export function PersonFieldRowFilledStamp({
       aria-current={isTarget ? "true" : undefined}
       className={cn(
         "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
-        userFeedbackClass({ press: "md", on: isTarget }),
         ROW_HEIGHT,
-        glassFlushRowClass(),
+        interactiveGlassRowClass({ press: "md", on: isTarget }),
         targetClass,
       )}
     >

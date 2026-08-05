@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { staticGlassFlushRowClass } from "@/lib/interactive-glass";
 
 interface PersonFieldRowShellProps {
   editing: boolean;
@@ -17,9 +18,7 @@ export function PersonFieldRowShell({
 }: PersonFieldRowShellProps) {
   if (editing) {
     return (
-      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
-        {children}
-      </div>
+      <div className={cn("rounded-2xl", staticGlassFlushRowClass(), shellClassName)}>{children}</div>
     );
   }
 
@@ -28,11 +27,7 @@ export function PersonFieldRowShell({
   }
 
   if (!onClear) {
-    return (
-      <div className={cn("overflow-hidden rounded-2xl", shellClassName)}>
-        {children}
-      </div>
-    );
+    return <div className={cn("rounded-2xl", shellClassName)}>{children}</div>;
   }
 
   return <div className="rounded-2xl">{children}</div>;

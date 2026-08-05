@@ -30,7 +30,7 @@ interface DesktopWorkspaceProps {
  * Desktop / tablet Session: compact progress rows on the left (name + one
  * circle per field); focused PersonCard + record on the right.
  *
- * Scrollports use `focus-safe-scroll` (vertical bleed + overflow-x clip).
+ * Scrollports use `focus-safe-scroll` (vertical bleed only).
  * Rail chips use `glassFlushClass` so soft-lift isn’t sliced at the edge.
  */
 export function DesktopWorkspace({
@@ -71,7 +71,7 @@ export function DesktopWorkspace({
         already applies `.app-content` + `px-4 sm:px-5` (same gutter as nav).
       */}
       <ul
-        className="focus-safe-scroll flex w-64 shrink-0 flex-col gap-2 overflow-y-auto overflow-x-clip px-0 lg:w-72 xl:w-80"
+        className="focus-safe-scroll flex w-64 shrink-0 flex-col gap-2 overflow-y-auto px-0 lg:w-72 xl:w-80"
         aria-label="People"
       >
         {people.map((p) => {
@@ -98,7 +98,7 @@ export function DesktopWorkspace({
         </li>
       </ul>
 
-      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto overflow-x-clip px-0 py-1 sm:py-2">
+      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto px-0 py-1 sm:py-2">
         {current ? (
           <div className="flex w-full flex-col gap-4 sm:gap-5">
             <PersonCard
