@@ -73,7 +73,7 @@ Saffron marks a **recorded** time and the Quick Log. Flag blue marks the
 
 | Token | Role |
 | --- | --- |
-| `ink` | Primary text — **very dark blue** (`#152238`), not black |
+| `ink` | Primary text — **flag blue** (`#162d5c`) on glass/photo; never pure black |
 | `muted` | Secondary text — **and every icon at rest** |
 | `subtle` | Tertiary text: counters, empty values, hints |
 | `line` | Hairlines and dividers, **never a foreground** |

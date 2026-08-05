@@ -24,7 +24,7 @@ export function PageTitle({ title, trailing, className }: PageTitleProps) {
         className,
       )}
     >
-      <h2 className="min-w-0 truncate font-display text-lg font-semibold text-ink">
+      <h2 className="min-w-0 truncate font-display text-base font-semibold text-ink">
         {title}
       </h2>
       {trailing ? <div className="shrink-0">{trailing}</div> : null}

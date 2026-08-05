@@ -1,38 +1,7 @@
 import { cn } from "@/lib/utils";
 
-/** Timekeeper mark — lens outline + clock hand (saffron on flag blue). */
-function LogoMark({ size }: { size: number }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      width={size}
-      height={size}
-      className="shrink-0"
-      aria-hidden
-    >
-      <path
-        d="M8 50 C24 26 76 26 92 50 C76 74 24 74 8 50 Z"
-        fill="none"
-        stroke="#2A4394"
-        strokeWidth="7"
-        strokeLinejoin="round"
-      />
-      <circle cx="50" cy="50" r="17" fill="#2A4394" />
-      <path
-        d="M50 50 V40 M50 50 L57 55"
-        fill="none"
-        stroke="#E8A13A"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 /**
- * Header brand: mark + Timekeeper wordmark.
- * No hover scale — that grew into the nav and read as shaky type.
+ * Header brand: time emoji + Timekeeper wordmark.
  * Optional `onHome` returns to the Home landing page.
  */
 export function BrandLockup({
@@ -46,12 +15,17 @@ export function BrandLockup({
   onHome?: () => void;
   className?: string;
 }) {
-  const mark = titleSize === "2xl" ? 32 : 28;
-
   const label = (
     <>
-      <LogoMark size={mark} />
       <span
+        className={cn(
+          "shrink-0 leading-none",
+          titleSize === "2xl" ? "text-2xl" : "text-lg",
+        )}
+        aria-hidden
+      >
+        ⏱️
+      </span>      <span
         className={cn(
           "truncate font-display font-bold leading-none text-ink",
           titleSize === "2xl" ? "text-lg xl:text-2xl" : "text-lg",

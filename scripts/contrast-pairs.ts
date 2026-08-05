@@ -20,10 +20,10 @@ export { GLASS_SURFACES, GLASS_WORST_CASE_BG };
 
 export const TOKENS = {
   white: "#ffffff",
-  ink: "#152238",
-  muted: "#4a5568",
-  subtle: "#64748b",
-  line: "#d4d8e0",
+  ink: "#162d5c",
+  muted: "#3a4d72",
+  subtle: "#5a6b8c",
+  line: "#c8d0e0",
   card: "#f3f1ee",
   cardCurrent: "#fbe8bf",
   saffron300: "#f8bd5c",
