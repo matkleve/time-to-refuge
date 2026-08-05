@@ -4,15 +4,18 @@
   "steps": [
     {
       "title": "Add people",
-      "body": "Name each aspirant and set the retreat."
+      "body": "Name each aspirant and set the retreat.",
+      "view": "people"
     },
     {
       "title": "Check the clock",
-      "body": "Verify time zone and network time before you begin."
+      "body": "Verify time zone and network time before you begin.",
+      "view": "quicklog"
     },
     {
       "title": "Record each snap",
-      "body": "One tap per phase — export CSV or share cards after."
+      "body": "One tap per phase — export CSV or share cards after.",
+      "view": "refuge"
     }
   ],
   "cta": "Open Session",
