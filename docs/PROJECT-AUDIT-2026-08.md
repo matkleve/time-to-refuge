@@ -10,7 +10,7 @@ Companion audits: `docs/WCAG-AUDIT-2026-08.md`, `docs/AGENT-OVERFLOW-OUTLINES.md
 
 | Area | Status |
 | --- | --- |
-| CI (`typecheck`, `lint`, `a11y`) | **Green** on `main` after merge |
+| CI (`typecheck`, `lint`, `a11y`) | **Green** with `--max-warnings 0` |
 | Layout (one gutter, flex shell) | **Enforced** — `PAGE_INLINE_GUTTER`, `a11y:layout`, `a11y:overflow` |
 | WCAG contrast | **50/50 pass** (`a11y:contrast`) |
 | Type scale | **Pass** (`a11y:type`) |
