@@ -17,7 +17,7 @@ npm run a11y
 3. **Page slot must be `flex flex-col`** with `flex-1 min-h-0` around `{page}`. `PageEnter` needs `h-full flex-1`.
 4. **Never gate layout clearance on `useMediaQuery`** (defaults false until mount). Column geometry and header clearance use **`md:` / `lg:` CSS**, not JS.
 5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
-6. **Page skeleton** — every AppView: `StickyPageChrome` (title + optional pin) at top, then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: **list left**, record button **right** (`md:w-64` / `lg:w-80`) — not a second column in the title band.
+6. **Page skeleton** — every AppView: `StickyPageChrome` (title + optional pin) at top, then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: **list left `1.6fr`**, record button **right `1fr`** (`QUICKLOG_BODY_GRID`) — isolated columns, no row bleed.
 7. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no soft-lift). Soft-lift (`shadow-glass`) only on floating menus/panels. Never pair soft-lift + `overflow-x: clip` + `px-0`.
 8. **No nested vertical pad** inside `StickyPageChrome` on top of clearance.
 9. Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5`).

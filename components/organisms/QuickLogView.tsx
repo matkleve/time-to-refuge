@@ -9,13 +9,12 @@ import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
+import { PAGE_INLINE_GUTTER, QUICKLOG_BODY_GRID } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
- * Quick Log — same page skeleton as People / Fields:
- * sticky title band → scroll body. Desktop: list left, record button right
- * (Session rail proportions: w-64 / lg:w-80).
+ * Quick Log — sticky title band → body grid.
+ * Desktop: list left (1.6fr), record button right (1fr).
  */
 export function QuickLogView() {
   const [ready, setReady] = useState(false);
@@ -72,14 +71,15 @@ export function QuickLogView() {
 
       <div
         className={cn(
-          "flex min-h-0 flex-1 flex-col md:flex-row md:gap-5 lg:gap-6",
+          "min-h-0 flex-1",
+          QUICKLOG_BODY_GRID,
           "pb-[max(1rem,env(safe-area-inset-bottom))]",
         )}
       >
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           List column — left on desktop; stops tap-to-log on controls. */}
+           List column — clipped so rows never bleed into the button column. */}
         <div
-          className="focus-safe-scroll order-1 min-h-0 flex-1 overflow-y-auto overscroll-contain px-0 md:order-1"
+          className="isolate min-h-0 min-w-0 overflow-x-clip overflow-y-auto overscroll-contain px-0"
           onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
         >
           <QuickLogEntryList
@@ -92,12 +92,12 @@ export function QuickLogView() {
         </div>
 
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Record control — right on desktop; not in the title band. */}
+           Record column — isolated stack above any list bleed. */}
         <div
           className={cn(
-            "order-2 shrink-0 pt-2",
+            "isolate min-h-0 min-w-0 overflow-hidden pt-2",
             PAGE_INLINE_GUTTER,
-            "md:order-2 md:flex md:w-64 md:flex-col md:justify-center md:self-stretch md:px-0 md:pt-0 md:pb-4 lg:w-80",
+            "md:flex md:flex-col md:justify-center md:px-0 md:pt-0 md:pb-4",
           )}
           onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
         >

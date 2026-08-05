@@ -27,3 +27,7 @@ export const BRAND_CHROME_PAD =
 
 /** Desktop / tablet nav band. */
 export const DESKTOP_BRAND_CHROME_PAD = "4.5rem";
+
+/** Quick Log body — list : button golden ratio (1.6 : 1). */
+export const QUICKLOG_BODY_GRID =
+  "md:grid md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:gap-5 lg:gap-6";

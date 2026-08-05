@@ -1,127 +1,108 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Globe } from "lucide-react";
+import { TimezoneSelectMenu } from "@/components/atoms/TimezoneSelectMenu";
+import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
 import { controlH, controlMinH } from "@/lib/control-size";
+import { formatTimezoneLabel } from "@/lib/timezone-options";
 import { glassFlushClass } from "@/lib/surfaces";
 import { userFeedbackClass } from "@/lib/user-feedback";
 import { cn } from "@/lib/utils";
 
-/**
- * Short curated list for Quick Log — device zone is always merged in.
- * Not every IANA id; just enough to re-read a stamp in another place.
- */
-const CURATED_ZONES = [
-  "UTC",
-  "America/New_York",
-  "Europe/London",
-  "Europe/Berlin",
-  "Europe/Kathmandu",
-  "Asia/Kolkata",
-  "Asia/Bangkok",
-  "Asia/Tokyo",
-];
-
-function listTimezones(): string[] {
-  const device = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const set = new Set(CURATED_ZONES);
-  if (device) set.add(device);
-  return Array.from(set).sort((a, b) => {
-    if (a === "UTC") return -1;
-    if (b === "UTC") return 1;
-    if (a === device) return -1;
-    if (b === device) return 1;
-    return a.localeCompare(b);
-  });
-}
-
 interface TimezoneSelectProps {
   value: string;
   onChange: (tz: string) => void;
-  /**
-   * Full-width chip matching the retreat name control (md / 44px shell).
-   * Default is the older compact inline select.
-   */
+  /** Full-width chip matching retreat name control (Quick Log page chrome). */
   chip?: boolean;
   className?: string;
 }
 
+/**
+ * Custom timezone picker — no native `<select>` (desktop or mobile).
+ * Whole chip is the trigger; focus ring wraps the full control.
+ */
 export function TimezoneSelect({
   value,
   onChange,
   chip = false,
   className,
 }: TimezoneSelectProps) {
-  const zones = useMemo(() => {
-    const list = listTimezones();
-    // If value somehow isn't in the list (stale storage), keep it selectable.
-    return list.includes(value) ? list : [value, ...list];
-  }, [value]);
+  const { open, box, zones, triggerRef, panelRef, toggle, pick } =
+    useTimezoneSelect(value, onChange);
+  const label = formatTimezoneLabel(value);
+
+  const shell = cn(
+    glassFlushClass(),
+    "w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flagblue-600 focus-visible:ring-offset-2",
+    userFeedbackClass({ press: "md", on: open }),
+    className,
+  );
+
+  const menu =
+    open && box ? (
+      <TimezoneSelectMenu
+        panelRef={panelRef}
+        box={box}
+        zones={zones}
+        value={value}
+        onPick={pick}
+      />
+    ) : null;
 
   if (chip) {
     return (
-      <div
-        className={cn(
-          "relative flex w-full items-center gap-2.5 rounded-2xl px-3.5",
-          controlH.md,
-          glassFlushClass(),
-          className,
-        )}
-      >
-        <Globe className="pointer-events-none size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
-        <select
-          value={value}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label="Time zone"
-          className={cn(
-            "min-w-0 flex-1 appearance-none truncate bg-transparent pr-7 font-display text-base font-semibold text-ink",
-            controlH.sm,
-            userFeedbackClass({ press: "md" }),
-          )}
+      <div ref={triggerRef} className="relative w-full">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-label={`Time zone: ${label}`}
+          className={cn("flex items-center gap-2.5 rounded-2xl px-3.5", controlH.md, shell)}
         >
-          {zones.map((z) => (
-            <option key={z} value={z}>
-              {z.replace(/_/g, " ")}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-3.5 size-4 text-muted"
-          aria-hidden
-        />
+          <Globe className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
+          <span className="min-w-0 flex-1 truncate font-display text-base font-semibold text-ink">
+            {label}
+          </span>
+          <ChevronDown
+            className={cn("size-4 shrink-0 text-muted transition-transform", open && "rotate-180")}
+            aria-hidden
+          />
+        </button>
+        {menu}
       </div>
     );
   }
 
   return (
-    <label className={cn("flex flex-col gap-0.5", className)}>
+    <div ref={triggerRef} className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
       <span className="relative inline-flex min-w-0 items-center">
-        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-        <select
-          value={value}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label="Time zone"
+        <button
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-label={`Time zone: ${label}`}
           className={cn(
-            "min-w-0 max-w-[60vw] appearance-none rounded-xl pr-7 pl-8 text-sm text-ink",
+            "inline-flex min-w-0 max-w-full items-center rounded-xl px-3 pr-8 pl-8",
             controlMinH.md,
-            userFeedbackClass({ press: "md" }),
-            glassFlushClass(),
+            shell,
           )}
         >
-          {zones.map((z) => (
-            <option key={z} value={z}>
-              {z.replace(/_/g, " ")}
-            </option>
-          ))}
-        </select>
+          <span className="min-w-0 truncate text-sm text-ink">{label}</span>
+        </button>
+        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
         <ChevronDown
-          className="pointer-events-none absolute right-2 size-4 text-muted"
+          className={cn(
+            "pointer-events-none absolute right-2 size-4 text-muted transition-transform",
+            open && "rotate-180",
+          )}
           aria-hidden
         />
       </span>
-    </label>
+      {menu}
+    </div>
   );
 }
