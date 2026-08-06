@@ -1,6 +1,6 @@
 # Agent rules — Timekeeper
 
-Hard gates before merge. Companion: `docs/AGENT-OVERFLOW-OUTLINES.md`, `lib/chrome.ts`.
+Wall-clock moment recorder for timed session steps — not a stopwatch. See `docs/DESIGN-SYSTEM.md` §0.
 
 ## CI (must pass)
 
@@ -10,41 +10,26 @@ npm run lint
 npm run a11y
 ```
 
-## Layout — one column, one gutter (never regress)
+Targeted: `a11y:layout`, `a11y:overflow`, `a11y:interactive`.
 
-1. **Shell owns horizontal inset** — mobile `px-3` (`PAGE_INLINE_GUTTER`), desktop `.app-content` + `px-4 sm:px-5`. Title, filters, and rows share that edge.
-2. **No nested horizontal padding** inside the page column — no `px-1` / `px-2` / `max-w-xl` + `mx-auto` on list bodies. Scrollports: `focus-safe-scroll` with **`px-0`** (vertical bleed only).
-3. **Page slot must be `flex flex-col`** with `flex-1 min-h-0` around `{page}`. `PageEnter` needs `h-full flex-1`.
-4. **Never gate layout clearance on `useMediaQuery`** (defaults false until mount). Column geometry and header clearance use **`md:` / `lg:` CSS**, not JS.
-5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
-6. **Page skeleton** — every AppView: `StickyPageChrome` (title + optional pin) at top, then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: **list left `1.6fr`**, record button **right `1fr`** (`QUICKLOG_BODY_GRID`) — isolated columns, no row bleed.
-7. **Flush-edge chips** (Session rail, Add person, retreat, list rows, page cards) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` (no outer shadow). Glass uses inset specular rim only — no `--shadow-glass` drop lift on controls or list rows.
-8. **No nested vertical pad** inside `StickyPageChrome` on top of clearance.
-9. Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5`).
-10. **Desktop nav tabs** — always `font-semibold` + `glassNavTabClass(selected)` (idle = transparent border box, selected = glass fill). Never toggle font weight or border width only on selected.
+## Cursor rules (scoped UI chrome)
 
-## Overflow / focus
+| Rule | When |
+| --- | --- |
+| `.cursor/rules/timekeeper-ui-chrome.mdc` | Editing `components/`, `app/`, `app/globals.css` |
+| `.cursor/rules/timekeeper-interactive-glass.mdc` | Editing `components/` |
 
-- No `overflow-x-auto` on chrome (clips focus rings).
-- Every `overflow-y-auto` list of controls → `focus-safe-scroll` or inset focus cues.
-- Menus/popovers → portal (`GlassMenu`).
-- Adjacent buttons/icons in a cluster → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).
-- **Interactive glass** — tappable controls use `lib/interactive-glass.ts` only (`interactiveGlassFlushClass`, `interactiveGlassRowClass`, `interactiveActionClass`, `staticGlassFlushClass` for editing shells, `interactiveFeedbackClass` for feedback-only rows). Material + `userFeedbackClass` on **one** element. Never import `userFeedbackClass` or `glass*Class` from `@/lib/surfaces` in components (`npm run a11y:interactive`).
-- **No overlay cut** — never `overflow-x-clip` or `contain-paint` on layout chrome / scrollports / cards. Scrollports: `focus-safe-scroll` + `overflow-y-auto` only. Floating panels portaled (`GlassMenu`, LocationCheck). Inset focus globally — no horizontal clip for rings.
+**Constants:** `lib/chrome.ts`. **Overflow detail:** `docs/DESIGN-SYSTEM.md` §4c.
 
-## Session desktop
+## Scope discipline
 
-- Left rail = `SessionPersonRow` (name + field status circles), not full `PersonCard`.
-- Right pane = focused `PersonCard` + `LiveClockButton`.
-
-## File size (ESLint warn)
-
-- `max-lines` 200 code lines (skip blanks + comments)
-- `max-lines-per-function` 60
-- At ~150 lines: extract before growing. Split candidates: `LocationCheck`, handlers in hooks.
+- **Layout, gutter, scroll, header clearance, overflow, glass on controls** — follow Cursor rules above; minimal diffs are not exempt.
+- **Logic, copy, non-chrome styling** — minimal diff OK; run CI if you touch components.
 
 ## Before shipping a page change
 
-Check **Home, Session, People, Quick Log, Fields** on desktop + mobile: nav and content share the same left/right edge.
+Check **Home, Session, People, Quick Log, Fields** on desktop + mobile: nav and content share the same left/right edge. Tap controls on `/dev/components` — whole chip must bounce (`lib/interactive-glass.ts`).
 
-**Interactive states:** `/dev/components` — tap every control; whole chip must bounce. Glass + feedback on one node (`lib/interactive-glass.ts`).
+## File size (ESLint warn)
+
+`max-lines` 200, `max-lines-per-function` 60 (100 in `components/`). Extract before ~150 lines.

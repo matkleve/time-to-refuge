@@ -8,15 +8,18 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import { BrandLockup } from "@/components/atoms/BrandLockup";
+import { Brand } from "@/components/atoms/Brand";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import { DesktopNavPages } from "@/components/atoms/DesktopNavPages";
 import { DesktopNavActions } from "@/components/atoms/DesktopNavActions";
+import { HeaderActionsSlot } from "@/components/timekeeper/header-actions-context";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { cn } from "@/lib/utils";
 
 /**
  * Desktop page tabs — same order as the mobile Pages menu, minus Home
- * (the brand lockup already goes home; a second Home tab overcrowds the bar).
+ * (the brand icon already goes home; a second Home tab overcrowds the bar).
  */
 export const DESKTOP_NAV_PAGES: ReadonlyArray<{
   id: AppView;
@@ -46,12 +49,10 @@ interface DesktopNavProps {
 
 /**
  * Desktop / tablet chrome:
- * brand (→ Home) · page tabs · undo/redo · Export/Dana.
+ * brand lockup (left) · centered page tabs · actions (right).
  *
- * Standard toolbar pattern: no horizontal scroll, no clipped outlines.
- * Density: icon-only below `lg`, short labels from `lg` up. Labels are
- * `text-base` + ink (not muted) so they clear WCAG AA on the header scrim.
- * Actions stay `shrink-0` so they never get eaten by the tab flex.
+ * Selected tab names the page. View-specific actions slot in before global
+ * actions. Centered titles are mobile-only (`TimekeeperMobileShell`).
  */
 export function DesktopNav({
   view,
@@ -68,28 +69,34 @@ export function DesktopNav({
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40 overflow-visible">
       <HeaderScrim />
-      <div className="app-content relative z-10 overflow-visible px-4 py-2.5 sm:px-5">
-        <div className="pointer-events-auto flex min-h-12 items-center gap-2 sm:gap-3">
-          <BrandLockup
-            titleSize="2xl"
-            onHome={() => onChange("home")}
-            className="min-w-0 shrink-0"
-          />
+      <div className="app-content relative z-10 w-full overflow-visible px-4 py-2.5 sm:px-5">
+        <div className="pointer-events-auto flex min-h-12 w-full items-center gap-x-2 sm:gap-x-3">
+          <div className="flex min-w-0 flex-1 items-center justify-start">
+            <Brand size="2xl" showWordmark onHome={() => onChange("home")} />
+          </div>
 
           <DesktopNavPages view={view} onChange={onChange} />
 
-          <DesktopNavActions
-            view={view}
-            onChange={onChange}
-            onUndo={onUndo}
-            undoDisabled={undoDisabled}
-            undoLabel={undoLabel}
-            onRedo={onRedo}
-            redoDisabled={redoDisabled}
-            redoLabel={redoLabel}
-            onExportAll={onExportAll}
-            exportDisabled={exportDisabled}
-          />
+          <div
+            className={cn(
+              "flex min-w-0 flex-1 items-center justify-end",
+              BUTTON_CLUSTER_GAP,
+            )}
+          >
+            <HeaderActionsSlot />
+            <DesktopNavActions
+              view={view}
+              onChange={onChange}
+              onUndo={onUndo}
+              undoDisabled={undoDisabled}
+              undoLabel={undoLabel}
+              onRedo={onRedo}
+              redoDisabled={redoDisabled}
+              redoLabel={redoLabel}
+              onExportAll={onExportAll}
+              exportDisabled={exportDisabled}
+            />
+          </div>
         </div>
       </div>
     </header>

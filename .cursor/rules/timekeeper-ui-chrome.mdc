@@ -1,0 +1,38 @@
+---
+description: Timekeeper page layout, PAGE_INLINE_GUTTER, StickyPageChrome, scroll under brand, overflow clipping focus rings, Session rail, desktop nav tabs
+globs: components/**/*.tsx, app/**/*.tsx, app/globals.css
+alwaysApply: false
+---
+
+# UI chrome — one column, one gutter
+
+Constants: `lib/chrome.ts`. Overflow rationale: `docs/DESIGN-SYSTEM.md` §4c. CI: `a11y:layout`, `a11y:overflow`.
+
+## Column geometry (never regress)
+
+1. **Shell owns horizontal inset** — mobile `px-3` (`PAGE_INLINE_GUTTER`), desktop `.app-content` + `px-4 sm:px-5`. Title, filters, and rows share that edge.
+2. **No nested horizontal padding** in the page column — no `px-1`/`px-2`, no `max-w-*` + `mx-auto` on list bodies. Scrollports: `focus-safe-scroll` with **`px-0`** (vertical bleed only).
+3. **Page slot** — `flex flex-col` + `flex-1 min-h-0` around `{page}`. `PageEnter`: `h-full flex-1`.
+4. **Breakpoints in CSS, not JS** — never gate clearance/width on `useMediaQuery` (SSR false). Use matching `md:`/`lg:` utilities.
+5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
+6. **Page skeleton** — `StickyPageChrome` (title + optional pin), then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: list `1.6fr`, record `1fr` (`QUICKLOG_BODY_GRID`) — isolated columns.
+7. **Flush-edge chips** (rail, add person, list rows) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` via `interactive-glass` — inset rim only, no `--shadow-glass` lift.
+8. **No extra vertical pad** inside `StickyPageChrome` on top of clearance.
+9. **Button clusters** → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).
+10. **Desktop nav tabs** — always `font-semibold` + `glassNavTabClass(selected)`; never toggle weight/border width only when selected.
+
+## Session desktop
+
+Left rail = `SessionPersonRow` (name + field dots), not full `PersonCard`. Right = focused `PersonCard` + `LiveClockButton`.
+
+## Overflow × focus (hard rule)
+
+Outset `:focus-visible` rings are clipped by ancestor `overflow: hidden|auto|scroll|clip`.
+
+- **No `overflow-x-auto` on chrome** — compress density instead; horizontal scroll clips rings on both axes.
+- **Every `overflow-y-auto` list of controls** → `focus-safe-scroll` (bleed ≥ soft-lift blur) **or** inset focus on children. Bare `overflow-y-auto` promotes x→auto and invents horizontal scrollbars.
+- **Menus/popovers** → portal (`GlassMenu`, `LocationCheck`), not inside overflow parents.
+- **No `overflow-x-clip` / `contain-paint`** on layout chrome, scrollports, or cards. Scrollports: `focus-safe-scroll` + `overflow-y-auto` only.
+- **Flex shrink** → prefer `min-h-0` + flex constraints before `overflow-hidden`.
+
+Verify: keyboard-tab changed surface; reload desktop — nothing paints through brand toolbar. Fix parent overflow before weakening focus styles.

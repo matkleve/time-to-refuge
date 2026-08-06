@@ -3,7 +3,6 @@
 import { downloadPersonCsv } from "@/lib/csv";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { RefugeView } from "@/components/organisms/RefugeView";
 import { DesktopWorkspace } from "@/components/organisms/DesktopWorkspace";
@@ -13,8 +12,7 @@ function sessionFrame(app: TimekeeperAppModel, children: React.ReactNode) {
   return (
     <ListPageFrame
       fill="workspace"
-      pin={<PageTitle title="Session" />}
-      pinBelow={
+      pin={
         <RetreatNameField value={app.retreatName} onChange={app.setRetreatName} />
       }
     >

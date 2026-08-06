@@ -5,7 +5,6 @@ import { formatLogTime } from "@/lib/format";
 import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { PageTitle } from "@/components/atoms/PageTitle";
 import { cn } from "@/lib/utils";
 
 interface HistoryPanelProps {
@@ -41,7 +40,7 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
   const sorted = [...log].sort((a, b) => b.at - a.at);
 
   return (
-    <ListPageFrame pin={<PageTitle title="History" />}>
+    <ListPageFrame>
       <div className="mt-3">
         {sorted.length === 0 ? (
           <GlassEmptyNote title="No moments yet" className="mt-16 px-6">

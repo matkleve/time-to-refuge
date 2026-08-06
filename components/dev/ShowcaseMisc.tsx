@@ -11,7 +11,7 @@ import {
   interactiveGlassFlushChipClass,
 } from "@/lib/interactive-glass";
 import { PersonCardNameDisplay } from "@/components/organisms/PersonCardNameDisplay";
-import { BrandLockup } from "@/components/atoms/BrandLockup";
+import { Brand } from "@/components/atoms/Brand";
 import { DEMO_FIELDS, DEMO_PERSON_PARTIAL } from "@/components/dev/showcase-data";
 import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
@@ -28,7 +28,7 @@ export function ShowcaseMisc() {
             isCurrent
             dangerTone={false}
           />
-          <BrandLockup onHome={() => {}} />
+          <Brand onHome={() => {}} />
         </div>
       </ShowcaseSection>
 

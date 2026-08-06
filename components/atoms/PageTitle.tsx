@@ -10,8 +10,8 @@ interface PageTitleProps {
 }
 
 /**
- * In-page heading under the brand toolbar. Always visible — DesktopNav
- * marks the section, this names the page you’re in (Fields / History / …).
+ * Legacy in-page heading row — prefer `HeaderTitle` in the app shell.
+ * Kept for dev showcase / trailing-action layout reference.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (

@@ -8,6 +8,7 @@ import {
 } from "@/components/timekeeper/timekeeper-app-content";
 import { TimekeeperDesktopShell } from "@/components/timekeeper/TimekeeperDesktopShell";
 import { TimekeeperMobileShell } from "@/components/timekeeper/TimekeeperMobileShell";
+import { HeaderActionsProvider } from "@/components/timekeeper/header-actions-context";
 
 export function TimekeeperApp() {
   const app = useTimekeeperApp();
@@ -17,15 +18,17 @@ export function TimekeeperApp() {
 
   const page = <TimekeeperPage app={app} isDesktop={isDesktop} />;
 
-  if (isDesktop) {
-    return <TimekeeperDesktopShell app={app} page={page} />;
-  }
-
   return (
-    <TimekeeperMobileShell
-      app={app}
-      menu={<TimekeeperViewMenu app={app} />}
-      page={page}
-    />
+    <HeaderActionsProvider>
+      {isDesktop ? (
+        <TimekeeperDesktopShell app={app} page={page} />
+      ) : (
+        <TimekeeperMobileShell
+          app={app}
+          menu={<TimekeeperViewMenu app={app} />}
+          page={page}
+        />
+      )}
+    </HeaderActionsProvider>
   );
 }

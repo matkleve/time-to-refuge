@@ -3,7 +3,6 @@
 import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { PageTitle } from "@/components/atoms/PageTitle";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
@@ -40,8 +39,7 @@ export function PeopleSheet({
 }: PeopleSheetProps) {
   return (
     <ListPageFrame
-      pin={<PageTitle title="People" />}
-      pinBelow={
+      pin={
         onRetreatNameChange ? (
           <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
         ) : undefined

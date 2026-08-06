@@ -10,8 +10,8 @@ interface StickyPageChromeProps {
 }
 
 /**
- * Pins page title under the floating brand toolbar.
- * Clearance pad alone owns top air — no nested `pt-*`, no title scrim.
+ * Pins optional page chrome under the floating app header (e.g. retreat chip).
+ * Page titles live in the shell (`HeaderTitle` / nav tabs).
  * Horizontal inset = `PAGE_INLINE_GUTTER` only (same edge as page body).
  */
 export function StickyPageChrome({

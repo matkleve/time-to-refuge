@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Static overflow / clip audit for production UI (DESIGN-SYSTEM §4c,
- * docs/AGENT-OVERFLOW-OUTLINES.md). Run with `npm run a11y:overflow`.
+ * .cursor/rules/timekeeper-ui-chrome.mdc). Run with `npm run a11y:overflow`.
  *
  * Catches the regressions that keep shipping:
  *   - bare `overflow-y-auto` (CSS promotes x→auto → horizontal scrollbar

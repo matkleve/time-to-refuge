@@ -10,7 +10,7 @@ import {
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { FieldEditorRow } from "@/components/organisms/FieldEditorRow";
-import { FieldsPagePin } from "@/components/organisms/FieldsPagePin";
+import { FieldsPageIntro } from "@/components/organisms/FieldsPagePin";
 import { useArmedAction } from "@/lib/use-armed-action";
 
 function isDefaultFields(fields: FieldDef[]): boolean {
@@ -62,7 +62,8 @@ export function FieldsPage({ fields, onChange }: {
   }
 
   return (
-    <ListPageFrame pin={<FieldsPagePin atDefault={atDefault} resetAll={resetAll} />}>
+    <ListPageFrame>
+      <FieldsPageIntro atDefault={atDefault} resetAll={resetAll} />
       <ul className="mt-4 space-y-3 pt-1.5 pb-2">
         {fields.map((field, index) => (
           <li key={field.id}>

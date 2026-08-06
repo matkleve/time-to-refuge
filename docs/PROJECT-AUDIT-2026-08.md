@@ -2,7 +2,7 @@
 
 Post-hygiene pass: CI gates, layout invariant, ESLint maintainability, `page.tsx` split.
 
-Companion audits: `docs/WCAG-AUDIT-2026-08.md`, `docs/AGENT-OVERFLOW-OUTLINES.md`, `AGENTS.md`.
+Companion audits: `docs/WCAG-AUDIT-2026-08.md`, `AGENTS.md`, `.cursor/rules/`.
 
 ---
 
@@ -31,7 +31,7 @@ npm run lint      # --max-warnings 0 (errors + warns block)
 npm run a11y      # contrast + type + overflow + layout
 ```
 
-Agent entry point: **`AGENTS.md`** (layout rules, session rail, no stacked gutters).
+Agent entry point: **`AGENTS.md`** + `.cursor/rules/timekeeper-ui-chrome.mdc`.
 
 ---
 

@@ -7,14 +7,13 @@ import { useArmedAction } from "@/lib/use-armed-action";
 import { cn } from "@/lib/utils";
 import { QuickLogButton } from "@/components/atoms/QuickLogButton";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
 import { PAGE_INLINE_GUTTER, QUICKLOG_BODY_GRID } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
- * Quick Log — sticky title band → body grid inside ListPageFrame.
+ * Quick Log — page tools band → body grid inside ListPageFrame.
  * Desktop: list left (1.6fr), record button right (1fr).
  */
 export function QuickLogView() {
@@ -61,7 +60,7 @@ export function QuickLogView() {
   );
 
   return (
-    <ListPageFrame fill="workspace" selfClearance selfGutter>
+    <ListPageFrame fill="workspace" selfGutter>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Phone: pointer-only convenience so any tap logs a time. */}
       <div
@@ -71,7 +70,7 @@ export function QuickLogView() {
         )}
         onClick={tapAnywhere ? handleLog : undefined}
       >
-        <StickyPageChrome className="md:hidden">{pageChrome}</StickyPageChrome>
+        <div className={cn("md:hidden", PAGE_INLINE_GUTTER)}>{pageChrome}</div>
 
         <div
           className={cn(
@@ -86,7 +85,9 @@ export function QuickLogView() {
             className="flex min-h-0 min-w-0 flex-col"
             onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
           >
-            <StickyPageChrome className="hidden md:block">{pageChrome}</StickyPageChrome>
+            <div className={cn("hidden md:block", PAGE_INLINE_GUTTER)}>
+              {pageChrome}
+            </div>
 
             <div className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-0">
               <QuickLogEntryList

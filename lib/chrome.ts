@@ -15,7 +15,7 @@
  *    horizontal frame (`px-0` on scrollports is fine).
  * 4. Flush-edge controls → `glassFlushClass`, `glassFlushRowClass`, or
  *    `glassFlushChipClass` (no soft-lift). Soft-lift is for floating panels only.
- * 5. Glass is on *controls*, not a full-page inner card. No title scrim.
+ * 5. Glass is on *controls*, not a full-page inner card. Page titles in the shell header.
  */
 
 /** Mobile page / sticky-title inset — matches brand toolbar `px-3`. */

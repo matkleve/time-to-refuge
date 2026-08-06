@@ -180,7 +180,7 @@ if (/\babsolute inset-0\b/.test(listFrame)) {
   shellProblems.push("ListPageFrame still uses absolute inset-0 — prefer h-full flex-1 scroll");
 }
 if (/subheader/.test(desktopAppShell) || /subheader/.test(mobileAppShell)) {
-  shellProblems.push("shell subheader removed — page titles live in ListPageFrame pin");
+  shellProblems.push("shell subheader removed — page titles live in app header");
 }
 
 const rows: Row[] = pageFiles.map(({ page, file }) => {

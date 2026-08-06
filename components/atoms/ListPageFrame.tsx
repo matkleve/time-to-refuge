@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface ListPageFrameProps {
   children: ReactNode;
   className?: string;
-  /** Pinned under the brand toolbar — usually a `PageTitle` (+ blurb). */
+  /** Pinned under the app header — e.g. retreat name chip on Session / People. */
   pin?: ReactNode;
   /** Extra pinned block under the title (e.g. retreat chip). */
   pinBelow?: ReactNode;

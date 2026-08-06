@@ -1,0 +1,24 @@
+---
+description: Timekeeper tappable controls — import interactive-glass only, never surfaces or userFeedbackClass in components
+globs: components/**/*.tsx
+alwaysApply: false
+---
+
+# Interactive glass
+
+Tappable controls use **`@/lib/interactive-glass`** only:
+
+- `interactiveGlassFlushClass`, `interactiveGlassRowClass`, `interactiveActionClass`
+- `staticGlassFlushClass` — editing shells (non-tappable)
+- `interactiveFeedbackClass` — feedback-only rows
+
+Material + `userFeedbackClass` on **one** element.
+
+## Do not in components
+
+- Import `userFeedbackClass` from `@/lib/user-feedback`
+- Import `glass*Class` / `actionClass` from `@/lib/surfaces` (use interactive-glass helpers)
+
+CI: `npm run a11y:interactive`.
+
+Allowlist: `lib/interactive-glass.ts`, `lib/surfaces.ts`, `Surface.tsx`, `icon-button-classes.ts`.

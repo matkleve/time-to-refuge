@@ -447,8 +447,8 @@ adding more outline CSS. At desktop width, confirm nothing sits under the
 brand toolbar. Scroll to the last glass card and confirm its soft shadow
 fades — no hard horizontal cut.
 
-Pasteable agent rule: [`AGENT-OVERFLOW-OUTLINES.md`](./AGENT-OVERFLOW-OUTLINES.md).
-Static CI: `npm run a11y:overflow` fails on bare `overflow-y-auto` (no
+Agent rule: `.cursor/rules/timekeeper-ui-chrome.mdc` (Overflow × focus). Static
+CI: `npm run a11y:overflow` fails on bare `overflow-y-auto` (no
 `focus-safe-scroll` / `overflow-x-clip`) and on any `overflow-x-auto`.
 
 ## 4a. Units
