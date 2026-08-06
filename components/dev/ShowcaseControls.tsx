@@ -25,7 +25,7 @@ export function ShowcaseControls() {
       <ShowcaseSection title="Pills & chips" hint="Whole control is one interactive glass node.">
         <div className="flex max-w-md flex-col gap-3">
           <RetreatNameField value={retreat} onChange={setRetreat} />
-          <TimezoneSelect value={tz} onChange={setTz} chip />
+          <TimezoneSelect value={tz} onChange={setTz} chip fullWidth />
           <AddRowTray
             idleLabel="Add person"
             placeholder="Name"

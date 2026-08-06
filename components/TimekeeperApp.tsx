@@ -26,8 +26,8 @@ export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView 
         return;
       }
       app.setView(view);
-      if (pathname === "/dana") {
-        router.push(view === "home" ? "/" : `/?view=${view}`);
+      if (pathname === "/" || pathname === "/dana") {
+        router.push(view === "home" ? "/" : `/?view=${view}`, { scroll: false });
       }
     },
     [app, pathname, router],

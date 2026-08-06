@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import type { ButtonSize } from "@/components/atoms/button-classes";
+import type { ButtonSize, ButtonVariant } from "@/components/atoms/button-classes";
 
 export type GlassMenuItem = {
   id: string;
@@ -57,6 +57,8 @@ export interface GlassMenuProps {
   triggerIcon?: LucideIcon;
   /** Trigger chip size — default `md` (same as row actions). */
   size?: ButtonSize;
+  /** Trigger material — header hamburger uses `quiet`; in-page ⋯ defaults to `glass`. */
+  triggerVariant?: Extract<ButtonVariant, "quiet" | "glass">;
   align?: "left" | "right";
   className?: string;
 }

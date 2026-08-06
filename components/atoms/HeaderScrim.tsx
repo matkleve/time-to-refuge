@@ -21,7 +21,7 @@ export function HeaderScrim({
     <div
       aria-hidden
       className={cn(
-        "header-scrim",
+        "header-scrim chrome-scrim",
         extended ? HEADER_SCRIM_EXTENDED_HEIGHT : HEADER_SCRIM_HEIGHT,
         className,
       )}

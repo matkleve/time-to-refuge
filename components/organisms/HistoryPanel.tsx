@@ -41,13 +41,13 @@ export function HistoryPanel({ log, fields }: HistoryPanelProps) {
 
   return (
     <ListPageFrame navPage>
-      <div className="mt-3">
+      <div className="mx-auto max-w-prose">
         {sorted.length === 0 ? (
           <GlassEmptyNote title="No moments yet" className="mt-16 px-6">
             Recorded, reset, and undone times will gather here as the ceremony goes.
           </GlassEmptyNote>
         ) : (
-          <ul className="space-y-2 pb-2">
+          <ul className="mt-3 space-y-2 pb-2">
             {sorted.map((entry) => (
               <li
                 key={entry.id}

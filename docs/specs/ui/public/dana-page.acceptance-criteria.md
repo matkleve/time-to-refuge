@@ -33,7 +33,7 @@ Parent: [dana-page.md](dana-page.md)
 
 - [ ] “Open DRCE page” → `https://thebuddapath.eu/drce`
 - [ ] `target="_blank"` + `rel="noopener noreferrer"`
-- [ ] Glass flush chip styling on link (`interactiveGlassFlushChipClass`)
+- [ ] Bold centered text link beneath aside column (not a glass chip)
 
 ## Quote responsive split
 

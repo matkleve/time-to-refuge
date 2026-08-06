@@ -1,7 +1,7 @@
 /* Timekeeper — offline shell for retreat wifi.
  * Precache the app shell; runtime-cache same-origin GETs so a cold open
  * still works after the first successful visit. */
-const CACHE = "timekeeper-v2";
+const CACHE = "timekeeper-v3";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
@@ -52,6 +52,24 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match("/") || caches.match(request)),
+    );
+    return;
+  }
+
+  /* Next.js hashed assets — network-first so a soft reload never pairs fresh
+   * HTML with a stale CSS chunk from an older build (breaks flex / container
+   * utilities and can wrap the header tab row). Offline: fall back to cache. */
+  if (url.pathname.startsWith("/_next/")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
     );
     return;
   }

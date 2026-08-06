@@ -45,18 +45,18 @@ export function DesktopNav({
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40 overflow-visible">
       <HeaderScrim extended={isNavPageView(view)} />
       <div className="app-content relative z-10 w-full overflow-visible px-4 py-2.5 sm:px-5">
-        <div className="pointer-events-auto flex min-h-12 w-full items-center gap-x-2 sm:gap-x-3">
-          <div className="flex shrink-0 justify-start overflow-visible">
+        <div className="pointer-events-auto grid min-h-12 w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 sm:gap-x-3">
+          <div className="flex justify-start overflow-visible">
             <Brand wordmark={true} onHome={() => onChange("home")} />
           </div>
 
-          <div className="@container/nav flex min-w-0 flex-1 justify-center overflow-visible">
+          <div className="@container/nav flex min-w-0 justify-center overflow-visible">
             <DesktopNavPages view={view} onChange={onChange} />
           </div>
 
           <div
             className={cn(
-              "flex shrink-0 items-center justify-end overflow-visible",
+              "flex items-center justify-end overflow-visible",
               BUTTON_CLUSTER_GAP,
             )}
           >

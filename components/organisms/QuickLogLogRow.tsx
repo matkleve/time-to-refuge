@@ -74,7 +74,7 @@ export function QuickLogLogRow({
         ref={dismissRef}
         className={cn(
           "flex w-full max-w-full min-w-0 items-center",
-          BUTTON_CLUSTER_GAP,
+          showActions && BUTTON_CLUSTER_GAP,
           controlMinH.md,
         )}
       >

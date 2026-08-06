@@ -66,6 +66,7 @@ export function ViewMenu({
     <GlassMenu
       label="Open menu"
       triggerIcon={Menu}
+      triggerVariant="quiet"
       size={size}
       sections={[pages, actions]}
       primaryAction={primaryAction}

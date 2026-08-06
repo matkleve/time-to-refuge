@@ -20,14 +20,16 @@ export function resolveButtonLabelContent({
     return <span className={collapseLabel.label}>{children}</span>;
   }
   if (variant === "primary" || (variant === "glass" && chipVisible)) {
-    if (!children) return null;
+    const label = children ?? chipVisible;
+    if (!label) return null;
     return (
       <span
         className={cn(
-          variant === "glass" && "max-w-28 truncate text-sm font-medium whitespace-nowrap",
+          variant === "glass" &&
+            "max-w-28 truncate text-sm font-medium leading-none whitespace-nowrap",
         )}
       >
-        {children}
+        {label}
       </span>
     );
   }

@@ -5,7 +5,6 @@ import { ArmedActionButton } from "@/components/atoms/ArmedActionButton";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import type { useArmedAction } from "@/lib/use-armed-action";
 import { useRegisterHeaderActions } from "@/components/timekeeper/header-actions-context";
-import { useMediaQuery } from "@/lib/use-media-query";
 
 function QuickLogClearButton({
   entryCount,
@@ -40,7 +39,6 @@ export function QuickLogPageChrome({
   onTzChange: (tz: string) => void;
   clearAll: ReturnType<typeof useArmedAction>;
 }) {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const headerActions = useMemo(
     () => (
       <QuickLogClearButton entryCount={entryCount} clearAll={clearAll} />
@@ -48,17 +46,12 @@ export function QuickLogPageChrome({
     [entryCount, clearAll],
   );
 
-  useRegisterHeaderActions(isDesktop ? headerActions : null);
+  useRegisterHeaderActions(headerActions);
 
   return (
     <div className="flex flex-col gap-2 pb-2">
-      {!isDesktop ? (
-        <div className="flex justify-end">
-          <QuickLogClearButton entryCount={entryCount} clearAll={clearAll} />
-        </div>
-      ) : null}
       <p className="text-base tabular-nums text-muted">{entryCount} logged</p>
-      <TimezoneSelect value={tz} onChange={onTzChange} chip />
+      <TimezoneSelect value={tz} onChange={onTzChange} chip fullWidth />
     </div>
   );
 }

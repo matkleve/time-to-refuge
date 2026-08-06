@@ -29,9 +29,9 @@ export const buttonSizeClass = {
 } as const;
 
 export const buttonLabeledSizeClass = {
-  sm: "h-9 gap-1 px-2.5",
-  md: "h-11 gap-1.5 px-3",
-  lg: "h-12 gap-1.5 px-3.5",
+  sm: "h-9 gap-1 px-2.5 leading-none",
+  md: "h-11 gap-1.5 px-3 leading-none",
+  lg: "h-12 gap-1.5 px-3.5 leading-none",
 } as const;
 
 export const buttonIconSize = {

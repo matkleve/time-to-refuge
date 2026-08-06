@@ -323,9 +323,15 @@
     opacity: 1;
   }
 
-  /* One-shot bounce — class toggled by PressBounceRegister on pointerdown. */
+  /*
+   * One-shot bounce — class toggled by PressBounceRegister on pointerdown.
+   * Drop backdrop-filter for the animation: scale + backdrop-filter on one
+   * node leaves a horizontal seam in Chromium (milky band through the chip).
+   */
   .user-feedback.is-press-bounce {
     animation: feedback-press-bounce 280ms ease-out;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 
   /* Open / selected — same cover as hover, held on. */
@@ -366,16 +372,11 @@
   }
 
   /*
-   * Brand toolbar soften — one element, one blur, fade to transparent.
-   * Do not reintroduce multi-layer progressive scrims or a separate
-   * title-scrim band (those read as milky panes / fake light shadows).
+   * Soften band — one blur + fade. `header-scrim` pins it under the app
+   * toolbar; `chrome-scrim` is the shared recipe for page chrome bands.
    */
-  .header-scrim {
+  .chrome-scrim {
     pointer-events: none;
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    z-index: 0;
     -webkit-backdrop-filter: blur(12px) saturate(1.2);
     backdrop-filter: blur(12px) saturate(1.2);
     background: linear-gradient(
@@ -393,8 +394,15 @@
     mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
   }
 
+  .header-scrim {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    z-index: 0;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .header-scrim {
+    .chrome-scrim {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }

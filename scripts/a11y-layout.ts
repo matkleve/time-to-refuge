@@ -199,6 +199,14 @@ if (
     "DesktopNav brand slot must not use min-w-0 flex-1 — grid col or shrink-0 so wordmark never clips",
   );
 }
+if (
+  !/grid-cols-\[auto_minmax\(0,1fr\)_auto\]/.test(desktopNav) &&
+  !/flex-nowrap/.test(desktopNav)
+) {
+  shellProblems.push(
+    "DesktopNav tab row must use grid-cols-[auto_minmax(0,1fr)_auto] (or flex-nowrap) — tabs must not wrap below the brand",
+  );
+}
 
 const rows: Row[] = pageFiles.map(({ page, file }) => {
   const src = read(file);

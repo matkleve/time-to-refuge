@@ -10,15 +10,17 @@ export function QuickLogEntryList({
   tz,
   tapAnywhere,
   clearAllArmed,
+  growUp = false,
   onDelete,
 }: {
   entries: QuickLogEntry[];
   tz: string;
   tapAnywhere: boolean;
   clearAllArmed: boolean;
+  growUp?: boolean;
   onDelete: (id: string) => void;
 }) {
-  const sorted = [...entries].sort((a, b) => b.at - a.at);
+  const sorted = [...entries].sort((a, b) => (growUp ? a.at - b.at : b.at - a.at));
 
   return (
     <div className={cn("flex w-full flex-col gap-2 py-3")}>
@@ -30,7 +32,7 @@ export function QuickLogEntryList({
         sorted.map((entry, i) => (
           <QuickLogLogRow
             key={entry.id}
-            index={sorted.length - i}
+            index={growUp ? i + 1 : sorted.length - i}
             at={entry.at}
             tz={tz}
             armedAll={clearAllArmed}

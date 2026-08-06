@@ -31,6 +31,7 @@ export function GlassMenu({
   iconActions,
   triggerIcon: TriggerIcon = MoreVertical,
   size = "md",
+  triggerVariant = "glass",
   align = "right",
   className,
 }: GlassMenuProps) {
@@ -48,7 +49,7 @@ export function GlassMenu({
   return (
     <div className={cn("relative", open && "z-50", className)} ref={triggerRef}>
       <Button
-        variant="glass"
+        variant={triggerVariant}
         icon={TriggerIcon}
         aria-label={open ? `Close ${label}` : label}
         title={open ? `Close ${label}` : label}

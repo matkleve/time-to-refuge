@@ -10,7 +10,7 @@ Server-rendered support page for the Dzogchen Retreat Center Europe (DRCE). Bank
 
 ## What It Looks Like
 
-Two-column grid from `md`: story column (photo, H1, intro, desktop blockquote) + aside column (dana meter, bank block, copy IBAN CTA, mobile quote, external link chip). Same open-backdrop aesthetic as before — no `max-w-xl` clamp inside app-content (page is full public column now).
+Two-column grid from `md`: story column (photo, H1, intro, desktop blockquote) + aside column (dana meter, bank block, copy IBAN CTA, mobile quote, centered external text link). Same open-backdrop aesthetic as before — no `max-w-xl` clamp inside app-content (page is full public column now).
 
 ## Where It Lives
 
@@ -48,7 +48,7 @@ PublicShell
         ├── DanaCopyRow × 2
         ├── Button Copy IBAN
         ├── blockquote (mobile only)
-        └── external link chips
+        └── external text link (centered)
 ```
 
 ## Heading contract

@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
-import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import {
-  interactiveGlassFlushChipClass,
-  staticGlassFlushClass,
-} from "@/lib/interactive-glass";
+import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/atoms/Button";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
@@ -92,25 +88,20 @@ export function DanaPageAside() {
         <footer className="text-sm text-muted">— {dana.quote.attribution}</footer>
       </blockquote>
 
-      <ul className={cn("flex flex-wrap items-center", BUTTON_CLUSTER_GAP)}>
+      <div className="flex flex-col items-center gap-1 text-center">
         {dana.links.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "inline-flex items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted hover:text-ink",
-                controlMinH.md,
-                interactiveGlassFlushChipClass({ press: "md" }),
-              )}
-            >
-              {link.label}
-              <ExternalLink className="size-4 shrink-0" aria-hidden />
-            </a>
-          </li>
+          <a
+            key={link.href}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-ink underline-offset-4 hover:text-accent hover:underline"
+          >
+            {link.label}
+            <ExternalLink className="size-4 shrink-0" aria-hidden />
+          </a>
         ))}
-      </ul>
+      </div>
 
       <p className="pb-2 text-center text-sm text-subtle">{dana.credit}</p>
     </div>

@@ -78,7 +78,7 @@ export function buildChipClassName({
 }) {
   const collapse = labelCollapseClasses(labelCollapse, size);
   return cn(
-    "inline-flex shrink-0 items-center justify-center rounded-full",
+    "inline-flex shrink-0 items-center justify-center rounded-full leading-none",
     surfaceClass ??
       (useGlass
         ? interactiveGlassFlushChipClass({ press, on: selected })
@@ -116,7 +116,7 @@ export function buildPrimaryClassName({
       "primary",
       { press, on: selected },
       cn(
-        "inline-flex shrink-0 items-center justify-center gap-1.5 font-semibold text-white",
+        "inline-flex shrink-0 items-center justify-center gap-1.5 font-semibold leading-none text-white",
         roundedClass,
         controlH[size],
         size === "lg" ? "px-6 text-base sm:text-lg" : "px-3 text-sm",
@@ -161,7 +161,7 @@ export function buildFlushChipClassName({
   className?: string;
 }) {
   return cn(
-    "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl px-2.5 text-base font-semibold",
+    "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl px-2.5 text-base font-semibold leading-none",
     controlH.sm,
     buttonToneClass(true, armed, tone),
     interactiveGlassFlushChipClass({ press }),

@@ -1,20 +1,20 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Globe } from "lucide-react";
+import { Button } from "@/components/atoms/Button";
 import { TimezoneSelectMenu } from "@/components/atoms/TimezoneSelectMenu";
 import { useTimezoneSelect } from "@/components/atoms/useTimezoneSelect";
-import { controlH, controlMinH } from "@/lib/control-size";
+import { controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { glassPillFocusWithin } from "@/lib/focus-cues";
-import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 interface TimezoneSelectProps {
   value: string;
   onChange: (tz: string) => void;
-  /** Full-width chip matching retreat name control (Quick Log page chrome). */
+  /** Glass pill trigger — matches field / add-row rails when not `fullWidth`. */
   chip?: boolean;
+  /** Span the container (e.g. dev showcase). Default false — flex child in page chrome. */
+  fullWidth?: boolean;
   className?: string;
 }
 
@@ -26,19 +26,22 @@ export function TimezoneSelect({
   value,
   onChange,
   chip = false,
+  fullWidth = false,
   className,
 }: TimezoneSelectProps) {
   const { open, box, zones, triggerRef, panelRef, toggle, pick } =
     useTimezoneSelect(value, onChange);
   const label = formatTimezoneLabel(value);
 
-  const shell = cn(
-    interactiveGlassFlushClass(undefined, { press: "md", on: open }),
-    "w-full text-left focus-visible:outline-none",
-    className,
-  );
-
-  const focusWrap = cn("rounded-2xl", glassPillFocusWithin);
+  const triggerProps = {
+    variant: "flushPill" as const,
+    press: "md" as const,
+    selected: open,
+    onClick: toggle,
+    "aria-expanded": open,
+    "aria-haspopup": "listbox" as const,
+    "aria-label": `Time zone: ${label}`,
+  };
 
   const menu =
     open && box ? (
@@ -53,24 +56,23 @@ export function TimezoneSelect({
 
   if (chip) {
     return (
-      <div ref={triggerRef} className={cn("relative w-full", focusWrap)}>
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-label={`Time zone: ${label}`}
-          className={cn("flex w-full items-center gap-2.5 rounded-2xl px-3.5", controlH.md, shell)}
+      <div ref={triggerRef} className={cn("relative min-w-0", fullWidth && "w-full", className)}>
+        <Button
+          {...triggerProps}
+          fullWidth={fullWidth}
+          className={cn(
+            "gap-2.5 rounded-full px-4 py-2.5 text-left font-display text-lg font-semibold leading-snug",
+            controlMinH.md,
+            !fullWidth && "w-full",
+          )}
         >
           <Globe className="size-5 shrink-0 text-flagblue-600" strokeWidth={2} aria-hidden />
-          <span className="min-w-0 flex-1 truncate font-display text-base font-semibold text-ink">
-            {label}
-          </span>
+          <span className="min-w-0 flex-1 truncate text-ink">{label}</span>
           <ChevronDown
             className={cn("size-4 shrink-0 text-muted transition-transform", open && "rotate-180")}
             aria-hidden
           />
-        </button>
+        </Button>
         {menu}
       </div>
     );
@@ -79,29 +81,18 @@ export function TimezoneSelect({
   return (
     <div ref={triggerRef} className={cn("flex flex-col gap-0.5", className)}>
       <span className="pl-1 text-sm font-medium text-muted">Time zone</span>
-      <span className={cn("relative inline-flex min-w-0 items-center", focusWrap)}>
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          aria-label={`Time zone: ${label}`}
-          className={cn(
-            "inline-flex min-w-0 max-w-full items-center rounded-xl px-3 pr-8 pl-8",
-            controlMinH.md,
-            shell,
-          )}
+      <span className="relative inline-flex min-w-0 items-center">
+        <Button
+          {...triggerProps}
+          className={cn("inline-flex min-w-0 max-w-full gap-2 rounded-xl px-3", controlMinH.md)}
         >
+          <Globe className="size-4 shrink-0 text-muted" aria-hidden />
           <span className="min-w-0 truncate text-sm text-ink">{label}</span>
-        </button>
-        <Globe className="pointer-events-none absolute left-2.5 size-4 text-muted" aria-hidden />
-        <ChevronDown
-          className={cn(
-            "pointer-events-none absolute right-2 size-4 text-muted transition-transform",
-            open && "rotate-180",
-          )}
-          aria-hidden
-        />
+          <ChevronDown
+            className={cn("size-4 shrink-0 text-muted transition-transform", open && "rotate-180")}
+            aria-hidden
+          />
+        </Button>
       </span>
       {menu}
     </div>

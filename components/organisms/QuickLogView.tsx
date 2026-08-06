@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { useArmedAction } from "@/lib/use-armed-action";
@@ -9,10 +9,8 @@ import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import {
-  WORKSPACE_RAIL_WIDTH,
-  WORKSPACE_SCROLL_COLUMN,
-} from "@/lib/chrome";
+import { ChromeScrim } from "@/components/atoms/ChromeScrim";
+import { WORKSPACE_SCROLL_COLUMN } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
@@ -100,6 +98,14 @@ function QuickLogMobileBody({
   onLog,
   onDelete,
 }: QuickLogBodyProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, [entries.length]);
+
   const pageChrome = (
     <QuickLogPageChrome
       entryCount={entries.length}
@@ -116,20 +122,36 @@ function QuickLogMobileBody({
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}
     >
-      <div className="shrink-0 pb-2">{pageChrome}</div>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-         List column — stop tap-anywhere propagation. */}
-      <div
-        className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain"
-        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-      >
-        <QuickLogEntryList
-          entries={entries}
-          tz={tz}
-          tapAnywhere={tapAnywhere}
-          clearAllArmed={clearAll.armed}
-          onDelete={onDelete}
-        />
+      <div className="relative min-h-0 flex-1">
+        <div
+          ref={scrollRef}
+          className={cn(
+            WORKSPACE_SCROLL_COLUMN,
+            "absolute inset-0 flex flex-col overflow-y-auto overscroll-contain",
+          )}
+          onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+        >
+          <div className="mt-auto">
+            <QuickLogEntryList
+              entries={entries}
+              tz={tz}
+              tapAnywhere={tapAnywhere}
+              clearAllArmed={clearAll.armed}
+              growUp
+              onDelete={onDelete}
+            />
+          </div>
+        </div>
+        {/* Pinned chrome — list scrolls underneath the soften band. */}
+        <div className="relative z-10 shrink-0">
+          <ChromeScrim className="absolute inset-0" />
+          <div
+            className="relative"
+            onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+          >
+            {pageChrome}
+          </div>
+        </div>
       </div>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Record button — stop tap-anywhere propagation. */}
@@ -162,11 +184,12 @@ function QuickLogDesktopBody({
   return (
     <div
       className={cn(
-        "hidden min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5 md:flex",
+        "mx-auto hidden w-full max-w-3xl min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5 md:grid",
+        "grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]",
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}
     >
-      <div className={cn(WORKSPACE_RAIL_WIDTH, "flex flex-col gap-3")}>
+      <div className="flex min-h-0 min-w-0 flex-col justify-start">
         <ClockStamp
           mode="quicklog"
           flash={flash}
@@ -175,24 +198,20 @@ function QuickLogDesktopBody({
         />
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="shrink-0">
-          <QuickLogPageChrome
-            entryCount={entries.length}
-            tz={tz}
-            onTzChange={onTzChange}
-            clearAll={clearAll}
-          />
-        </div>
-        <div className={cn(WORKSPACE_SCROLL_COLUMN, "min-h-0 flex-1")}>
-          <QuickLogEntryList
-            entries={entries}
-            tz={tz}
-            tapAnywhere={tapAnywhere}
-            clearAllArmed={clearAll.armed}
-            onDelete={onDelete}
-          />
-        </div>
+      <div className={cn(WORKSPACE_SCROLL_COLUMN, "flex min-h-0 min-w-0 flex-col")}>
+        <QuickLogPageChrome
+          entryCount={entries.length}
+          tz={tz}
+          onTzChange={onTzChange}
+          clearAll={clearAll}
+        />
+        <QuickLogEntryList
+          entries={entries}
+          tz={tz}
+          tapAnywhere={tapAnywhere}
+          clearAllArmed={clearAll.armed}
+          onDelete={onDelete}
+        />
       </div>
     </div>
   );

@@ -15,10 +15,14 @@ export function ButtonIconSlot({
   position: "start" | "end";
 }) {
   return (
-    <Icon
-      className={cn(buttonIconSize[size], "shrink-0")}
-      strokeWidth={2}
+    <span
+      className={cn(
+        buttonIconSize[size],
+        "inline-flex shrink-0 items-center justify-center",
+      )}
       aria-hidden
-    />
+    >
+      <Icon className="size-full" strokeWidth={2} />
+    </span>
   );
 }
