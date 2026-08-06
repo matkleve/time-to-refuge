@@ -55,6 +55,8 @@ export function PinnedToolbarScrollColumn({
 
   if (!toolbar) {
     return (
+      /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Optional stop-propagation for parent tap layers; scrollport is not interactive. */
       <div
         ref={scrollRef}
         className={cn(WORKSPACE_UNDER_TOOLBAR_LIST_SCROLL, className, listClassName)}
@@ -70,6 +72,8 @@ export function PinnedToolbarScrollColumn({
       <div ref={toolbarRef} className="absolute inset-x-0 top-0 z-20">
         {toolbar}
       </div>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Optional stop-propagation for parent tap layers; scrollport is not interactive. */}
       <div
         ref={scrollRef}
         className={cn(WORKSPACE_UNDER_TOOLBAR_LIST_SCROLL, listClassName)}
