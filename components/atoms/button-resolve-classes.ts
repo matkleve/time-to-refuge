@@ -69,7 +69,14 @@ export function resolveButtonClassName(input: ResolveInput): string {
   if (variant === "flushPill") {
     return buildFlushPillClassName({ press, selected, fullWidth, className: cn("min-h-11", className) });
   }
-  if (variant === "flushChip") return buildFlushChipClassName({ press, className });
+  if (variant === "flushChip") {
+    return buildFlushChipClassName({
+      press,
+      armed,
+      tone,
+      className,
+    });
+  }
   if (variant === "card") return buildCardClassName({ className });
   if (variant === "row") {
     return buildRowClassName({ press, selected, fullWidth, flush: rowFlush, className });

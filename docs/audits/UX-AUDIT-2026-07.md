@@ -1,7 +1,9 @@
-# UX audit
+# UX audit — July 2026
+
+> **Historical snapshot** — see [`README.md`](./README.md). Living rules: [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md).
 
 A pass over every screen and state of the app, and the decisions taken from it.
-The design system that resulted is [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md).
+The design system that resulted is [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md).
 
 Screens reviewed: Refuge (empty / card empty / partial / complete), row-reset
 confirm, reset-all confirm, inline rename, People (empty / adding / list / with
@@ -100,7 +102,7 @@ Spacing is now driven by the scale, and the card gets more internal room.
 
 A second pass found the local patterns (row reveal, carousel, a few fade-ups)
 were fine, but **page switches and list mounts still hard-cut**, and capture
-feedback was easy to miss. See [`MOTION-AUDIT.md`](./MOTION-AUDIT.md) for the
+feedback was easy to miss. See [`MOTION-AUDIT-2026-07.md`](./MOTION-AUDIT-2026-07.md) for the
 full priority table; P0 shipped as page entrances, list mounts, stronger
 capture flashes, menu scale-in, sharper carousel easing, and
 `prefers-reduced-motion`.

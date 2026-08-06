@@ -1,5 +1,7 @@
 # Component / UI DRY audit — August 2026
 
+> **Historical snapshot** — see [`README.md`](./README.md).
+
 Pass after unified `PersonCard`, open-backdrop pages, and `PageTitle`.
 Scope: `components/*`, `app/page.tsx`, `lib/surfaces.ts`, `lib/user-feedback.ts`.
 

@@ -258,7 +258,7 @@ const shellRows: Row[] = [
     page: "(shell) DesktopNav",
     file: "components/atoms/DesktopNav.tsx",
     layers: layoutSignalCount(desktopNav),
-    root: "grid brand · centered tabs · actions",
+    root: "flex brand · nav slot · actions",
     problems: shellProblems.filter((p) => p.includes("DesktopNav")),
   },
 ];

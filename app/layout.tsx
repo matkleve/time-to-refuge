@@ -52,11 +52,20 @@ export const metadata: Metadata = {
     siteName,
     title: siteTitle,
     description: siteDescription,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Timekeeper — Refuge Ceremony Timer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: ["/og-image.png"],
   },
   appleWebApp: {
     capable: true,
@@ -65,8 +74,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/logo.svg", type: "image/svg+xml" },
     ],
     apple: "/apple-icon.png",
   },

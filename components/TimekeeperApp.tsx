@@ -1,7 +1,10 @@
 "use client";
 
+import { useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useTimekeeperApp } from "@/lib/use-timekeeper-app";
 import { useMediaQuery } from "@/lib/use-media-query";
+import type { AppView } from "@/components/atoms/ViewMenu";
 import {
   TimekeeperPage,
   TimekeeperViewMenu,
@@ -10,22 +13,40 @@ import { TimekeeperDesktopShell } from "@/components/timekeeper/TimekeeperDeskto
 import { TimekeeperMobileShell } from "@/components/timekeeper/TimekeeperMobileShell";
 import { HeaderActionsProvider } from "@/components/timekeeper/header-actions-context";
 
-export function TimekeeperApp() {
-  const app = useTimekeeperApp();
+export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView }) {
+  const app = useTimekeeperApp(initialView);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const router = useRouter();
+  const pathname = usePathname();
 
-  if (!app.ready) return null;
+  const navigate = useCallback(
+    (view: AppView) => {
+      if (view === "dana") {
+        router.push("/dana");
+        return;
+      }
+      app.setView(view);
+      if (pathname === "/dana") {
+        router.push(view === "home" ? "/" : `/?view=${view}`);
+      }
+    },
+    [app, pathname, router],
+  );
 
-  const page = <TimekeeperPage app={app} isDesktop={isDesktop} />;
+  const appNav = { ...app, setView: navigate } as typeof app;
+
+  if (!app.ready && app.view !== "home" && app.view !== "dana") return null;
+
+  const page = <TimekeeperPage app={appNav} isDesktop={isDesktop} />;
 
   return (
     <HeaderActionsProvider>
       {isDesktop ? (
-        <TimekeeperDesktopShell app={app} page={page} />
+        <TimekeeperDesktopShell app={appNav} page={page} />
       ) : (
         <TimekeeperMobileShell
-          app={app}
-          menu={<TimekeeperViewMenu app={app} />}
+          app={appNav}
+          menu={<TimekeeperViewMenu app={appNav} />}
           page={page}
         />
       )}

@@ -12,7 +12,8 @@ function sessionFrame(app: TimekeeperAppModel, children: React.ReactNode) {
   return (
     <ListPageFrame
       fill="workspace"
-      pin={
+      navPage
+      pinBelow={
         <RetreatNameField value={app.retreatName} onChange={app.setRetreatName} />
       }
     >

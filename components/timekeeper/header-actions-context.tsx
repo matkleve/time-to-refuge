@@ -27,13 +27,18 @@ export function HeaderActionsProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Register view-specific toolbar actions into `DesktopNav` (desktop only). */
+/** Register view-specific actions into the page-title row (desktop `NavPageTitle`, mobile `HeaderTitle`). */
 export function useRegisterHeaderActions(actions: ReactNode) {
   const { setActions } = useContext(HeaderActionsContext);
   useEffect(() => {
     setActions(actions);
     return () => setActions(null);
   }, [actions, setActions]);
+}
+
+export function useHeaderActionsRegistered(): boolean {
+  const { actions } = useContext(HeaderActionsContext);
+  return actions != null;
 }
 
 export function HeaderActionsSlot({ className }: { className?: string }) {

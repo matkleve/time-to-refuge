@@ -1,8 +1,10 @@
 # Project audit — Timekeeper (August 2026)
 
+> **Historical snapshot** — see [`README.md`](./README.md). Today: run CI; see [`AGENTS.md`](../../AGENTS.md).
+
 Post-hygiene pass: CI gates, layout invariant, ESLint maintainability, `page.tsx` split.
 
-Companion audits: `docs/WCAG-AUDIT-2026-08.md`, `AGENTS.md`, `.cursor/rules/`.
+Companion audits: [`WCAG-AUDIT-2026-08.md`](./WCAG-AUDIT-2026-08.md), `AGENTS.md`, `.cursor/rules/`.
 
 ---
 

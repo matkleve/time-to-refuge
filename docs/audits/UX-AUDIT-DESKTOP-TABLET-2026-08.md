@@ -1,9 +1,11 @@
 # UX audit — desktop & tablet (August 2026)
 
+> **Historical snapshot** — see [`README.md`](./README.md).
+
 Pass focused **only** on tablet (`768–1023`) and desktop (`≥1024`). Phone
 shell (`AppShell` / `max-w-md`) is out of scope except where it explains a
 shared component. Companion to [`UX-AUDIT-2026-08.md`](./UX-AUDIT-2026-08.md)
-(phone-primary) and [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) §3b.
+(phone-primary) and [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §3b.
 
 **Code facts at audit time**
 - Shell switch: `useMediaQuery("(min-width: 768px)")` → `DesktopShell` +

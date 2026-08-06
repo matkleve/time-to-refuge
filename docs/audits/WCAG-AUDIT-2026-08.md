@@ -1,5 +1,7 @@
 # WCAG audit — Timekeeper UI (August 2026)
 
+> **Historical snapshot** — see [`README.md`](./README.md). Today: `npm run a11y`.
+
 Pass against **WCAG 2.2 Level AA** for the shipped glass / open-backdrop UI.
 Companion to `npm run a11y:contrast`, `a11y:type`, `a11y:overflow`, `a11y:layout`.
 

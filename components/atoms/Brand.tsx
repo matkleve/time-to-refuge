@@ -1,9 +1,15 @@
 "use client";
 
-import { Button } from "@/components/atoms/Button";
+import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
-/** Header home — ⏱️; desktop toolbar adds the Timekeeper wordmark. */
+/**
+ * Header home lockup. Desktop toolbar always shows ⏱️ + “Timekeeper”.
+ * Mobile shows ⏱️ only (page title is centered separately).
+ *
+ * Plain button + interactiveFeedbackClass — not Button variant="quiet"
+ * (chip sizing and labelCollapse fight a wordmark).
+ */
 export function Brand({
   onHome,
   wordmark = false,
@@ -13,35 +19,44 @@ export function Brand({
   wordmark?: boolean;
   className?: string;
 }) {
+  const shellClass = cn(
+    "inline-flex shrink-0 items-center gap-2 font-display font-bold leading-none text-ink",
+    wordmark ? "text-lg xl:text-2xl" : "text-lg",
+    className,
+  );
+
+  const mark = (
+    <span aria-hidden className="text-2xl leading-none">
+      ⏱️
+    </span>
+  );
+  const title = wordmark ? (
+    <span className="whitespace-nowrap">Timekeeper</span>
+  ) : null;
+
   if (!onHome) {
     return (
-      <span
-        className={cn(
-          "inline-flex shrink-0 items-center gap-2 font-display font-bold text-ink",
-          wordmark && "text-lg xl:text-2xl",
-          className,
-        )}
-      >
-        <span aria-hidden className="text-2xl leading-none">⏱️</span>
-        {wordmark ? "Timekeeper" : null}
+      <span className={shellClass}>
+        {mark}
+        {title}
       </span>
     );
   }
 
   return (
-    <Button
-      variant="quiet"
+    <button
+      type="button"
       onClick={onHome}
       aria-label="Timekeeper — open Home"
-      press="sm"
       className={cn(
-        "shrink-0 font-display font-bold text-ink",
-        wordmark ? "h-12 gap-2 px-3.5 text-base xl:text-2xl" : "size-11",
-        className,
+        shellClass,
+        "rounded-lg",
+        interactiveFeedbackClass({ press: "sm" }),
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flagblue-600 focus-visible:ring-offset-2",
       )}
     >
-      <span aria-hidden className="shrink-0 text-2xl leading-none">⏱️</span>
-      {wordmark ? <span className="shrink-0 whitespace-nowrap">Timekeeper</span> : null}
-    </Button>
+      {mark}
+      {title}
+    </button>
   );
 }

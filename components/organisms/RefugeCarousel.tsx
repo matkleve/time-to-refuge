@@ -31,9 +31,8 @@ function RefugeCarouselSlide({
   retreatName: string;
 }) {
   return (
-    <div className="flex h-full w-full shrink-0 flex-col px-3 pb-1">
+    <div className="focus-safe-scroll flex h-full w-full shrink-0 flex-col overflow-y-auto overscroll-contain pb-1">
       <PersonCard
-        fillHeight
         person={person}
         fields={fields}
         target={isCurrent ? target : null}

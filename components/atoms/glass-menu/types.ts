@@ -37,9 +37,11 @@ export type GlassMenuPrimaryAction = {
   id: string;
   label: string;
   icon: LucideIcon;
-  onSelect: () => void;
   selected?: boolean;
-};
+} & (
+  | { href: string; onSelect?: never }
+  | { href?: never; onSelect: () => void }
+);
 
 export interface GlassMenuProps {
   label: string;

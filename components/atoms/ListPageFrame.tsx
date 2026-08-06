@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
-import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
+import {
+  DESKTOP_CLEARANCE_WITH_TITLE,
+  MOBILE_HEADER_CLEARANCE,
+  PAGE_INLINE_GUTTER,
+} from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 interface ListPageFrameProps {
@@ -15,14 +19,19 @@ interface ListPageFrameProps {
    * `workspace` — fixed viewport slot: pin + flex children (Session, Quick Log, Home).
    */
   fill?: "scroll" | "workspace";
+  /** Page title is in `DesktopNav` — extra md+ clearance for nav + title band. */
+  navPage?: boolean;
   /** Page owns StickyPageChrome internally — skip fallback header clearance. */
   selfClearance?: boolean;
   /** Page applies PAGE_INLINE_GUTTER internally — skip on body wrapper. */
   selfGutter?: boolean;
 }
 
-const HEADER_CLEARANCE =
-  "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)] md:pt-[4.5rem]";
+const HEADER_CLEARANCE = cn(MOBILE_HEADER_CLEARANCE, "md:pt-[4.5rem]");
+const NAV_PAGE_CLEARANCE = cn(
+  MOBILE_HEADER_CLEARANCE,
+  DESKTOP_CLEARANCE_WITH_TITLE,
+);
 
 /**
  * Standard page frame inside the app shell: one column, one gutter, one
@@ -34,10 +43,12 @@ export function ListPageFrame({
   pinBelow,
   className,
   fill = "scroll",
+  navPage = false,
   selfClearance = false,
   selfGutter = false,
 }: ListPageFrameProps) {
   const isWorkspace = fill === "workspace";
+  const clearance = navPage ? NAV_PAGE_CLEARANCE : HEADER_CLEARANCE;
 
   return (
     <div
@@ -56,14 +67,16 @@ export function ListPageFrame({
             }
       }
     >
-      {pin ? (
-        <StickyPageChrome below={pinBelow}>{pin}</StickyPageChrome>
+      {pin || pinBelow ? (
+        <StickyPageChrome below={pinBelow} belowHeaderTitle={navPage}>
+          {pin}
+        </StickyPageChrome>
       ) : null}
       <div
         className={cn(
           !selfGutter && PAGE_INLINE_GUTTER,
           isWorkspace && "flex min-h-0 flex-1 flex-col",
-          !pin && !selfClearance && HEADER_CLEARANCE,
+          !pin && !pinBelow && !selfClearance && clearance,
         )}
       >
         {children}

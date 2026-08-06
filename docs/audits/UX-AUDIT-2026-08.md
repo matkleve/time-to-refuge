@@ -1,8 +1,10 @@
 # UX audit — August 2026
 
+> **Historical snapshot** — see [`README.md`](./README.md).
+
 Pass over the ceremony timing app after Custom Fields, unified `PersonCard`,
 People open-backdrop chrome, and Quick Log header cleanup. Extends
-[`UX-AUDIT.md`](./UX-AUDIT.md) (contrast / controls / motion foundations) —
+[`UX-AUDIT-2026-07.md`](./UX-AUDIT-2026-07.md) (contrast / controls / motion foundations) —
 those fixes are treated as shipped and are not re-litigated.
 
 Screens reviewed: Refuge (mobile + desktop), People, Quick Log, History,

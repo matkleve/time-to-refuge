@@ -4,9 +4,10 @@ import type { AppView } from "@/components/atoms/ViewMenu";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { DESKTOP_NAV_PAGES } from "@/components/atoms/DesktopNav";
+import { DESKTOP_NAV_PAGES } from "@/lib/desktop-nav-pages";
+import { interactiveGlassNavTabClass } from "@/lib/interactive-glass";
 
-/** Desktop page tabs — quiet chrome; icon-only when tight, icon + label from `lg` up. */
+/** Desktop page tabs — quiet chrome; icon-only when the nav slot is tight. */
 export function DesktopNavPages({
   view,
   onChange,
@@ -17,7 +18,10 @@ export function DesktopNavPages({
   return (
     <nav
       aria-label="Primary"
-      className={cn("flex shrink-0 flex-nowrap items-center", BUTTON_CLUSTER_GAP)}
+      className={cn(
+        "flex min-w-0 flex-nowrap items-center justify-center",
+        BUTTON_CLUSTER_GAP,
+      )}
     >
       {DESKTOP_NAV_PAGES.map(({ id, label, icon }) => {
         const selected = view === id;
@@ -27,8 +31,9 @@ export function DesktopNavPages({
             variant="quiet"
             icon={icon}
             selected={selected}
-            labelCollapse="lg"
+            labelCollapse="nav"
             press="md"
+            surfaceClass={interactiveGlassNavTabClass(selected, { press: "md" })}
             aria-label={label}
             title={label}
             aria-current={selected ? "page" : undefined}

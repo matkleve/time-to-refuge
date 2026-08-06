@@ -1,9 +1,11 @@
-# Motion & interaction audit
+# Motion & interaction audit — July 2026
+
+> **Historical snapshot** — see [`README.md`](./README.md). Living motion rules: [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §5.
 
 UX pass focused on **responsiveness** — does the UI acknowledge input and
 change of place, or does it jump? Companion to the earlier contrast / controls
 audit in this file’s sections 1–7. Spec updates land in
-[`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) §5.
+[`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §5.
 
 Screens / flows re-checked: Refuge carousel + record, field/row reveals,
 Jump-here confirm, person ⋯ / hamburger menus, People / History / Quick Log

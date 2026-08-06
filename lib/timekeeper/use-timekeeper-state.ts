@@ -11,9 +11,9 @@ import {
   useTimekeeperPersistEffects,
 } from "@/lib/timekeeper/use-timekeeper-effects";
 
-export function useTimekeeperState() {
+export function useTimekeeperState(initialView: AppView = "home") {
   const [ready, setReady] = useState(false);
-  const [view, setView] = useState<AppView>("home");
+  const [view, setView] = useState<AppView>(initialView);
   const [fields, setFields] = useState<FieldDef[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [log, setLog] = useState<LogEntry[]>([]);

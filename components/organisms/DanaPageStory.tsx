@@ -25,7 +25,9 @@ export function DanaPageStory() {
       </div>
 
       <div className="space-y-2 md:space-y-3">
-        <h3 className="font-display text-2xl font-semibold text-ink">{dana.headline}</h3>
+        <h1 className="font-display text-2xl font-semibold text-ink md:text-4xl">
+          {dana.headline}
+        </h1>
         <p className="text-base leading-relaxed text-muted md:text-lg">{dana.intro}</p>
       </div>
 

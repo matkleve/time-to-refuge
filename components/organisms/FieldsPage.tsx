@@ -62,41 +62,43 @@ export function FieldsPage({ fields, onChange }: {
   }
 
   return (
-    <ListPageFrame>
-      <FieldsPageIntro atDefault={atDefault} resetAll={resetAll} />
-      <ul className="mt-4 space-y-3 pt-1.5 pb-2">
-        {fields.map((field, index) => (
-          <li key={field.id}>
-            <FieldEditorRow
-              field={field}
-              canDelete={fields.length > 1}
-              canUp={index > 0}
-              canDown={index < fields.length - 1}
-              bumpNonce={bumpedId === field.id ? bumpNonce : 0}
-              onRename={(label) => rename(field.id, label)}
-              onUp={() => move(field.id, -1)}
-              onDown={() => move(field.id, 1)}
-              onDelete={() => remove(field.id)}
-            />
+    <ListPageFrame navPage>
+      <div className="mx-auto max-w-prose">
+        <FieldsPageIntro atDefault={atDefault} resetAll={resetAll} />
+        <ul className="mt-4 space-y-3 pt-1.5 pb-2">
+          {fields.map((field, index) => (
+            <li key={field.id}>
+              <FieldEditorRow
+                field={field}
+                canDelete={fields.length > 1}
+                canUp={index > 0}
+                canDown={index < fields.length - 1}
+                bumpNonce={bumpedId === field.id ? bumpNonce : 0}
+                onRename={(label) => rename(field.id, label)}
+                onUp={() => move(field.id, -1)}
+                onDown={() => move(field.id, 1)}
+                onDelete={() => remove(field.id)}
+              />
+            </li>
+          ))}
+          <li>
+            {fields.length >= MAX_FIELDS ? (
+              <p className="px-2 py-2 text-center text-sm text-muted">
+                Up to {MAX_FIELDS} fields.
+              </p>
+            ) : (
+              <AddRowTray
+                idleLabel="Add field"
+                placeholder="Field name"
+                inputLabel="New field name"
+                cancelLabel="Cancel adding field"
+                confirmLabel="Add field"
+                onAdd={addField}
+              />
+            )}
           </li>
-        ))}
-        <li>
-          {fields.length >= MAX_FIELDS ? (
-            <p className="px-2 py-2 text-center text-sm text-muted">
-              Up to {MAX_FIELDS} fields.
-            </p>
-          ) : (
-            <AddRowTray
-              idleLabel="Add field"
-              placeholder="Field name"
-              inputLabel="New field name"
-              cancelLabel="Cancel adding field"
-              confirmLabel="Add field"
-              onAdd={addField}
-            />
-          )}
-        </li>
-      </ul>
+        </ul>
+      </div>
     </ListPageFrame>
   );
 }

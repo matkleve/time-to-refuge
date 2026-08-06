@@ -1,6 +1,23 @@
 {
   "headline": "Refuge ceremony timer",
   "intro": "Record the exact wall-clock moment of each vow — Buddha, Dharma, Sangha — to the millisecond. Built for retreat timekeepers.",
+  "about": {
+    "title": "A record, not a stopwatch",
+    "body": "Timekeeper captures the exact wall-clock moment a person completes each phase of a refuge ceremony. Nothing counts up or down. Each tap stores a timestamp to the millisecond and never recomputes it afterward — so the record stays faithful to when the timekeeper tapped, as close as possible to the preceptor's snap."
+  },
+  "audience": {
+    "title": "Who it is for",
+    "body": "The app is built for retreat timekeepers running Worlds of Wisdom-style ceremonies and similar threefold refuge rites. The preceptor and participants never touch the app — only the timekeeper does, one aspirant at a time, moving through Buddha, Dharma, and Sangha before the next person begins."
+  },
+  "features": {
+    "title": "What you get",
+    "items": [
+      "Millisecond timestamps for Buddha, Dharma, and Sangha — one tap per phase.",
+      "Offline-ready PWA: works on retreat wifi after a single online visit.",
+      "CSV export per person or for the whole retreat, plus shareable record cards.",
+      "Undo and redo when you need to correct a moment without losing the session."
+    ]
+  },
   "steps": [
     {
       "title": "Add people",
@@ -19,5 +36,11 @@
     }
   ],
   "cta": "Open Session",
-  "footnote": "Offline-ready after one visit. No account needed."
+  "footnote": "Offline-ready after one visit. No account needed.",
+  "footer": {
+    "supportLabel": "Support DRCE",
+    "supportHref": "/dana",
+    "externalLabel": "Dzogchen Retreat Center Europe",
+    "externalHref": "https://thebuddapath.eu/drce"
+  }
 }

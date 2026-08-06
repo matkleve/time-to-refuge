@@ -2,7 +2,7 @@
 
 Everything here is defined once in [`app/globals.css`](../app/globals.css) and
 verified by `npm run a11y:contrast`. The audit that produced it is
-[`UX-AUDIT.md`](./UX-AUDIT.md).
+[`UX-AUDIT-2026-07.md`](./audits/UX-AUDIT-2026-07.md).
 
 ---
 
@@ -368,7 +368,7 @@ fills use `.user-feedback--on-accent` (white wash). Chrome controls
 a second hover recipe locally.
 
 **Three interaction recipes (only these).** Anything else is drift — see
-[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./INTERACTIVE-STATES-AUDIT-2026-08.md).
+[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./audits/INTERACTIVE-STATES-AUDIT-2026-08.md).
 
 | Recipe | Cue | Use |
 | --- | --- | --- |
@@ -390,7 +390,7 @@ shared feedback cover + blue icon.
 **State coverage checklist (ship gate).** For every interactive surface,
 verify these are *visibly distinct* — not only wired in props. Full inventory
 of primitives vs one-offs:
-[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./INTERACTIVE-STATES-AUDIT-2026-08.md).
+[`INTERACTIVE-STATES-AUDIT-2026-08.md`](./audits/INTERACTIVE-STATES-AUDIT-2026-08.md).
 
 | Must show | Examples |
 | --- | --- |
@@ -470,7 +470,7 @@ Everything else is rem.
 
 ## 5. Motion
 
-Full findings: [`MOTION-AUDIT.md`](./MOTION-AUDIT.md).
+Full findings: [`MOTION-AUDIT-2026-07.md`](./audits/MOTION-AUDIT-2026-07.md).
 
 Three durations, all Tailwind's own `duration-*` — no custom duration names,
 for the same reason the type scale re-values Tailwind's steps (§4a):

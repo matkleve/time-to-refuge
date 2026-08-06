@@ -1,4 +1,4 @@
-import { controlH, controlMinH } from "@/lib/control-size";
+import { controlH } from "@/lib/control-size";
 import {
   interactiveActionClass,
   interactiveGlassClass,
@@ -21,14 +21,19 @@ export function labelCollapseClasses(collapse?: LabelCollapse, size: ButtonSize 
   if (!collapse) return { button: "", label: "" };
   const iconOnly = buttonSizeClass[size];
   const labeledAtLg: Record<ButtonSize, string> = {
-    sm: "lg:h-9 lg:w-auto lg:gap-1 lg:px-2.5",
+    sm: "lg:h-11 lg:w-auto lg:gap-1.5 lg:px-3",
     md: "lg:h-11 lg:w-auto lg:gap-2 lg:px-3 xl:px-3.5",
     lg: "lg:h-12 lg:w-auto lg:gap-2 lg:px-3.5",
   };
   const labeledAtXl: Record<ButtonSize, string> = {
-    sm: "xl:h-9 xl:w-auto xl:gap-1 xl:px-2.5",
+    sm: "xl:h-11 xl:w-auto xl:gap-1.5 xl:px-3",
     md: "xl:h-11 xl:w-auto xl:gap-2 xl:px-3",
     lg: "xl:h-12 xl:w-auto xl:gap-2 xl:px-3.5",
+  };
+  const labeledAtNav: Record<ButtonSize, string> = {
+    sm: "@min-[28rem]/nav:h-9 @min-[28rem]/nav:w-auto @min-[28rem]/nav:gap-1.5 @min-[28rem]/nav:px-3",
+    md: "@min-[30rem]/nav:h-11 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3 xl:px-3.5",
+    lg: "@min-[30rem]/nav:h-12 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3.5",
   };
   return {
     button: cn(
@@ -36,8 +41,13 @@ export function labelCollapseClasses(collapse?: LabelCollapse, size: ButtonSize 
       "shrink-0",
       collapse === "lg" && labeledAtLg[size],
       collapse === "xl" && labeledAtXl[size],
+      collapse === "nav" && labeledAtNav[size],
     ),
-    label: cn(collapse === "lg" && "hidden lg:inline", collapse === "xl" && "hidden xl:inline"),
+    label: cn(
+      collapse === "lg" && "hidden lg:inline",
+      collapse === "xl" && "hidden xl:inline",
+      collapse === "nav" && "hidden @min-[30rem]/nav:inline",
+    ),
   };
 }
 
@@ -132,6 +142,7 @@ export function buildFlushPillClassName({
   className?: string;
 }) {
   return cn(
+    "flex items-center",
     interactiveGlassFlushClass(undefined, { press, on: selected }),
     fullWidth && "w-full",
     className,
@@ -140,14 +151,19 @@ export function buildFlushPillClassName({
 
 export function buildFlushChipClassName({
   press,
+  armed = false,
+  tone = "neutral",
   className,
 }: {
   press: FeedbackPress;
+  armed?: boolean;
+  tone?: ButtonTone;
   className?: string;
 }) {
   return cn(
-    "inline-flex items-center justify-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted hover:text-ink",
-    controlMinH.md,
+    "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl px-2.5 text-base font-semibold",
+    controlH.sm,
+    buttonToneClass(true, armed, tone),
     interactiveGlassFlushChipClass({ press }),
     className,
   );

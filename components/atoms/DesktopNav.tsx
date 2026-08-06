@@ -1,38 +1,15 @@
 "use client";
 
-import {
-  Clock,
-  Contact,
-  History,
-  ListTree,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
 import { Brand } from "@/components/atoms/Brand";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
+import { NavPageTitle } from "@/components/atoms/NavPageTitle";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import { DesktopNavPages } from "@/components/atoms/DesktopNavPages";
 import { DesktopNavActions } from "@/components/atoms/DesktopNavActions";
 import { HeaderActionsSlot } from "@/components/timekeeper/header-actions-context";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { isNavPageView } from "@/lib/view-titles";
 import { cn } from "@/lib/utils";
-
-/**
- * Desktop page tabs — same order as the mobile Pages menu, minus Home
- * (the brand icon already goes home; a second Home tab overcrowds the bar).
- */
-export const DESKTOP_NAV_PAGES: ReadonlyArray<{
-  id: AppView;
-  label: string;
-  shortLabel: string;
-  icon: LucideIcon;
-}> = [
-  { id: "fields", label: "Fields", shortLabel: "Fields", icon: ListTree },
-  { id: "people", label: "People", shortLabel: "People", icon: Contact },
-  { id: "refuge", label: "Session", shortLabel: "Session", icon: Users },
-  { id: "quicklog", label: "Quick Log", shortLabel: "Log", icon: Clock },
-  { id: "history", label: "History", shortLabel: "History", icon: History },
-];
 
 interface DesktopNavProps {
   view: AppView;
@@ -49,10 +26,8 @@ interface DesktopNavProps {
 
 /**
  * Desktop / tablet chrome:
- * brand lockup (left) · centered page tabs · actions (right).
- *
- * Selected tab names the page. View-specific actions slot in before global
- * actions. Centered titles are mobile-only (`TimekeeperMobileShell`).
+ * brand lockup (left) · page tabs (flex middle) · global actions (right).
+ * Nav pages: page title row below tabs — view actions sit on the title row.
  */
 export function DesktopNav({
   view,
@@ -68,27 +43,24 @@ export function DesktopNav({
 }: DesktopNavProps) {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-40 overflow-visible">
-      <HeaderScrim />
+      <HeaderScrim extended={isNavPageView(view)} />
       <div className="app-content relative z-10 w-full overflow-visible px-4 py-2.5 sm:px-5">
-        <div
-          className="pointer-events-auto grid min-h-12 w-full grid-cols-[1fr_auto_1fr] items-center gap-x-2 sm:gap-x-3"
-        >
-          <div className="flex justify-start overflow-visible">
+        <div className="pointer-events-auto flex min-h-12 w-full items-center gap-x-2 sm:gap-x-3">
+          <div className="flex shrink-0 justify-start overflow-visible">
             <Brand wordmark={true} onHome={() => onChange("home")} />
           </div>
 
-          <DesktopNavPages view={view} onChange={onChange} />
+          <div className="@container/nav flex min-w-0 flex-1 justify-center overflow-visible">
+            <DesktopNavPages view={view} onChange={onChange} />
+          </div>
 
           <div
             className={cn(
-              "flex items-center justify-end overflow-visible",
+              "flex shrink-0 items-center justify-end overflow-visible",
               BUTTON_CLUSTER_GAP,
             )}
           >
-            <HeaderActionsSlot />
             <DesktopNavActions
-              view={view}
-              onChange={onChange}
               onUndo={onUndo}
               undoDisabled={undoDisabled}
               undoLabel={undoLabel}
@@ -100,6 +72,16 @@ export function DesktopNav({
             />
           </div>
         </div>
+        {isNavPageView(view) ? (
+          <div className="flex min-h-12 items-center justify-between gap-3 pb-1">
+            <div className="pointer-events-none min-w-0 flex-1">
+              <NavPageTitle view={view} />
+            </div>
+            <div className="pointer-events-auto shrink-0">
+              <HeaderActionsSlot />
+            </div>
+          </div>
+        ) : null}
       </div>
     </header>
   );

@@ -4,18 +4,20 @@ import { cn } from "@/lib/utils";
 export function HeaderTitle({
   title,
   className,
+  as: Tag = "h1",
 }: {
   title: string;
   className?: string;
+  as?: "h1" | "p";
 }) {
   return (
-    <h1
+    <Tag
       className={cn(
-        "min-w-0 truncate text-center font-display text-base font-semibold text-ink",
+        "w-full min-w-0 truncate text-center font-display text-lg leading-tight font-semibold text-ink",
         className,
       )}
     >
       {title}
-    </h1>
+    </Tag>
   );
 }

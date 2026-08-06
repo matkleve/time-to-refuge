@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback } from "react";
+import type { GlassMenuPrimaryAction } from "./types";
 
 export function useGlassMenuPickers({
   setOpen,
   primaryAction,
 }: {
   setOpen: (value: boolean | ((v: boolean) => boolean)) => void;
-  primaryAction?: { onSelect: () => void };
+  primaryAction?: GlassMenuPrimaryAction;
 }) {
   const pick = useCallback(
     (item: { onSelect: () => void; keepOpen?: boolean }) => {
@@ -26,7 +27,7 @@ export function useGlassMenuPickers({
   );
 
   const onPrimarySelect = useCallback(() => {
-    if (!primaryAction) return;
+    if (!primaryAction || primaryAction.href || !primaryAction.onSelect) return;
     primaryAction.onSelect();
     setOpen(false);
   }, [primaryAction, setOpen]);

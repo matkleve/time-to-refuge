@@ -10,8 +10,8 @@ interface PageTitleProps {
 }
 
 /**
- * Legacy in-page heading row — prefer `HeaderTitle` in the app shell.
- * Kept for dev showcase / trailing-action layout reference.
+ * In-page heading under the brand toolbar on desktop nav pages.
+ * Mobile uses `HeaderTitle` in the shell — hide this row below `md`.
  */
 export function PageTitle({ title, trailing, className }: PageTitleProps) {
   return (

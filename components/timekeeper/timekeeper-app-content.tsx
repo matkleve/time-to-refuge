@@ -6,9 +6,9 @@ import { PageEnter } from "@/components/atoms/PageEnter";
 import { ViewMenu } from "@/components/atoms/ViewMenu";
 import { HistoryPanel } from "@/components/organisms/HistoryPanel";
 import { FieldsPage } from "@/components/organisms/FieldsPage";
-import { DanaPage } from "@/components/organisms/DanaPage";
 import { QuickLogView } from "@/components/organisms/QuickLogView";
 import { LandingPage } from "@/components/organisms/LandingPage";
+import { DanaPage } from "@/components/organisms/DanaPage";
 import { undoRedoMenuProps } from "@/components/timekeeper/timekeeper-menu-props";
 import { TimekeeperPeoplePage } from "@/components/timekeeper/timekeeper-people-page";
 import { TimekeeperRefugePage } from "@/components/timekeeper/timekeeper-refuge-page";
@@ -52,12 +52,12 @@ export function TimekeeperPage({
           : app.view === "history"
             ? <HistoryPanel log={app.log} fields={app.fields} />
             : app.view === "people"
-              ? <TimekeeperPeoplePage app={app} />
-              : app.view === "fields"
-                ? <FieldsPage fields={app.fields} onChange={app.handleFieldsChange} />
-                : app.view === "dana"
-                  ? <DanaPage />
-                  : <TimekeeperRefugePage app={app} isDesktop={isDesktop} />}
+              ? <TimekeeperPeoplePage app={app} isDesktop={isDesktop} />
+            : app.view === "fields"
+              ? <FieldsPage fields={app.fields} onChange={app.handleFieldsChange} />
+              : app.view === "dana"
+                ? <DanaPage />
+                : <TimekeeperRefugePage app={app} isDesktop={isDesktop} />}
     </PageEnter>
   );
 }

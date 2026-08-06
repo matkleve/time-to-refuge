@@ -4,7 +4,7 @@ import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import type { useArmedAction } from "@/lib/use-armed-action";
 
-/** Armed two-tap destroy chip with a visible label (Clear, Reset). */
+/** Armed two-tap destroy — `Button` `glass` + `showLabel` (DESIGN-SYSTEM §4 labeled glass). */
 export function ArmedActionButton({
   armed,
   disabled,
@@ -12,7 +12,7 @@ export function ArmedActionButton({
   armedLabel,
   showLabel,
   onTrigger,
-  press = "md",
+  press = "sm",
 }: {
   armed: boolean;
   disabled?: boolean;
@@ -26,15 +26,17 @@ export function ArmedActionButton({
     <Button
       variant="glass"
       icon={RotateCcw}
-      aria-label={armed ? armedLabel : idleLabel}
       showLabel={showLabel}
+      aria-label={armed ? armedLabel : idleLabel}
       tone="danger"
-      size="md"
+      size="sm"
       press={press}
       disabled={disabled}
       armed={armed}
       onClick={onTrigger}
-    />
+    >
+      {showLabel}
+    </Button>
   );
 }
 

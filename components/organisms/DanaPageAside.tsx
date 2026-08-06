@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Copy, ExternalLink } from "lucide-react";
 import dana from "@/content/dana.json";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
@@ -12,13 +13,25 @@ import { Button } from "@/components/atoms/Button";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
 import { DanaCopyRow } from "@/components/organisms/DanaCopyRow";
 
-export function DanaPageAside({
-  copied,
-  onCopy,
-}: {
-  copied: "iban" | "bic" | null;
-  onCopy: (kind: "iban" | "bic", value: string) => void;
-}) {
+async function copyText(value: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function DanaPageAside() {
+  const [copied, setCopied] = useState<"iban" | "bic" | null>(null);
+
+  async function handleCopy(kind: "iban" | "bic", value: string) {
+    const ok = await copyText(value);
+    if (!ok) return;
+    setCopied(kind);
+    setTimeout(() => setCopied(null), 1600);
+  }
+
   return (
     <div className="flex flex-col gap-5 md:gap-6">
       <DanaProgress
@@ -34,7 +47,9 @@ export function DanaPageAside({
           staticGlassFlushClass(),
         )}
       >
-        <p className="text-xs font-medium tracking-wide text-muted uppercase">Bank transfer</p>
+        <h2 className="text-xs font-medium tracking-wide text-muted uppercase">
+          Bank transfer
+        </h2>
         <p className="font-display text-lg font-semibold text-ink md:text-2xl">
           {dana.bank.accountName}
         </p>
@@ -42,13 +57,13 @@ export function DanaPageAside({
           label="IBAN"
           value={dana.bank.iban}
           copied={copied === "iban"}
-          onCopy={() => onCopy("iban", dana.bank.iban)}
+          onCopy={() => handleCopy("iban", dana.bank.iban)}
         />
         <DanaCopyRow
           label="BIC"
           value={dana.bank.bic}
           copied={copied === "bic"}
-          onCopy={() => onCopy("bic", dana.bank.bic)}
+          onCopy={() => handleCopy("bic", dana.bank.bic)}
         />
         <p className="text-sm text-muted md:text-base">{dana.bank.messageHint}</p>
       </div>
@@ -65,7 +80,7 @@ export function DanaPageAside({
         size="lg"
         tone="accent"
         press="md"
-        onClick={() => onCopy("iban", dana.bank.iban)}
+        onClick={() => handleCopy("iban", dana.bank.iban)}
         className={cn(
           "w-full max-w-none justify-center [&_span]:max-w-none",
           copied === "iban" && "text-saffron-700",

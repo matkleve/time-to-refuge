@@ -53,4 +53,4 @@ export type ButtonVariant =
   | "menuRow"
   | "quietText";
 
-export type LabelCollapse = "lg" | "xl";
+export type LabelCollapse = "lg" | "xl" | "nav";

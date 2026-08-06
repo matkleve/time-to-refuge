@@ -2,6 +2,7 @@
 
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
+import { WORKSPACE_DETAIL, WORKSPACE_RAIL } from "@/lib/chrome";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { AddPersonRow } from "./AddPersonRow";
@@ -26,13 +27,7 @@ interface DesktopWorkspaceProps {
   retreatName?: string;
 }
 
-/**
- * Desktop / tablet Session: compact progress rows on the left (name + one
- * circle per field); focused PersonCard + record on the right.
- *
- * Scrollports use `focus-safe-scroll` (vertical bleed only).
- * Rail chips use `glassFlushClass` so soft-lift isn’t sliced at the edge.
- */
+/** Desktop / tablet Session — progress rail left, PersonCard + record right. */
 export function DesktopWorkspace({
   people,
   fields,
@@ -65,15 +60,8 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 gap-3 overflow-hidden py-3 sm:gap-4 sm:py-4 lg:gap-5">
-      {/*
-        Progress rail — scan who’s done. Horizontal padding stays 0: the shell
-        already applies `.app-content` + `px-4 sm:px-5` (same gutter as nav).
-      */}
-      <ul
-        className="focus-safe-scroll flex w-64 shrink-0 flex-col gap-2 overflow-y-auto px-0 lg:w-72 xl:w-80"
-        aria-label="People"
-      >
+    <div className="flex min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5">
+      <ul className={WORKSPACE_RAIL} aria-label="People">
         {people.map((p) => {
           const selected = p.id === current?.id;
           return (
@@ -98,7 +86,7 @@ export function DesktopWorkspace({
         </li>
       </ul>
 
-      <div className="focus-safe-scroll flex min-w-0 flex-1 flex-col items-center overflow-y-auto px-0 py-1 sm:py-2">
+      <div className={WORKSPACE_DETAIL}>
         {current ? (
           <div className="flex w-full flex-col gap-4 sm:gap-5">
             <PersonCard

@@ -1,11 +1,13 @@
 # Interactive states audit — August 2026
 
+> **Historical snapshot** — see [`README.md`](./README.md). Living rules: [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §4.
+
 Full-app screen of **how interaction is shown** today: shared primitives vs
 custom one-offs, state coverage per control, and improvement approaches.
 
-Companion to [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) §4 (interaction states /
+Companion to [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §4 (interaction states /
 ForJu `userFeedbackMode`) and the ship-gate checklist there. Not a re-litigation
-of materials (`lib/surfaces.ts`) or motion timings ([`MOTION-AUDIT.md`](./MOTION-AUDIT.md)).
+of materials (`lib/surfaces.ts`) or motion timings ([`MOTION-AUDIT-2026-07.md`](./MOTION-AUDIT-2026-07.md)).
 
 ---
 
@@ -197,7 +199,7 @@ Before calling interaction work “done,” on phone + `md` desktop:
 
 ## Related
 
-- [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) §4 + Confirming / armed-subject gate  
+- [`DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md) §4 + Confirming / armed-subject gate  
 - [`COMPONENT-AUDIT-2026-08.md`](./COMPONENT-AUDIT-2026-08.md) — DRY / atom inventory  
 - [`UX-AUDIT-2026-08.md`](./UX-AUDIT-2026-08.md) — product UX  
 - `lib/user-feedback.ts`, `app/globals.css` (`.user-feedback`), `PressBounceRegister`

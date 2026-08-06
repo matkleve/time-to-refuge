@@ -89,16 +89,12 @@ export function buildViewMenuActions(
   };
 }
 
-export function buildViewMenuPrimaryAction(
-  view: AppView,
-  onChange: (view: AppView) => void,
-): GlassMenuPrimaryAction {
+export function buildViewMenuPrimaryAction(): GlassMenuPrimaryAction {
   return {
     id: "dana",
     label: dana.menuCta,
     icon: HeartHandshake,
-    selected: view === "dana",
-    onSelect: () => onChange("dana"),
+    href: "/dana",
   };
 }
 

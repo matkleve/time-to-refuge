@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { HeartHandshake } from "lucide-react";
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { Button } from "@/components/atoms/Button";
@@ -42,14 +43,17 @@ export function ShowcaseControls() {
           <Button variant="glass" icon={Pencil} aria-label="Edit" title="Edit" onClick={() => {}} tone="accent" size="md" />
           <Button variant="glass" icon={Trash2} aria-label="Delete" title="Delete" onClick={() => {}} tone="danger" armed />
           <Button variant="quiet" icon={Plus} aria-label="Quiet" title="Quiet" onClick={() => {}} />
-          <Button
-            variant="quiet"
-            icon={HeartHandshake}
+          <Link
+            href="/dana"
             aria-label="Dana"
             title="Dana"
-            surfaceClass={interactiveGlassFlushChipClass({ press: "md", on: view === "dana" })}
-            onClick={() => setView("dana")}
-          />
+            className={cn(
+              "inline-flex size-11 items-center justify-center rounded-xl text-ink",
+              interactiveGlassFlushChipClass({ press: "md" }),
+            )}
+          >
+            <HeartHandshake className="size-4" strokeWidth={2} aria-hidden />
+          </Link>
         </div>
       </ShowcaseSection>
 

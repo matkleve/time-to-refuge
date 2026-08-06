@@ -52,7 +52,7 @@ export function ViewMenu({
 }: ViewMenuProps) {
   const pages = buildViewMenuPages(view, onChange);
   const actions = buildViewMenuActions(onExportAll, exportDisabled);
-  const primaryAction = buildViewMenuPrimaryAction(view, onChange);
+  const primaryAction = buildViewMenuPrimaryAction();
   const iconActions = buildViewMenuIconActions(
     onUndo,
     onRedo,

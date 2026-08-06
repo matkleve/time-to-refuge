@@ -49,8 +49,7 @@ export function ShowcaseMenus() {
             id: "dana",
             label: "Support Dana",
             icon: HeartHandshake,
-            selected: view === "dana",
-            onSelect: () => setView("dana"),
+            href: "/dana",
           }}
           iconActions={[{ id: "undo", label: "Undo", icon: Undo2, onSelect: () => {} }]}
         />
