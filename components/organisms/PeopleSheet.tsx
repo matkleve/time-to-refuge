@@ -16,7 +16,6 @@ interface PeopleSheetProps {
   fields: FieldDef[];
   currentId: string | null;
   index: number;
-  isDesktop: boolean;
   onAdd: (name: string) => void;
   onSelect: (id: string) => void;
   onOpenAt: (id: string, phase: Phase | null) => void;
@@ -35,7 +34,6 @@ export function PeopleSheet({
   fields,
   currentId,
   index,
-  isDesktop,
   onAdd,
   onSelect,
   onOpenAt,
@@ -53,69 +51,77 @@ export function PeopleSheet({
   ) : undefined;
 
   return (
-    <ListPageFrame
-      fill="workspace"
-      navPage
-      pinBelow={isDesktop ? retreatPin : undefined}
-      selfClearance={!isDesktop}
-    >
-      <PeoplePageChrome
-        people={people}
-        fields={fields}
-        currentPerson={currentPerson}
-        isDesktop={isDesktop}
-        onResetAll={onResetAll}
-      />
-      {isDesktop ? (
-        <DesktopPeopleWorkspace
-          people={people}
-          fields={fields}
-          index={index}
-          onSelect={onSelect}
-          onAdd={onAdd}
-          onOpenAt={onOpenAt}
-          onEditTime={onEditTime}
-          onClearTime={onClearTime}
-          onResetAll={onResetAll}
-          onDelete={onDelete}
-          onRename={onRename}
-          onExport={(p) => downloadPersonCsv(p, fields, retreatName)}
-          retreatName={retreatName}
-        />
-      ) : (
-        <PinnedToolbarScrollColumn
-          toolbar={
-            retreatPin ? (
-              <StickyPageChrome below={retreatPin} belowHeaderTitle />
-            ) : null
-          }
-        >
-          <ul className="space-y-3">
-          {people.map((p) => (
-            <li key={p.id} className="animate-fade-in-up">
-              <PersonCard
-                person={p}
-                fields={fields}
-                isCurrent={p.id === currentId}
-                onOpenPerson={() => onOpenAt(p.id, null)}
-                onSelectPhase={(phase) => onOpenAt(p.id, phase)}
-                onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-                onClear={(phase) => onClearTime(p.id, phase)}
-                onResetAll={() => onResetAll(p.id)}
-                onDelete={() => onDelete(p.id)}
-                onExport={() => downloadPersonCsv(p, fields, retreatName)}
-                onRename={(name) => onRename(p.id, name)}
-                retreatName={retreatName}
-              />
-            </li>
-          ))}
+    <>
+      <div className="flex min-h-0 flex-1 flex-col md:hidden">
+        <ListPageFrame fill="workspace" navPage selfClearance>
+          <PeoplePageChrome
+            people={people}
+            fields={fields}
+            currentPerson={currentPerson}
+            isDesktop={false}
+            onResetAll={onResetAll}
+          />
+          <PinnedToolbarScrollColumn
+            toolbar={
+              retreatPin ? (
+                <StickyPageChrome below={retreatPin} belowHeaderTitle />
+              ) : null
+            }
+          >
+            <ul className="space-y-3">
+              {people.map((p) => (
+                <li key={p.id} className="animate-fade-in-up">
+                  <PersonCard
+                    person={p}
+                    fields={fields}
+                    isCurrent={p.id === currentId}
+                    onOpenPerson={() => onOpenAt(p.id, null)}
+                    onSelectPhase={(phase) => onOpenAt(p.id, phase)}
+                    onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+                    onClear={(phase) => onClearTime(p.id, phase)}
+                    onResetAll={() => onResetAll(p.id)}
+                    onDelete={() => onDelete(p.id)}
+                    onExport={() => downloadPersonCsv(p, fields, retreatName)}
+                    onRename={(name) => onRename(p.id, name)}
+                    retreatName={retreatName}
+                  />
+                </li>
+              ))}
 
-          <li>
-            <AddPersonRow onAdd={onAdd} />
-          </li>
-        </ul>
-        </PinnedToolbarScrollColumn>
-      )}
-    </ListPageFrame>
+              <li>
+                <AddPersonRow onAdd={onAdd} />
+              </li>
+            </ul>
+          </PinnedToolbarScrollColumn>
+        </ListPageFrame>
+      </div>
+
+      <div className="hidden min-h-0 flex-1 flex-col md:flex">
+        <ListPageFrame fill="workspace" navPage pinBelow={retreatPin} selfClearance={false}>
+          <PeoplePageChrome
+            people={people}
+            fields={fields}
+            currentPerson={currentPerson}
+            isDesktop
+            onResetAll={onResetAll}
+          />
+          <DesktopPeopleWorkspace
+            people={people}
+            fields={fields}
+            index={index}
+            onSelect={onSelect}
+            onAdd={onAdd}
+            onOpenAt={onOpenAt}
+            onEditTime={onEditTime}
+            onClearTime={onClearTime}
+            onResetAll={onResetAll}
+            onDelete={onDelete}
+            onRename={onRename}
+            onExport={(p) => downloadPersonCsv(p, fields, retreatName)}
+            retreatName={retreatName}
+          />
+        </ListPageFrame>
+      </div>
+    </>
   );
 }

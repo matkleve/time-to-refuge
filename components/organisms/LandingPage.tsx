@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
 import { buildCardClassName, buildPrimaryClassName } from "@/components/atoms/button-build";
+import { ButtonIconSlot } from "@/components/atoms/button-icon-slot";
 import landing from "@/content/landing.json";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { LandingPwaInstall } from "@/components/organisms/landing-pwa-install";
@@ -89,11 +90,16 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
               selected: false,
               rounded: "xl",
               fullWidth: false,
-              className: "inline-flex w-full max-w-sm items-center justify-center gap-1.5 font-medium sm:w-auto",
+              className: "w-full max-w-sm sm:w-auto",
             })}
           >
-            {landing.cta}
-            <ArrowRight className="size-5 shrink-0" strokeWidth={2.5} aria-hidden />
+            <span className="leading-none">{landing.cta}</span>
+            <ButtonIconSlot
+              Icon={ArrowRight}
+              size="lg"
+              variant="primary"
+              position="end"
+            />
           </Link>
           <p className="text-center text-sm text-subtle">{landing.footnote}</p>
         </div>

@@ -132,18 +132,17 @@ const pageFiles: Array<{ page: string; file: string }> = [
   { page: "dana", file: "components/organisms/DanaPage.tsx" },
 ];
 
-const desktopAppShell = read("components/timekeeper/TimekeeperDesktopShell.tsx");
-const mobileAppShell = read("components/timekeeper/TimekeeperMobileShell.tsx");
+const appShell = read("components/timekeeper/TimekeeperShell.tsx");
 const pageEnter = read("components/atoms/PageEnter.tsx");
 const listFrame = read("components/atoms/ListPageFrame.tsx");
 
 const shellProblems: string[] = [];
 const shellSlotOk =
-  /className="relative flex min-h-0 flex-1 flex-col">\{page\}/.test(desktopAppShell) ||
-  /relative flex min-h-0 flex-1 flex-col">\{page\}/.test(desktopAppShell);
+  /className="relative flex min-h-0 flex-1 flex-col">\{page\}/.test(appShell) ||
+  /relative flex min-h-0 flex-1 flex-col">\{page\}/.test(appShell);
 if (!shellSlotOk) {
   shellProblems.push(
-    "TimekeeperDesktopShell slot missing `flex flex-col` around {page} — flex-1 pages collapse to height 0",
+    "TimekeeperShell slot missing `flex flex-col` around {page} — flex-1 pages collapse to height 0",
   );
 }
 if (!/\bh-full\b/.test(pageEnter) || !/\bflex-1\b/.test(pageEnter)) {
@@ -179,7 +178,7 @@ if (
 if (/\babsolute inset-0\b/.test(listFrame)) {
   shellProblems.push("ListPageFrame still uses absolute inset-0 — prefer h-full flex-1 scroll");
 }
-if (/subheader/.test(desktopAppShell) || /subheader/.test(mobileAppShell)) {
+if (/subheader/.test(appShell)) {
   shellProblems.push("shell subheader removed — page titles live in app header");
 }
 
@@ -222,13 +221,13 @@ const rows: Row[] = pageFiles.map(({ page, file }) => {
 // Shell synthetic rows
 const shellRows: Row[] = [
   {
-    page: "(shell) desktop slot",
-    file: "components/timekeeper/TimekeeperDesktopShell.tsx",
-    layers: layoutSignalCount(desktopAppShell),
-    root: "DesktopShell → app-content → flex slot → PageEnter",
+    page: "(shell) app slot",
+    file: "components/timekeeper/TimekeeperShell.tsx",
+    layers: layoutSignalCount(appShell),
+    root: "TimekeeperShell → app-content → flex slot → PageEnter",
     problems: shellProblems.filter(
       (p) =>
-        p.includes("TimekeeperDesktopShell") ||
+        p.includes("TimekeeperShell") ||
         p.includes("PageEnter"),
     ),
   },

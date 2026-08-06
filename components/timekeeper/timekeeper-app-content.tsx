@@ -31,13 +31,7 @@ export function TimekeeperViewMenu({ app }: { app: TimekeeperAppModel }) {
   );
 }
 
-export function TimekeeperPage({
-  app,
-  isDesktop,
-}: {
-  app: TimekeeperAppModel;
-  isDesktop: boolean;
-}) {
+export function TimekeeperPage({ app }: { app: TimekeeperAppModel }) {
   return (
     <PageEnter viewKey={app.view}>
       {app.view === "home"
@@ -52,12 +46,12 @@ export function TimekeeperPage({
           : app.view === "history"
             ? <HistoryPanel log={app.log} fields={app.fields} />
             : app.view === "people"
-              ? <TimekeeperPeoplePage app={app} isDesktop={isDesktop} />
+              ? <TimekeeperPeoplePage app={app} />
             : app.view === "fields"
               ? <FieldsPage fields={app.fields} onChange={app.handleFieldsChange} />
               : app.view === "dana"
                 ? <DanaPage />
-                : <TimekeeperRefugePage app={app} isDesktop={isDesktop} />}
+                : <TimekeeperRefugePage app={app} />}
     </PageEnter>
   );
 }

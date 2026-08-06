@@ -11,7 +11,6 @@ import { PinnedToolbarScrollColumn } from "@/components/atoms/PinnedToolbarScrol
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * Quick Log — workspace slot only (no document scroll). Mobile: toolbar → fading
@@ -22,7 +21,6 @@ export function QuickLogView() {
   const [entries, setEntries] = useState<QuickLogEntry[]>([]);
   const [tz, setTz] = useState("UTC");
   const [flash, setFlash] = useState(false);
-  const tapAnywhere = !useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     setEntries(loadQuickLog());
@@ -48,8 +46,6 @@ export function QuickLogView() {
   const bodyProps = {
     entries,
     tz,
-    tapAnywhere,
-    isDesktop: !tapAnywhere,
     flash,
     clearAll,
     onTzChange: setTz,
@@ -67,16 +63,8 @@ export function QuickLogView() {
   );
 
   return (
-    <ListPageFrame fill="workspace" navPage selfClearance={tapAnywhere}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-         Phone: pointer-only convenience so any tap logs a time. */}
-      <div
-        className={cn(
-          "no-select flex min-h-0 flex-1 flex-col",
-          tapAnywhere && "cursor-pointer",
-        )}
-        onClick={tapAnywhere ? handleLog : undefined}
-      >
+    <ListPageFrame fill="workspace" navPage selfClearance>
+      <div className="no-select flex min-h-0 flex-1 flex-col">
         <QuickLogMobileBody {...bodyProps} pageChrome={pageChrome} />
         <QuickLogDesktopBody {...bodyProps} pageChrome={pageChrome} />
       </div>
@@ -87,8 +75,6 @@ export function QuickLogView() {
 type QuickLogBodyProps = {
   entries: QuickLogEntry[];
   tz: string;
-  tapAnywhere: boolean;
-  isDesktop: boolean;
   flash: boolean;
   clearAll: ReturnType<typeof useArmedAction>;
   onTzChange: (tz: string) => void;
@@ -100,8 +86,6 @@ type QuickLogBodyProps = {
 function QuickLogMobileBody({
   entries,
   tz,
-  tapAnywhere,
-  isDesktop,
   flash,
   clearAll,
   onLog,
@@ -116,14 +100,17 @@ function QuickLogMobileBody({
     el.scrollTop = el.scrollHeight;
   }, [entries.length]);
 
-  const stopTap = tapAnywhere ? (e: React.MouseEvent) => e.stopPropagation() : undefined;
+  const stopTap = (e: React.MouseEvent) => e.stopPropagation();
 
   return (
+    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+       Phone: pointer-only convenience so any tap logs a time. */
     <div
       className={cn(
-        "flex min-h-0 flex-1 flex-col md:hidden",
+        "flex min-h-0 flex-1 cursor-pointer flex-col md:hidden",
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}
+      onClick={onLog}
     >
       <PinnedToolbarScrollColumn
         scrollRef={scrollRef}
@@ -139,7 +126,7 @@ function QuickLogMobileBody({
           <QuickLogEntryList
             entries={entries}
             tz={tz}
-            tapAnywhere={tapAnywhere}
+            tapAnywhere
             clearAllArmed={clearAll.armed}
             growUp
             onDelete={onDelete}
@@ -153,7 +140,7 @@ function QuickLogMobileBody({
           mode="quicklog"
           flash={flash}
           onLog={onLog}
-          hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
+          hint="Tap anywhere to log"
         />
       </div>
     </div>
@@ -163,8 +150,6 @@ function QuickLogMobileBody({
 function QuickLogDesktopBody({
   entries,
   tz,
-  tapAnywhere,
-  isDesktop,
   flash,
   clearAll,
   onLog,
@@ -184,7 +169,7 @@ function QuickLogDesktopBody({
           mode="quicklog"
           flash={flash}
           onLog={onLog}
-          hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
+          hint="Tap to log"
         />
       </div>
 
@@ -193,7 +178,7 @@ function QuickLogDesktopBody({
           <QuickLogEntryList
             entries={entries}
             tz={tz}
-            tapAnywhere={tapAnywhere}
+            tapAnywhere={false}
             clearAllArmed={clearAll.armed}
             onDelete={onDelete}
           />
