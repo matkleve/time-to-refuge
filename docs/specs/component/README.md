@@ -15,3 +15,6 @@
 | **Page frame** | |
 | [list-page-frame.md](list-page-frame.md) | `ListPageFrame` |
 | [sticky-page-chrome.md](sticky-page-chrome.md) | Pin below header |
+| **Session rail** | |
+| [session-phase-dot.md](session-phase-dot.md) | Rail field status circles |
+| [session-phase-dot.density.supplement.md](session-phase-dot.density.supplement.md) | 8-field density tiers |

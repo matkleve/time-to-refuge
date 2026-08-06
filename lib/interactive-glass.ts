@@ -9,6 +9,10 @@
  */
 import { cn } from "@/lib/utils";
 import {
+  SESSION_PHASE_DOT_SIZE,
+  type SessionPhaseDotDensity,
+} from "@/lib/session-phase-dot-size";
+import {
   actionClass,
   glassClass,
   glassFlushChipClass,
@@ -44,9 +48,13 @@ export function interactiveFeedbackClass(feedback: InteractiveFeedback = {}): st
  * No armed/outline link to PersonCard target. Bounce on filled toggle via
  * SessionPhaseDot; pointerdown bounce via user-feedback.
  */
-export function interactiveSessionPhaseDotClass(opts: { filled: boolean }): string {
+export function interactiveSessionPhaseDotClass(opts: {
+  filled: boolean;
+  density?: SessionPhaseDotDensity;
+}): string {
+  const { dot } = SESSION_PHASE_DOT_SIZE[opts.density ?? "comfortable"];
   return cn(
-    "inline-flex size-7 shrink-0 items-center justify-center rounded-full border-2 transition-none",
+    `inline-flex ${dot} shrink-0 items-center justify-center rounded-full border-2 transition-none`,
     interactiveFeedbackClass({ press: "sm" }),
     opts.filled
       ? "border-transparent bg-saffron-400/55 text-ink"

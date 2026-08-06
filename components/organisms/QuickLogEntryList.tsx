@@ -3,7 +3,6 @@
 import { QuickLogEntry } from "@/lib/types";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { QuickLogLogRow } from "@/components/organisms/QuickLogLogRow";
-import { PAGE_INLINE_GUTTER } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 export function QuickLogEntryList({
@@ -22,7 +21,7 @@ export function QuickLogEntryList({
   const sorted = [...entries].sort((a, b) => b.at - a.at);
 
   return (
-    <div className={cn("flex w-full flex-col gap-2 py-3", PAGE_INLINE_GUTTER)}>
+    <div className={cn("flex w-full flex-col gap-2 py-3")}>
       {sorted.length === 0 ? (
         <GlassEmptyNote>
           {tapAnywhere ? "Tap anywhere to log a time." : "Tap the button to log a time."}

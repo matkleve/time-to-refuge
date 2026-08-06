@@ -8,6 +8,15 @@ import {
 
 export const DEMO_FIELDS: FieldDef[] = DEFAULT_FIELDS;
 
+export const DEMO_FIELDS_EIGHT: FieldDef[] = [
+  ...DEFAULT_FIELDS,
+  { id: "field-4", label: "Field 4" },
+  { id: "field-5", label: "Field 5" },
+  { id: "field-6", label: "Field 6" },
+  { id: "field-7", label: "Field 7" },
+  { id: "field-8", label: "Field 8" },
+];
+
 const base = createPerson("Alex", DEMO_FIELDS);
 const t = Date.UTC(2026, 7, 5, 14, 30, 0);
 

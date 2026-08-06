@@ -43,7 +43,7 @@ export function PersonFieldRowFilledStamp({
       </span>
       <span
         className={cn(
-          "min-w-0 flex-1 overflow-hidden whitespace-nowrap text-right font-mono text-lg tabular-nums",
+          "shrink-0 overflow-hidden whitespace-nowrap font-mono text-lg tabular-nums",
           resetArmed ? "text-danger-600" : "text-saffron-700",
         )}
       >

@@ -3,16 +3,14 @@
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   type RefObject,
 } from "react";
 import type { PanelBox } from "@/lib/location-check/types";
 import { PANEL_WIDTH } from "@/lib/location-check/tone-styles";
-import {
-  placePanelAboveTrigger,
-} from "@/lib/popover-placement";
+import { placePanelNearTrigger } from "@/lib/popover-placement";
+import { usePopoverReposition } from "@/lib/use-popover-reposition";
 
 export function usePanelPlacement(open: boolean) {
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -23,20 +21,12 @@ export function usePanelPlacement(open: boolean) {
     const el = triggerRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const { left, bottom, width } = placePanelAboveTrigger(r, PANEL_WIDTH);
-    setBox({ bottom, left, width });
+    const panelHeight = panelRef.current?.getBoundingClientRect().height ?? 0;
+    const placement = placePanelNearTrigger(r, PANEL_WIDTH, panelHeight);
+    setBox(placement);
   }, []);
 
-  useLayoutEffect(() => {
-    if (!open) return;
-    place();
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
-    return () => {
-      window.removeEventListener("resize", place);
-      window.removeEventListener("scroll", place, true);
-    };
-  }, [open, place]);
+  usePopoverReposition(open, place, panelRef, box !== null);
 
   return { triggerRef, panelRef, box };
 }

@@ -9,12 +9,15 @@ import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import { PAGE_INLINE_GUTTER, QUICKLOG_BODY_GRID } from "@/lib/chrome";
+import {
+  WORKSPACE_RAIL_WIDTH,
+  WORKSPACE_SCROLL_COLUMN,
+} from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
- * Quick Log — page tools band → body grid inside ListPageFrame.
- * Desktop: list left (1.6fr), record button right (1fr).
+ * Quick Log — page tools band → body inside ListPageFrame.
+ * Desktop: record button left (session rail width), log list right.
  */
 export function QuickLogView() {
   const [ready, setReady] = useState(false);
@@ -42,25 +45,22 @@ export function QuickLogView() {
     if (navigator.vibrate) navigator.vibrate(15);
   }
 
-  function deleteEntry(id: string) {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-  }
-
   if (!ready) return null;
 
-  const isDesktop = !tapAnywhere;
-
-  const pageChrome = (
-    <QuickLogPageChrome
-      entryCount={entries.length}
-      tz={tz}
-      onTzChange={setTz}
-      clearAll={clearAll}
-    />
-  );
+  const bodyProps = {
+    entries,
+    tz,
+    tapAnywhere,
+    isDesktop: !tapAnywhere,
+    flash,
+    clearAll,
+    onTzChange: setTz,
+    onLog: handleLog,
+    onDelete: (id: string) => setEntries((prev) => prev.filter((e) => e.id !== id)),
+  };
 
   return (
-    <ListPageFrame fill="workspace" selfGutter navPage>
+    <ListPageFrame fill="workspace" navPage>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Phone: pointer-only convenience so any tap logs a time. */}
       <div
@@ -70,55 +70,130 @@ export function QuickLogView() {
         )}
         onClick={tapAnywhere ? handleLog : undefined}
       >
-        <div className={cn("md:hidden", PAGE_INLINE_GUTTER)}>{pageChrome}</div>
-
-        <div
-          className={cn(
-            "min-h-0 flex-1",
-            QUICKLOG_BODY_GRID,
-            "pb-[max(1rem,env(safe-area-inset-bottom))]",
-          )}
-        >
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-             List column — chrome + scroll. */}
-          <div
-            className="flex min-h-0 min-w-0 flex-col"
-            onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-          >
-            <div className={cn("hidden md:block", PAGE_INLINE_GUTTER)}>
-              {pageChrome}
-            </div>
-
-            <div className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-0">
-              <QuickLogEntryList
-                entries={entries}
-                tz={tz}
-                tapAnywhere={tapAnywhere}
-                clearAllArmed={clearAll.armed}
-                onDelete={deleteEntry}
-              />
-            </div>
-          </div>
-
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-             Record column. */}
-          <div
-            className={cn(
-              "min-h-0 min-w-0 pt-2",
-              PAGE_INLINE_GUTTER,
-              "md:flex md:flex-col md:justify-center md:px-0 md:pt-0 md:pb-4",
-            )}
-            onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-          >
-            <ClockStamp
-              mode="quicklog"
-              flash={flash}
-              onLog={handleLog}
-              hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
-            />
-          </div>
-        </div>
+        <QuickLogMobileBody {...bodyProps} />
+        <QuickLogDesktopBody {...bodyProps} />
       </div>
     </ListPageFrame>
+  );
+}
+
+type QuickLogBodyProps = {
+  entries: QuickLogEntry[];
+  tz: string;
+  tapAnywhere: boolean;
+  isDesktop: boolean;
+  flash: boolean;
+  clearAll: ReturnType<typeof useArmedAction>;
+  onTzChange: (tz: string) => void;
+  onLog: () => void;
+  onDelete: (id: string) => void;
+};
+
+function QuickLogMobileBody({
+  entries,
+  tz,
+  tapAnywhere,
+  isDesktop,
+  flash,
+  clearAll,
+  onTzChange,
+  onLog,
+  onDelete,
+}: QuickLogBodyProps) {
+  const pageChrome = (
+    <QuickLogPageChrome
+      entryCount={entries.length}
+      tz={tz}
+      onTzChange={onTzChange}
+      clearAll={clearAll}
+    />
+  );
+
+  return (
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col md:hidden",
+        "pb-[max(1rem,env(safe-area-inset-bottom))]",
+      )}
+    >
+      <div className="shrink-0 pb-2">{pageChrome}</div>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         List column — stop tap-anywhere propagation. */}
+      <div
+        className="focus-safe-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain"
+        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+      >
+        <QuickLogEntryList
+          entries={entries}
+          tz={tz}
+          tapAnywhere={tapAnywhere}
+          clearAllArmed={clearAll.armed}
+          onDelete={onDelete}
+        />
+      </div>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Record button — stop tap-anywhere propagation. */}
+      <div
+        className="shrink-0 pt-2"
+        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+      >
+        <ClockStamp
+          mode="quicklog"
+          flash={flash}
+          onLog={onLog}
+          hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
+        />
+      </div>
+    </div>
+  );
+}
+
+function QuickLogDesktopBody({
+  entries,
+  tz,
+  tapAnywhere,
+  isDesktop,
+  flash,
+  clearAll,
+  onTzChange,
+  onLog,
+  onDelete,
+}: QuickLogBodyProps) {
+  return (
+    <div
+      className={cn(
+        "hidden min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5 md:flex",
+        "pb-[max(1rem,env(safe-area-inset-bottom))]",
+      )}
+    >
+      <div className={cn(WORKSPACE_RAIL_WIDTH, "flex flex-col gap-3")}>
+        <ClockStamp
+          mode="quicklog"
+          flash={flash}
+          onLog={onLog}
+          hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}
+        />
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="shrink-0">
+          <QuickLogPageChrome
+            entryCount={entries.length}
+            tz={tz}
+            onTzChange={onTzChange}
+            clearAll={clearAll}
+          />
+        </div>
+        <div className={cn(WORKSPACE_SCROLL_COLUMN, "min-h-0 flex-1")}>
+          <QuickLogEntryList
+            entries={entries}
+            tz={tz}
+            tapAnywhere={tapAnywhere}
+            clearAllArmed={clearAll.armed}
+            onDelete={onDelete}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

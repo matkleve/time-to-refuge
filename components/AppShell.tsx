@@ -16,7 +16,7 @@ import { BACKDROP_CLASS, backdropStyle } from "@/lib/backdrop";
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className={`min-h-dvh ${BACKDROP_CLASS}`} style={backdropStyle}>
-      <main className="relative mx-auto flex h-dvh w-full max-w-md flex-col overflow-hidden">
+      <main className="relative mx-auto flex h-dvh w-full max-w-md flex-col">
         {children}
       </main>
     </div>

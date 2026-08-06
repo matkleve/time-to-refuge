@@ -51,6 +51,13 @@ See also `AGENTS.md` § Spec conflicts.
 | [`page/`](page/README.md) | Route-level + in-app view contracts |
 | [`system/`](system/README.md) | Cross-cutting rules (layout, interaction, public routes, SEO) |
 
+## Session / People workspace rail
+
+| Spec | Scope |
+| --- | --- |
+| [session-phase-dot.md](component/session-phase-dot.md) | Rail field status circles |
+| [session-phase-dot.density.supplement.md](component/session-phase-dot.density.supplement.md) | 8-field density tiers |
+
 ## Desktop header — full spec tree
 
 ```text

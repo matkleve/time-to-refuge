@@ -42,39 +42,74 @@ export function clampPopoverHorizontal(
   return { left, width };
 }
 
-/** Panel above trigger — right edges align when space allows. */
-export function placePanelAboveTrigger(
+export type VerticalPanelPlacement =
+  | { side: "above"; bottom: number }
+  | { side: "below"; top: number };
+
+const PANEL_MAX_HEIGHT = 28 * 16; // 28rem
+
+/** Panel beside trigger — prefers above; flips below when needed. Never covers trigger. */
+export function placePanelNearTrigger(
   triggerRect: DOMRect,
   panelWidth: number,
+  panelHeight = 0,
   gap = POPOVER_MARGIN,
-): { left: number; bottom: number; width: number } {
+  margin = POPOVER_MARGIN,
+): { left: number; width: number; maxHeight: number } & VerticalPanelPlacement {
   const vp = getViewportBounds();
   const { left, width } = clampPopoverHorizontal(
     triggerRect.right - panelWidth,
     panelWidth,
+    margin,
   );
-  const bottom = Math.max(
-    gap,
-    vp.top + vp.height - triggerRect.top + gap,
+
+  const spaceAbove = Math.max(0, triggerRect.top - gap - (vp.top + margin));
+  const spaceBelow = Math.max(
+    0,
+    vp.top + vp.height - margin - (triggerRect.bottom + gap),
   );
-  return { left, bottom, width };
+  const preferredBottom = vp.top + vp.height - triggerRect.top + gap;
+
+  const fitsAbove = panelHeight === 0 || panelHeight <= spaceAbove;
+  const fitsBelow = panelHeight === 0 || panelHeight <= spaceBelow;
+  const useAbove = fitsAbove
+    ? true
+    : fitsBelow
+      ? false
+      : spaceAbove >= spaceBelow;
+
+  const maxHeight = Math.min(PANEL_MAX_HEIGHT, useAbove ? spaceAbove : spaceBelow);
+
+  if (useAbove) {
+    return { side: "above", bottom: preferredBottom, left, width, maxHeight };
+  }
+
+  return {
+    side: "below",
+    top: triggerRect.bottom + gap,
+    left,
+    width,
+    maxHeight,
+  };
 }
 
 /** Dropdown below trigger — match trigger width, clamp horizontal. */
 export function placeMenuBelowTrigger(
   triggerRect: DOMRect,
+  panelHeight = 0,
   gap = 6,
+  margin = POPOVER_MARGIN,
 ): { top: number; left: number; width: number } {
-  const { left, width } = clampPopoverHorizontal(triggerRect.left, triggerRect.width);
-  const vp = getViewportBounds();
-  const top = Math.min(
-    triggerRect.bottom + gap,
-    vp.top + vp.height - marginBottomReserve(vp.height),
+  const { left, width } = clampPopoverHorizontal(
+    triggerRect.left,
+    triggerRect.width,
+    margin,
   );
+  const vp = getViewportBounds();
+  let top = triggerRect.bottom + gap;
+  if (panelHeight > 0) {
+    top = Math.min(top, vp.top + vp.height - margin - panelHeight);
+  }
+  top = Math.max(vp.top + margin, top);
   return { top, left, width };
-}
-
-/** Leave room for at least one menu row when clamping vertical open-down. */
-function marginBottomReserve(viewportHeight: number): number {
-  return Math.min(120, Math.max(48, viewportHeight * 0.25));
 }

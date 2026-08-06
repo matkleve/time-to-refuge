@@ -1,8 +1,11 @@
 "use client";
 
 import { Person, FieldDef, Phase, getTime, fieldLabel } from "@/lib/types";
-import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { interactiveGlassFlushClass } from "@/lib/interactive-glass";
+import {
+  SESSION_PHASE_DOT_SIZE,
+  sessionPhaseDotDensity,
+} from "@/lib/session-phase-dot-size";
 import { cn } from "@/lib/utils";
 import { SessionPhaseDot } from "./SessionPhaseDot";
 
@@ -29,6 +32,8 @@ export function SessionPersonRow({
 }: SessionPersonRowProps) {
   const filledCount = fields.filter((f) => getTime(person, f.id) !== null).length;
   const allDone = filledCount === fields.length && fields.length > 0;
+  const density = sessionPhaseDotDensity(fields.length);
+  const dotGap = SESSION_PHASE_DOT_SIZE[density].gap;
 
   return (
     <div
@@ -54,13 +59,14 @@ export function SessionPersonRow({
         {person.name}
       </button>
 
-      <ul className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)} aria-label="Field progress">
+      <ul className={cn("flex shrink-0 items-center", dotGap)} aria-label="Field progress">
         {fields.map((field) => {
           const filled = getTime(person, field.id) !== null;
           return (
             <li key={field.id}>
               <SessionPhaseDot
                 filled={filled}
+                density={density}
                 title={field.label}
                 ariaLabel={
                   filled

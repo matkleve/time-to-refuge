@@ -54,7 +54,7 @@ export function ListPageFrame({
     <div
       className={cn(
         isWorkspace
-          ? "flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden px-0"
+          ? "flex h-full min-h-0 w-full flex-1 flex-col px-0"
           : "focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overscroll-contain px-0",
         className,
       )}

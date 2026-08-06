@@ -15,7 +15,7 @@ Constants: `lib/chrome.ts`. Overflow rationale: `docs/DESIGN-SYSTEM.md` §4c. CI
 3. **Page slot** — `flex flex-col` + `flex-1 min-h-0` around `{page}`. `PageEnter`: `h-full flex-1`.
 4. **Breakpoints in CSS, not JS** — never gate clearance/width on `useMediaQuery` (SSR false). Use matching `md:`/`lg:` utilities.
 5. **Lists scroll under brand** — full-bleed scroller + `StickyPageChrome` clearance. **No title scrim.** One `HeaderScrim` band only.
-6. **Page skeleton** — `StickyPageChrome` (title + optional pin), then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: list `1.6fr`, record `1fr` (`QUICKLOG_BODY_GRID`) — isolated columns.
+6. **Page skeleton** — `StickyPageChrome` (title + optional pin), then scroll body with `PAGE_INLINE_GUTTER`. Quick Log desktop: record button left (`WORKSPACE_RAIL_WIDTH`), log list right — same shell as Session.
 7. **Flush-edge chips** (rail, add person, list rows) → `glassFlushClass` / `glassFlushRowClass` / `glassFlushChipClass` via `interactive-glass` — inset rim only, no `--shadow-glass` lift.
 8. **No extra vertical pad** inside `StickyPageChrome` on top of clearance.
 9. **Button clusters** → `BUTTON_CLUSTER_GAP` (`gap-1.5` in `lib/control-size.ts`).

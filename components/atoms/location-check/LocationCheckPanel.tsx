@@ -36,12 +36,19 @@ export function LocationCheckPanel(props: PanelProps) {
     <div
       ref={panelRef}
       className="fixed z-50 overflow-visible"
-      style={{ bottom: box.bottom, left: box.left, width: box.width }}
+      style={{
+        left: box.left,
+        width: box.width,
+        ...(box.side === "above"
+          ? { bottom: box.bottom }
+          : { top: box.top }),
+      }}
     >
       <Surface
         material="glass-panel"
         rim
-        className="focus-safe-scroll animate-scale-in max-h-[min(28rem,calc(100dvh-1.5rem))] overflow-y-auto rounded-3xl p-4 text-left"
+        className="focus-safe-scroll animate-scale-in overflow-y-auto rounded-3xl p-4 text-left"
+        style={{ maxHeight: box.maxHeight }}
         onClick={(e) => e.stopPropagation()}
       >
         <PanelHeader

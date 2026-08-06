@@ -167,7 +167,9 @@ switches to an entirely different tree: `DesktopShell` (the backdrop photo
 filling the real viewport, not boxed behind a resized phone mockup) around
 shared chrome (`DesktopNav` + `.app-content` clamp) and, on the **Session**
 page, `DesktopWorkspace` — a persistent **progress rail** (`SessionPersonRow`:
-name + one status circle per field — empty ring / check when recorded) and the
+name + one status circle per field — empty ring / check when recorded; density
+tiers per [`specs/component/session-phase-dot.md`](specs/component/session-phase-dot.md))
+and the
 current person's full `PersonCard` with the record button beneath it. Tap a
 row name to focus that person; tap a circle to arm that field. **Tablet (`768–1023`)** is the stressed
 band for nav density; page links use **icon-only below `lg`**, short labels

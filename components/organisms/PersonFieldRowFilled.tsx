@@ -51,30 +51,34 @@ export function PersonFieldRowFilled({
 }: PersonFieldRowFilledProps) {
   return (
     <div ref={dismissRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
-      <PersonFieldRowFilledStamp
-        phaseLabel={phaseLabel}
-        value={value}
-        isTarget={isTarget}
-        resetArmed={resetArmed}
-        targetClass={targetClass}
-        showActions={showActions}
-        onRowClick={onRowClick}
-      />
+      <div className="min-w-0 flex-1">
+        <PersonFieldRowFilledStamp
+          phaseLabel={phaseLabel}
+          value={value}
+          isTarget={isTarget}
+          resetArmed={resetArmed}
+          targetClass={targetClass}
+          showActions={showActions}
+          onRowClick={onRowClick}
+        />
+      </div>
       <RowActionTray open={showActions}>
-        <PersonFieldRowLookActions
-          personName={person.name}
-          phaseLabel={phaseLabel}
-          copied={copied}
-          onOpenPerson={onOpenPerson}
-          onCopy={onCopy}
-        />
-        <PersonFieldRowChangeActions
-          phaseLabel={phaseLabel}
-          armedReset={armedReset}
-          onEditTime={onEditTime}
-          onClear={onClear}
-          onStartEdit={onStartEdit}
-        />
+        <div className={cn("flex items-center gap-4")}>
+          <PersonFieldRowLookActions
+            personName={person.name}
+            phaseLabel={phaseLabel}
+            copied={copied}
+            onOpenPerson={onOpenPerson}
+            onCopy={onCopy}
+          />
+          <PersonFieldRowChangeActions
+            phaseLabel={phaseLabel}
+            armedReset={armedReset}
+            onEditTime={onEditTime}
+            onClear={onClear}
+            onStartEdit={onStartEdit}
+          />
+        </div>
       </RowActionTray>
     </div>
   );

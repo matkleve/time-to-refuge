@@ -8,6 +8,7 @@ import { SessionPersonRow } from "@/components/organisms/SessionPersonRow";
 import { ShowcaseSection } from "@/components/dev/ShowcaseSection";
 import {
   DEMO_FIELDS,
+  DEMO_FIELDS_EIGHT,
   DEMO_PERSON_EMPTY,
   DEMO_PERSON_PARTIAL,
 } from "@/components/dev/showcase-data";
@@ -42,6 +43,23 @@ export function ShowcaseRows() {
               />
             </li>
           ))}
+        </ul>
+      </ShowcaseSection>
+
+      <ShowcaseSection
+        title="Session rail (8 fields)"
+        hint="Compact density — 20px circles, 4px gaps."
+      >
+        <ul className="flex w-64 flex-col gap-1.5">
+          <li>
+            <SessionPersonRow
+              person={DEMO_PERSON_PARTIAL}
+              fields={DEMO_FIELDS_EIGHT}
+              isCurrent
+              onSelect={() => {}}
+              onSelectPhase={() => {}}
+            />
+          </li>
         </ul>
       </ShowcaseSection>
 
