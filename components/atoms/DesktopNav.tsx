@@ -71,8 +71,8 @@ export function DesktopNav({
       <HeaderScrim />
       <div className="app-content relative z-10 w-full overflow-visible px-4 py-2.5 sm:px-5">
         <div className="pointer-events-auto flex min-h-12 w-full items-center gap-x-2 sm:gap-x-3">
-          <div className="flex min-w-0 flex-1 items-center justify-start">
-            <Brand size="2xl" showWordmark onHome={() => onChange("home")} />
+          <div className="flex min-w-0 flex-1 justify-start">
+            <Brand wordmark onHome={() => onChange("home")} />
           </div>
 
           <DesktopNavPages view={view} onChange={onChange} />

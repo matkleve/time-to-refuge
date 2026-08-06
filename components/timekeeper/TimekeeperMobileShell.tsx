@@ -27,7 +27,7 @@ export function TimekeeperMobileShell({
         >
           <div className="grid h-11 grid-cols-[auto_1fr_auto] items-center gap-2">
             <div className="pointer-events-auto justify-self-start">
-              <Brand showWordmark={false} onHome={() => app.setView("home")} />
+              <Brand onHome={() => app.setView("home")} />
             </div>
             <HeaderTitle
               title={getHeaderTitle(app.view)}

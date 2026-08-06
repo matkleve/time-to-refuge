@@ -28,7 +28,7 @@ export function ShowcaseMisc() {
             isCurrent
             dangerTone={false}
           />
-          <Brand onHome={() => {}} />
+          <Brand wordmark onHome={() => {}} />
         </div>
       </ShowcaseSection>
 

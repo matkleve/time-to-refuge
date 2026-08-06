@@ -1,72 +1,46 @@
 import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
-/**
- * Header home control — clock emoji with optional "Timekeeper" wordmark.
- * Mobile: icon only (`showWordmark={false}`) + centered `HeaderTitle`.
- * Desktop toolbar: full lockup on the left.
- */
+/** Header home — ⏱️ with optional "Timekeeper" wordmark (desktop toolbar). */
 export function Brand({
-  showWordmark = true,
   onHome,
-  size = "lg",
+  wordmark = false,
   className,
 }: {
-  showWordmark?: boolean;
-  /** Opens Home (landing). */
   onHome?: () => void;
-  /** `lg` mobile toolbar · `2xl` desktop toolbar. */
-  size?: "lg" | "2xl";
+  wordmark?: boolean;
   className?: string;
 }) {
-  const emoji = (
-    <span
-      className={cn(
-        "shrink-0 leading-none",
-        size === "2xl" ? "text-2xl" : "text-lg",
-      )}
-      aria-hidden
-    >
-      ⏱️
-    </span>
+  const classes = cn(
+    "flex w-max items-center gap-2 rounded-lg",
+    onHome && "cursor-pointer text-left",
+    onHome && interactiveFeedbackClass({ press: "sm" }),
+    className,
   );
 
-  const wordmark = showWordmark ? (
-    <span
-      className={cn(
-        "shrink-0 whitespace-nowrap font-display font-bold leading-none text-ink",
-        size === "2xl" ? "text-lg xl:text-2xl" : "text-lg",
-      )}
-    >
-      Timekeeper
-    </span>
-  ) : null;
-
-  const layoutClass = showWordmark ? "gap-2" : undefined;
+  const content = (
+    <>
+      <span
+        className={cn("shrink-0 leading-none", wordmark ? "text-2xl" : "text-lg")}
+        aria-hidden
+      >
+        ⏱️
+      </span>
+      {wordmark ? (
+        <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold leading-none text-ink xl:text-2xl">
+          Timekeeper
+        </span>
+      ) : null}
+    </>
+  );
 
   if (onHome) {
     return (
-      <button
-        type="button"
-        onClick={onHome}
-        aria-label="Timekeeper — open Home"
-        className={cn(
-          "flex w-max cursor-pointer items-center rounded-lg text-left",
-          layoutClass,
-          interactiveFeedbackClass({ press: "sm" }),
-          className,
-        )}
-      >
-        {emoji}
-        {wordmark}
+      <button type="button" onClick={onHome} aria-label="Timekeeper — open Home" className={classes}>
+        {content}
       </button>
     );
   }
 
-  return (
-    <div className={cn("flex w-max items-center", layoutClass, className)}>
-      {emoji}
-      {wordmark}
-    </div>
-  );
+  return <div className={classes}>{content}</div>;
 }
