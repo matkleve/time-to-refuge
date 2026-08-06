@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ScrollFadeShell } from "@/components/atoms/ScrollFadeShell";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import {
   DESKTOP_CLEARANCE_WITH_TITLE,
@@ -50,23 +51,8 @@ export function ListPageFrame({
   const isWorkspace = fill === "workspace";
   const clearance = navPage ? NAV_PAGE_CLEARANCE : HEADER_CLEARANCE;
 
-  return (
-    <div
-      className={cn(
-        isWorkspace
-          ? "flex h-full min-h-0 w-full flex-1 flex-col px-0"
-          : "focus-safe-scroll h-full min-h-0 w-full flex-1 overflow-y-auto overscroll-contain px-0",
-        className,
-      )}
-      style={
-        isWorkspace
-          ? undefined
-          : {
-              paddingBottom:
-                "max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))",
-            }
-      }
-    >
+  const body = (
+    <>
       {pin || pinBelow ? (
         <StickyPageChrome below={pinBelow} belowHeaderTitle={navPage}>
           {pin}
@@ -81,6 +67,35 @@ export function ListPageFrame({
       >
         {children}
       </div>
-    </div>
+    </>
+  );
+
+  if (isWorkspace) {
+    return (
+      <div
+        className={cn(
+          "flex h-full min-h-0 w-full flex-1 flex-col px-0",
+          className,
+        )}
+      >
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <ScrollFadeShell
+      className={cn("h-full min-h-0 w-full flex-1", className)}
+    >
+      <div
+        className="focus-safe-scroll h-full min-h-0 w-full overflow-y-auto overscroll-contain px-0"
+        style={{
+          paddingBottom:
+            "max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))",
+        }}
+      >
+        {body}
+      </div>
+    </ScrollFadeShell>
   );
 }

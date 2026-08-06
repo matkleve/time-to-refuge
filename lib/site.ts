@@ -9,6 +9,11 @@ export const siteTitle = "Timekeeper — Refuge Ceremony Timer";
 export const siteDescription =
   "Millisecond refuge timestamps for Buddha, Dharma, Sangha. Offline PWA for retreat timekeepers. Export CSV and share cards.";
 
+export const authorName = "Matthias";
+
+export const authorLinkedIn =
+  "https://www.linkedin.com/in/matthias-kleveta-884a76253";
+
 export const siteKeywords = [
   "refuge ceremony timer",
   "Buddhist refuge timestamp",

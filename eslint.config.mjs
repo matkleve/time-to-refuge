@@ -41,7 +41,7 @@ const eslintConfig = [
     },
   },
   {
-    files: ["scripts/**", "app/dev/**", "app/opengraph-image.tsx", "lib/card-image.ts"],
+    files: ["scripts/**", "app/dev/**", "lib/card-image.ts", "lib/popover-placement.ts"],
     rules: {
       "max-lines": "off",
       "max-lines-per-function": "off",

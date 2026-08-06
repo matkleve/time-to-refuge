@@ -77,16 +77,6 @@ export const FILLED = {
   row: "bg-white",
 } as const;
 
-/**
- * @deprecated Use `actionClass` — primary actions are glass now, not solid.
- * Kept as aliases so stray imports fail loudly toward the new API if grepped.
- */
-export const SOLID = {
-  primary: "bg-flagblue-600/42",
-  primaryIdle: "bg-white/45",
-  accent: "bg-saffron-400/42",
-} as const;
-
 /** Shape used by `scripts/a11y-contrast` — alphas + stack graph only. */
 export const GLASS_SURFACES = {
   panel: { alpha: GLASS.panel.alpha },

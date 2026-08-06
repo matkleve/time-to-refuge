@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { downloadCsv } from "@/lib/csv";
 import { DesktopShell } from "@/components/DesktopShell";
 import { DesktopNav } from "@/components/atoms/DesktopNav";
+import { SiteFooter } from "@/components/atoms/SiteFooter";
 import type { TimekeeperAppModel } from "@/components/timekeeper/timekeeper-app-content";
 import { undoRedoMenuProps } from "@/components/timekeeper/timekeeper-menu-props";
 
@@ -31,6 +32,7 @@ export function TimekeeperDesktopShell({
           <div className="relative flex min-h-0 flex-1 flex-col">{page}</div>
         </div>
       </div>
+      <SiteFooter />
     </DesktopShell>
   );
 }

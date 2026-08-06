@@ -22,7 +22,12 @@ npm run dev
 | `npm run start` | Serve the production build |
 | `npm run lint` | ESLint, including `jsx-a11y` |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run a11y` | Full accessibility gate suite (contrast, type, overflow, layout, interactive) |
 | `npm run a11y:contrast` | WCAG pairings for every shipped colour / glass surface |
+| `npm run a11y:type` | Typography scale enforcement |
+| `npm run a11y:overflow` | Overflow / clip static audit |
+| `npm run a11y:layout` | Shell layout contract checks |
+| `npm run a11y:interactive` | Interactive glass import rules |
 
 ## Views
 
@@ -50,13 +55,17 @@ hamburger Actions menu downloads a CSV of everyone at once.
 ## Layout
 
 ```
-app/          routes, root layout (fonts), global colour tokens
+app/              routes, root layout (fonts), global colour tokens
 components/
-  atoms/      Surface, buttons, icons — single-purpose UI
-  organisms/  composed, stateful views
-  AppShell    phone-first frame
-lib/          types, storage, surfaces (glass/filled/solid), share
-docs/         use cases → design system
+  atoms/          Surface, buttons, icons — single-purpose UI
+  organisms/      composed, stateful views
+  timekeeper/     app shells, page routers, header-actions context
+  dev/            component showcase (dev-only routes)
+  AppShell.tsx    phone-first frame
+content/          static JSON for landing and Dana pages
+lib/              types, storage, surfaces (glass/filled), share, timekeeper state
+scripts/          custom a11y audit scripts (run via npm run a11y:*)
+docs/             design system, specs, agent workflows
 ```
 
 See [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) for colour, type and

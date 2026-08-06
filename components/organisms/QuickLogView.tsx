@@ -9,8 +9,8 @@ import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import { ChromeScrim } from "@/components/atoms/ChromeScrim";
-import { WORKSPACE_SCROLL_COLUMN } from "@/lib/chrome";
+import { ScrollFadeShell } from "@/components/atoms/ScrollFadeShell";
+import { PAGE_INLINE_GUTTER, WORKSPACE_SCROLL_COLUMN } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
@@ -106,14 +106,7 @@ function QuickLogMobileBody({
     el.scrollTop = el.scrollHeight;
   }, [entries.length]);
 
-  const pageChrome = (
-    <QuickLogPageChrome
-      entryCount={entries.length}
-      tz={tz}
-      onTzChange={onTzChange}
-      clearAll={clearAll}
-    />
-  );
+  const stopTap = tapAnywhere ? (e: React.MouseEvent) => e.stopPropagation() : undefined;
 
   return (
     <div
@@ -122,14 +115,23 @@ function QuickLogMobileBody({
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}
     >
-      <div className="relative min-h-0 flex-1">
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+         Toolbar — stop tap-anywhere propagation for tz/clear controls. */}
+      <div className="shrink-0 pb-2" onClick={stopTap}>
+        <QuickLogPageChrome
+          entryCount={entries.length}
+          tz={tz}
+          onTzChange={onTzChange}
+          clearAll={clearAll}
+        />
+      </div>
+      <ScrollFadeShell className="min-h-0 flex-1">
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
+           Log list — blur fade at top and bottom edges. */}
         <div
           ref={scrollRef}
-          className={cn(
-            WORKSPACE_SCROLL_COLUMN,
-            "absolute inset-0 flex flex-col overflow-y-auto overscroll-contain",
-          )}
-          onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
+          className={cn(WORKSPACE_SCROLL_COLUMN, "h-full")}
+          onClick={stopTap}
         >
           <div className="mt-auto">
             <QuickLogEntryList
@@ -142,23 +144,10 @@ function QuickLogMobileBody({
             />
           </div>
         </div>
-        {/* Pinned chrome — list scrolls underneath the soften band. */}
-        <div className="relative z-10 shrink-0">
-          <ChromeScrim className="absolute inset-0" />
-          <div
-            className="relative"
-            onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-          >
-            {pageChrome}
-          </div>
-        </div>
-      </div>
+      </ScrollFadeShell>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Record button — stop tap-anywhere propagation. */}
-      <div
-        className="shrink-0 pt-2"
-        onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
-      >
+      <div className="shrink-0 pt-2" onClick={stopTap}>
         <ClockStamp
           mode="quicklog"
           flash={flash}
@@ -198,21 +187,23 @@ function QuickLogDesktopBody({
         />
       </div>
 
-      <div className={cn(WORKSPACE_SCROLL_COLUMN, "flex min-h-0 min-w-0 flex-col")}>
-        <QuickLogPageChrome
-          entryCount={entries.length}
-          tz={tz}
-          onTzChange={onTzChange}
-          clearAll={clearAll}
-        />
-        <QuickLogEntryList
-          entries={entries}
-          tz={tz}
-          tapAnywhere={tapAnywhere}
-          clearAllArmed={clearAll.armed}
-          onDelete={onDelete}
-        />
-      </div>
+      <ScrollFadeShell className="flex min-h-0 min-w-0 flex-col">
+        <div className={cn(WORKSPACE_SCROLL_COLUMN, "flex min-h-0 min-w-0 flex-col")}>
+          <QuickLogPageChrome
+            entryCount={entries.length}
+            tz={tz}
+            onTzChange={onTzChange}
+            clearAll={clearAll}
+          />
+          <QuickLogEntryList
+            entries={entries}
+            tz={tz}
+            tapAnywhere={tapAnywhere}
+            clearAllArmed={clearAll.armed}
+            onDelete={onDelete}
+          />
+        </div>
+      </ScrollFadeShell>
     </div>
   );
 }

@@ -35,10 +35,14 @@ export function SessionPersonRow({
   const density = sessionPhaseDotDensity(fields.length);
   const dotGap = SESSION_PHASE_DOT_SIZE[density].gap;
 
+  const rowLabel = allDone
+    ? `${person.name}, all fields recorded`
+    : `${person.name}, ${filledCount} of ${fields.length} recorded`;
+
   return (
     <div
       className={cn(
-        "flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
+        "relative flex min-h-12 w-full items-center gap-2 rounded-2xl px-3 py-2",
         interactiveGlassFlushClass(isCurrent ? "cardCurrent" : "card", {
           press: "sm",
           on: isCurrent,
@@ -49,17 +53,20 @@ export function SessionPersonRow({
         type="button"
         onClick={onSelect}
         aria-current={isCurrent ? "true" : undefined}
-        aria-label={
-          allDone
-            ? `${person.name}, all fields recorded`
-            : `${person.name}, ${filledCount} of ${fields.length} recorded`
-        }
-        className="min-w-0 flex-1 truncate text-left font-display text-base font-semibold text-ink"
+        aria-label={rowLabel}
+        className="absolute inset-0 z-0 rounded-2xl"
+      />
+      <span
+        aria-hidden
+        className="relative z-[1] min-w-0 flex-1 truncate text-left font-display text-base font-semibold text-ink pointer-events-none"
       >
         {person.name}
-      </button>
+      </span>
 
-      <ul className={cn("flex shrink-0 items-center", dotGap)} aria-label="Field progress">
+      <ul
+        className={cn("relative z-[1] flex shrink-0 items-center", dotGap)}
+        aria-label="Field progress"
+      >
         {fields.map((field) => {
           const filled = getTime(person, field.id) !== null;
           return (

@@ -10,7 +10,7 @@ import {
 import { AddRowTray } from "@/components/atoms/AddRowTray";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { FieldEditorRow } from "@/components/organisms/FieldEditorRow";
-import { FieldsPageIntro } from "@/components/organisms/FieldsPagePin";
+import { FieldsPageIntro } from "@/components/organisms/FieldsPageIntro";
 import { useArmedAction } from "@/lib/use-armed-action";
 
 function isDefaultFields(fields: FieldDef[]): boolean {

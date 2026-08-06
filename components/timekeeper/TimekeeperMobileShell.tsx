@@ -5,6 +5,7 @@ import { Brand } from "@/components/atoms/Brand";
 import { HeaderScrim } from "@/components/atoms/HeaderScrim";
 import { HeaderTitle } from "@/components/atoms/HeaderTitle";
 import { AppShell } from "@/components/AppShell";
+import { SiteFooter } from "@/components/atoms/SiteFooter";
 import type { TimekeeperAppModel } from "@/components/timekeeper/timekeeper-app-content";
 import { HeaderActionsSlot, useHeaderActionsRegistered } from "@/components/timekeeper/header-actions-context";
 import { getHeaderTitle } from "@/lib/view-titles";
@@ -58,6 +59,7 @@ export function TimekeeperMobileShell({
         </div>
       </header>
       <div className="relative z-0 flex min-h-0 flex-1 flex-col">{page}</div>
+      <SiteFooter />
     </AppShell>
   );
 }
