@@ -11,6 +11,7 @@ import { PinnedToolbarScrollColumn } from "@/components/atoms/PinnedToolbarScrol
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
+import { DESKTOP_CLEARANCE_WITH_TITLE } from "@/lib/chrome";
 
 /**
  * Quick Log — workspace slot only (no document scroll). Mobile: toolbar → fading
@@ -160,6 +161,7 @@ function QuickLogDesktopBody({
     <div
       className={cn(
         "mx-auto hidden w-full max-w-3xl min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5 md:grid",
+        DESKTOP_CLEARANCE_WITH_TITLE,
         "grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]",
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}

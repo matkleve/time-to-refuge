@@ -31,7 +31,7 @@ Parent: [dana-page.md](dana-page.md)
 
 ## External link
 
-- [ ] “Open DRCE page” → `https://thebuddapath.eu/drce`
+- [ ] “Open DRCE page” → `https://thebuddhapath.eu/`
 - [ ] `target="_blank"` + `rel="noopener noreferrer"`
 - [ ] Bold centered text link beneath aside column (not a glass chip)
 

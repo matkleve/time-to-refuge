@@ -15,7 +15,7 @@ Parent: [`desktop-header.md`](desktop-header.md) · Layout: [`desktop-header.lay
 ## Tab row layout
 
 - [ ] Brand left; tabs in `flex-1` middle slot; global actions right
-- [ ] **1280×800:** labels when nav slot ≥ `30rem`; no overlap with undo/redo
+- [ ] **1280×800:** labels when nav slot ≥ `33rem`; no overlap with undo/redo
 - [ ] **1440×900:** same
 
 ## Page tabs
@@ -37,9 +37,9 @@ Hard reload (disable cache):
 | 1280×800 | Icons + labels | `h-11 w-auto` each | Labels readable; even `gap-1.5` |
 | 1440×900 | Icons + labels | same | same |
 
-- [ ] Resize: labels appear when nav slot widens past `30rem`
+- [ ] Resize: labels appear when nav slot widens past `33rem`
 - [ ] Narrow slot: label `hidden`; `aria-label` + `title` on host
-- [ ] Wide slot: `@min-[30rem]/nav:w-auto` overrides icon-only `size-11` width
+- [ ] Wide slot: `@min-[33rem]/nav:w-auto` overrides icon-only `size-11` width
 
 ## Global actions column (tab row)
 

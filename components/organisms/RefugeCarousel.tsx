@@ -35,7 +35,7 @@ function RefugeCarouselSlide({
   retreatName: string;
 }) {
   return (
-    <div className="focus-safe-scroll flex h-full w-full shrink-0 flex-col overflow-y-auto overscroll-contain px-3 pb-1">
+    <div className="flex h-full w-full shrink-0 flex-col justify-end overflow-visible px-3 pb-1">
       <PersonCard
         person={person}
         fields={fields}
@@ -89,7 +89,7 @@ export function RefugeCarousel({
   return (
     <div
       className={cn(
-        "relative -mx-3 min-h-0 flex-1 overflow-x-hidden md:mx-0",
+        "relative -mx-3 min-h-0 flex-1 overflow-x-hidden overflow-y-visible md:mx-0",
       )}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}

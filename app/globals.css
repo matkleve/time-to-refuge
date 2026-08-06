@@ -490,24 +490,24 @@
 
 /*
  * List under absolute toolbar — fade in the toolbar band only; opaque below
- * `--scroll-fade-toolbar-band` so the first row is sharp at scroll rest.
+ * ~72% of `--scroll-fade-toolbar-band` so the first row is sharp at scroll rest.
  */
 @utility scroll-fade-y-under-toolbar {
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    rgb(0 0 0 / 0.4) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.3),
-    rgb(0 0 0 / 0.75) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.65),
-    #000 var(--scroll-fade-toolbar-band, 5.5rem),
+    rgb(0 0 0 / 0.45) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.22),
+    rgb(0 0 0 / 0.85) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.5),
+    #000 calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.72),
     #000 calc(100% - var(--scroll-fade-size)),
     transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
     transparent 0,
-    rgb(0 0 0 / 0.4) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.3),
-    rgb(0 0 0 / 0.75) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.65),
-    #000 var(--scroll-fade-toolbar-band, 5.5rem),
+    rgb(0 0 0 / 0.45) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.22),
+    rgb(0 0 0 / 0.85) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.5),
+    #000 calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.72),
     #000 calc(100% - var(--scroll-fade-size)),
     transparent 100%
   );

@@ -19,7 +19,7 @@ function FieldsResetButton({
       armed={armed}
       disabled={atDefault}
       idleLabel="Reset fields to defaults"
-      armedLabel="Confirm reset fields to Buddha, Dharma, Sangha"
+      armedLabel="Confirm reset fields to defaults"
       showLabel="Reset"
       onTrigger={onTrigger}
     />
@@ -44,11 +44,5 @@ export function FieldsPageIntro({
 
   useRegisterHeaderActions(headerActions);
 
-  return (
-    <div className="space-y-1 pt-1">
-      <p className="text-sm text-muted">
-        Choose what you record — rename, reorder, or add your own.
-      </p>
-    </div>
-  );
+  return null;
 }

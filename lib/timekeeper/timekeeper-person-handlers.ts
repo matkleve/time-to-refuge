@@ -36,6 +36,12 @@ export function createTimekeeperPersonHandlers(ctx: TimekeeperHandlersContext) {
     setPeople((prev) => prev.filter((p) => p.id !== id));
   }
 
+  function handleDeleteAllPeople() {
+    setPeople([]);
+    setIndex(0);
+    setRequestedPhase(null);
+  }
+
   function handleSelectPerson(id: string) {
     const i = people.findIndex((p) => p.id === id);
     if (i >= 0) setIndex(i);
@@ -61,6 +67,7 @@ export function createTimekeeperPersonHandlers(ctx: TimekeeperHandlersContext) {
     handleFieldsChange,
     handleAddPerson,
     handleDeletePerson,
+    handleDeleteAllPeople,
     handleOpenPersonAt,
     handleRenamePerson,
     goTo,

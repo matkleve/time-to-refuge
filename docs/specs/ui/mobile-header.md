@@ -6,7 +6,7 @@ Phone shell toolbar: brand (left) · centered page title · hamburger menu (righ
 
 ## What It Looks Like
 
-`grid-cols-[auto_1fr_auto] h-11` inside `px-3` + safe-area top padding. Ghost brand (emoji only) — **no** selected glass on `home` (title carries “Timekeeper”). Title `text-lg leading-tight font-semibold text-ink` centered in a `min-w-0 overflow-hidden` middle slot (`truncate` + ellipsis). Menu trigger right.
+`grid-cols-[auto_1fr_auto] h-11` inside `px-3` + safe-area top padding. Ghost brand (emoji only) — **no** selected glass on `home` (title carries “Timekeeper”). Title `text-lg leading-tight font-semibold text-ink` centered in a `min-w-0 overflow-hidden` middle slot (`truncate` + ellipsis). Muted subtitle `text-sm text-muted` centered below the `h-11` row (`truncate`). Menu trigger right.
 
 [`HeaderScrim`](../component/header-scrim.md) behind row (not `extended`).
 
@@ -20,7 +20,7 @@ Phone shell toolbar: brand (left) · centered page title · hamburger menu (righ
 | --- | --- | --- |
 | 1 | Tap brand | `setView("home")` |
 | 2 | Open menu | Pages + actions + Dana primary → `/dana` ([supplement](nav/view-menu-dana.supplement.md)) |
-| 3 | — | Title updates from `getHeaderTitle(view)` |
+| 3 | — | Title updates from `getHeaderTitle(view)`; subtitle from `getViewDescription(view)` |
 | 4 | View-specific | [`HeaderActionsSlot`](../component/header-actions-slot.md) left of title when registered (e.g. Fields Reset) |
 
 ## Component Hierarchy

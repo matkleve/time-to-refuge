@@ -60,7 +60,7 @@ export function DesktopWorkspace({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5">
+    <div className="flex min-h-0 flex-1 overflow-visible gap-3 py-3 sm:gap-4 sm:py-4 lg:gap-5">
       <ul className={WORKSPACE_RAIL} aria-label="People">
         {people.map((p) => {
           const selected = p.id === current?.id;

@@ -64,7 +64,7 @@ Rendered in root layout `<body>` on every page:
 | Asset | Spec |
 | --- | --- |
 | `public/og-image.png` | 1200×630; referenced in OG + Twitter metadata |
-| Alt text | `Timekeeper — Refuge Ceremony Timer` |
+| Alt text | `Timekeeper — Vow Ceremony Timer` |
 
 ## Content JSON contracts
 

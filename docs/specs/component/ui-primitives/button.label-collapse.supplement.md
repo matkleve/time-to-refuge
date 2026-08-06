@@ -6,7 +6,7 @@ Parent: [`button.md`](button.md) · Consumers: [`desktop-nav-pages.md`](../deskt
 
 Responsive quiet-button mode: **icon-only below the collapse key, icon + label at the key and up** ([responsive navbar guides](https://ui-incubator.com/en/blog/react-navbar-components-guide)).
 
-Keys: `lg` (1024px viewport) · `xl` (1280px viewport) · `nav` (`30rem` nav slot via `@container/nav`). Implementation: `labelCollapseClasses()` in `button-build.ts`.
+Keys: `lg` (1024px viewport) · `xl` (1280px viewport) · `nav` (`33rem` nav slot via `@container/nav`). Implementation: `labelCollapseClasses()` in `button-build.ts`.
 
 ## Class split (normative — matches code)
 
@@ -19,8 +19,8 @@ Parent: `@container/nav` on `DesktopNav` middle slot.
 | Layer | Classes |
 | --- | --- |
 | Host (always) | `size-11` `shrink-0` `rounded-full` |
-| Host at slot ≥ `30rem` | `@min-[30rem]/nav:h-11 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3` |
-| Label span | `hidden @min-[30rem]/nav:inline` |
+| Host at slot ≥ `33rem` | `@min-[33rem]/nav:h-11 @min-[33rem]/nav:w-auto @min-[33rem]/nav:gap-2 @min-[33rem]/nav:px-3` |
+| Label span | `hidden @min-[33rem]/nav:inline` |
 
 ### `labelCollapse="lg"` · `size="md"` (page tabs)
 
@@ -59,7 +59,7 @@ Rendered by `resolveButtonLabelContent()`:
 | --- | --- |
 | `lg` | `hidden lg:inline` |
 | `xl` | `hidden xl:inline` |
-| `nav` | `hidden @min-[30rem]/nav:inline` |
+| `nav` | `hidden @min-[33rem]/nav:inline` |
 
 **MUST** set `aria-label` + `title` on host when label is hidden.
 

@@ -12,8 +12,8 @@ Quiet ghost buttons: ink icon + ink label (when label visible). `gap-1.5` betwee
 
 | Breakpoint | Appearance |
 | --- | --- |
-| Nav slot &lt; `30rem` | Icon-only, 44×44px circles |
-| Nav slot ≥ `30rem` | Icon + label inline, `h-11` auto width |
+| Nav slot &lt; `33rem` | Icon-only, 44×44px circles |
+| Nav slot ≥ `33rem` | Icon + label inline, `h-11` auto width |
 
 Standard SaaS pattern: collapse labels on tablet, show text on desktop ([UI Incubator navbar guide](https://ui-incubator.com/en/blog/react-navbar-components-guide)).
 
@@ -62,7 +62,7 @@ nav[aria-label=Primary] (flex flex-nowrap gap-1.5)
 | `press` | `md` |
 | `surfaceClass` | `interactiveGlassNavTabClass(selected, { press: "md" })` |
 | `className` | `text-base font-semibold text-ink` |
-| `aria-label` / `title` | Full page label (required — icon-only when nav slot &lt; `30rem`) |
+| `aria-label` / `title` | Full page label (required — icon-only when nav slot &lt; `33rem`) |
 
 **MUST NOT:** `primary`, `glass` variant, `navTab` variant name.
 
@@ -74,8 +74,8 @@ Shipped class split (`labelCollapse="nav"`, `size="md"`):
 
 ```text
 size-11 shrink-0 rounded-full
-@min-[30rem]/nav:h-11 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3
-hidden @min-[30rem]/nav:inline  (label span)
+@min-[33rem]/nav:h-11 @min-[33rem]/nav:w-auto @min-[33rem]/nav:gap-2 @min-[33rem]/nav:px-3
+hidden @min-[33rem]/nav:inline  (label span)
 ```
 
 Parent: `@container/nav` on `DesktopNav` middle wrapper.
@@ -83,6 +83,6 @@ Parent: `@container/nav` on `DesktopNav` middle wrapper.
 ## Acceptance Criteria
 
 - [ ] Five tabs only; correct order
-- [ ] Icon-only when nav slot &lt; `30rem` with accessible names
-- [ ] Labeled when nav slot ≥ `30rem`
+- [ ] Icon-only when nav slot &lt; `33rem` with accessible names
+- [ ] Labeled when nav slot ≥ `33rem`
 - [ ] Hard reload passes matrix in [`desktop-header.acceptance-criteria.md`](../ui/nav/desktop-header.acceptance-criteria.md)

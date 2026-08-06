@@ -76,7 +76,7 @@ export async function renderPersonCardPng(
   ctx.fillStyle = MUTED;
   ctx.font = `500 30px ${fonts.sans}`;
   ctx.letterSpacing = "6px";
-  ctx.fillText("TIME TO REFUGE", WIDTH / 2, 110);
+  ctx.fillText("VOW CEREMONY", WIDTH / 2, 110);
   ctx.letterSpacing = "0px";
 
   if (retreatName.trim()) {

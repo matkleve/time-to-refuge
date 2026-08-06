@@ -45,7 +45,7 @@ Parent header remains `pointer-events-none`; scrim and outer wrapper unchanged.
 | Pointer events | `pointer-events-auto` on `<nav>` |
 | Whitespace | `flex-nowrap` — **MUST NOT** wrap tabs to second line |
 | Overflow | **MUST NOT** `overflow-x-auto` on nav |
-| Labels | `labelCollapse="nav"` — icons only below `30rem` slot width |
+| Labels | `labelCollapse="nav"` — icons only below `33rem` slot width |
 
 Tabs are grouped in the middle flex slot — constrained between brand and actions, not viewport-centered via symmetric grid tracks.
 
@@ -84,7 +84,7 @@ Spec: [`nav-page-title.md`](../../component/nav-page-title.md) · [`header-actio
 
 When brand + icon tabs + actions exceed row width:
 
-1. **MUST** keep icon-only tabs when nav slot &lt; `30rem` (`labelCollapse="nav"`).
+1. **MUST** keep icon-only tabs when nav slot &lt; `33rem` (`labelCollapse="nav"`).
 2. **MUST NOT** shrink tab hit area below 44×44px.
 3. **MUST NOT** let tabs overlap brand or global actions — middle slot constrains width.
 

@@ -1,7 +1,7 @@
 {
-  "name": "Timekeeper — Refuge Ceremony Timer",
+  "name": "Timekeeper — Vow Ceremony Timer",
   "short_name": "Timekeeper",
-  "description": "Record exact refuge moments to the millisecond — Buddha, Dharma, Sangha for each aspirant. Offline-ready for retreat timekeepers.",
+  "description": "Record exact vow moments to the millisecond — refuge, Bodhisattva vows, and any ceremony steps you define. Offline-ready for retreat timekeepers.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

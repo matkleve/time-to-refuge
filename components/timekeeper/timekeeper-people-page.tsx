@@ -18,6 +18,7 @@ export function TimekeeperPeoplePage({ app }: { app: TimekeeperAppModel }) {
       onOpenAt={app.handleOpenPersonAt}
       onResetAll={app.handleResetAll}
       onDelete={app.handleDeletePerson}
+      onDeleteAll={app.handleDeleteAllPeople}
       onRename={app.handleRenamePerson}
       onEditTime={app.handleEditTime}
       onClearTime={app.handleClear}

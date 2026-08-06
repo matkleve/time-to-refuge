@@ -31,9 +31,9 @@ export function labelCollapseClasses(collapse?: LabelCollapse, size: ButtonSize 
     lg: "xl:h-12 xl:w-auto xl:gap-2 xl:px-3.5",
   };
   const labeledAtNav: Record<ButtonSize, string> = {
-    sm: "@min-[28rem]/nav:h-9 @min-[28rem]/nav:w-auto @min-[28rem]/nav:gap-1.5 @min-[28rem]/nav:px-3",
-    md: "@min-[30rem]/nav:h-11 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3 xl:px-3.5",
-    lg: "@min-[30rem]/nav:h-12 @min-[30rem]/nav:w-auto @min-[30rem]/nav:gap-2 @min-[30rem]/nav:px-3.5",
+    sm: "@min-[31rem]/nav:h-9 @min-[31rem]/nav:w-auto @min-[31rem]/nav:gap-1.5 @min-[31rem]/nav:px-3",
+    md: "@min-[33rem]/nav:h-11 @min-[33rem]/nav:w-auto @min-[33rem]/nav:gap-2 @min-[33rem]/nav:px-3 xl:px-3.5",
+    lg: "@min-[33rem]/nav:h-12 @min-[33rem]/nav:w-auto @min-[33rem]/nav:gap-2 @min-[33rem]/nav:px-3.5",
   };
   return {
     button: cn(
@@ -46,7 +46,7 @@ export function labelCollapseClasses(collapse?: LabelCollapse, size: ButtonSize 
     label: cn(
       collapse === "lg" && "hidden lg:inline",
       collapse === "xl" && "hidden xl:inline",
-      collapse === "nav" && "hidden @min-[30rem]/nav:inline",
+      collapse === "nav" && "hidden @min-[33rem]/nav:inline",
     ),
   };
 }

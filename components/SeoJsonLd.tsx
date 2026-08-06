@@ -20,15 +20,15 @@ export function SeoJsonLd() {
           priceCurrency: "EUR",
         },
         featureList: [
-          "Millisecond refuge timestamps",
-          "Buddha, Dharma, Sangha phases",
+          "Millisecond vow timestamps",
+          "Custom ceremony steps — refuge, Bodhisattva vows, and more",
           "Offline PWA for retreat wifi",
           "CSV export and shareable cards",
         ],
       },
       {
         "@type": "HowTo",
-        name: "Record a refuge ceremony with Timekeeper",
+        name: "Record a vow ceremony with Timekeeper",
         description: landing.intro,
         step: landing.steps.map((step, index) => ({
           "@type": "HowToStep",

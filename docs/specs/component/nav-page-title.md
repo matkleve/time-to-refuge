@@ -8,11 +8,12 @@ Desktop/tablet page heading on the **second header row** for the five nav `AppVi
 
 ## What It Looks Like
 
-`flex min-h-12 items-center`:
+`flex min-h-12 flex-col justify-center gap-0.5`:
 
 | Element | Style |
 | --- | --- |
 | Title | `h2` · `font-display text-2xl font-semibold text-ink` · truncate |
+| Subtitle | `p` · `text-sm text-muted` · truncate · from `getViewDescription(view)` |
 
 Left side of title row; [`HeaderActionsSlot`](header-actions-slot.md) on the right.
 
@@ -34,8 +35,9 @@ Left side of title row; [`HeaderActionsSlot`](header-actions-slot.md) on the rig
 ## Component Hierarchy
 
 ```text
-div.flex.min-h-12
-└── h2 — page.label
+div.flex.min-h-12.flex-col
+├── h2 — page.label
+└── p — view description (optional)
 ```
 
 ## Rules
@@ -43,6 +45,7 @@ div.flex.min-h-12
 - **MUST NOT** duplicate on mobile (`HeaderTitle` owns mobile center title)
 - **MUST NOT** repeat in `StickyPageChrome` or list scroll body on desktop
 - Label source: `DESKTOP_NAV_PAGES` — keep in sync with tab labels
+- Description source: `VIEW_DESCRIPTIONS` in `lib/view-titles.ts` — keep in sync with mobile `HeaderTitle` subtitle
 
 ## Acceptance Criteria
 

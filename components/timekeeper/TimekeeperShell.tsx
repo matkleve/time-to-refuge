@@ -14,7 +14,7 @@ import {
   HeaderActionsSlot,
   useHeaderActionsRegistered,
 } from "@/components/timekeeper/header-actions-context";
-import { getHeaderTitle } from "@/lib/view-titles";
+import { getHeaderTitle, getViewDescription } from "@/lib/view-titles";
 
 /**
  * Responsive app shell — mobile header and desktop nav coexist in the DOM;
@@ -32,6 +32,8 @@ export function TimekeeperShell({
 }) {
   const undoRedo = undoRedoMenuProps(app.undoStack, app.redoStack);
   const hasHeaderActions = useHeaderActionsRegistered();
+  const headerTitle = getHeaderTitle(app.view);
+  const headerSubtitle = getViewDescription(app.view);
 
   return (
     <div
@@ -62,12 +64,17 @@ export function TimekeeperShell({
                   </div>
                 ) : null}
                 <HeaderTitle
-                  title={getHeaderTitle(app.view)}
+                  title={headerTitle}
                   as={app.view === "home" ? "p" : "h1"}
-                  className="pointer-events-none w-auto max-w-full truncate"
+                  className="pointer-events-none w-auto max-w-full"
                 />
               </div>
             </div>
+            {headerSubtitle ? (
+              <p className="min-w-0 truncate px-11 text-center text-sm text-muted">
+                {headerSubtitle}
+              </p>
+            ) : null}
           </div>
         </div>
       </header>

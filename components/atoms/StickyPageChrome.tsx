@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PAGE_INLINE_GUTTER, STICKY_CHROME_PT_BELOW_HEADER_TITLE } from "@/lib/chrome";
+import { PAGE_INLINE_GUTTER, MOBILE_HEADER_CLEARANCE, STICKY_CHROME_PT_BELOW_HEADER_TITLE } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 interface StickyPageChromeProps {
@@ -26,10 +26,7 @@ export function StickyPageChrome({
 }: StickyPageChromeProps) {
   const topClearance = belowHeaderTitle
     ? STICKY_CHROME_PT_BELOW_HEADER_TITLE
-    : cn(
-        "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)]",
-        "md:pt-[4.5rem]",
-      );
+    : cn(MOBILE_HEADER_CLEARANCE, "md:pt-[4.5rem]");
   const inset = inScrollport ? undefined : PAGE_INLINE_GUTTER;
 
   return (

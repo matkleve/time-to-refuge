@@ -51,17 +51,15 @@ export function PersonFieldRowFilled({
 }: PersonFieldRowFilledProps) {
   return (
     <div ref={dismissRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
-      <div className="min-w-0 flex-1">
-        <PersonFieldRowFilledStamp
-          phaseLabel={phaseLabel}
-          value={value}
-          isTarget={isTarget}
-          resetArmed={resetArmed}
-          targetClass={targetClass}
-          showActions={showActions}
-          onRowClick={onRowClick}
-        />
-      </div>
+      <PersonFieldRowFilledStamp
+        phaseLabel={phaseLabel}
+        value={value}
+        isTarget={isTarget}
+        resetArmed={resetArmed}
+        targetClass={targetClass}
+        showActions={showActions}
+        onRowClick={onRowClick}
+      />
       <RowActionTray open={showActions}>
         <div className={cn("flex items-center gap-4")}>
           <PersonFieldRowLookActions

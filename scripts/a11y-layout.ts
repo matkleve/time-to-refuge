@@ -182,6 +182,18 @@ if (/subheader/.test(appShell)) {
   shellProblems.push("shell subheader removed — page titles live in app header");
 }
 
+const chrome = read("lib/chrome.ts");
+if (/calc\([^)]*calc\(/i.test(chrome)) {
+  shellProblems.push(
+    "lib/chrome.ts must use flat calc() sums in Tailwind bracket classes — nested calc is dropped by JIT",
+  );
+}
+if (/\[[^\]]*\$\{/.test(chrome)) {
+  shellProblems.push(
+    "lib/chrome.ts bracket utilities must be string literals — template interpolation is not scanned by Tailwind",
+  );
+}
+
 const desktopNav = read("components/atoms/DesktopNav.tsx");
 const brand = read("components/atoms/Brand.tsx");
 if (!/wordmark\s*=\s*\{?true\}?/.test(desktopNav) && !/<Brand[^>]*wordmark[^>]*onHome/.test(desktopNav)) {

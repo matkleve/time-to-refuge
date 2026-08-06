@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mountain, Pencil } from "lucide-react";
+import { WORKSPACE_RAIL_MAX_WIDTH } from "@/lib/chrome";
 import { controlMinH } from "@/lib/control-size";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
 import {
@@ -33,6 +34,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
 
   const shellLayout = cn(
     "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
+    WORKSPACE_RAIL_MAX_WIDTH,
     controlMinH.md,
     className,
   );
@@ -88,7 +90,7 @@ export function RetreatNameField({ value, onChange, className }: RetreatNameFiel
       />
       <span
         className={cn(
-          "max-w-[16rem] truncate font-display text-base font-semibold leading-snug sm:max-w-md",
+          "min-w-0 flex-1 truncate font-display text-base font-semibold leading-snug",
           value ? "text-ink" : "text-muted",
         )}
       >

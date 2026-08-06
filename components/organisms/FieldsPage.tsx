@@ -65,7 +65,7 @@ export function FieldsPage({ fields, onChange }: {
     <ListPageFrame navPage>
       <div className="mx-auto max-w-prose">
         <FieldsPageIntro atDefault={atDefault} resetAll={resetAll} />
-        <ul className="mt-4 space-y-3 pt-1.5 pb-2">
+        <ul className="mt-4 space-y-3 pb-2">
           {fields.map((field, index) => (
             <li key={field.id}>
               <FieldEditorRow

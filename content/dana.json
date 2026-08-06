@@ -11,7 +11,7 @@
     "currentEuros": 12500,
     "targetEuros": 1000000,
     "label": "Dana gathered",
-    "caption": "Log scale — early gifts move the line more; each decade to €1.000.000 is one equal step."
+    "caption": "Thank you to everyone who has given."
   },
   "bank": {
     "accountName": "Dzogchen Shri Singha Europe",
@@ -30,7 +30,7 @@
   "links": [
     {
       "label": "Open DRCE page",
-      "href": "https://thebuddhapath.eu/drce"
+      "href": "https://thebuddhapath.eu/"
     }
   ],
   "credit": "Photo and donation details from Dzogchen Retreat Center Europe / Buddha Path."

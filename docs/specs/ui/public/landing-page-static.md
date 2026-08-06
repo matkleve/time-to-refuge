@@ -28,7 +28,7 @@ Single-column article inside `PublicShell`: centered hero (H1 + intro + blue CTA
 | --- | --- | --- |
 | 1 | Click “Open Session” | Navigate to `/?app=1` — mounts SPA |
 | 2 | Click Support DRCE (footer or shell nav) | Navigate to `/dana` |
-| 3 | Click DRCE external link | New tab → `thebuddapath.eu/drce` |
+| 3 | Click DRCE external link | New tab → `thebuddhapath.eu/` |
 | 4 | Read page | No JS required |
 
 ## Component Hierarchy

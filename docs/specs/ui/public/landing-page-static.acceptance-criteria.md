@@ -9,7 +9,7 @@ Parent: [landing-page-static.md](landing-page-static.md)
 - [ ] Visible paragraph text ≥ **250 words** (about + audience + features + steps + footer)
 - [ ] Title words from `<title>` appear in body copy
 - [ ] `href="/dana"` appears at least once
-- [ ] External link `https://thebuddapath.eu/drce` with `rel="noopener noreferrer"`
+- [ ] External link `https://thebuddhapath.eu/` with `rel="noopener noreferrer"`
 
 ## Headings & landmarks
 

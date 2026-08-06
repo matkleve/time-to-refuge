@@ -20,7 +20,7 @@ Floating desktop/tablet toolbar: brand home (left), five page tabs (center grid 
 
 Photo shows through — no solid bar. [`HeaderScrim`](../component/header-scrim.md) softens list content scrolling underneath (`extended` on nav pages).
 
-All header controls are **quiet** ghost at idle. Page tabs collapse to icon-only when the nav slot is narrower than `30rem`; labels appear when the slot has room (`labelCollapse="nav"`).
+All header controls are **quiet** ghost at idle. Page tabs collapse to icon-only when the nav slot is narrower than `33rem`; labels appear when the slot has room (`labelCollapse="nav"`).
 
 ## Where It Lives
 
@@ -75,7 +75,7 @@ Tab cluster sits in a **`flex-1 min-w-0` middle slot** between brand (left, `shr
 
 **MUST NOT** use absolute positioning for the tab cluster.
 
-Labels use **`labelCollapse="nav"`** — icon-only below `30rem` slot width; icon + label when the slot is wide enough (not viewport-centered grid).
+Labels use **`labelCollapse="nav"`** — icon-only below `33rem` slot width; icon + label when the slot is wide enough (not viewport-centered grid).
 
 ## Interaction emphasis
 

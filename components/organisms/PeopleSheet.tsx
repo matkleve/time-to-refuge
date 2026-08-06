@@ -23,6 +23,7 @@ interface PeopleSheetProps {
   onClearTime: (id: string, phase: Phase) => void;
   onResetAll: (id: string) => void;
   onDelete: (id: string) => void;
+  onDeleteAll: () => void;
   onRename: (id: string, name: string) => void;
   retreatName?: string;
   onRetreatNameChange?: (name: string) => void;
@@ -41,11 +42,11 @@ export function PeopleSheet({
   onClearTime,
   onResetAll,
   onDelete,
+  onDeleteAll,
   onRename,
   retreatName = "",
   onRetreatNameChange,
 }: PeopleSheetProps) {
-  const currentPerson = people.find((p) => p.id === currentId) ?? null;
   const retreatPin = onRetreatNameChange ? (
     <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
   ) : undefined;
@@ -56,10 +57,7 @@ export function PeopleSheet({
         <ListPageFrame fill="workspace" navPage selfClearance>
           <PeoplePageChrome
             people={people}
-            fields={fields}
-            currentPerson={currentPerson}
-            isDesktop={false}
-            onResetAll={onResetAll}
+            onDeleteAll={onDeleteAll}
           />
           <PinnedToolbarScrollColumn
             toolbar={
@@ -100,10 +98,7 @@ export function PeopleSheet({
         <ListPageFrame fill="workspace" navPage pinBelow={retreatPin} selfClearance={false}>
           <PeoplePageChrome
             people={people}
-            fields={fields}
-            currentPerson={currentPerson}
-            isDesktop
-            onResetAll={onResetAll}
+            onDeleteAll={onDeleteAll}
           />
           <DesktopPeopleWorkspace
             people={people}
