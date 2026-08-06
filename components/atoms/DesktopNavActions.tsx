@@ -1,10 +1,9 @@
 "use client";
 
 import { Download, HeartHandshake, Redo2, Undo2 } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { BUTTON_CLUSTER_GAP, controlMinH } from "@/lib/control-size";
-import { interactiveActionClass } from "@/lib/interactive-glass";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 import dana from "@/content/dana.json";
 
@@ -33,18 +32,20 @@ export function DesktopNavActions({
 }) {
   return (
     <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
-      <IconButton
+      <Button
+        variant="quiet"
         icon={Undo2}
-        label={undoLabel}
-        quiet
+        aria-label={undoLabel}
+        title={undoLabel}
         size="sm"
         onClick={onUndo}
         disabled={undoDisabled}
       />
-      <IconButton
+      <Button
+        variant="quiet"
         icon={Redo2}
-        label={redoLabel}
-        quiet
+        aria-label={redoLabel}
+        title={redoLabel}
         size="sm"
         onClick={onRedo}
         disabled={redoDisabled}
@@ -57,40 +58,30 @@ export function DesktopNavActions({
         role="group"
         aria-label="Actions"
       >
-        <IconButton
+        <Button
+          variant="quiet"
           icon={Download}
-          label="Export all"
-          quiet
+          aria-label="Export all"
+          title="Export all"
           size="sm"
           onClick={onExportAll}
           disabled={exportDisabled}
         />
-        <button
-          type="button"
-          onClick={() => onChange("dana")}
+        <Button
+          variant="quiet"
+          size="sm"
+          icon={HeartHandshake}
+          selected={view === "dana"}
+          labelCollapse="lg"
+          press="md"
           aria-label={dana.menuCta}
+          title={dana.menuCta}
           aria-current={view === "dana" ? "page" : undefined}
-          className={cn(
-            interactiveActionClass(
-              "primary",
-              { press: "md", on: view === "dana" },
-              cn(
-                "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3 text-sm font-semibold text-white",
-                controlMinH.sm,
-                "hover:brightness-[1.06]",
-                "user-feedback--on-accent",
-                view === "dana" && "ring-2 ring-inset ring-white/70",
-              ),
-            ),
-          )}
+          onClick={() => onChange("dana")}
+          className="text-base font-semibold text-ink"
         >
-          <HeartHandshake
-            className="size-[1.125rem] shrink-0"
-            strokeWidth={2}
-            aria-hidden
-          />
-          <span className="whitespace-nowrap">{dana.menuCta}</span>
-        </button>
+          {dana.menuCta}
+        </Button>
       </div>
     </div>
   );

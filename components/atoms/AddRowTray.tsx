@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { Button } from "@/components/atoms/Button";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import {
-  interactiveGlassFlushClass,
-  staticGlassFlushClass,
-} from "@/lib/interactive-glass";
+import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 
@@ -64,8 +62,6 @@ export function AddRowTray({
             /* eslint-disable-next-line jsx-a11y/no-autofocus -- opened by an
                explicit user action; focusing the field is expected. */
             autoFocus
-            /* Keep Safari from treating this as a contact “name” field and
-               painting yellow autofill over the glass pill (iOS People add). */
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="words"
@@ -87,19 +83,16 @@ export function AddRowTray({
           />
         </div>
       ) : (
-        <button
-          type="button"
+        <Button
+          variant="flushPill"
+          icon={Plus}
+          aria-label={idleLabel}
+          fullWidth
           onClick={() => setOpen(true)}
-          className={cn(
-            "flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-base leading-snug text-muted",
-            controlMinH.md,
-            interactiveGlassFlushClass(undefined, { press: "md" }),
-            "hover:text-flagblue-600",
-          )}
+          className="min-w-0 flex-1 justify-center gap-2 rounded-full px-4 py-2.5 text-base leading-snug text-muted hover:text-flagblue-600"
         >
-          <Plus className="size-4" aria-hidden />
-          <span>{idleLabel}</span>
-        </button>
+          {idleLabel}
+        </Button>
       )}
 
       <CancelConfirmTray

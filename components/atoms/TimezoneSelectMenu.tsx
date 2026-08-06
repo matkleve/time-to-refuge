@@ -2,10 +2,8 @@
 
 import { createPortal } from "react-dom";
 import type { RefObject } from "react";
-import { controlMinH } from "@/lib/control-size";
 import { formatTimezoneLabel } from "@/lib/timezone-options";
-import { interactiveFeedbackClass } from "@/lib/interactive-glass";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/atoms/Button";
 import { Surface } from "@/components/atoms/Surface";
 
 export type TimezoneMenuBox = {
@@ -45,24 +43,19 @@ export function TimezoneSelectMenu({
         {zones.map((zone) => {
           const selected = zone === value;
           return (
-            <button
+            <Button
               key={zone}
-              type="button"
+              variant="menuRow"
               role="option"
               aria-selected={selected}
+              selected={selected}
               onClick={(e) => {
                 e.stopPropagation();
                 onPick(zone);
               }}
-              className={cn(
-                "flex w-full items-center rounded-xl px-3.5 text-left text-base font-medium text-ink",
-                controlMinH.md,
-                interactiveFeedbackClass({ press: "md", on: selected }),
-                selected && "bg-white/40 font-semibold",
-              )}
             >
               <span className="min-w-0 truncate">{formatTimezoneLabel(zone)}</span>
-            </button>
+            </Button>
           );
         })}
       </Surface>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, Trash2 } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import { RowActionTray } from "@/components/atoms/RowReveal";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import type { useArmedAction } from "@/lib/use-armed-action";
@@ -23,19 +23,21 @@ export function QuickLogLogRowActions({
   return (
     <RowActionTray open={showActions}>
       <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
-        <IconButton
+        <Button
+          variant="glass"
           icon={copied ? Check : Copy}
-          label={copied ? "Time copied" : "Copy time"}
-          glass
+          aria-label={copied ? "Time copied" : "Copy time"}
+          title={copied ? "Time copied" : "Copy time"}
           onClick={onCopy}
           tone="accent"
           size="md"
           className={copied ? "text-saffron-700" : undefined}
         />
-        <IconButton
+        <Button
+          variant="glass"
           icon={Trash2}
-          label={remove.armed ? `Confirm delete entry #${index}` : `Delete entry #${index}`}
-          glass
+          aria-label={remove.armed ? `Confirm delete entry #${index}` : `Delete entry #${index}`}
+          title={remove.armed ? `Confirm delete entry #${index}` : `Delete entry #${index}`}
           onClick={(e) => {
             e.stopPropagation();
             remove.trigger();

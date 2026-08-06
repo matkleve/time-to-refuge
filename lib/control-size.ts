@@ -1,6 +1,6 @@
 /**
- * Shared interactive heights for chips, stamps, selects, and IconButton.
- * Keep in sync with `IconButton` sizeClass (sm / md / lg).
+ * Shared interactive heights for chips, stamps, selects, and Button.
+ * Keep in sync with Button size tokens (sm / md / lg).
  *
  * | Token | Box   | Role |
  * | sm    | 36px  | Dense chrome — Session person nav, nested editors |

@@ -2,7 +2,7 @@
 
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import type { GlassMenuIconAction } from "./types";
 
 export function MenuIconStrip({
@@ -18,10 +18,12 @@ export function MenuIconStrip({
       <div className="mx-2 my-1.5 border-t border-line" role="separator" />
       <div className={cn("flex items-center justify-center px-1 py-0.5", BUTTON_CLUSTER_GAP)}>
         {actions.map((action) => (
-          <IconButton
+          <Button
             key={action.id}
+            variant="quiet"
             icon={action.icon}
-            label={action.label}
+            aria-label={action.label}
+            title={action.label}
             size="md"
             disabled={action.disabled}
             onClick={() => onPick(action)}

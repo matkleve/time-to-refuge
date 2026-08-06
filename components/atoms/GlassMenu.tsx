@@ -2,7 +2,7 @@
 
 import { MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import { GlassMenuPanel } from "@/components/atoms/glass-menu/GlassMenuPanel";
 import { useGlassMenu } from "@/components/atoms/glass-menu/useGlassMenu";
 import type { GlassMenuProps } from "@/components/atoms/glass-menu/types";
@@ -21,7 +21,7 @@ export type {
  *
  * Destructive items (`tone: "danger"`) render at the bottom below a hairline.
  * When armed (`selected` on a danger row), the row uses the same filled
- * danger chip as `IconButton.armed`.
+ * danger chip as `Button` armed glass.
  */
 export function GlassMenu({
   label,
@@ -47,13 +47,13 @@ export function GlassMenu({
 
   return (
     <div className={cn("relative", open && "z-50", className)} ref={triggerRef}>
-      <IconButton
+      <Button
+        variant="glass"
         icon={TriggerIcon}
-        label={open ? `Close ${label}` : label}
-        glass
+        aria-label={open ? `Close ${label}` : label}
+        title={open ? `Close ${label}` : label}
         size={size}
-        /* Same md chip as row Copy / Edit — glyph follows IconButton size. */
-        feedbackOn={open}
+        selected={open}
         onClick={toggle}
         className={cn(
           "text-ink",

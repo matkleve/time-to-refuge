@@ -1,11 +1,9 @@
-import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { interactiveGlassRowClass } from "@/lib/interactive-glass";
+import { Button } from "@/components/atoms/Button";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 import { RowPackSpacer } from "@/components/atoms/RowReveal";
-
-const ROW_HEIGHT = controlMinH.md;
 
 interface PersonFieldRowEmptyProps {
   confirmSkipRef: React.RefObject<HTMLDivElement | null>;
@@ -33,9 +31,12 @@ export function PersonFieldRowEmpty({
   onConfirmSkip,
 }: PersonFieldRowEmptyProps) {
   return (
-    <div ref={confirmSkipRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, ROW_HEIGHT)}>
-      <button
-        type="button"
+    <div ref={confirmSkipRef} className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP, "min-h-11")}>
+      <Button
+        variant="row"
+        rowFlush={false}
+        fullWidth
+        selected={active}
         onClick={onRowClick}
         aria-expanded={confirmSkip}
         aria-current={isTarget ? "true" : undefined}
@@ -46,12 +47,7 @@ export function PersonFieldRowEmpty({
               ? `${phaseLabel} armed to record`
               : `Select ${phaseLabel} to record`
         }
-        className={cn(
-          "flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-2xl px-4 text-left",
-          ROW_HEIGHT,
-          interactiveGlassRowClass({ press: "md", on: active }),
-          targetClass,
-        )}
+        className={cn("gap-2 text-left", targetClass)}
       >
         <span
           className={cn(
@@ -68,7 +64,7 @@ export function PersonFieldRowEmpty({
         ) : (
           <RowPackSpacer packed />
         )}
-      </button>
+      </Button>
       <CancelConfirmTray
         open={confirmSkip}
         onCancel={onCancelSkip}

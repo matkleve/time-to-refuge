@@ -1,10 +1,7 @@
-import { controlMinH } from "@/lib/control-size";
 import { formatTimestamp } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { interactiveGlassRowClass } from "@/lib/interactive-glass";
+import { Button } from "@/components/atoms/Button";
 import { PersonFieldRowLabel } from "./PersonFieldRowLabel";
-
-const ROW_HEIGHT = controlMinH.md;
 
 interface PersonFieldRowFilledStampProps {
   phaseLabel: string;
@@ -26,17 +23,15 @@ export function PersonFieldRowFilledStamp({
   onRowClick,
 }: PersonFieldRowFilledStampProps) {
   return (
-    <button
-      type="button"
+    <Button
+      variant="row"
+      rowFlush={false}
+      fullWidth
+      selected={isTarget}
       onClick={onRowClick}
       aria-expanded={showActions}
       aria-current={isTarget ? "true" : undefined}
-      className={cn(
-        "flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden rounded-2xl px-4",
-        ROW_HEIGHT,
-        interactiveGlassRowClass({ press: "md", on: isTarget }),
-        targetClass,
-      )}
+      className={cn("justify-between", targetClass)}
     >
       <span className="shrink-0">
         <PersonFieldRowLabel
@@ -54,6 +49,6 @@ export function PersonFieldRowFilledStamp({
       >
         {formatTimestamp(value)}
       </span>
-    </button>
+    </Button>
   );
 }

@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import type { FieldDef } from "@/lib/types";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import { RowActionTray } from "@/components/atoms/RowReveal";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import type { useArmedAction } from "@/lib/use-armed-action";
@@ -28,31 +28,36 @@ export function FieldEditorRowActions({
   return (
     <RowActionTray open>
       <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
-        <IconButton
+        <Button
+          variant="glass"
           icon={ArrowUp}
-          label={`Move ${field.label} up`}
-          glass
+          aria-label={`Move ${field.label} up`}
+          title={`Move ${field.label} up`}
           size="md"
           press="md"
           onClick={onUp}
           disabled={!canUp}
         />
-        <IconButton
+        <Button
+          variant="glass"
           icon={ArrowDown}
-          label={`Move ${field.label} down`}
-          glass
+          aria-label={`Move ${field.label} down`}
+          title={`Move ${field.label} down`}
           size="md"
           press="md"
           onClick={onDown}
           disabled={!canDown}
         />
         {canDelete && (
-          <IconButton
+          <Button
+            variant="glass"
             icon={Trash2}
-            label={
+            aria-label={
               remove.armed ? `Confirm delete ${field.label}` : `Delete ${field.label}`
             }
-            glass
+            title={
+              remove.armed ? `Confirm delete ${field.label}` : `Delete ${field.label}`
+            }
             size="md"
             press="md"
             tone="danger"

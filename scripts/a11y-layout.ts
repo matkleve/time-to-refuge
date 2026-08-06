@@ -183,6 +183,23 @@ if (/subheader/.test(desktopAppShell) || /subheader/.test(mobileAppShell)) {
   shellProblems.push("shell subheader removed — page titles live in app header");
 }
 
+const desktopNav = read("components/atoms/DesktopNav.tsx");
+const brand = read("components/atoms/Brand.tsx");
+if (!/wordmark\s*=\s*\{?true\}?/.test(desktopNav) && !/<Brand[^>]*wordmark[^>]*onHome/.test(desktopNav)) {
+  shellProblems.push("DesktopNav must render Brand with wordmark (desktop header lockup)");
+}
+if (!/Timekeeper/.test(brand)) {
+  shellProblems.push("Brand must include visible Timekeeper wordmark text");
+}
+if (
+  /min-w-0\s+flex-1[\s"'][^>]*>\s*\n\s*<Brand/.test(desktopNav) ||
+  /flex\s+min-w-0\s+flex-1[\s"'][^>]*>\s*\n\s*<Brand/.test(desktopNav)
+) {
+  shellProblems.push(
+    "DesktopNav brand slot must not use min-w-0 flex-1 — grid col or shrink-0 so wordmark never clips",
+  );
+}
+
 const rows: Row[] = pageFiles.map(({ page, file }) => {
   const src = read(file);
   return {
@@ -236,6 +253,13 @@ const shellRows: Row[] = [
     layers: layoutSignalCount(listFrame),
     root: "flow fill (h-full flex-1 scroll)",
     problems: shellProblems.filter((p) => p.includes("ListPageFrame")),
+  },
+  {
+    page: "(shell) DesktopNav",
+    file: "components/atoms/DesktopNav.tsx",
+    layers: layoutSignalCount(desktopNav),
+    root: "grid brand · centered tabs · actions",
+    problems: shellProblems.filter((p) => p.includes("DesktopNav")),
   },
 ];
 

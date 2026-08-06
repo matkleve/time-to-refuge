@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import type { IconButtonSize } from "@/components/atoms/IconButton";
+import type { ButtonSize } from "@/components/atoms/button-classes";
 
 export type GlassMenuItem = {
   id: string;
@@ -54,7 +54,7 @@ export interface GlassMenuProps {
   /** Trigger icon — hamburger or ⋯. */
   triggerIcon?: LucideIcon;
   /** Trigger chip size — default `md` (same as row actions). */
-  size?: IconButtonSize;
+  size?: ButtonSize;
   align?: "left" | "right";
   className?: string;
 }

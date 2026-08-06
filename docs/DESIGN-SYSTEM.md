@@ -180,7 +180,7 @@ rings and neighboring glyphs); density compresses instead.
 **People**, **History**, and the other destinations are their own pages via
 the top nav (same `AppView` switch as Quick Log), not overlays. Only one
 shell tree is ever mounted (`useMediaQuery`, not a CSS breakpoint toggling
-visibility) — mounting both would run two copies of `LiveClockButton`'s
+visibility) — mounting both would run two copies of `ClockStamp`'s
 animation-frame loop at once.
 
 `RefugeView` (mobile) and `DesktopWorkspace` (desktop / tablet) share their
@@ -203,68 +203,66 @@ pressure (**UC-1**).
 
 ### Button variants
 
-Two families. Don’t invent a third fill recipe.
+One atom: [`Button`](../components/atoms/Button.tsx). Hero record stamps stay in
+[`ClockStamp`](../components/atoms/ClockStamp.tsx) (`mode="session"` /
+`mode="quicklog"`). Don’t invent a third fill recipe.
 
-#### A. `IconButton` surfaces ([`IconButton.tsx`](../components/atoms/IconButton.tsx))
+#### A. Chip variants (`variant="quiet"` · `variant="glass"`)
 
-| Variant | API | Look | Use when | Where today |
-| --- | --- | --- | --- | --- |
-| **Quiet** | `quiet` | Glyph only — no fill, no rim | Chrome over the open backdrop that must **not** read as a chip (especially near a card) | Desktop nav Undo/Redo/Export; Session prev/next; Dana header icon when that page is **not** current |
-| **Glass** | `glass` | Cloudy round chip (`glassChipClass`) — fill + blur + rim + specular | Default row/chrome action over photo or glass; low–medium emphasis | Row Copy/Edit/Reset/Delete; Fields reorder/delete; Quick Log Clear; hamburger/⋯ trigger; Dana Copy IBAN + copy chips + link chips; Dana header icon when current |
-| **Armed** | `armed` | Solid `danger-600` fill, white glyph | Second tap of a two-tap destroy — never a dialog | Field reset, Quick Log delete/clear-all, Fields delete, person-card menu confirm |
-| **Labeled glass** | `glass` + `showLabel` | Same chip, icon + short word | Consequential or labeled chrome (Clear, Reset, Cancel/Add, Copy IBAN) | Quick Log Clear; Fields Reset; `CancelConfirmTray`; Dana primary Copy IBAN |
-
-**Tones** (glyph colour only; fill stays from the surface above): `neutral` · `accent` (→ flag blue on hover) · `danger` · `onAccent` (on tinted heroes).
-
-**Priority:** `armed` > `quiet` > `glass`. `quiet` wins over `glass` if both are set.
-
-#### B. Action glass (`actionClass` in [`surfaces.ts`](../lib/surfaces.ts))
-
-Hero / filled CTAs — tinted glass, **not** the round IconButton chip.
-
-| Variant | API | Look | Use when | Where today |
-| --- | --- | --- | --- | --- |
-| **Primary** | `actionClass("primary")` | Flag-blue tinted glass | Armed record — the UC-1 hit target | `LiveClockButton` when a phase is armed; hamburger Dana CTA; empty-state primary |
-| **Primary idle** | `actionClass("primaryIdle")` | White cloudy glass | Same control, not yet armed | `LiveClockButton` idle |
-| **Accent** | `actionClass("accent")` | Saffron tinted glass | Quick Log stamp only | `QuickLogButton` |
-
-#### C. Related controls (same materials, not IconButton)
-
-| Control | Material | Fits | Where |
+| Variant | API | Look | Use when |
 | --- | --- | --- | --- |
-| Desktop page nav pill | Selected → `glassChipClass`; else quiet text | Page switcher in header | `DesktopNav` |
-| Field / add / retreat / TZ stamps | Glass pill (`glass` row / chip recipes) | Named session chrome & stamps | `PersonFields`, `AddRowTray`, `RetreatNameField`, `TimezoneSelect` |
-| Glass menu row | Wash when `selected` / armed | Menu items inside `GlassMenu` | Hamburger Pages/Actions; person-card ⋯ |
-| External link chip | `glassChipClass` on `<a>` | Secondary outbound links | Dana “Open DRCE page” |
+| **Quiet** | `variant="quiet"` | Glyph only — no fill, no rim | Chrome that must **not** read as a chip |
+| **Glass** | `variant="glass"` | Cloudy round chip | Default row/chrome action |
+| **Armed** | `variant="glass"` + `armed` | Solid `danger-600` fill | Second tap of a two-tap destroy |
+| **Labeled glass** | `variant="glass"` + `showLabel` | Chip + short word | Clear, Reset, Copy IBAN |
 
-**Pick rule (short):** backdrop chrome that must stay invisible → **quiet**; almost everything else icon-sized → **glass**; ceremony record / Quick Log / rare full-width menu CTA → **actionClass**; destroy confirm → **armed**.
+**Tones** (glyph colour only): `neutral` · `accent` · `danger` · `onAccent`.
 
-**Sizes.** One scale for **every** interactive surface — IconButton, glass
-chips, field stamps, selects, CTAs — via [`lib/control-size.ts`](../lib/control-size.ts)
-and [`IconButton`](../components/atoms/IconButton.tsx). Default is **`md`**:
+#### B. Action glass (`variant="primary"`)
+
+**Rule: `primary` always has a visible tinted background at rest** — not ghost,
+not icon-only chrome. If it looks like the nav bar at idle, use `quiet` instead.
+
+| Variant | Look | Use when |
+| --- | --- | --- |
+| **Primary** | Flag-blue tinted glass, white label | Full CTAs — Landing “Open Session”, empty-state actions, hamburger menu Dana row |
+| **Primary idle** | White cloudy glass | `ClockStamp` session idle only (not `Button`) |
+| **Accent** | Saffron tinted glass | `ClockStamp` quicklog only (not `Button`) |
+
+Desktop header (page tabs, Dana, undo/redo, export) is all **`quiet`** — ghost at
+idle, feedback wash on hover/press. Not `primary`.
+
+#### C. Layout variants (same materials, different shape)
+
+| Variant | Use |
+| --- | --- |
+| `flushPill` | Add row, field label chip, retreat/TZ pills |
+| `flushChip` | Small labeled outbound chips |
+| `card` | Landing step cards |
+| `row` | Full-width list row stamps (`rowFlush` for flush vs card-row glass) |
+| `menuRow` | Popover list items (`GlassMenu`, timezone list) |
+| `quietText` | Person name tap, brand home — feedback only |
+
+**Responsive labels:** `labelCollapse="lg"` on **`quiet`** nav items — icon-only
+square below breakpoint, label from `lg` up. Requires `icon` + `aria-label`. Never
+collapse `showLabel` chips (Clear, Reset). **Never** use `labelCollapse` on
+`primary` — a primary CTA must always read as a filled button.
+
+**Sizes** via [`lib/control-size.ts`](../lib/control-size.ts) — default **`md`**:
 
 | Size | Box | Used for |
 | --- | --- | --- |
-| `sm` | 2.25rem (36px) | Nested editors / inners only |
-| `md` | 2.75rem (44px) | **Default** — hamburger, ⋯, nav, row Copy/Edit/Reset, field stamps, retreat + timezone chips, Add row, Check zone, menu rows, Clear/Reset, Dana CTAs |
-| `lg` | 3rem (48px) | Rare emphasis |
-| *special* | ≥7rem | Record / Quick Log hero clocks only |
+| `sm` | 2.25rem (36px) | Dense chrome — undo/redo, session nav |
+| `md` | 2.75rem (44px) | **Default** |
+| `lg` | 3rem (48px) | Primary CTAs, Copy IBAN |
+| *special* | ≥7rem | `ClockStamp` hero only |
 
-**Nothing smaller than `sm`.** That floor is this app’s WCAG touch target
-(above the 2.5.8 minimum of 24px). Don’t invent one-off `h-10` / `min-h-13`
-on new controls — pick a token. Don’t override glyph size with
-`[&_svg]:size-*` on IconButton chips — the size token sets footprint and icon.
+**Icons and words.** Prefer `showLabel` for consequential actions. Reserve
+icon-only for prev/next, hamburger/⋯, and low-risk utilities. `aria-label`
+required when the label is not visible.
 
-**Icons and words.** Prefer icon+text (`IconButton` `showLabel`) for
-destructive actions, export/share on a person card, and add-flow
-submit/cancel. The header hamburger lists History, People, and Export
-with icon+label inside the menu; Undo / Redo are icon-only at the bottom
-of that menu. Those are not separate header chips.
-Reserve icon-only for Close, Prev/Next, the hamburger/⋯ triggers, and
-low-risk utilities next to their object (copy, edit).
-[`IconButton`](../components/atoms/IconButton.tsx) is the only control for
-these — tone and size stay consistent. An `aria-label` is required either
-way; it is not a substitute for a visible label on consequential actions.
+[`ArmedActionButton`](../components/atoms/ArmedActionButton.tsx) wraps the
+Clear / Reset armed-destroy pattern.
 
 The icon vocabulary, all [lucide](https://lucide.dev):
 
@@ -366,7 +364,7 @@ Here that lives in [`.user-feedback`](../app/globals.css) +
 
 The wash is an overlay, so it never replaces a glass chip’s fill. On accent
 fills use `.user-feedback--on-accent` (white wash). Chrome controls
-(`IconButton`, hamburger / ⋯) opt in via `userFeedbackClass()`; don’t invent
+(`Button`, hamburger / ⋯) opt in via `userFeedbackClass()`; don’t invent
 a second hover recipe locally.
 
 **Three interaction recipes (only these).** Anything else is drift — see
@@ -374,9 +372,9 @@ a second hover recipe locally.
 
 | Recipe | Cue | Use |
 | --- | --- | --- |
-| **Chrome** | `userFeedbackClass` wash + press bounce (± `.is-feedback-on` when open/selected) | IconButton, nav, menu rows, chips, stamps |
+| **Chrome** | `userFeedbackClass` wash + press bounce (± `.is-feedback-on` when open/selected) | Button, nav, menu rows, chips, stamps |
 | **Record target** | Chrome + inset `ring-flagblue-500` + ink label + matching caption | Empty field / Jump-here |
-| **Destroy arm** | [`armedDestroyClass`](../lib/user-feedback.ts) filled danger + subject `text-danger-600` | IconButton `armed`, GlassMenu danger+selected, field/Quick Log resets |
+| **Destroy arm** | [`armedDestroyClass`](../lib/user-feedback.ts) filled danger + subject `text-danger-600` | Button `armed`, GlassMenu danger+selected, field/Quick Log resets |
 
 Named exceptions (do not copy elsewhere): large `actionClass` CTAs may add
 `hover:brightness-*`. BrandLockup is plain bold type + mark — **no** hover
@@ -487,7 +485,7 @@ for the same reason the type scale re-values Tailwind's steps (§4a):
 gets a dip → overshoot → settle bounce on pointerdown (`PressBounceRegister`,
 §4 — `user-feedback--press-*`). Hover washes come from that same cover, not
 ad-hoc `hover:bg-*` on each control. Icon-only chrome goes through
-`IconButton` so this stays consistent.
+`Button` so this stays consistent.
 
 **Easing.** Default `ease-out`. The person carousel uses
 `cubic-bezier(0.32, 0.72, 0, 1)` so the card settles like a native sheet.
@@ -534,7 +532,7 @@ transition instead of jumping:
 - Height never changes (§3): only grid columns and opacity move.
 
 Shared pieces: [`RowActionTray`](../components/atoms/RowReveal.tsx),
-`IconButton glass` + [`glassChipClass`](../lib/surfaces.ts).
+`Button` `variant="glass"` + [`glassChipClass`](../lib/surfaces.ts).
 (`RowPackSpacer` remains for Jump-here’s always-packed stamp.)
 
 > **Do not swap element types (`<button>` ↔ `<div>`) between a row's states.**

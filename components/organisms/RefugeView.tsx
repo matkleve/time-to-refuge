@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
-import { LiveClockButton } from "@/components/atoms/LiveClockButton";
+import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { RefugeCarousel } from "./RefugeCarousel";
 import { RefugePersonSwitcher } from "./RefugePersonSwitcher";
 
@@ -105,7 +105,8 @@ export function RefugeView({
       />
 
       <div className="shrink-0 pt-3">
-        <LiveClockButton
+        <ClockStamp
+          mode="session"
           onCapture={handleCaptureClick}
           armed={target !== null}
           label={

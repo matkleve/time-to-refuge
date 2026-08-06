@@ -1,8 +1,10 @@
+"use client";
+
 import { Check, Copy, Eye, Pencil, RotateCcw } from "lucide-react";
+import { Button } from "@/components/atoms/Button";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { Phase } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
 
 interface PersonFieldRowLookActionsProps {
   personName: string;
@@ -22,19 +24,21 @@ export function PersonFieldRowLookActions({
   return (
     <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
       {onOpenPerson && (
-        <IconButton
+        <Button
+          variant="glass"
           icon={Eye}
-          label={`Open ${personName}`}
-          glass
+          aria-label={`Open ${personName}`}
+          title={`Open ${personName}`}
           onClick={onOpenPerson}
           tone="accent"
           size="md"
         />
       )}
-      <IconButton
+      <Button
+        variant="glass"
         icon={copied ? Check : Copy}
-        label={copied ? `${phaseLabel} time copied` : `Copy ${phaseLabel} time`}
-        glass
+        aria-label={copied ? `${phaseLabel} time copied` : `Copy ${phaseLabel} time`}
+        title={copied ? `${phaseLabel} time copied` : `Copy ${phaseLabel} time`}
         onClick={onCopy}
         tone="accent"
         size="md"
@@ -62,24 +66,30 @@ export function PersonFieldRowChangeActions({
   return (
     <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
       {onEditTime && (
-        <IconButton
+        <Button
+          variant="glass"
           icon={Pencil}
-          label={`Edit ${phaseLabel} time`}
-          glass
+          aria-label={`Edit ${phaseLabel} time`}
+          title={`Edit ${phaseLabel} time`}
           onClick={onStartEdit}
           tone="accent"
           size="md"
         />
       )}
       {onClear && (
-        <IconButton
+        <Button
+          variant="glass"
           icon={RotateCcw}
-          label={
+          aria-label={
             armedReset.armed
               ? `Confirm reset ${phaseLabel}`
               : `Reset ${phaseLabel}`
           }
-          glass
+          title={
+            armedReset.armed
+              ? `Confirm reset ${phaseLabel}`
+              : `Reset ${phaseLabel}`
+          }
           onClick={armedReset.trigger}
           tone="danger"
           size="md"

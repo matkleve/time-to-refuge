@@ -3,7 +3,7 @@
 import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
-import { LiveClockButton } from "@/components/atoms/LiveClockButton";
+import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
 import { SessionPersonRow } from "./SessionPersonRow";
@@ -114,7 +114,8 @@ export function DesktopWorkspace({
               onEditTime={(phase, at) => onEditTime(current.id, phase, at)}
               retreatName={retreatName}
             />
-            <LiveClockButton
+            <ClockStamp
+              mode="session"
               onCapture={handleCaptureClick}
               armed={target !== null}
               label={

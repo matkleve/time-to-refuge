@@ -1,12 +1,9 @@
 "use client";
 
 import type { FieldDef } from "@/lib/types";
-import { controlMinH } from "@/lib/control-size";
+import { Button } from "@/components/atoms/Button";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
-import {
-  interactiveGlassFlushClass,
-  staticGlassFlushClass,
-} from "@/lib/interactive-glass";
+import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
 
 export function FieldEditorRowLabel({
@@ -62,8 +59,8 @@ export function FieldEditorRowLabel({
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="flushPill"
       key={bumpNonce > 0 ? `bump-${bumpNonce}` : "idle"}
       onClick={onStartEdit}
       onAnimationEnd={onAnimationEnd}
@@ -71,11 +68,10 @@ export function FieldEditorRowLabel({
         pillClass,
         "text-left font-display text-lg font-semibold leading-snug",
         armed ? "text-danger-600" : "text-ink",
-        interactiveGlassFlushClass(undefined, { press: "md" }),
         bumpNonce > 0 && "animate-chip-bump",
       )}
     >
       <span className="min-w-0 flex-1 truncate">{field.label}</span>
-    </button>
+    </Button>
   );
 }

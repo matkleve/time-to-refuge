@@ -2,10 +2,10 @@
 
 import { ArrowRight } from "lucide-react";
 import type { AppView } from "@/components/atoms/ViewMenu";
+import { Button } from "@/components/atoms/Button";
 import landing from "@/content/landing.json";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
-import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
-import { interactiveGlassClass, interactiveActionClass } from "@/lib/interactive-glass";
+import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 
 /** Short nav labels — matches `DesktopNav` page names for deco hints on step cards. */
@@ -34,13 +34,10 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
         <ol className="grid min-h-0 w-full grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
           {landing.steps.map((step, index) => (
             <li key={step.title} className="min-w-0">
-              <button
-                type="button"
+              <Button
+                variant="card"
                 onClick={() => onNavigate(step.view as AppView)}
-                className={cn(
-                  "flex h-full w-full min-w-0 flex-col gap-1.5 rounded-2xl px-3.5 py-3.5 text-left sm:px-4 sm:py-4",
-                  interactiveGlassClass("card", { rim: true }, { press: "md" }),
-                )}
+                aria-label={step.title}
               >
                 <span className="text-xs font-medium tracking-wide text-subtle uppercase">
                   Step {index + 1}
@@ -61,31 +58,22 @@ export function LandingPage({ onStart, onNavigate }: LandingPageProps) {
                   {STEP_NAV_LABEL[step.view] ?? step.view}
                   <ArrowRight className="size-3.5 shrink-0" strokeWidth={2.5} />
                 </span>
-              </button>
+              </Button>
             </li>
           ))}
         </ol>
 
         <div className="flex flex-col items-center gap-2.5">
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="lg"
+            icon={ArrowRight}
+            iconPosition="end"
             onClick={onStart}
-            className={cn(
-              interactiveActionClass(
-                "primary",
-                { press: "lg" },
-                cn(
-                  "inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl px-6 text-base font-medium text-white sm:w-auto sm:text-lg",
-                  controlMinH.lg,
-                  "hover:brightness-[1.06]",
-                  "user-feedback--on-accent",
-                ),
-              ),
-            )}
+            className="w-full max-w-sm font-medium sm:w-auto"
           >
             {landing.cta}
-            <ArrowRight className="size-4" aria-hidden />
-          </button>
+          </Button>
           <p className="text-center text-sm text-subtle">{landing.footnote}</p>
         </div>
       </div>

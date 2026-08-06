@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { cn } from "@/lib/utils";
 
@@ -22,10 +22,11 @@ export function DanaCopyRow({
         <p className="text-xs font-medium tracking-wide text-muted uppercase">{label}</p>
         <p className="truncate font-mono text-sm tabular-nums text-ink md:text-base">{value}</p>
       </div>
-      <IconButton
+      <Button
+        variant="glass"
         icon={copied ? Check : Copy}
-        label={copied ? `${label} copied` : `Copy ${label}`}
-        glass
+        aria-label={copied ? `${label} copied` : `Copy ${label}`}
+        title={copied ? `${label} copied` : `Copy ${label}`}
         size="md"
         tone="accent"
         onClick={onCopy}

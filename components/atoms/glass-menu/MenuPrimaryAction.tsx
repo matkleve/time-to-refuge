@@ -1,8 +1,6 @@
 "use client";
 
-import { controlMinH } from "@/lib/control-size";
-import { interactiveActionClass } from "@/lib/interactive-glass";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/atoms/Button";
 import type { GlassMenuPrimaryAction } from "./types";
 
 export function MenuPrimaryAction({
@@ -12,34 +10,22 @@ export function MenuPrimaryAction({
   action: GlassMenuPrimaryAction;
   onSelect: () => void;
 }) {
-  const Icon = action.icon;
   return (
     <div>
       <div className="mx-2 my-1.5 border-t border-line" role="separator" />
       <div className="px-1 pb-0.5 pt-0.5">
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="md"
+          icon={action.icon}
           role="menuitem"
+          selected={action.selected}
+          fullWidth
           onClick={onSelect}
-          className={cn(
-            interactiveActionClass(
-              "primary",
-              { press: "md", on: action.selected },
-              cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl px-3.5 text-base font-semibold text-white",
-                controlMinH.md,
-                /* Named CTA exception: brightness on large actionClass fills. */
-                "hover:brightness-[1.06]",
-                "user-feedback--on-accent",
-                /* Inset ring — outset clips awkwardly on glass panels. */
-                action.selected && "ring-2 ring-inset ring-white/70",
-              ),
-            ),
-          )}
+          className="flex w-full justify-center gap-2 px-3.5"
         >
-          <Icon className="size-5 shrink-0" strokeWidth={2.25} aria-hidden />
-          <span>{action.label}</span>
-        </button>
+          {action.label}
+        </Button>
       </div>
     </div>
   );

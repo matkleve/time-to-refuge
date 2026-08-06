@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { RotateCcw } from "lucide-react";
-import { IconButton } from "@/components/atoms/IconButton";
+import { ArmedActionButton } from "@/components/atoms/ArmedActionButton";
 import type { useArmedAction } from "@/lib/use-armed-action";
 import { useRegisterHeaderActions } from "@/components/timekeeper/header-actions-context";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -15,21 +14,14 @@ function FieldsResetButton({
   resetAll: ReturnType<typeof useArmedAction>;
 }) {
   return (
-    <IconButton
-      icon={RotateCcw}
-      label={
-        resetAll.armed
-          ? "Confirm reset fields to Buddha, Dharma, Sangha"
-          : "Reset fields to defaults"
-      }
-      showLabel="Reset"
-      glass
-      tone="danger"
-      size="md"
-      press="md"
-      disabled={atDefault}
+    <ArmedActionButton
       armed={resetAll.armed}
-      onClick={resetAll.trigger}
+      disabled={atDefault}
+      idleLabel="Reset fields to defaults"
+      armedLabel="Confirm reset fields to Buddha, Dharma, Sangha"
+      showLabel="Reset"
+      press="md"
+      onTrigger={resetAll.trigger}
     />
   );
 }

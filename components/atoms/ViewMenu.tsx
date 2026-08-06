@@ -2,7 +2,7 @@
 
 import { Menu } from "lucide-react";
 import { GlassMenu } from "@/components/atoms/GlassMenu";
-import type { IconButtonSize } from "@/components/atoms/IconButton";
+import type { ButtonSize } from "@/components/atoms/button-classes";
 import {
   buildViewMenuActions,
   buildViewMenuIconActions,
@@ -31,7 +31,7 @@ interface ViewMenuProps {
   onExportAll: () => void;
   exportDisabled?: boolean;
   /** Hamburger chip — default `md` (same as row actions). */
-  size?: IconButtonSize;
+  size?: ButtonSize;
 }
 
 /**

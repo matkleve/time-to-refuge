@@ -36,7 +36,7 @@ const ALLOWLIST = new Set([
   "lib/surfaces.ts",
   "lib/user-feedback.ts",
   "components/atoms/Surface.tsx",
-  "components/atoms/icon-button-classes.ts",
+  "components/atoms/button-classes.ts",
   "app/dev/fonts/FontPicker.tsx",
 ]);
 

@@ -5,7 +5,7 @@ import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { cn } from "@/lib/utils";
-import { QuickLogButton } from "@/components/atoms/QuickLogButton";
+import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
@@ -110,7 +110,8 @@ export function QuickLogView() {
             )}
             onClick={tapAnywhere ? (e) => e.stopPropagation() : undefined}
           >
-            <QuickLogButton
+            <ClockStamp
+              mode="quicklog"
               flash={flash}
               onLog={handleLog}
               hint={isDesktop ? "Tap to log" : "Tap anywhere to log"}

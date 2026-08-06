@@ -1,20 +1,13 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { Brand } from "@/components/atoms/Brand";
+import { Button } from "@/components/atoms/Button";
 import { GlassEmptyNote } from "@/components/atoms/GlassEmptyNote";
 import { LocationCheck } from "@/components/atoms/LocationCheck";
 import { ShowcaseSection } from "@/components/dev/ShowcaseSection";
-import { controlMinH } from "@/lib/control-size";
-import {
-  interactiveActionClass,
-  interactiveGlassClass,
-  interactiveGlassFlushChipClass,
-} from "@/lib/interactive-glass";
-import { PersonCardNameDisplay } from "@/components/organisms/PersonCardNameDisplay";
-import { Brand } from "@/components/atoms/Brand";
 import { DEMO_FIELDS, DEMO_PERSON_PARTIAL } from "@/components/dev/showcase-data";
-import { cn } from "@/lib/utils";
-import { ExternalLink } from "lucide-react";
+import { PersonCardNameDisplay } from "@/components/organisms/PersonCardNameDisplay";
 
 export function ShowcaseMisc() {
   return (
@@ -34,31 +27,13 @@ export function ShowcaseMisc() {
 
       <ShowcaseSection title="Landing card + CTA">
         <div className="grid max-w-lg gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            className={cn(
-              "flex flex-col gap-1 rounded-2xl px-3.5 py-3.5 text-left",
-              interactiveGlassClass("card", { rim: true }, { press: "md" }),
-            )}
-          >
+          <Button variant="card" aria-label="Add people">
             <span className="text-xs font-medium tracking-wide text-subtle uppercase">Step 1</span>
             <span className="font-display font-semibold text-ink">Add people</span>
-          </button>
-          <button
-            type="button"
-            className={interactiveActionClass(
-              "primary",
-              { press: "lg" },
-              cn(
-                "inline-flex items-center justify-center gap-2 rounded-xl px-5 text-white",
-                controlMinH.md,
-                "user-feedback--on-accent",
-              ),
-            )}
-          >
+          </Button>
+          <Button variant="primary" size="md" icon={ArrowRight} iconPosition="end" className="px-5">
             Start session
-            <ArrowRight className="size-4" aria-hidden />
-          </button>
+          </Button>
         </div>
       </ShowcaseSection>
 
@@ -72,16 +47,9 @@ export function ShowcaseMisc() {
       </ShowcaseSection>
 
       <ShowcaseSection title="Link chip">
-        <button
-          type="button"
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-muted",
-            interactiveGlassFlushChipClass({ press: "md" }),
-          )}
-        >
+        <Button variant="flushChip" icon={ExternalLink} aria-label="Example link">
           Example link
-          <ExternalLink className="size-4" aria-hidden />
-        </button>
+        </Button>
       </ShowcaseSection>
 
       <ShowcaseSection title="Location check" hint="Open the badge — panel is portaled; trigger is one feedback node.">

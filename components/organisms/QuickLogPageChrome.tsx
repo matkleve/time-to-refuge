@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { RotateCcw } from "lucide-react";
+import { ArmedActionButton } from "@/components/atoms/ArmedActionButton";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
-import { IconButton } from "@/components/atoms/IconButton";
 import type { useArmedAction } from "@/lib/use-armed-action";
 import { useRegisterHeaderActions } from "@/components/timekeeper/header-actions-context";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -16,20 +15,13 @@ function QuickLogClearButton({
   clearAll: ReturnType<typeof useArmedAction>;
 }) {
   return (
-    <IconButton
-      icon={RotateCcw}
-      label={
-        clearAll.armed
-          ? "Confirm clear all logged times"
-          : "Clear all logged times"
-      }
-      showLabel="Clear"
-      glass
-      tone="danger"
-      size="md"
-      disabled={entryCount === 0}
+    <ArmedActionButton
       armed={clearAll.armed}
-      onClick={(e) => {
+      disabled={entryCount === 0}
+      idleLabel="Clear all logged times"
+      armedLabel="Confirm clear all logged times"
+      showLabel="Clear"
+      onTrigger={(e) => {
         e.stopPropagation();
         clearAll.trigger();
       }}

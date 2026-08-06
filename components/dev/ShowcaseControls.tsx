@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { HeartHandshake } from "lucide-react";
 import { AddRowTray } from "@/components/atoms/AddRowTray";
+import { Button } from "@/components/atoms/Button";
 import { DesktopNavPages } from "@/components/atoms/DesktopNavPages";
-import { IconButton } from "@/components/atoms/IconButton";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { TimezoneSelect } from "@/components/atoms/TimezoneSelect";
 import { ShowcaseSection } from "@/components/dev/ShowcaseSection";
@@ -36,16 +36,17 @@ export function ShowcaseControls() {
         </div>
       </ShowcaseSection>
 
-      <ShowcaseSection title="Icon buttons" hint="Glass chip + feedback on the same button.">
+      <ShowcaseSection title="Buttons" hint="Glass chip + feedback on the same button.">
         <div className={cn("flex flex-wrap items-center", BUTTON_CLUSTER_GAP)}>
-          <IconButton icon={Copy} label="Copy" glass onClick={() => {}} tone="accent" />
-          <IconButton icon={Pencil} label="Edit" glass onClick={() => {}} tone="accent" size="md" />
-          <IconButton icon={Trash2} label="Delete" glass onClick={() => {}} tone="danger" armed />
-          <IconButton icon={Plus} label="Quiet" quiet onClick={() => {}} />
-          <IconButton
+          <Button variant="glass" icon={Copy} aria-label="Copy" title="Copy" onClick={() => {}} tone="accent" />
+          <Button variant="glass" icon={Pencil} aria-label="Edit" title="Edit" onClick={() => {}} tone="accent" size="md" />
+          <Button variant="glass" icon={Trash2} aria-label="Delete" title="Delete" onClick={() => {}} tone="danger" armed />
+          <Button variant="quiet" icon={Plus} aria-label="Quiet" title="Quiet" onClick={() => {}} />
+          <Button
+            variant="quiet"
             icon={HeartHandshake}
-            label="Dana"
-            quiet
+            aria-label="Dana"
+            title="Dana"
             surfaceClass={interactiveGlassFlushChipClass({ press: "md", on: view === "dana" })}
             onClick={() => setView("dana")}
           />

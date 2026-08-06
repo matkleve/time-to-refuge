@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import { IconButton, type IconButtonSize } from "@/components/atoms/IconButton";
+import { Button, type ButtonSize } from "@/components/atoms/Button";
 import { RowActionTray } from "@/components/atoms/RowReveal";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import type { FeedbackPress } from "@/lib/user-feedback";
@@ -14,9 +14,8 @@ interface CancelConfirmTrayProps {
   cancelLabel: string;
   confirmLabel: string;
   confirmDisabled?: boolean;
-  /** Match sibling stamps — Fields / People use `md`. */
   press?: FeedbackPress;
-  size?: IconButtonSize;
+  size?: ButtonSize;
 }
 
 /**
@@ -35,18 +34,20 @@ export function CancelConfirmTray({
   return (
     <RowActionTray open={open}>
       <div className={cn("flex shrink-0 items-center", BUTTON_CLUSTER_GAP)}>
-        <IconButton
+        <Button
+          variant="glass"
           icon={X}
-          label={cancelLabel}
-          glass
+          aria-label={cancelLabel}
+          title={cancelLabel}
           onClick={onCancel}
           size={size}
           press={press}
         />
-        <IconButton
+        <Button
+          variant="glass"
           icon={Check}
-          label={confirmLabel}
-          glass
+          aria-label={confirmLabel}
+          title={confirmLabel}
           onClick={onConfirm}
           tone="accent"
           size={size}

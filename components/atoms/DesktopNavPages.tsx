@@ -1,12 +1,12 @@
 "use client";
 
 import type { AppView } from "@/components/atoms/ViewMenu";
-import { interactiveGlassNavTabClass } from "@/lib/interactive-glass";
+import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { DESKTOP_NAV_PAGES } from "@/components/atoms/DesktopNav";
 
-/** Desktop page tabs — icon-only when tight; icon + label from `lg` up. */
+/** Desktop page tabs — quiet chrome; icon-only when tight, icon + label from `lg` up. */
 export function DesktopNavPages({
   view,
   onChange,
@@ -19,26 +19,24 @@ export function DesktopNavPages({
       aria-label="Primary"
       className={cn("flex shrink-0 flex-nowrap items-center", BUTTON_CLUSTER_GAP)}
     >
-      {DESKTOP_NAV_PAGES.map(({ id, label, icon: Icon }) => {
+      {DESKTOP_NAV_PAGES.map(({ id, label, icon }) => {
         const selected = view === id;
         return (
-          <button
+          <Button
             key={id}
-            type="button"
-            aria-current={selected ? "page" : undefined}
+            variant="quiet"
+            icon={icon}
+            selected={selected}
+            labelCollapse="lg"
+            press="md"
             aria-label={label}
             title={label}
+            aria-current={selected ? "page" : undefined}
             onClick={() => onChange(id)}
-            className={cn(
-              "inline-flex size-11 shrink-0 items-center justify-center rounded-full",
-              "lg:h-11 lg:w-auto lg:gap-2 lg:px-3 xl:px-3.5",
-              "text-base font-semibold text-ink",
-              interactiveGlassNavTabClass(selected),
-            )}
+            className="text-base font-semibold text-ink"
           >
-            <Icon className="size-5 shrink-0" strokeWidth={2} aria-hidden />
-            <span className="hidden lg:inline">{label}</span>
-          </button>
+            {label}
+          </Button>
         );
       })}
     </nav>

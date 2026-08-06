@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
+import { Button } from "@/components/atoms/Button";
 import { Person, FieldDef, isComplete } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { interactiveFeedbackClass } from "@/lib/interactive-glass";
 
 interface PersonCardNameDisplayProps {
   person: Person;
@@ -24,8 +24,9 @@ export function PersonCardNameDisplay({
 
   if (onSelectPerson) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="quietText"
+        selected={isCurrent}
         onClick={onSelectPerson}
         aria-current={isCurrent ? "true" : undefined}
         aria-label={
@@ -33,14 +34,12 @@ export function PersonCardNameDisplay({
         }
         className={cn(
           "no-select flex h-10 min-w-0 flex-1 items-center gap-2 truncate rounded-xl px-2 text-left font-display text-2xl font-semibold",
-          interactiveFeedbackClass({ press: "md", on: isCurrent }),
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-flagblue-600",
           dangerTone ? "text-danger-600" : "text-ink",
         )}
       >
         {completeIcon}
         <span className="truncate">{person.name}</span>
-      </button>
+      </Button>
     );
   }
 

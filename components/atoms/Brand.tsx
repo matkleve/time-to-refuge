@@ -1,7 +1,9 @@
-import { interactiveFeedbackClass } from "@/lib/interactive-glass";
+"use client";
+
+import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 
-/** Header home — ⏱️ with optional "Timekeeper" wordmark (desktop toolbar). */
+/** Header home — ⏱️; desktop toolbar adds the Timekeeper wordmark. */
 export function Brand({
   onHome,
   wordmark = false,
@@ -11,36 +13,35 @@ export function Brand({
   wordmark?: boolean;
   className?: string;
 }) {
-  const classes = cn(
-    "flex w-max items-center gap-2 rounded-lg",
-    onHome && "cursor-pointer text-left",
-    onHome && interactiveFeedbackClass({ press: "sm" }),
-    className,
-  );
-
-  const content = (
-    <>
-      <span
-        className={cn("shrink-0 leading-none", wordmark ? "text-2xl" : "text-lg")}
-        aria-hidden
-      >
-        ⏱️
-      </span>
-      {wordmark ? (
-        <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold leading-none text-ink xl:text-2xl">
-          Timekeeper
-        </span>
-      ) : null}
-    </>
-  );
-
-  if (onHome) {
+  if (!onHome) {
     return (
-      <button type="button" onClick={onHome} aria-label="Timekeeper — open Home" className={classes}>
-        {content}
-      </button>
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center gap-2 font-display font-bold text-ink",
+          wordmark && "text-lg xl:text-2xl",
+          className,
+        )}
+      >
+        <span aria-hidden className="text-2xl leading-none">⏱️</span>
+        {wordmark ? "Timekeeper" : null}
+      </span>
     );
   }
 
-  return <div className={classes}>{content}</div>;
+  return (
+    <Button
+      variant="quiet"
+      onClick={onHome}
+      aria-label="Timekeeper — open Home"
+      press="sm"
+      className={cn(
+        "shrink-0 font-display font-bold text-ink",
+        wordmark ? "h-12 gap-2 px-3.5 text-base xl:text-2xl" : "size-11",
+        className,
+      )}
+    >
+      <span aria-hidden className="shrink-0 text-2xl leading-none">⏱️</span>
+      {wordmark ? <span className="shrink-0 whitespace-nowrap">Timekeeper</span> : null}
+    </Button>
+  );
 }

@@ -8,7 +8,7 @@ import {
   staticGlassFlushClass,
 } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
-import { IconButton } from "@/components/atoms/IconButton";
+import { Button } from "@/components/atoms/Button";
 import { DanaProgress } from "@/components/organisms/DanaProgress";
 import { DanaCopyRow } from "@/components/organisms/DanaCopyRow";
 
@@ -53,15 +53,15 @@ export function DanaPageAside({
         <p className="text-sm text-muted md:text-base">{dana.bank.messageHint}</p>
       </div>
 
-      <IconButton
+      <Button
+        variant="glass"
         icon={copied === "iban" ? Check : Copy}
-        label={
+        aria-label={
           copied === "iban" ? dana.primaryCta.copiedLabel : dana.primaryCta.label
         }
         showLabel={
           copied === "iban" ? dana.primaryCta.copiedLabel : dana.primaryCta.label
         }
-        glass
         size="lg"
         tone="accent"
         press="md"

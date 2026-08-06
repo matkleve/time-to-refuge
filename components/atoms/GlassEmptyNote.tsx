@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { controlMinH } from "@/lib/control-size";
-import { interactiveActionClass } from "@/lib/interactive-glass";
+import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { Surface } from "@/components/atoms/Surface";
 
@@ -41,24 +40,9 @@ export function GlassEmptyNote({
         </div>
       </Surface>
       {action ? (
-        <button
-          type="button"
-          onClick={action.onClick}
-          className={cn(
-            interactiveActionClass(
-              "primary",
-              { press: "md" },
-              cn(
-                "rounded-xl px-5 text-base font-medium text-white",
-                controlMinH.md,
-                "hover:brightness-[1.06]",
-                "user-feedback--on-accent",
-              ),
-            ),
-          )}
-        >
+        <Button variant="primary" size="md" onClick={action.onClick} className="px-5 font-medium">
           {action.label}
-        </button>
+        </Button>
       ) : null}
     </div>
   );
