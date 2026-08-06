@@ -3,10 +3,13 @@
 import { Person, Phase, FieldDef } from "@/lib/types";
 import { downloadPersonCsv } from "@/lib/csv";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
+import { PinnedToolbarScrollColumn } from "@/components/atoms/PinnedToolbarScrollColumn";
+import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { RetreatNameField } from "@/components/atoms/RetreatNameField";
 import { DesktopPeopleWorkspace } from "./DesktopPeopleWorkspace";
 import { AddPersonRow } from "./AddPersonRow";
 import { PersonCard } from "./PersonCard";
+import { PeoplePageChrome } from "./PeoplePageChrome";
 
 interface PeopleSheetProps {
   people: Person[];
@@ -26,7 +29,7 @@ interface PeopleSheetProps {
   onRetreatNameChange?: (name: string) => void;
 }
 
-/** People — mobile: stacked cards; desktop: rail + focused card (like Session). */
+/** People — mobile: pinned retreat chip + scrolling cards; desktop: rail + focused card. */
 export function PeopleSheet({
   people,
   fields,
@@ -44,16 +47,25 @@ export function PeopleSheet({
   retreatName = "",
   onRetreatNameChange,
 }: PeopleSheetProps) {
+  const currentPerson = people.find((p) => p.id === currentId) ?? null;
   const retreatPin = onRetreatNameChange ? (
     <RetreatNameField value={retreatName} onChange={onRetreatNameChange} />
   ) : undefined;
 
   return (
     <ListPageFrame
-      fill={isDesktop ? "workspace" : "scroll"}
+      fill="workspace"
       navPage
-      pinBelow={retreatPin}
+      pinBelow={isDesktop ? retreatPin : undefined}
+      selfClearance={!isDesktop}
     >
+      <PeoplePageChrome
+        people={people}
+        fields={fields}
+        currentPerson={currentPerson}
+        isDesktop={isDesktop}
+        onResetAll={onResetAll}
+      />
       {isDesktop ? (
         <DesktopPeopleWorkspace
           people={people}
@@ -71,7 +83,14 @@ export function PeopleSheet({
           retreatName={retreatName}
         />
       ) : (
-        <ul className="space-y-3">
+        <PinnedToolbarScrollColumn
+          toolbar={
+            retreatPin ? (
+              <StickyPageChrome below={retreatPin} belowHeaderTitle />
+            ) : null
+          }
+        >
+          <ul className="space-y-3">
           {people.map((p) => (
             <li key={p.id} className="animate-fade-in-up">
               <PersonCard
@@ -95,6 +114,7 @@ export function PeopleSheet({
             <AddPersonRow onAdd={onAdd} />
           </li>
         </ul>
+        </PinnedToolbarScrollColumn>
       )}
     </ListPageFrame>
   );

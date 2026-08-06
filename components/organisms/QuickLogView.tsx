@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { QuickLogEntry, createQuickLogEntry } from "@/lib/types";
 import { loadQuickLog, saveQuickLog } from "@/lib/storage";
 import { useArmedAction } from "@/lib/use-armed-action";
 import { cn } from "@/lib/utils";
 import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { ListPageFrame } from "@/components/atoms/ListPageFrame";
+import { PinnedToolbarScrollColumn } from "@/components/atoms/PinnedToolbarScrollColumn";
+import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import { QuickLogEntryList } from "@/components/organisms/QuickLogEntryList";
 import { QuickLogPageChrome } from "@/components/organisms/QuickLogPageChrome";
-import { ScrollFadeShell } from "@/components/atoms/ScrollFadeShell";
-import { PAGE_INLINE_GUTTER, WORKSPACE_SCROLL_COLUMN } from "@/lib/chrome";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
- * Quick Log — page tools band → body inside ListPageFrame.
- * Desktop: record button left (session rail width), log list right.
+ * Quick Log — workspace slot only (no document scroll). Mobile: toolbar → fading
+ * list → fixed clock. Desktop: record left, toolbar + fading list right.
  */
 export function QuickLogView() {
   const [ready, setReady] = useState(false);
@@ -57,8 +57,17 @@ export function QuickLogView() {
     onDelete: (id: string) => setEntries((prev) => prev.filter((e) => e.id !== id)),
   };
 
+  const pageChrome = (
+    <QuickLogPageChrome
+      entryCount={entries.length}
+      tz={tz}
+      onTzChange={setTz}
+      clearAll={clearAll}
+    />
+  );
+
   return (
-    <ListPageFrame fill="workspace" navPage>
+    <ListPageFrame fill="workspace" navPage selfClearance={tapAnywhere}>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
          Phone: pointer-only convenience so any tap logs a time. */}
       <div
@@ -68,8 +77,8 @@ export function QuickLogView() {
         )}
         onClick={tapAnywhere ? handleLog : undefined}
       >
-        <QuickLogMobileBody {...bodyProps} />
-        <QuickLogDesktopBody {...bodyProps} />
+        <QuickLogMobileBody {...bodyProps} pageChrome={pageChrome} />
+        <QuickLogDesktopBody {...bodyProps} pageChrome={pageChrome} />
       </div>
     </ListPageFrame>
   );
@@ -85,6 +94,7 @@ type QuickLogBodyProps = {
   onTzChange: (tz: string) => void;
   onLog: () => void;
   onDelete: (id: string) => void;
+  pageChrome?: ReactNode;
 };
 
 function QuickLogMobileBody({
@@ -94,9 +104,9 @@ function QuickLogMobileBody({
   isDesktop,
   flash,
   clearAll,
-  onTzChange,
   onLog,
   onDelete,
+  pageChrome,
 }: QuickLogBodyProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -115,38 +125,29 @@ function QuickLogMobileBody({
         "pb-[max(1rem,env(safe-area-inset-bottom))]",
       )}
     >
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-         Toolbar — stop tap-anywhere propagation for tz/clear controls. */}
-      <div className="shrink-0 pb-2" onClick={stopTap}>
-        <QuickLogPageChrome
-          entryCount={entries.length}
-          tz={tz}
-          onTzChange={onTzChange}
-          clearAll={clearAll}
-        />
-      </div>
-      <ScrollFadeShell className="min-h-0 flex-1">
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-           Log list — blur fade at top and bottom edges. */}
-        <div
-          ref={scrollRef}
-          className={cn(WORKSPACE_SCROLL_COLUMN, "h-full")}
-          onClick={stopTap}
-        >
-          <div className="mt-auto">
-            <QuickLogEntryList
-              entries={entries}
-              tz={tz}
-              tapAnywhere={tapAnywhere}
-              clearAllArmed={clearAll.armed}
-              growUp
-              onDelete={onDelete}
-            />
-          </div>
+      <PinnedToolbarScrollColumn
+        scrollRef={scrollRef}
+        onListClick={stopTap}
+        listClassName="flex flex-col"
+        toolbar={
+          pageChrome ? (
+            <StickyPageChrome below={pageChrome} belowHeaderTitle />
+          ) : null
+        }
+      >
+        <div className="mt-auto w-full">
+          <QuickLogEntryList
+            entries={entries}
+            tz={tz}
+            tapAnywhere={tapAnywhere}
+            clearAllArmed={clearAll.armed}
+            growUp
+            onDelete={onDelete}
+          />
         </div>
-      </ScrollFadeShell>
+      </PinnedToolbarScrollColumn>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions --
-         Record button — stop tap-anywhere propagation. */}
+         Record button — fixed in workspace slot, never scrolls. */}
       <div className="shrink-0 pt-2" onClick={stopTap}>
         <ClockStamp
           mode="quicklog"
@@ -166,9 +167,9 @@ function QuickLogDesktopBody({
   isDesktop,
   flash,
   clearAll,
-  onTzChange,
   onLog,
   onDelete,
+  pageChrome,
 }: QuickLogBodyProps) {
   return (
     <div
@@ -187,14 +188,8 @@ function QuickLogDesktopBody({
         />
       </div>
 
-      <ScrollFadeShell className="flex min-h-0 min-w-0 flex-col">
-        <div className={cn(WORKSPACE_SCROLL_COLUMN, "flex min-h-0 min-w-0 flex-col")}>
-          <QuickLogPageChrome
-            entryCount={entries.length}
-            tz={tz}
-            onTzChange={onTzChange}
-            clearAll={clearAll}
-          />
+      <div className="flex min-h-0 min-w-0 flex-col">
+        <PinnedToolbarScrollColumn toolbar={pageChrome}>
           <QuickLogEntryList
             entries={entries}
             tz={tz}
@@ -202,8 +197,8 @@ function QuickLogDesktopBody({
             clearAllArmed={clearAll.armed}
             onDelete={onDelete}
           />
-        </div>
-      </ScrollFadeShell>
+        </PinnedToolbarScrollColumn>
+      </div>
     </div>
   );
 }

@@ -7,19 +7,21 @@ import { useRegisterHeaderActions } from "@/components/timekeeper/header-actions
 
 function FieldsResetButton({
   atDefault,
-  resetAll,
+  armed,
+  onTrigger,
 }: {
   atDefault: boolean;
-  resetAll: ReturnType<typeof useArmedAction>;
+  armed: boolean;
+  onTrigger: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   return (
     <ArmedActionButton
-      armed={resetAll.armed}
+      armed={armed}
       disabled={atDefault}
       idleLabel="Reset fields to defaults"
       armedLabel="Confirm reset fields to Buddha, Dharma, Sangha"
       showLabel="Reset"
-      onTrigger={resetAll.trigger}
+      onTrigger={onTrigger}
     />
   );
 }
@@ -31,9 +33,13 @@ export function FieldsPageIntro({
   atDefault: boolean;
   resetAll: ReturnType<typeof useArmedAction>;
 }) {
+  const { armed, trigger } = resetAll;
+
   const headerActions = useMemo(
-    () => <FieldsResetButton atDefault={atDefault} resetAll={resetAll} />,
-    [atDefault, resetAll],
+    () => (
+      <FieldsResetButton atDefault={atDefault} armed={armed} onTrigger={trigger} />
+    ),
+    [armed, atDefault, trigger],
   );
 
   useRegisterHeaderActions(headerActions);

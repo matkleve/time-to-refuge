@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ScrollFadeShell } from "@/components/atoms/ScrollFadeShell";
 import { StickyPageChrome } from "@/components/atoms/StickyPageChrome";
 import {
   DESKTOP_CLEARANCE_WITH_TITLE,
@@ -11,6 +10,8 @@ import { cn } from "@/lib/utils";
 interface ListPageFrameProps {
   children: ReactNode;
   className?: string;
+  /** Attach to the scroll root (`fill="scroll"` only). */
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
   /** Pinned under the app header — e.g. retreat name chip on Session / People. */
   pin?: ReactNode;
   /** Extra pinned block under the title (e.g. retreat chip). */
@@ -43,6 +44,7 @@ export function ListPageFrame({
   pin,
   pinBelow,
   className,
+  scrollRef,
   fill = "scroll",
   navPage = false,
   selfClearance = false,
@@ -50,6 +52,8 @@ export function ListPageFrame({
 }: ListPageFrameProps) {
   const isWorkspace = fill === "workspace";
   const clearance = navPage ? NAV_PAGE_CLEARANCE : HEADER_CLEARANCE;
+
+  const hasPinnedChrome = Boolean(pin || pinBelow);
 
   const body = (
     <>
@@ -84,18 +88,19 @@ export function ListPageFrame({
   }
 
   return (
-    <ScrollFadeShell
-      className={cn("h-full min-h-0 w-full flex-1", className)}
+    <div
+      ref={scrollRef}
+      className={cn(
+        "focus-safe-scroll scroll-fade-y h-full min-h-0 w-full flex-1 overflow-y-auto overscroll-contain px-0",
+        hasPinnedChrome && "scroll-fade-y-pinned",
+        className,
+      )}
+      style={{
+        paddingBottom:
+          "max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))",
+      }}
     >
-      <div
-        className="focus-safe-scroll h-full min-h-0 w-full overflow-y-auto overscroll-contain px-0"
-        style={{
-          paddingBottom:
-            "max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)))",
-        }}
-      >
-        {body}
-      </div>
-    </ScrollFadeShell>
+      {body}
+    </div>
   );
 }

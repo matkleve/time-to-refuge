@@ -114,8 +114,10 @@
    */
   --focus-safe-bleed: 0.75rem;
 
-  /** Top/bottom blur fade on scrollports (`ScrollFadeShell`). */
-  --scroll-fade-size: 3rem;
+  /** Soft edge fade on overflow scrollports. */
+  --scroll-fade-size: 2.5rem;
+  /** Taller top fade when list scrolls under pinned chrome (retreat chip, etc.). */
+  --scroll-fade-size-top: 2.5rem;
 
 
   /* Motion — three durations on ease-out (design system §5).
@@ -445,90 +447,128 @@
 }
 
 /*
- * Mask-only edge fade — avoid combining with ScrollFadeShell (reads as a hard line).
+ * Opacity fade at scrollport edges — backdrop shows through, no white wash or blur.
  */
 @utility scroll-fade-y {
   -webkit-mask-image: linear-gradient(
     to bottom,
-    transparent 0%,
-    rgb(0 0 0 / 0.35) calc(var(--scroll-fade-size) * 0.45),
-    #000 var(--scroll-fade-size),
+    transparent 0,
+    #000 var(--scroll-fade-size-top),
     #000 calc(100% - var(--scroll-fade-size)),
-    rgb(0 0 0 / 0.35) calc(100% - var(--scroll-fade-size) * 0.45),
     transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
-    transparent 0%,
-    rgb(0 0 0 / 0.35) calc(var(--scroll-fade-size) * 0.45),
-    #000 var(--scroll-fade-size),
+    transparent 0,
+    #000 var(--scroll-fade-size-top),
     #000 calc(100% - var(--scroll-fade-size)),
-    rgb(0 0 0 / 0.35) calc(100% - var(--scroll-fade-size) * 0.45),
     transparent 100%
   );
 }
 
+/* Pinned chrome in the scrollport — soft multi-stop top fade (no hard cut). */
+@utility scroll-fade-y-pinned {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.2) 1.75rem,
+    rgb(0 0 0 / 0.55) 3.25rem,
+    #000 5.5rem,
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.2) 1.75rem,
+    rgb(0 0 0 / 0.55) 3.25rem,
+    #000 5.5rem,
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+}
+
+/*
+ * List under absolute toolbar — fade in the toolbar band only; opaque below
+ * `--scroll-fade-toolbar-band` so the first row is sharp at scroll rest.
+ */
+@utility scroll-fade-y-under-toolbar {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.4) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.3),
+    rgb(0 0 0 / 0.75) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.65),
+    #000 var(--scroll-fade-toolbar-band, 5.5rem),
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 0.4) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.3),
+    rgb(0 0 0 / 0.75) calc(var(--scroll-fade-toolbar-band, 5.5rem) * 0.65),
+    #000 var(--scroll-fade-toolbar-band, 5.5rem),
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+@utility scroll-fade-bottom {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+}
+
+/** Narrow blur fade at Refuge person-carousel edges (mobile). */
 @layer components {
-  .scroll-fade-edge {
+  .refuge-carousel-edge {
     pointer-events: none;
     position: absolute;
-    inset-inline: 0;
-    z-index: 1;
-    height: var(--scroll-fade-size);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
-  }
-
-  .scroll-fade-edge-top {
     top: 0;
-    background: linear-gradient(
-      to bottom,
-      rgb(255 255 255 / 0.22) 0%,
-      rgb(255 255 255 / 0.08) 45%,
-      transparent 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      rgb(0 0 0 / 0.75) 40%,
-      rgb(0 0 0 / 0.25) 70%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      rgb(0 0 0 / 0.75) 40%,
-      rgb(0 0 0 / 0.25) 70%,
-      transparent 100%
-    );
+    bottom: 0;
+    z-index: 1;
+    width: 1.25rem;
+    -webkit-backdrop-filter: blur(10px) saturate(1.15);
+    backdrop-filter: blur(10px) saturate(1.15);
   }
 
-  .scroll-fade-edge-bottom {
-    bottom: 0;
+  .refuge-carousel-edge-start {
+    left: 0;
     background: linear-gradient(
-      to top,
-      rgb(255 255 255 / 0.22) 0%,
-      rgb(255 255 255 / 0.08) 45%,
+      to right,
+      rgb(255 255 255 / 0.2) 0%,
       transparent 100%
     );
-    -webkit-mask-image: linear-gradient(
-      to top,
-      #000 0%,
-      rgb(0 0 0 / 0.75) 40%,
-      rgb(0 0 0 / 0.25) 70%,
+    -webkit-mask-image: linear-gradient(to right, #000, transparent);
+    mask-image: linear-gradient(to right, #000, transparent);
+  }
+
+  .refuge-carousel-edge-end {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      rgb(255 255 255 / 0.2) 0%,
       transparent 100%
     );
-    mask-image: linear-gradient(
-      to top,
-      #000 0%,
-      rgb(0 0 0 / 0.75) 40%,
-      rgb(0 0 0 / 0.25) 70%,
-      transparent 100%
-    );
+    -webkit-mask-image: linear-gradient(to left, #000, transparent);
+    mask-image: linear-gradient(to left, #000, transparent);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .scroll-fade-edge {
+    .refuge-carousel-edge {
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }

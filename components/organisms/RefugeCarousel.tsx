@@ -1,7 +1,11 @@
 "use client";
 
 import type { Person, Phase, FieldDef } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { PersonCard } from "./PersonCard";
+
+/** Gap between carousel slides — keep in sync with `translateX` below. */
+const CAROUSEL_GAP = "1rem";
 
 function RefugeCarouselSlide({
   person,
@@ -31,7 +35,7 @@ function RefugeCarouselSlide({
   retreatName: string;
 }) {
   return (
-    <div className="focus-safe-scroll flex h-full w-full shrink-0 flex-col overflow-y-auto overscroll-contain pb-1">
+    <div className="focus-safe-scroll flex h-full w-full shrink-0 flex-col overflow-y-auto overscroll-contain px-3 pb-1">
       <PersonCard
         person={person}
         fields={fields}
@@ -84,13 +88,25 @@ export function RefugeCarousel({
 }) {
   return (
     <div
-      className="relative min-h-0 flex-1 overflow-x-hidden"
+      className={cn(
+        "relative -mx-3 min-h-0 flex-1 overflow-x-hidden md:mx-0",
+      )}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
       <div
-        className="flex h-full w-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-        style={{ transform: `translateX(-${index * 100}%)` }}
+        aria-hidden
+        className="refuge-carousel-edge refuge-carousel-edge-start"
+      />
+      <div
+        aria-hidden
+        className="refuge-carousel-edge refuge-carousel-edge-end"
+      />
+      <div
+        className="flex h-full w-full gap-4 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        style={{
+          transform: `translateX(calc(-${index} * (100% + ${CAROUSEL_GAP})))`,
+        }}
       >
         {people.map((p) => (
           <RefugeCarouselSlide

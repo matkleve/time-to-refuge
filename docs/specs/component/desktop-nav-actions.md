@@ -15,8 +15,6 @@ Undo, redo, export are **quiet** ghost `sm` icon buttons. Dana is a **`Link`** s
 | Undo / Redo / Export | `sm` (36×36) | Icon only |
 | Dana | `h-9` chip | Icon; + label at `lg+` |
 
-Divider (`border-l border-line`) before export/Dana group.
-
 Hamburger menu Dana remains `primary` `fullWidth` with `href="/dana"` — see [`view-menu-dana.supplement.md`](../ui/nav/view-menu-dana.supplement.md).
 
 ## Where It Lives
@@ -36,13 +34,13 @@ Hamburger menu Dana remains `primary` `fullWidth` with `href="/dana"` — see [`
 ## Component Hierarchy
 
 ```text
-div (flex shrink-0)
-├── div (flex gap-1.5) — Undo, Redo
-└── div[role=group, aria-label=Actions] (border-l pl-1, gap-1.5)
-    ├── Button quiet sm — Export
-    └── Link[/dana] + interactiveGlassFlushChipClass
-        ├── HeartHandshake icon
-        └── span.hidden.lg:inline — menuCta label
+div[role=group, aria-label=Actions] (flex shrink-0, gap-1.5)
+├── Button quiet sm — Undo
+├── Button quiet sm — Redo
+├── Button quiet sm — Export
+└── Link[/dana] + interactiveGlassFlushChipClass
+    ├── HeartHandshake icon
+    └── span.hidden.lg:inline — menuCta label
 ```
 
 ## Dana control (normative)
@@ -60,7 +58,7 @@ div (flex shrink-0)
 
 ## Spacing
 
-- Cluster: undo/redo `gap-1.5`; export/Dana group `gap-1.5` with `border-l pl-1` — no extra gap between redo and export
+- Cluster: single row, uniform `gap-1.5` between all controls
 
 ## Acceptance Criteria
 

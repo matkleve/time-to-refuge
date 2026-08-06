@@ -8,22 +8,21 @@ import { useRegisterHeaderActions } from "@/components/timekeeper/header-actions
 
 function QuickLogClearButton({
   entryCount,
-  clearAll,
+  armed,
+  onTrigger,
 }: {
   entryCount: number;
-  clearAll: ReturnType<typeof useArmedAction>;
+  armed: boolean;
+  onTrigger: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   return (
     <ArmedActionButton
-      armed={clearAll.armed}
+      armed={armed}
       disabled={entryCount === 0}
       idleLabel="Clear all logged times"
       armedLabel="Confirm clear all logged times"
       showLabel="Clear"
-      onTrigger={(e) => {
-        e.stopPropagation();
-        clearAll.trigger();
-      }}
+      onTrigger={onTrigger}
     />
   );
 }
@@ -39,11 +38,20 @@ export function QuickLogPageChrome({
   onTzChange: (tz: string) => void;
   clearAll: ReturnType<typeof useArmedAction>;
 }) {
+  const { armed, trigger } = clearAll;
+
   const headerActions = useMemo(
     () => (
-      <QuickLogClearButton entryCount={entryCount} clearAll={clearAll} />
+      <QuickLogClearButton
+        entryCount={entryCount}
+        armed={armed}
+        onTrigger={(e) => {
+          e.stopPropagation();
+          trigger();
+        }}
+      />
     ),
-    [entryCount, clearAll],
+    [armed, entryCount, trigger],
   );
 
   useRegisterHeaderActions(headerActions);

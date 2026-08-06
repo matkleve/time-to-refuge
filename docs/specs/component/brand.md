@@ -4,7 +4,7 @@
 
 Header home control: ⏱️ emoji + optional “Timekeeper” wordmark. Desktop toolbar always shows wordmark; mobile shows emoji only (page title is [`HeaderTitle`](../../ui/mobile-header.md) center).
 
-**Not** `Button variant="quiet"` — plain `<button>` + `interactiveFeedbackClass` so wordmark sizing is not fighting chip/`labelCollapse` geometry.
+`Button variant="quiet"` — same ghost chrome as header tabs; wordmark uses `h-11 w-auto px-3` (not `labelCollapse`).
 
 ## What It Looks Like
 
@@ -13,7 +13,7 @@ Header home control: ⏱️ emoji + optional “Timekeeper” wordmark. Desktop 
 | Desktop (`wordmark`) | ⏱️ + “Timekeeper” | `font-display font-bold text-ink` · `text-lg xl:text-2xl` · `gap-2` |
 | Mobile | ⏱️ only | `text-lg` |
 
-Idle: ghost — no fill. Hover/press: feedback wash on rounded-lg hit area.
+Idle: ghost — no fill. Desktop wordmark on `home` view: white glass chip (same as selected nav tab). Mobile: ghost on all views (title shows “Timekeeper” on `home`). Hover/press: feedback wash on `rounded-full` chip.
 
 ## Where It Lives
 
@@ -33,7 +33,7 @@ Idle: ghost — no fill. Hover/press: feedback wash on rounded-lg hit area.
 ## Component Hierarchy
 
 ```text
-button.Brand | span.Brand (static)
+Button[quiet] | span.Brand (static)
 ├── span [emoji ⏱️, aria-hidden, text-2xl]
 └── [wordmark] span "Timekeeper" whitespace-nowrap
 ```
@@ -42,15 +42,16 @@ button.Brand | span.Brand (static)
 
 | Behavior | Owner | Geometry |
 | --- | --- | --- |
-| Hit area | `button` host | Desktop: implicit padding via `gap-2`; no fixed `size-*` on wordmark variant |
-| Feedback | host | `interactiveFeedbackClass({ press: "sm" })` |
+| Hit area | `Button` host | Mobile: `size-11` icon chip; desktop wordmark: `h-11 w-auto px-3 gap-2` |
+| Feedback | host | `quiet` + `press="md"`; `surfaceClass={interactiveGlassNavTabClass(selected)}` |
 | Emoji | child | `text-2xl leading-none shrink-0` |
 
-**MUST NOT** use `labelCollapse`, `size-11`, or `Button` wrapper on desktop wordmark.
+**MUST NOT** use `labelCollapse` on wordmark — label is always visible on desktop (`wordmark`).
 
 ## Acceptance Criteria
 
 - [ ] Desktop: “Timekeeper” always visible; never clipped at 1280px
 - [ ] `aria-label="Timekeeper — open Home"` when clickable
 - [ ] Left edge aligns with page column gutter in `DesktopNav`
-- [ ] Matches ghost family of header chrome at idle
+- [ ] Desktop wordmark on `home`: glass chip fill matches selected nav tab
+- [ ] Mobile: ghost on all views (including `home`)

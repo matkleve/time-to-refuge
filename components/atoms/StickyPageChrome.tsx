@@ -9,6 +9,8 @@ interface StickyPageChromeProps {
   below?: ReactNode;
   /** Page title is in `DesktopNav` — offset through nav + title band. */
   belowHeaderTitle?: boolean;
+  /** Inside a workspace scroll column — sticky at scrollport top only. */
+  inScrollport?: boolean;
 }
 
 /**
@@ -19,6 +21,7 @@ export function StickyPageChrome({
   children,
   below,
   belowHeaderTitle = false,
+  inScrollport = false,
   className,
 }: StickyPageChromeProps) {
   const topClearance = belowHeaderTitle
@@ -27,32 +30,23 @@ export function StickyPageChrome({
         "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+2.75rem+0.375rem)]",
         "md:pt-[4.5rem]",
       );
+  const inset = inScrollport ? undefined : PAGE_INLINE_GUTTER;
 
   return (
     <div
       className={cn(
         "pointer-events-none sticky top-0 z-20",
-        topClearance,
+        !inScrollport && topClearance,
         className,
       )}
     >
       {children != null && children !== false ? (
-        <div
-          className={cn(
-            "pointer-events-auto relative pb-1",
-            PAGE_INLINE_GUTTER,
-          )}
-        >
+        <div className={cn("pointer-events-auto relative pb-1", inset)}>
           {children}
         </div>
       ) : null}
       {below ? (
-        <div
-          className={cn(
-            "pointer-events-auto relative pb-2",
-            PAGE_INLINE_GUTTER,
-          )}
-        >
+        <div className={cn("pointer-events-auto relative pb-2", inset)}>
           {below}
         </div>
       ) : null}

@@ -43,7 +43,7 @@ Hard reload (disable cache):
 
 ## Global actions column (tab row)
 
-- [ ] Order: undo → redo → divider → export → Dana `Link`
+- [ ] Order: undo → redo → export → Dana `Link`
 - [ ] **MUST NOT** include `HeaderActionsSlot` on tab row
 - [ ] Dana = `Link href="/dana"` + `interactiveGlassFlushChipClass` — see [`desktop-nav-actions.md`](../../component/desktop-nav-actions.md)
 - [ ] **MUST NOT** `aria-current` on Dana

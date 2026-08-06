@@ -23,7 +23,12 @@ export function QuickLogEntryList({
   const sorted = [...entries].sort((a, b) => (growUp ? a.at - b.at : b.at - a.at));
 
   return (
-    <div className={cn("flex w-full flex-col gap-2 py-3")}>
+    <div
+      className={cn(
+        "flex w-full flex-col gap-2",
+        growUp ? "pb-3" : "py-3",
+      )}
+    >
       {sorted.length === 0 ? (
         <GlassEmptyNote>
           {tapAnywhere ? "Tap anywhere to log a time." : "Tap the button to log a time."}

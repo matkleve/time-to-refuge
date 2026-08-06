@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useDocumentTitle } from "@/lib/use-document-title";
 import { useTimekeeperApp } from "@/lib/use-timekeeper-app";
 import { useMediaQuery } from "@/lib/use-media-query";
 import type { AppView } from "@/components/atoms/ViewMenu";
@@ -26,14 +27,19 @@ export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView 
         return;
       }
       app.setView(view);
-      if (pathname === "/" || pathname === "/dana") {
-        router.push(view === "home" ? "/" : `/?view=${view}`, { scroll: false });
+      // Sync URL without Next.js navigation — router.push re-renders the page
+      // and useMediaQuery briefly falls back to the mobile shell on desktop.
+      if (pathname === "/") {
+        const next = view === "home" ? "/" : `/?view=${view}`;
+        window.history.replaceState(window.history.state, "", next);
       }
     },
     [app, pathname, router],
   );
 
   const appNav = { ...app, setView: navigate } as typeof app;
+
+  useDocumentTitle(appNav.view);
 
   if (!app.ready && app.view !== "home" && app.view !== "dana") return null;
 
