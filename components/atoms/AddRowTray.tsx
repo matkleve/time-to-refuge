@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { controlMinH, BUTTON_CLUSTER_GAP } from "@/lib/control-size";
 import { glassPillFocusWithin, suppressInputOutline } from "@/lib/focus-cues";
 import { staticGlassFlushClass } from "@/lib/interactive-glass";
 import { cn } from "@/lib/utils";
+import { useDismissible } from "@/lib/use-dismissible";
 import { CancelConfirmTray } from "@/components/atoms/CancelConfirmTray";
 
 interface AddRowTrayProps {
@@ -34,6 +35,16 @@ export function AddRowTray({
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
 
+  const cancel = useCallback(() => {
+    setOpen(false);
+    setDraft("");
+  }, []);
+
+  const dismissRef = useDismissible<HTMLDivElement>({
+    active: open && !draft.trim(),
+    onDismiss: cancel,
+  });
+
   function submit() {
     const trimmed = draft.trim();
     if (!trimmed) return;
@@ -42,13 +53,11 @@ export function AddRowTray({
     setOpen(false);
   }
 
-  function cancel() {
-    setOpen(false);
-    setDraft("");
-  }
-
   return (
-    <div className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP)}>
+    <div
+      ref={dismissRef}
+      className={cn("flex w-full items-center", BUTTON_CLUSTER_GAP)}
+    >
       {open ? (
         <div
           className={cn(

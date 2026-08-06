@@ -35,14 +35,21 @@ export type GeocodePayload = {
 
 export type ProbeTone = "idle" | "ok" | "warn" | "danger" | "checking";
 
-export type PanelBox = {
-  left: number;
-  width: number;
-  maxHeight: number;
-} & (
-  | { side: "above"; bottom: number }
-  | { side: "below"; top: number }
-);
+export type PanelBox =
+  | {
+      side: "above";
+      bottom: number;
+      left: number;
+      width: number;
+      maxHeight: number;
+    }
+  | {
+      side: "below" | "left" | "right";
+      top: number;
+      left: number;
+      width: number;
+      maxHeight: number;
+    };
 
 export type ClockProbeState =
   | { status: "idle" }

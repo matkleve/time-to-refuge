@@ -78,17 +78,15 @@ export function QuickLogLogRow({
           controlMinH.md,
         )}
       >
-        <div className="min-w-0 flex-1">
-          <QuickLogLogRowStamp
-            index={index}
-            date={date}
-            time={time}
-            ms={ms}
-            red={red}
-            showActions={showActions}
-            onToggleActions={handleRowClick}
-          />
-        </div>
+        <QuickLogLogRowStamp
+          index={index}
+          date={date}
+          time={time}
+          ms={ms}
+          red={red}
+          showActions={showActions}
+          onToggleActions={handleRowClick}
+        />
         <QuickLogLogRowActions
           index={index}
           copied={copied}
