@@ -23,11 +23,16 @@ export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView 
         router.push("/dana");
         return;
       }
+      const next = view === "home" ? "/" : `/?view=${view}`;
+      if (pathname === "/dana") {
+        // Leave the /dana route so the URL matches the in-app view again.
+        router.replace(next);
+        return;
+      }
       app.setView(view);
       // Sync URL without Next.js navigation — router.push re-renders the page
       // and can flash the wrong shell while client state reconciles.
       if (pathname === "/") {
-        const next = view === "home" ? "/" : `/?view=${view}`;
         window.history.replaceState(window.history.state, "", next);
       }
     },
