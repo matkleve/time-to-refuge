@@ -9,6 +9,7 @@ export const VIEW_TITLES: Partial<Record<AppView, string>> = {
   quicklog: "Quick Log",
   history: "History",
   dana: "Dana",
+  privacy: "Privacy",
 };
 
 /** One-line hint under the in-header page title — mobile + desktop nav pages. */
@@ -20,6 +21,7 @@ export const VIEW_DESCRIPTIONS: Partial<Record<AppView, string>> = {
   quicklog: "Stamp wall-clock moments without fields or people.",
   history: "Recorded, reset, and undone moments in order.",
   dana: "Your dana helps keep DRCE open for teachings and practice.",
+  privacy: "What Timekeeper stores, what it sends, and what stays on your device.",
 };
 
 /** Browser tab title — matches layout metadata template (`%s · Timekeeper`). */

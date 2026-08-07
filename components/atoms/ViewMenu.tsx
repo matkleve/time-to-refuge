@@ -17,7 +17,8 @@ export type AppView =
   | "history"
   | "people"
   | "fields"
-  | "dana";
+  | "dana"
+  | "privacy";
 
 interface ViewMenuProps {
   view: AppView;

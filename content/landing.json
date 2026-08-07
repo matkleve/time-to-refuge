@@ -50,6 +50,8 @@
   "footer": {
     "supportLabel": "Support DRCE",
     "supportHref": "/dana",
+    "privacyLabel": "Privacy",
+    "privacyHref": "/privacy",
     "externalLabel": "Dzogchen Retreat Center Europe",
     "externalHref": "https://thebuddhapath.eu/"
   }

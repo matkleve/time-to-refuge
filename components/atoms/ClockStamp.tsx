@@ -46,7 +46,7 @@ export function ClockStamp(props: ClockStampProps) {
           disabled={!armed}
           className={cn(
             "no-select flex w-full flex-col items-center justify-center gap-1 rounded-3xl",
-            fillRemaining ? "h-full min-h-28 py-3" : "min-h-38 py-6",
+            fillRemaining ? "h-full min-h-28 py-3" : "min-h-32 py-4 md:min-h-38 md:py-6",
             "enabled:hover:brightness-[1.04]",
             interactiveActionClass(
               armed ? "primary" : "primaryIdle",

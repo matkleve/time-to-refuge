@@ -1,0 +1,29 @@
+{
+  "headline": "Privacy",
+  "intro": "Timekeeper keeps ceremony data on your device. This page explains what leaves your browser and what does not.",
+  "sections": [
+    {
+      "title": "Ceremony data stays on your device",
+      "body": "People, timestamps, fields, and retreat names are stored in your browser's local storage. Nothing is uploaded to our servers. Clearing site data or uninstalling the app removes it."
+    },
+    {
+      "title": "No accounts",
+      "body": "Timekeeper does not ask you to sign in. We do not collect names, email addresses, or ceremony records on our side."
+    },
+    {
+      "title": "Anonymous visit statistics",
+      "body": "We use Vercel Web Analytics to count page views and see which pages are visited. It does not use cookies, does not track you across other websites, and does not identify individual visitors. We see aggregated numbers such as page views and country."
+    },
+    {
+      "title": "Hosting",
+      "body": "The public website is hosted on Vercel. When you load a page, Vercel processes standard server logs (IP address, browser type, requested URL) to deliver the site. See Vercel's privacy policy for how they handle that data."
+    },
+    {
+      "title": "Your rights",
+      "body": "Because we do not store your ceremony data, there is nothing for us to export or delete on request. You control local data through your browser settings. For questions about this policy, contact the site operator."
+    }
+  ],
+  "contactLabel": "Contact",
+  "contactHref": "https://www.linkedin.com/in/matthias-kleveta-884a76253",
+  "updated": "7 August 2026"
+}

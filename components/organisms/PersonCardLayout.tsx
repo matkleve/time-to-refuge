@@ -11,7 +11,7 @@ export function PersonCardLayout(props: PersonCardLayoutProps) {
       flush
       className={cn(
         "rounded-3xl",
-        props.fillHeight && "flex h-full min-h-0 flex-col",
+        props.fillHeight && "flex max-h-full min-h-0 flex-col",
       )}
     >
       <PersonCardLayoutContent {...props} />

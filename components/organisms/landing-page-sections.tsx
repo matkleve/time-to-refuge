@@ -44,6 +44,12 @@ export function LandingSiteLinks() {
       >
         {landing.footer.supportLabel}
       </Link>
+      <Link
+        href={landing.footer.privacyHref}
+        className="text-muted underline-offset-2 hover:text-ink hover:underline"
+      >
+        {landing.footer.privacyLabel}
+      </Link>
       <a
         href={landing.footer.externalHref}
         target="_blank"

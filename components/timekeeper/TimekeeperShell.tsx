@@ -71,7 +71,7 @@ export function TimekeeperShell({
               </div>
             </div>
             {headerSubtitle ? (
-              <p className="min-w-0 truncate px-11 text-center text-sm text-muted">
+              <p className="line-clamp-2 min-w-0 px-11 text-center text-sm leading-snug text-muted">
                 {headerSubtitle}
               </p>
             ) : null}

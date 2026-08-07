@@ -6,7 +6,7 @@ Phone shell toolbar: brand (left) · centered page title · hamburger menu (righ
 
 ## What It Looks Like
 
-`grid-cols-[auto_1fr_auto] h-11` inside `px-3` + safe-area top padding. Ghost brand (emoji only) — **no** selected glass on `home` (title carries “Timekeeper”). Title `text-lg leading-tight font-semibold text-ink` centered in a `min-w-0 overflow-hidden` middle slot (`truncate` + ellipsis). Muted subtitle `text-sm text-muted` centered below the `h-11` row (`truncate`). Menu trigger right.
+`grid-cols-[auto_1fr_auto] h-11` inside `px-3` + safe-area top padding. Ghost brand (emoji only) — **no** selected glass on `home` (title carries “Timekeeper”). Title `text-lg leading-tight font-semibold text-ink` centered in a `min-w-0 overflow-hidden` middle slot (`truncate` + ellipsis). Muted subtitle `text-sm text-muted` centered below the `h-11` row (`line-clamp-2`). Menu trigger right.
 
 [`HeaderScrim`](../component/header-scrim.md) behind row (not `extended`).
 

@@ -1,7 +1,6 @@
 "use client";
 
 import type { Person, Phase, FieldDef } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { PersonCard } from "./PersonCard";
 
 /** Gap between carousel slides — keep in sync with `translateX` below. */
@@ -35,7 +34,7 @@ function RefugeCarouselSlide({
   retreatName: string;
 }) {
   return (
-    <div className="flex h-full w-full shrink-0 flex-col justify-end overflow-visible px-3 pb-1">
+    <div className="flex max-h-full w-full shrink-0 flex-col px-3 pb-1">
       <PersonCard
         person={person}
         fields={fields}
@@ -48,6 +47,7 @@ function RefugeCarouselSlide({
         onRename={onRename}
         onEditTime={onEditTime}
         retreatName={retreatName}
+        fillHeight
       />
     </div>
   );
@@ -88,44 +88,42 @@ export function RefugeCarousel({
 }) {
   return (
     <div
-      className={cn(
-        "relative -mx-3 min-h-0 flex-1 overflow-x-hidden overflow-y-visible md:mx-0",
-      )}
+      className="relative -mx-3 min-h-0 flex-1 overflow-x-hidden overflow-y-visible md:mx-0"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <div
-        aria-hidden
-        className="refuge-carousel-edge refuge-carousel-edge-start"
-      />
-      <div
-        aria-hidden
-        className="refuge-carousel-edge refuge-carousel-edge-end"
-      />
-      <div
-        className="flex h-full w-full gap-4 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-        style={{
-          transform: `translateX(calc(-${index} * (100% + ${CAROUSEL_GAP})))`,
-        }}
-      >
-        {people.map((p) => (
-          <RefugeCarouselSlide
-            key={p.id}
-            person={p}
-            fields={fields}
-            isCurrent={p.id === current?.id}
-            target={target}
-            setSelectedPhase={setSelectedPhase}
-            onClear={(phase) => onClear(p.id, phase)}
-            onResetAll={() => onResetAll(p.id)}
-            onDelete={() => onDelete(p.id)}
-            onExport={() => onExport(p)}
-            onRename={(name) => onRename(p.id, name)}
-            onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
-            retreatName={retreatName}
-          />
-        ))}
-      </div>
+        <div
+          aria-hidden
+          className="refuge-carousel-edge refuge-carousel-edge-start"
+        />
+        <div
+          aria-hidden
+          className="refuge-carousel-edge refuge-carousel-edge-end"
+        />
+        <div
+          className="flex h-full w-full items-start gap-4 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          style={{
+            transform: `translateX(calc(-${index} * (100% + ${CAROUSEL_GAP})))`,
+          }}
+        >
+          {people.map((p) => (
+            <RefugeCarouselSlide
+              key={p.id}
+              person={p}
+              fields={fields}
+              isCurrent={p.id === current?.id}
+              target={target}
+              setSelectedPhase={setSelectedPhase}
+              onClear={(phase) => onClear(p.id, phase)}
+              onResetAll={() => onResetAll(p.id)}
+              onDelete={() => onDelete(p.id)}
+              onExport={() => onExport(p)}
+              onRename={(name) => onRename(p.id, name)}
+              onEditTime={(phase, at) => onEditTime(p.id, phase, at)}
+              retreatName={retreatName}
+            />
+          ))}
+        </div>
     </div>
   );
 }

@@ -52,20 +52,22 @@ export const DESKTOP_NAV_PAGE_CLEARANCE = "9.5rem";
 /** Desktop scroll clearance below nav + in-header page title (md+). */
 export const DESKTOP_CLEARANCE_WITH_TITLE = "md:pt-[9.5rem]";
 
-/** Mobile scroll clearance under brand toolbar + page subtitle. */
+/**
+ * Mobile scroll clearance under brand toolbar + page subtitle.
+ */
 export const MOBILE_HEADER_CLEARANCE =
-  "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+5.5rem)]";
+  "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+5rem)]";
 
 /** Sticky chrome offset when page title lives in the header (md+). */
 export const STICKY_CHROME_PT_BELOW_HEADER_TITLE =
-  "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+5.5rem)] md:pt-[9.5rem]";
+  "pt-[calc(max(0.375rem,env(safe-area-inset-top,0px))+5rem)] md:pt-[9.5rem]";
 
 /** `HeaderScrim` when it extends through the page title (md+ nav pages). Doc: 4.75 + 5. */
 export const DESKTOP_EXTENDED_SCRIM = "9.625rem";
 
 /** Tailwind height utilities for `HeaderScrim` — keep in sync with bands above. */
 export const HEADER_SCRIM_HEIGHT =
-  "h-[calc(env(safe-area-inset-top,0px)+6.125rem)] md:h-[4.75rem]";
+  "h-[calc(env(safe-area-inset-top,0px)+5.625rem)] md:h-[4.75rem]";
 export const HEADER_SCRIM_EXTENDED_HEIGHT =
   "h-[calc(env(safe-area-inset-top,0px)+9.625rem)] md:h-[9.625rem]";
 

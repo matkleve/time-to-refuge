@@ -5,7 +5,6 @@ import { Person, Phase, FieldDef, fieldLabel } from "@/lib/types";
 import { usePhaseTarget } from "@/lib/use-phase-target";
 import { ClockStamp } from "@/components/atoms/ClockStamp";
 import { RefugeCarousel } from "./RefugeCarousel";
-import { RefugePersonSwitcher } from "./RefugePersonSwitcher";
 
 interface RefugeViewProps {
   people: Person[];
@@ -74,18 +73,6 @@ export function RefugeView({
       className="flex min-h-0 flex-1 flex-col"
       style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
-      {/*
-        Person switcher sits in its own row above the card — quiet glyphs,
-        no glass chip overlaying the card corner. Card fills remaining height;
-        many fields scroll inside. Horizontal swipe still changes person.
-      */}
-      <RefugePersonSwitcher
-        index={index}
-        total={people.length}
-        onPrev={() => onIndexChange(index - 1)}
-        onNext={() => onIndexChange(index + 1)}
-      />
-
       <RefugeCarousel
         people={people}
         fields={fields}

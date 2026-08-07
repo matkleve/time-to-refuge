@@ -10,14 +10,22 @@ export function RefugePersonSwitcher({
   total,
   onPrev,
   onNext,
+  inline = false,
 }: {
   index: number;
   total: number;
   onPrev: () => void;
   onNext: () => void;
+  inline?: boolean;
 }) {
   return (
-    <div className={cn("flex shrink-0 items-center justify-end px-3 pb-1", BUTTON_CLUSTER_GAP)}>
+    <div
+      className={cn(
+        "flex shrink-0 items-center",
+        BUTTON_CLUSTER_GAP,
+        !inline && "justify-end px-3 pb-1",
+      )}
+    >
       <Button
         variant="quiet"
         icon={ChevronLeft}

@@ -23,9 +23,13 @@ export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView 
         router.push("/dana");
         return;
       }
+      if (view === "privacy") {
+        router.push("/privacy");
+        return;
+      }
       const next = view === "home" ? "/" : `/?view=${view}`;
-      if (pathname === "/dana") {
-        // Leave the /dana route so the URL matches the in-app view again.
+      if (pathname === "/dana" || pathname === "/privacy") {
+        // Leave standalone public routes so the URL matches the in-app view again.
         router.replace(next);
         return;
       }
@@ -43,7 +47,9 @@ export function TimekeeperApp({ initialView = "home" }: { initialView?: AppView 
 
   useDocumentTitle(appNav.view);
 
-  if (!app.ready && app.view !== "home" && app.view !== "dana") return null;
+  if (!app.ready && app.view !== "home" && app.view !== "dana" && app.view !== "privacy") {
+    return null;
+  }
 
   const page = <TimekeeperPage app={appNav} />;
 
