@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Literata, Source_Code_Pro, Source_Sans_3 } from "next/font/google";
 import { PressBounceRegister } from "@/components/PressBounceRegister";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
@@ -108,6 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <PressBounceRegister />
         <ServiceWorkerRegister />
+        <Analytics />
       </body>
     </html>
   );

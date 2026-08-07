@@ -17,6 +17,7 @@
     "a11y": "npm run a11y:contrast && npm run a11y:type && npm run a11y:overflow && npm run a11y:layout && npm run a11y:interactive"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
     "next": "^15.3.3",
