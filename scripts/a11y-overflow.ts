@@ -110,7 +110,7 @@ function checkFile(file: string): Hit[] {
       const guarded = contextHas(
         lines,
         i,
-        /\bfocus-safe-scroll\b|\boverflow-x-(?:clip|hidden)\b/,
+        /\bfocus-safe-scroll\b|\bworkspace-scroll\b|\boverflow-x-(?:clip|hidden)\b/,
       );
       if (!guarded) {
         hits.push({

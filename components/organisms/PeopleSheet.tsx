@@ -62,7 +62,7 @@ export function PeopleSheet({
           <PinnedToolbarScrollColumn
             toolbar={
               retreatPin ? (
-                <StickyPageChrome below={retreatPin} belowHeaderTitle />
+                <StickyPageChrome below={retreatPin} belowHeaderTitle flushGutter />
               ) : null
             }
           >

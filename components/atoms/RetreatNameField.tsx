@@ -15,8 +15,6 @@ interface RetreatNameFieldProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
-  /** Share a row with session person nav — chip shrinks; label uses fluid type. */
-  layout?: "default" | "inline";
 }
 
 /**
@@ -24,12 +22,7 @@ interface RetreatNameFieldProps {
  * Session / People only. Leading mountain icon; tap anywhere on the chip
  * to edit (whole pill highlights — not just an inner input). See §6c.
  */
-export function RetreatNameField({
-  value,
-  onChange,
-  className,
-  layout = "default",
-}: RetreatNameFieldProps) {
+export function RetreatNameField({ value, onChange, className }: RetreatNameFieldProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value);
 
@@ -39,23 +32,11 @@ export function RetreatNameField({
     setEditing(false);
   }
 
-  const inline = layout === "inline";
   const shellLayout = cn(
-    inline
-      ? "@container flex min-w-0 flex-1 items-center gap-2 rounded-full px-3 py-2.5"
-      : cn(
-          "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
-          WORKSPACE_RAIL_MAX_WIDTH,
-        ),
+    "flex w-fit max-w-full items-center gap-2.5 rounded-full px-3.5 py-2.5",
+    WORKSPACE_RAIL_MAX_WIDTH,
     controlMinH.md,
     className,
-  );
-  const labelClass = cn(
-    "min-w-0 flex-1 truncate font-display font-semibold leading-snug",
-    inline
-      ? "text-[length:clamp(0.8125rem,0.5rem+4cqi,1rem)]"
-      : "text-base",
-    value ? "text-ink" : "text-muted",
   );
   const editingShell = cn(shellLayout, staticGlassFlushClass(), glassPillFocusWithin);
 
@@ -84,10 +65,7 @@ export function RetreatNameField({
           aria-label="Retreat name"
           size={Math.max(draft.length, 12)}
           className={cn(
-            "box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70",
-            inline
-              ? "text-[length:clamp(0.8125rem,0.5rem+4cqi,1rem)]"
-              : "text-base",
+            "box-border max-w-full min-w-[8rem] rounded-full bg-transparent font-display text-base font-semibold leading-snug text-ink placeholder:font-sans placeholder:font-normal placeholder:text-muted/70",
             suppressInputOutline,
           )}
         />
@@ -110,7 +88,12 @@ export function RetreatNameField({
         strokeWidth={2}
         aria-hidden
       />
-      <span className={labelClass}>
+      <span
+        className={cn(
+          "min-w-0 flex-1 truncate font-display text-base font-semibold leading-snug",
+          value ? "text-ink" : "text-muted",
+        )}
+      >
         {value || "Add retreat name"}
       </span>
       {value ? <Pencil className="size-3.5 shrink-0 text-muted" aria-hidden /> : null}

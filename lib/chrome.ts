@@ -72,11 +72,18 @@ export const HEADER_SCRIM_EXTENDED_HEIGHT =
   "h-[calc(env(safe-area-inset-top,0px)+9.625rem)] md:h-[9.625rem]";
 
 /**
- * Workspace column scrollport — vertical bleed from `focus-safe-scroll` plus
- * horizontal inset so press bounce (scale ~1.08) is not clipped at the rail edge.
+ * Workspace scrollport horizontal bleed — desktop only; mobile uses `PAGE_INLINE_GUTTER`.
+ * Stops glass press bounce clipping inside `overflow-y` without doubling mobile inset.
  */
-export const WORKSPACE_SCROLL_COLUMN =
-  "focus-safe-scroll overflow-y-auto overscroll-contain px-[var(--focus-safe-bleed)]";
+export const WORKSPACE_SCROLL_X_BLEED = "px-0 md:px-[var(--focus-safe-bleed)]";
+
+/** Retreat chip left edge = workspace rail row content (desktop). */
+export const WORKSPACE_RETREAT_ALIGN = "md:pl-[var(--focus-safe-bleed)]";
+
+/**
+ * Workspace column scrollport — `workspace-scroll` has no vertical bleed pad.
+ */
+export const WORKSPACE_SCROLL_COLUMN = `workspace-scroll ${WORKSPACE_SCROLL_X_BLEED}`;
 
 /** Workspace list scrollport with edge fade (top + bottom). */
 export const WORKSPACE_LIST_SCROLL_COLUMN = `${WORKSPACE_SCROLL_COLUMN} scroll-fade-y`;
@@ -91,7 +98,7 @@ export const WORKSPACE_UNDER_TOOLBAR_LIST_SCROLL = `${WORKSPACE_SCROLL_COLUMN} s
 export const WORKSPACE_RAIL_WIDTH = "w-64 shrink-0 lg:w-72 xl:w-80";
 
 /** Session / People left rail — fixed width + bounce-safe scrollport. */
-export const WORKSPACE_RAIL = `${WORKSPACE_LIST_SCROLL_BOTTOM_FADE} flex ${WORKSPACE_RAIL_WIDTH} flex-col gap-3`;
+export const WORKSPACE_RAIL = `${WORKSPACE_LIST_SCROLL_COLUMN} flex ${WORKSPACE_RAIL_WIDTH} flex-col gap-3`;
 
 /** Retreat chip max width — stays in the left rail column on Session / People. */
 export const WORKSPACE_RAIL_MAX_WIDTH = "max-w-64 lg:max-w-72 xl:max-w-80";
@@ -100,4 +107,4 @@ export const WORKSPACE_RAIL_MAX_WIDTH = "max-w-64 lg:max-w-72 xl:max-w-80";
  * Session / People right detail — top-aligned with the rail; scrolls when tall.
  */
 export const WORKSPACE_DETAIL =
-  "flex min-h-0 min-w-0 flex-1 flex-col items-center overflow-visible px-[var(--focus-safe-bleed)]";
+  "flex min-h-0 min-w-0 flex-1 flex-col items-center overflow-visible";

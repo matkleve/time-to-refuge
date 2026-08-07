@@ -446,6 +446,12 @@
   scroll-padding-block: var(--focus-safe-bleed);
 }
 
+/* Flush workspace rails — inset focus rings, no scrollport bleed pad. */
+@utility workspace-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 /*
  * Opacity fade at scrollport edges — backdrop shows through, no white wash or blur.
  */

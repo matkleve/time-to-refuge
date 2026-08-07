@@ -21,12 +21,7 @@ function sessionRetreatPin(app: TimekeeperAppModel, mobileWithPeople: boolean) {
 
   return (
     <div className={cn("flex min-w-0 items-center", BUTTON_CLUSTER_GAP)}>
-      <RetreatNameField
-        layout="inline"
-        value={app.retreatName}
-        onChange={app.setRetreatName}
-        className="min-w-0 flex-1"
-      />
+      <RetreatNameField value={app.retreatName} onChange={app.setRetreatName} />
       <RefugePersonSwitcher
         inline
         index={app.index}

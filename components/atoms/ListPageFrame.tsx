@@ -58,7 +58,11 @@ export function ListPageFrame({
   const body = (
     <>
       {pin || pinBelow ? (
-        <StickyPageChrome below={pinBelow} belowHeaderTitle={navPage}>
+        <StickyPageChrome
+          below={pinBelow}
+          belowHeaderTitle={navPage}
+          workspacePin={isWorkspace && Boolean(pinBelow)}
+        >
           {pin}
         </StickyPageChrome>
       ) : null}

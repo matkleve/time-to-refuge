@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PAGE_INLINE_GUTTER, MOBILE_HEADER_CLEARANCE, STICKY_CHROME_PT_BELOW_HEADER_TITLE } from "@/lib/chrome";
+import { PAGE_INLINE_GUTTER, MOBILE_HEADER_CLEARANCE, STICKY_CHROME_PT_BELOW_HEADER_TITLE, WORKSPACE_RETREAT_ALIGN } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
 interface StickyPageChromeProps {
@@ -11,6 +11,10 @@ interface StickyPageChromeProps {
   belowHeaderTitle?: boolean;
   /** Inside a workspace scroll column — sticky at scrollport top only. */
   inScrollport?: boolean;
+  /** Skip `PAGE_INLINE_GUTTER` — parent column already owns mobile inset. */
+  flushGutter?: boolean;
+  /** Retreat pin above workspace rail — match rail scroll bleed on desktop. */
+  workspacePin?: boolean;
 }
 
 /**
@@ -22,12 +26,14 @@ export function StickyPageChrome({
   below,
   belowHeaderTitle = false,
   inScrollport = false,
+  flushGutter = false,
+  workspacePin = false,
   className,
 }: StickyPageChromeProps) {
   const topClearance = belowHeaderTitle
     ? STICKY_CHROME_PT_BELOW_HEADER_TITLE
     : cn(MOBILE_HEADER_CLEARANCE, "md:pt-[4.5rem]");
-  const inset = inScrollport ? undefined : PAGE_INLINE_GUTTER;
+  const inset = inScrollport || flushGutter ? undefined : PAGE_INLINE_GUTTER;
 
   return (
     <div
@@ -43,7 +49,13 @@ export function StickyPageChrome({
         </div>
       ) : null}
       {below ? (
-        <div className={cn("pointer-events-auto relative pb-2", inset)}>
+        <div
+          className={cn(
+            "pointer-events-auto relative pb-2",
+            inset,
+            workspacePin && WORKSPACE_RETREAT_ALIGN,
+          )}
+        >
           {below}
         </div>
       ) : null}
